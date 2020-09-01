@@ -1,0 +1,83 @@
+.layout--fourcol-section{
+  display:flex;
+  flex-wrap:wrap;
+}
+
+.layout--fourcol-section > .layout__region{
+    flex:1 0 100%;
+  }
+
+[dir] .layout--fourcol-section > .layout__region{
+    margin-bottom:18px;
+  }
+
+@media (min-width: 700px){
+
+.layout--fourcol-section > .layout__region{
+      flex-basis:calc(50% - 18px);
+      flex-grow:0;
+      flex-shrink:0
+  }
+
+[dir] .layout--fourcol-section > .layout__region{
+      margin-bottom:0
+  }
+    }
+
+@media (min-width: 700px){
+    [dir] .layout--fourcol-section > .layout__region--first, [dir] .layout--fourcol-section > .layout__region--second{
+      margin-bottom:36px;
+    }
+
+    [dir=ltr] .layout--fourcol-section > .layout__region--first, [dir=ltr] .layout--fourcol-section > .layout__region--third{
+    margin-right:18px;
+    }
+
+    [dir=rtl] .layout--fourcol-section > .layout__region--first, [dir=rtl] .layout--fourcol-section > .layout__region--third{
+      margin-left:18px;
+    }
+
+    [dir=ltr] .layout--fourcol-section > .layout__region--second, [dir=ltr] .layout--fourcol-section > .layout__region--fourth{
+    margin-left:18px;
+    }
+
+    [dir=rtl] .layout--fourcol-section > .layout__region--second, [dir=rtl] .layout--fourcol-section > .layout__region--fourth{
+      margin-right:18px;
+    }
+  }
+
+@media (min-width: 1000px){
+    .layout--fourcol-section > .layout__region{
+      flex-basis:calc(25% - 27px);
+    }
+
+    [dir] .layout--fourcol-section > .layout__region--first, [dir] .layout--fourcol-section > .layout__region--second{
+      margin-bottom:0;
+    }
+
+    [dir=ltr] .layout--fourcol-section > .layout__region--first{
+    margin-right:18px;
+    }
+
+    [dir=rtl] .layout--fourcol-section > .layout__region--first{
+      margin-left:18px;
+    }
+
+    [dir=ltr] .layout--fourcol-section > .layout__region--second, [dir=ltr] .layout--fourcol-section > .layout__region--third{
+    margin-right:18px;
+    margin-left:18px;
+    }
+
+    [dir=rtl] .layout--fourcol-section > .layout__region--second, [dir=rtl] .layout--fourcol-section > .layout__region--third{
+      margin-left:18px;
+      margin-right:18px;
+    }
+
+    [dir=ltr] .layout--fourcol-section > .layout__region--fourth{
+    margin-left:18px;
+    }
+
+    [dir=rtl] .layout--fourcol-section > .layout__region--fourth{
+      margin-right:18px;
+    }
+  }

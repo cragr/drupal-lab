@@ -1,0 +1,162 @@
+.button{
+  display:inline-block;
+  height:54px;
+  text-decoration:none;
+  letter-spacing:0.07em;
+  text-transform:uppercase;
+  color:#0d77b5;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  line-height:18px;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  -webkit-font-smoothing:antialiased;
+}[dir] .button{
+  padding:18px 27px;
+  cursor:pointer;
+  text-align:center;
+  border:2px solid #0d77b5;
+  border-radius:2px;
+  background-color:#fff;
+}[dir=ltr] .button{
+  margin:18px 18px 18px 0;
+}[dir=rtl] .button{
+  margin:18px 0 18px 18px;
+}
+
+.button:hover,
+  .button:focus{
+    text-decoration:none;
+    color:#2494db;
+  }
+
+[dir] .button:hover, [dir] .button:focus{
+    border-color:#2494db;
+  }
+
+.button:focus{
+    outline:var(--outline--base);
+    outline-offset:var(--outline-offset);
+  }
+
+[dir] .button:focus{
+    box-shadow:0
+0
+36px
+rgba(83, 176, 235, 0.25)
+,
+0
+0
+0
+2px
+#fff
+,
+0
+0
+0
+4px
+#53b0eb;
+  }
+
+.button:active{
+    color:#0d77b5;
+  }
+
+[dir] .button:active{
+    border-color:#0d77b5;
+    box-shadow:none;
+  }
+
+.button:disabled,
+  .button.is-disabled{
+    color:#d7e1e8;
+  }
+
+[dir] .button:disabled, [dir] .button.is-disabled{
+    cursor:default;
+    border-color:#d7e1e8;
+  }
+
+[dir] .menu .button{
+    margin:0;
+  }
+
+@supports (display: inline-flex){
+
+.button{
+    display:inline-flex;
+    align-items:center;
+    line-height:18px
+}
+
+[dir] .button{
+    padding:1px 27px 0
+}
+  }
+
+.button--small{
+  height:45px;
+}
+
+[dir] .button--small{
+  padding:13.5px 27px;
+}
+
+.button--primary{
+  color:#fff;
+}
+
+[dir] .button--primary{
+  background-color:#0d77b5;
+}
+
+.button--primary:hover,
+  .button--primary:focus{
+    color:#fff;
+  }
+
+[dir] .button--primary:hover, [dir] .button--primary:focus{
+    background-color:#2494db;
+  }
+
+.button--primary:active{
+    color:#fff;
+  }
+
+[dir] .button--primary:active{
+    background-color:#0d77b5;
+  }
+
+.button--primary:disabled,
+  .button--primary.is-disabled{
+    color:#fff;
+  }
+
+[dir] .button--primary:disabled, [dir] .button--primary.is-disabled{
+    background-color:#d7e1e8;
+  }
+
+.button--icon-back:before{
+    display:block;
+    width:0.5em;
+    height:0.5em;
+    content:"";
+  }
+
+[dir] .button--icon-back:before{
+    border-bottom:solid 2px currentColor;
+  }
+
+[dir=ltr] .button--icon-back:before{
+  margin-right:0.5em;
+  transform:rotate(45deg);
+  border-left:solid 2px currentColor;
+  }
+
+[dir=rtl] .button--icon-back:before{
+    margin-left:0.5em;
+    transform:rotate(-45deg);
+    border-right:solid 2px currentColor;
+  }

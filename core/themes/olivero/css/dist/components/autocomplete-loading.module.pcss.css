@@ -1,0 +1,67 @@
+html[dir=ltr].js .form-autocomplete{
+    padding-right:54px;
+    background:url("../../../images/magnifying-glass.svg") no-repeat right 18px top 16px,
+      linear-gradient(to right, #7e96a7 6px, transparent 6px, transparent 100%) #f7f9fa;
+  }html[dir=rtl].js .form-autocomplete{
+    padding-left:54px;
+    background:url("../../../images/magnifying-glass.svg") no-repeat left 18px top 16px,
+      linear-gradient(to left, #7e96a7 6px, transparent 6px, transparent 100%) #f7f9fa;
+  }
+
+html[dir=ltr].js .form-autocomplete:hover{
+    background:url("../../../images/magnifying-glass.svg") no-repeat right 18px top 16px,
+        linear-gradient(to right, #53b0eb 6px, transparent 6px, transparent 100%),
+        linear-gradient(to left, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+    }
+
+html[dir=rtl].js .form-autocomplete:hover{
+      background:url("../../../images/magnifying-glass.svg") no-repeat left 18px top 16px,
+        linear-gradient(to left, #53b0eb 6px, transparent 6px, transparent 100%),
+        linear-gradient(to right, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+    }
+
+html[dir=ltr].js .form-autocomplete:focus{
+    background:url("../../../images/magnifying-glass.svg") no-repeat right 18px top 16px,
+        linear-gradient(to right, #53b0eb 6px, transparent 6px, transparent 100%),
+        linear-gradient(to left, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+    }
+
+html[dir=rtl].js .form-autocomplete:focus{
+      background:url("../../../images/magnifying-glass.svg") no-repeat left 18px top 16px,
+        linear-gradient(to left, #53b0eb 6px, transparent 6px, transparent 100%),
+        linear-gradient(to right, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+    }
+
+html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading{
+    background:url("../../../images/throbber.svg") no-repeat right 18px top 16px,
+        linear-gradient(to right, #7e96a7 6px, transparent 6px, transparent 100%) #f7f9fa;
+    }
+
+html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading{
+      background:url("../../../images/throbber.svg") no-repeat left 18px top 16px,
+        linear-gradient(to left, #7e96a7 6px, transparent 6px, transparent 100%) #f7f9fa;
+    }
+
+html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading:hover{
+    background:url("../../../images/throbber.svg") no-repeat right 18px top 16px,
+          linear-gradient(to right, #53b0eb 6px, transparent 6px, transparent 100%),
+          linear-gradient(to left, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+      }
+
+html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading:hover{
+        background:url("../../../images/throbber.svg") no-repeat left 18px top 16px,
+          linear-gradient(to left, #53b0eb 6px, transparent 6px, transparent 100%),
+          linear-gradient(to right, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+      }
+
+html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading:focus{
+    background:url("../../../images/throbber.svg") no-repeat right 18px top 16px,
+          linear-gradient(to right, #53b0eb 6px, transparent 6px, transparent 100%),
+          linear-gradient(to left, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+      }
+
+html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading:focus{
+        background:url("../../../images/throbber.svg") no-repeat left 18px top 16px,
+          linear-gradient(to left, #53b0eb 6px, transparent 6px, transparent 100%),
+          linear-gradient(to right, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
+      }

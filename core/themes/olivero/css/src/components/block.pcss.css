@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Block styling.
+ */
+
+@import "../base/variables.css";
+
+.block__title {
+  margin-top: 0;
+  margin-bottom: var(--sp);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color--gray-20);
+  font-size: 16px;
+  line-height: var(--sp1-5);
+
+  .site-footer & {
+    color: var(--color--gray-50);
+  }
+}

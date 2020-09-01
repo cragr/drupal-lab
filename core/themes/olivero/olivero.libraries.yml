@@ -1,0 +1,176 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/dist/base/fonts.css: {}
+      css/dist/base/variables.css: {}
+      css/dist/base/base.css: {}
+      css/dist/base/utility.css: {}
+    layout:
+      css/dist/layout/layout.css: {}
+      css/dist/layout/grid.css: {}
+      css/dist/layout/layout-content-narrow.css: {}
+      css/dist/layout/layout-content-medium.css: {}
+      css/dist/layout/layout-footer.css: {}
+      css/dist/layout/region.css: {}
+      css/dist/layout/views.css: {}
+    component:
+      css/dist/components/block.css: {}
+      css/dist/components/breadcrumb.css: {}
+      css/dist/components/embedded-media.css: {}
+      css/dist/components/featured-bottom.css: {}
+      css/dist/components/footer.css: {}
+      css/dist/components/button.css: {}
+      css/dist/components/fieldset.css: {}
+      css/dist/components/field.css: {}
+      css/dist/components/field-image.css: {}
+      css/dist/components/form.css: {}
+      css/dist/components/form-boolean.css: {}
+      css/dist/components/form-text.css: {}
+      css/dist/components/form-textarea.css: {}
+      css/dist/components/form-select.css: {}
+      css/dist/components/header.css: {}
+      css/dist/components/header-buttons-mobile.css: {}
+      css/dist/components/header-navigation.css: {}
+      css/dist/components/header-site-branding.css: {}
+      css/dist/components/hero.css: {}
+      css/dist/components/nav-button-mobile.css: {}
+      css/dist/components/nav-button-wide.css: {}
+      css/dist/components/nav-primary-button.css: {}
+      css/dist/components/nav-primary.css: {}
+      css/dist/components/nav-secondary.css: {}
+      css/dist/components/node.css: {}
+      css/dist/components/node-teaser.css: {}
+      css/dist/components/page-title.css: {}
+      css/dist/components/skip-link.css: {}
+      css/dist/components/pager.css: {}
+      css/dist/components/social-container.css: {}
+      css/dist/components/table.css: {}
+      css/dist/components/text-content.css: {}
+
+  js:
+    js/checkbox.js: {}
+    js/polyfills.js: {}
+    js/scripts.js: {}
+    js/navigation.js: {}
+    js/second-level-navigation.js: {}
+  dependencies:
+    - core/drupal
+
+comments:
+  css:
+    component:
+      css/dist/components/comments.css: {}
+  js:
+    js/comments.js: {}
+
+filter.theme:
+  css:
+    component:
+      css/dist/theme/filter.theme.css: {}
+
+details:
+  css:
+    theme:
+      css/dist/components/details.css: {}
+
+layout_discovery_section:
+  css:
+    layout:
+      css/dist/layout/layout-discovery-section-layout.css: {}
+
+layout_builder_twocol_section:
+  css:
+    layout:
+      css/dist/layout/layout-builder-twocol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+layout_builder_threecol_section:
+  css:
+    layout:
+      css/dist/layout/layout-builder-threecol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+layout_builder_fourcol_section:
+  css:
+    layout:
+      css/dist/layout/layout-builder-fourcol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+messages:
+  css:
+    component:
+      css/dist/components/messages.css: {}
+  js:
+    js/messages.js: {}
+
+sidebar:
+  css:
+    component:
+      css/dist/components/sidebar.css: {}
+    layout:
+      css/dist/layout/layout-sidebar.css: {}
+
+tabs:
+  css:
+    theme:
+      css/dist/components/tabs.css: {}
+  js:
+    js/tabs.js: {}
+
+tags:
+  css:
+    theme:
+      css/dist/components/tags.css: {}
+
+debug:
+  css:
+    theme:
+      css/dist/components/_debug.css: {}
+  js:
+    js/debug.js: {}
+
+search-narrow:
+  css:
+    component:
+      css/dist/components/header-search-narrow.css: {}
+
+search-wide:
+  css:
+    component:
+      css/dist/components/header-search-wide.css: {}
+  js:
+    js/search.js: {}
+
+search-results:
+  css:
+    theme:
+      css/dist/components/search-results.css: {}
+
+drupal.node.preview:
+  css:
+    theme:
+      css/dist/components/node-preview-container.css: {}
+
+powered-by-block:
+  css:
+    theme:
+      css/dist/components/powered-by-block.css: {}
+
+layout-views-grid-horizontal:
+  css:
+    layout:
+      css/dist/layout/layout-views-grid-horizontal.css: {}
+
+layout-views-grid-vertical:
+  css:
+    layout:
+      css/dist/layout/layout-views-grid-vertical.css: {}
+
+cke-dialog:
+  css:
+    component:
+      css/dist/components/cke-dialog.css: {}

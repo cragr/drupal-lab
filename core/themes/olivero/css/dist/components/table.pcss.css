@@ -1,0 +1,94 @@
+table{
+  border-spacing:0;
+  color:#313637;
+  border-collapse:collapse;
+  font-family:"metropolis"
+,
+sans-serif;
+  font-size:16px;
+  line-height:27px;
+}[dir] table{
+  margin:36px 0;
+  border:0;
+}
+
+table caption{
+    color:#313637;
+    font-family:"Lora"
+,
+"georgia"
+,
+serif;
+    font-size:14px;
+    font-style:italic;
+    line-height:18px;
+  }
+
+[dir] table caption{
+    margin-bottom:18px;
+  }
+
+[dir=ltr] table caption{
+  text-align:left;
+  }
+
+[dir=rtl] table caption{
+    text-align:right;
+  }
+
+[dir] table tr:last-child td{
+        border-bottom:0;
+      }
+
+table td,
+  table th{
+    vertical-align:top;
+  }
+
+[dir=ltr] table td, [dir=ltr] table th{
+  padding:18px 18px 18px 0;
+  }
+
+[dir=rtl] table td, [dir=rtl] table th{
+    padding:18px 0 18px 18px;
+  }
+
+table th{
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:#0d1214;
+    font-family:"metropolis"
+,
+sans-serif;
+    font-size:14px;
+  }
+
+[dir] table th{
+    margin:0;
+    border-bottom:2px solid #2494db;
+  }
+
+[dir=ltr] table th{
+  text-align:left;
+  }
+
+[dir=rtl] table th{
+    text-align:right;
+  }
+
+table td{
+    white-space:normal;
+  }
+
+[dir] table td{
+    border-bottom:2px solid #98abb9;
+  }
+
+[dir] .sticky-header{
+  margin:0;
+  border-bottom:4px solid #2494db;
+}
+
+[dir] .views-field-node-bulk-form .form-item{
+  margin:0;
+}

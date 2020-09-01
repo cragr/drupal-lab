@@ -1,0 +1,136 @@
+.search-results{
+  list-style:none;
+}[dir] .search-results{
+  margin-bottom:36px;
+  padding:0;
+}
+
+@media (min-width: 700px){
+
+[dir] .search-results{
+    margin-bottom:54px
+}
+  }
+
+.search-result__title{
+  color:#0d1214;
+  font-size:20px;
+  line-height:27px;
+}
+
+[dir] .search-result__title{
+  margin:0;
+}
+
+.search-result__title a{
+    transition:background-size 0.2s, color 0.2s;
+    text-decoration:none;
+  }
+
+[dir] .search-result__title a{
+    padding-bottom:3px;
+    background-color:transparent;
+    background-image:linear-gradient(#2494db, #2494db);
+    background-repeat:no-repeat;
+    background-size:0 3px;
+  }
+
+[dir=ltr] .search-result__title a{
+  background-position:bottom left;
+  }
+
+[dir=rtl] .search-result__title a{
+    background-position:bottom right;
+  }
+
+.search-result__title a:hover{
+      color:#0d77b5;
+    }
+
+.search-result__title a:focus{
+      color:#0d77b5;
+      outline:0;
+    }
+
+[dir] .search-result__title a:focus{
+      background-size:100% 3px;
+    }
+
+@media screen and (-ms-high-contrast: active){
+
+.search-result__title a:focus{
+        text-decoration:underline;
+        outline:initial
+    }
+      }
+
+@media (min-width: 1000px){
+
+.search-result__title{
+    font-size:30px;
+    line-height:54px
+}
+
+[dir] .search-result__title{
+    margin-bottom:18px
+}
+  }
+
+[dir] .search-result__snippet{
+  padding-bottom:27px;
+}
+
+@media (min-width: 1000px){
+
+[dir] .search-result__snippet{
+    padding-bottom:54px
+}
+  }
+
+.search-result__meta{
+  display:flex;
+  align-items:center;
+  color:#6e7172;
+  font-size:14px;
+  line-height:18px;
+}
+
+[dir] .search-result__meta{
+  margin-bottom:18px;
+}
+
+.search-result__meta a{
+    color:#0d77b5;
+    font-weight:bold;
+  }
+
+.search-results__item{
+  position:relative;
+}
+
+[dir] .search-results__item{
+  margin-bottom:27px;
+}
+
+.search-results__item:after{
+    position:absolute;
+    bottom:0;
+    width:54px;
+    height:0;
+    content:"";
+  }
+
+[dir] .search-results__item:after{
+    border-top:solid 2px #e7edf1;
+  }
+
+[dir] .search-results__item:last-child{
+    margin-bottom:0;
+  }
+
+@media (min-width: 1000px){
+
+[dir] .search-results__item{
+    margin-bottom:54px
+}
+  }

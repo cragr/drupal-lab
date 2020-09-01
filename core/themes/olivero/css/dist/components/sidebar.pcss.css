@@ -1,0 +1,61 @@
+.region--sidebar .menu{
+    list-style:none;
+  }[dir=ltr] .region--sidebar .menu{
+    margin-left:0;
+  }[dir=rtl] .region--sidebar .menu{
+    margin-right:0;
+  }
+
+.region--sidebar .menu li:last-child a:after{
+        content:none;
+      }
+
+.region--sidebar .menu li li:last-child a:after{
+      content:"";
+    }
+
+.region--sidebar .menu a{
+      position:relative;
+      display:block;
+      text-decoration:none;
+      color:#0d1214;
+      font-family:"Lora"
+,
+"georgia"
+,
+serif;
+      font-size:18px;
+      font-weight:600;
+    }
+
+[dir] .region--sidebar .menu a{
+      padding:18px 0;
+    }
+
+.region--sidebar .menu a:hover{
+        color:#2494db;
+      }
+
+.region--sidebar .menu a:after{
+        position:absolute;
+        bottom:0;
+        width:72px;
+        height:0;
+        content:"";
+      }
+
+[dir] .region--sidebar .menu a:after{
+        border-top:solid 2px #e7edf1;
+      }
+
+[dir=ltr] .region--sidebar .menu a:after{
+    left:0;
+      }
+
+[dir=rtl] .region--sidebar .menu a:after{
+        right:0;
+      }
+
+[dir] .region--sidebar .menu .menu{
+      margin:0 18px;
+    }

@@ -1,0 +1,182 @@
+[dir] figure{
+  background:#f7f9fa;
+}
+
+figcaption{
+  color:#313637;
+  font-family:"Lora"
+,
+"georgia"
+,
+serif;
+  font-size:14px;
+  font-style:italic;
+  line-height:18px;
+}
+
+[dir] figcaption{
+  padding:9px;
+  background:#f7f9fa;
+}
+
+@media (min-width: 500px){
+
+[dir] figcaption{
+    padding:18px
+}
+  }
+
+.align-right{
+  max-width:100%;
+}
+
+[dir] .align-right{
+  float:none;
+  margin:54px 0;
+}
+
+@media (min-width: 700px){
+
+[dir=ltr] .layout--content-narrow .align-right, [dir=ltr] .layout--pass--content-narrow > * .align-right{
+    margin-right:calc(-1*((100vw - 504px)/14 + 36px))
+  }
+
+[dir=rtl] .layout--content-narrow .align-right, [dir=rtl] .layout--pass--content-narrow > * .align-right{
+      margin-left:calc(-1*((100vw - 504px)/14 + 36px))
+  }
+    }
+
+@media (min-width: 1000px){
+
+[dir=ltr] .layout--content-narrow .align-right, [dir=ltr] .layout--pass--content-narrow > * .align-right{
+    margin-right:calc(-2*((100vw - 519px)/14 + 36px))
+  }
+
+[dir=rtl] .layout--content-narrow .align-right, [dir=rtl] .layout--pass--content-narrow > * .align-right{
+      margin-left:calc(-2*((100vw - 519px)/14 + 36px))
+  }
+    }
+
+@media (min-width: 1200px){
+
+[dir=ltr] .layout--content-narrow .align-right, [dir=ltr] .layout--pass--content-narrow > * .align-right{
+    margin-right:calc(-3*((100vw - 645px)/14 + 36px))
+  }
+
+[dir=rtl] .layout--content-narrow .align-right, [dir=rtl] .layout--pass--content-narrow > * .align-right{
+      margin-left:calc(-3*((100vw - 645px)/14 + 36px))
+  }
+    }
+
+@media (min-width: 1440px){
+
+[dir=ltr] .layout--content-narrow .align-right, [dir=ltr] .layout--pass--content-narrow > * .align-right{
+    margin-right:-281.57143px
+  }
+
+[dir=rtl] .layout--content-narrow .align-right, [dir=rtl] .layout--pass--content-narrow > * .align-right{
+      margin-left:-281.57143px
+  }
+    }
+
+@media (min-width: 700px){
+
+.align-right{
+    max-width:50%
+}
+
+[dir=ltr] .align-right{
+    float:right;
+    margin:18px 0 18px 18px
+}
+
+[dir=rtl] .align-right{
+    float:left;
+    margin:18px 18px 18px 0
+}
+  }
+
+.align-left{
+  max-width:100%;
+}
+
+[dir] .align-left{
+  float:none;
+  margin:54px 0;
+}
+
+@media (min-width: 700px){
+
+[dir=ltr] .layout--content-narrow .align-left, [dir=ltr] .layout--pass--content-narrow > * .align-left{
+    margin-left:calc(-1*((100vw - 504px)/14 + 36px))
+  }
+
+[dir=rtl] .layout--content-narrow .align-left, [dir=rtl] .layout--pass--content-narrow > * .align-left{
+      margin-right:calc(-1*((100vw - 504px)/14 + 36px))
+  }
+    }
+
+@media (min-width: 1000px){
+
+[dir=ltr] .layout--content-narrow .align-left, [dir=ltr] .layout--pass--content-narrow > * .align-left{
+    margin-left:calc(-1*((100vw - 519px)/14 + 36px))
+  }
+
+[dir=rtl] .layout--content-narrow .align-left, [dir=rtl] .layout--pass--content-narrow > * .align-left{
+      margin-right:calc(-1*((100vw - 519px)/14 + 36px))
+  }
+    }
+
+@media (min-width: 1200px){
+
+[dir=ltr] .layout--content-narrow .align-left, [dir=ltr] .layout--pass--content-narrow > * .align-left{
+    margin-left:calc(-1*((100vw - 645px)/14 + 36px))
+  }
+
+[dir=rtl] .layout--content-narrow .align-left, [dir=rtl] .layout--pass--content-narrow > * .align-left{
+      margin-right:calc(-1*((100vw - 645px)/14 + 36px))
+  }
+    }
+
+@media (min-width: 1440px){
+
+[dir=ltr] .layout--content-narrow .align-left, [dir=ltr] .layout--pass--content-narrow > * .align-left{
+    margin-left:-93.85714px
+  }
+
+[dir=rtl] .layout--content-narrow .align-left, [dir=rtl] .layout--pass--content-narrow > * .align-left{
+      margin-right:-93.85714px
+  }
+    }
+
+@media (min-width: 700px){
+
+.align-left{
+    max-width:50%
+}
+
+[dir=ltr] .align-left{
+    float:left;
+    margin:18px 36px 18px 0
+}
+
+[dir=rtl] .align-left{
+    float:right;
+    margin:18px 0 18px 36px
+}
+  }
+
+[dir=ltr] .align-center img, [dir=ltr] .align-center video, [dir=ltr] .align-center audio{
+  margin-right:auto;
+  margin-left:auto;
+}
+
+[dir=rtl] .align-center img, [dir=rtl] .align-center video, [dir=rtl] .align-center audio{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.media-oembed-content{
+  display:block;
+  max-width:100%;
+}

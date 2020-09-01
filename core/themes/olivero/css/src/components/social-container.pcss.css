@@ -1,0 +1,60 @@
+/**
+ * @file
+ * Social Container Block.
+ */
+
+@import "../base/variables.css";
+
+.social-container {
+  @media (--nav) {
+    flex-shrink: 0;
+    width: var(--content-left);
+    background-color: var(--color--gray-95);
+  }
+}
+
+.rotate {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  @media (--nav) {
+    width: var(--content-left);
+    transform: rotate(180deg);
+    text-align: right; /* IE11 */
+    writing-mode: vertical-rl;
+
+    img {
+      margin: 10px 5px 10px 10px; /* IE11 */
+
+      @supports (display: block) { /* Override IE11 values. */
+        margin: 10px;
+      }
+    }
+  }
+}
+
+.social-label {
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--color--gray-25);
+  font-size: 12px;
+}
+
+.social-container__inner {
+  padding: var(--sp0-5) var(--sp);
+  background-color: var(--color--gray-95);
+
+  @media (--nav) {
+    position: relative;
+    width: var(--content-left);
+    padding: calc(9 * var(--sp)) 0;
+
+    &.js-fixed {
+      position: fixed;
+      top: var(--sp6);
+      left: 0;
+      height: calc(100vh - 6 * var(--sp));
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[dir] .view > *{
+    margin-bottom:36px;
+  }
+
+[dir] .view > *:last-child{
+      margin-bottom:0;
+    }
+
+@media (min-width: 700px){
+
+[dir] .view > *{
+      margin-bottom:54px
+  }
+    }

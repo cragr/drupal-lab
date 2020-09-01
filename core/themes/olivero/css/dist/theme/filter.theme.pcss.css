@@ -1,0 +1,66 @@
+[dir] .text-full > .form-item{
+  margin-bottom:0;
+}
+
+.form-element--editor-format{
+  vertical-align:top;
+}
+
+[dir] .filter-wrapper{
+  margin-top:18px;
+  margin-bottom:9px;
+}
+
+[dir] .filter-wrapper .form-item{
+  margin:0;
+}
+
+.filter-help{
+  font-size:12px;
+}
+
+[dir] .filter-help{
+  padding-top:9px;
+  padding-bottom:9px;
+}
+
+[dir=ltr] .filter-help{
+  float:right;
+}
+
+[dir=rtl] .filter-help{
+  float:left;
+}
+
+[dir] .compose-tips__item{
+  margin-top:27px;
+  margin-bottom:27px;
+}
+
+.filter-guidelines__item{
+  font-size:14px;
+  line-height:18px;
+}
+
+[dir] .filter-guidelines__item{
+  margin-top:18px;
+}
+
+[dir] .filter-guidelines p{
+  margin-top:4.5px;
+  margin-bottom:0;
+}
+
+[dir] .filter-tips--long{
+  margin-bottom:27px;
+}
+
+[dir] .filter-tips__item, [dir] .filter-tips--long p{
+  margin-top:13.5px;
+  margin-bottom:13.5px;
+}
+
+[dir] .filter-tips__item--short{
+  margin-top:4.5px;
+  margin-bottom:0;
+}

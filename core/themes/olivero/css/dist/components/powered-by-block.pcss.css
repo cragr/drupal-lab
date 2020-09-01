@@ -1,0 +1,41 @@
+.block-system-powered-by-block{
+  letter-spacing:0.02em;
+  color:#5d7585;
+  font-size:14px;
+  line-height:18px;
+}
+
+.block-system-powered-by-block a{
+    text-decoration:underline;
+  }
+
+.block-system-powered-by-block a:hover,
+    .block-system-powered-by-block a:focus{
+      text-decoration:none;
+    }
+
+.site-footer .block-system-powered-by-block a{
+      color:#fff;
+    }
+
+.block-system-powered-by-block svg{
+    display:inline-block;
+    vertical-align:middle;
+    fill:currentColor;
+  }
+
+[dir] .block-system-powered-by-block svg{
+    margin-top:-4.5px;
+  }
+
+[dir=ltr] .block-system-powered-by-block svg{
+  margin-left:4.5px;
+  }
+
+[dir=rtl] .block-system-powered-by-block svg{
+    margin-right:4.5px;
+  }
+
+.site-footer .block-system-powered-by-block svg{
+      fill:#fff;
+    }

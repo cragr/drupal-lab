@@ -1,0 +1,52 @@
+/**
+ * @file
+ * Styles for sidebar region.
+ */
+
+@import "../base/variables.css";
+
+.region--sidebar {
+  .menu {
+    margin-left: 0;
+    list-style: none;
+
+    li:last-child {
+      a:after {
+        content: none;
+      }
+    }
+
+    li li:last-child a:after {
+      content: "";
+    }
+
+    a {
+      position: relative;
+      display: block;
+      padding: var(--sp) 0;
+      text-decoration: none;
+      color: var(--color--gray-0);
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+
+      &:hover {
+        color: var(--color--blue-50);
+      }
+
+      &:after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: var(--sp4);
+        height: 0;
+        content: "";
+        border-top: solid 2px var(--color--gray-80);
+      }
+    }
+
+    .menu {
+      margin: 0 var(--sp);
+    }
+  }
+}

@@ -1,0 +1,76 @@
+input[type="file"],
+.form-element--type-file{
+  max-width:100%;
+  color:#313637;
+  outline:solid 1px transparent;
+  font-size:16px;
+  line-height:18px;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+}[dir] input[type="file"], [dir] .form-element--type-file{
+  padding:18px;
+  border:0;
+  background-color:#f7f9fa;
+}[dir=ltr] input[type="file"], [dir=ltr] .form-element--type-file{
+  border-left:solid 4px #7e96a7;
+}[dir=rtl] input[type="file"], [dir=rtl] .form-element--type-file{
+  border-right:solid 4px #7e96a7;
+}
+
+[dir] input[type="file"]:hover, [dir] input[type="file"]:focus, [dir] .form-element--type-file:hover, [dir] .form-element--type-file:focus{
+    padding:16px;
+    border:solid 2px #53b0eb;
+  }
+
+[dir=ltr] input[type="file"]:hover, [dir=ltr] input[type="file"]:focus, [dir=ltr] .form-element--type-file:hover, [dir=ltr] .form-element--type-file:focus{
+  border-left-width:6px;
+  }
+
+[dir=rtl] input[type="file"]:hover, [dir=rtl] input[type="file"]:focus, [dir=rtl] .form-element--type-file:hover, [dir=rtl] .form-element--type-file:focus{
+    border-right-width:6px;
+  }
+
+input[type="file"]:focus, .form-element--type-file:focus{
+    outline:2px
+dotted
+transparent;
+  }
+
+[dir] input[type="file"]:focus, [dir] .form-element--type-file:focus{
+    box-shadow:0
+0
+36px
+rgba(83, 176, 235, 0.25);
+  }
+
+[dir] input[type="file"].error, [dir] .form-element--type-file.error{
+    border-color:#e33f1e;
+  }
+
+[dir] input[type="file"].error:hover, [dir] input[type="file"].error:focus, [dir] .form-element--type-file.error:hover, [dir] .form-element--type-file.error:focus{
+      border-color:#53b0eb;
+    }
+
+[dir] input[type="file"].error:focus, [dir] .form-element--type-file.error:focus{
+      box-shadow:0
+0
+36px
+rgba(83, 176, 235, 0.25);
+    }
+
+input[type="file"][disabled], .form-element--type-file[disabled]{
+    color:#7e96a7;
+  }
+
+[dir] input[type="file"][disabled], [dir] .form-element--type-file[disabled]{
+    border-color:transparent;
+  }
+
+[dir=ltr] input[type="file"][disabled], [dir=ltr] .form-element--type-file[disabled]{
+  background:linear-gradient(to right, #d7e1e8 6px, transparent 6px, transparent 100%) #f7f9fa;
+  }
+
+[dir=rtl] input[type="file"][disabled], [dir=rtl] .form-element--type-file[disabled]{
+    background:linear-gradient(to left, #d7e1e8 6px, transparent 6px, transparent 100%) #f7f9fa;
+  }

@@ -1,0 +1,43 @@
+/**
+ * @file
+ * Base Layout.
+ */
+
+@import "../base/variables.css";
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  padding-right: var(--container-padding);
+  padding-left: var(--container-padding);
+
+  @media (--nav) {
+    padding-right: var(--container-padding-nav);
+    padding-left: var(--container-padding-nav);
+  }
+}
+
+.page-wrapper {
+  max-width: var(--max-bg-color);
+  background: white;
+}
+
+/* Contains the social sidebar, and the primary content area. */
+.layout-main {
+  @media (--nav) {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+
+.main-content {
+  padding-top: var(--sp3);
+
+  @media (--md) {
+    padding-top: var(--sp5);
+  }
+
+  @media (--nav) {
+    margin-right: auto;
+  }
+}

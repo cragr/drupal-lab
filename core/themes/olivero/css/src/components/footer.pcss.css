@@ -1,0 +1,38 @@
+/**
+ * @file
+ * Footer regions.
+ */
+
+@import "../base/variables.css";
+
+.site-footer {
+  position: relative; /* stack above left social bar */
+  color: var(--color--gray-95);
+  background: linear-gradient(180deg, #0c0d0e 0%, #171e23 100%);
+
+  .menu {
+    margin-left: 0;
+    list-style: none;
+
+    ul {
+      margin-left: var(--sp);
+    }
+
+    li {
+      margin-bottom: var(--sp0-5);
+    }
+  }
+
+  a {
+    &:focus,
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  @media (--nav) {
+    body:not(.is-always-mobile-nav) & {
+      border-left: solid var(--content-left) black;
+    }
+  }
+}

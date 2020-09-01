@@ -1,0 +1,32 @@
+/**
+ * @file
+ * Feature Bottom region.
+ */
+
+@import "../base/variables.css";
+
+.featured-bottom {
+
+  .grid-full > .region {
+    grid-column: 1 / -1;
+
+    @media (--nav) {
+      grid-column-start: 3;
+    }
+  }
+
+  @media (--nav) {
+    body:not(.is-always-mobile-nav) & {
+      padding-left: var(--content-left);
+    }
+  }
+}
+
+.featured-bottom__inner {
+  padding: var(--sp2) 0;
+
+  @media (--nav) {
+    padding-top: var(--sp4);
+    padding-bottom: var(--sp4);
+  }
+}

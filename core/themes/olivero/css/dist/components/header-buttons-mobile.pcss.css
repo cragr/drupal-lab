@@ -1,0 +1,32 @@
+[dir] .mobile-buttons{
+  margin-top:9px;
+}[dir=ltr] .mobile-buttons{
+  margin-left:auto;
+}[dir=rtl] .mobile-buttons{
+  margin-right:auto;
+}
+
+@media (min-width: 500px){
+
+[dir] .mobile-buttons{
+    margin-top:36px
+}
+  }
+
+@media (min-width: 700px){
+
+[dir] .mobile-buttons{
+    margin-top:72px
+}
+  }
+
+@media (min-width: 1200px){
+
+[dir] .mobile-buttons{
+    margin-top:108px
+}
+
+    body:not(.is-always-mobile-nav) .mobile-buttons{
+      display:none;
+    }
+  }

@@ -1,0 +1,26 @@
+[dir] .node-preview-container{
+  padding:0 9px;
+  background:white;
+}[dir=ltr] .node-preview-container{
+  box-shadow:-36px 1px 36px rgba(0, 0, 0, 0.08);
+}[dir=rtl] .node-preview-container{
+  box-shadow:36px 1px 36px rgba(0, 0, 0, 0.08);
+}
+
+body.toolbar-vertical.toolbar-tray-open .node-preview-container{
+    max-width:calc(100vw - 254px);
+  }
+
+.node-preview-form-select{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+[dir=ltr] .node-preview-backlink{
+  margin:9px auto 9px 0;
+}
+
+[dir=rtl] .node-preview-backlink{
+  margin:9px 0 9px auto;
+}

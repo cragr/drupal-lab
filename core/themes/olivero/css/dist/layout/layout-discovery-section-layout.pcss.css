@@ -1,0 +1,17 @@
+[dir] .layout{
+  margin-bottom:18px;
+}
+
+@media (min-width: 700px){
+
+[dir] .layout{
+    margin-bottom:36px
+}
+  }
+
+@media (min-width: 1000px){
+
+[dir] .layout{
+    margin-bottom:54px
+}
+  }

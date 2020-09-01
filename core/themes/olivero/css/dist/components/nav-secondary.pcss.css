@@ -1,0 +1,132 @@
+.secondary-nav__wrapper{
+  display:flex;
+}[dir] .secondary-nav__wrapper{
+  margin:36px 0;
+}
+
+@media (min-width: 1200px){
+    body:not(.is-always-mobile-nav) .secondary-nav__wrapper{
+      justify-content:flex-end;
+    }
+    [dir] body:not(.is-always-mobile-nav) .secondary-nav__wrapper{
+      margin:0;
+    }
+  }
+
+.secondary-nav{
+  letter-spacing:0.07em;
+  text-transform:uppercase;
+  font-size:14px;
+}
+
+.secondary-nav ul.menu{
+    display:flex;
+    align-items:center;
+    list-style:none;
+  }
+
+[dir] .secondary-nav ul.menu{
+    margin:0;
+    padding:0;
+  }
+
+.secondary-nav ul.menu li{
+      width:-webkit-max-content;
+      width:max-content;
+      max-width:200px;
+    }
+
+[dir=ltr] .secondary-nav ul.menu li:not(:last-child){
+  margin-right:27px;
+      }
+
+[dir=rtl] .secondary-nav ul.menu li:not(:last-child){
+        margin-left:27px;
+      }
+
+@media (min-width: 1200px){
+          [dir=ltr] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child){
+    margin-right:36px;
+          }
+          [dir=rtl] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child){
+            margin-left:36px;
+          }
+        }
+
+.secondary-nav ul.menu a:not(.button--primary){
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      height:36px;
+      text-decoration:none;
+    }
+
+.secondary-nav ul.menu a:not(.button--primary):after{
+        position:absolute;
+        bottom:0;
+        width:100%;
+        height:0;
+        content:"";
+        transition:opacity 0.2s, transform 0.2s;
+        opacity:0;
+      }
+
+[dir] .secondary-nav ul.menu a:not(.button--primary):after{
+        transform:translateY(5px);
+        border-top:solid 2px currentColor;
+      }
+
+[dir=ltr] .secondary-nav ul.menu a:not(.button--primary):after{
+  left:0;
+      }
+
+[dir=rtl] .secondary-nav ul.menu a:not(.button--primary):after{
+        right:0;
+      }
+
+.secondary-nav ul.menu a:not(.button--primary):focus:after, .secondary-nav ul.menu a:not(.button--primary):hover:after{
+          opacity:0.8;
+        }
+
+[dir] .secondary-nav ul.menu a:not(.button--primary):focus:after, [dir] .secondary-nav ul.menu a:not(.button--primary):hover:after{
+          transform:translateY(0);
+        }
+
+@media (min-width: 1200px){
+    body:not(.is-always-mobile-nav) .secondary-nav{
+      position:relative;
+      display:flex;
+    }
+    [dir=ltr] body:not(.is-always-mobile-nav) .secondary-nav{
+    margin-left:18px;
+    padding-left:36px;
+    }
+    [dir=rtl] body:not(.is-always-mobile-nav) .secondary-nav{
+      margin-right:18px;
+      padding-right:36px;
+    }
+
+      body:not(.is-always-mobile-nav) .secondary-nav:before{
+        position:absolute;
+        top:50%;
+        width:2px;
+        height:36px;
+        content:"";
+      }
+
+      [dir] body:not(.is-always-mobile-nav) .secondary-nav:before{
+        transform:translateY(-50%);
+        background-color:#d7e1e8;
+      }
+
+      [dir=ltr] body:not(.is-always-mobile-nav) .secondary-nav:before{
+    left:0;
+      }
+
+      [dir=rtl] body:not(.is-always-mobile-nav) .secondary-nav:before{
+        right:0;
+      }
+    body:not(.is-always-mobile-nav) .secondary-nav__wrapper:first-child .secondary-nav:before{
+      content:none;
+    }
+  }

@@ -1,0 +1,90 @@
+.site-header{
+  position:relative;
+}
+
+@media (min-width: 1200px){
+
+.site-header{
+    min-height:180px
+}
+
+[dir] .site-header{
+    border-bottom:solid 1px transparent
+}
+  }
+
+.header__left{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:flex-end;
+  align-self:stretch;
+}
+
+[dir] .header__left{
+  background-color:#2494db;
+}
+
+.site-header__fixable{
+  display:flex;
+  align-items:flex-end;
+  transition:all 0.5s;
+}
+
+@media (min-width: 1200px){
+      .site-header__fixable.js-fixed:not(.is-expanded){
+        pointer-events:none;
+      }
+
+      body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed{
+        position:fixed;
+        z-index:2;
+        top:-72px;
+        max-width:1570px;
+      }
+      body.toolbar-vertical.toolbar-fixed:not(.is-always-mobile-nav) .site-header__fixable.js-fixed,
+      body.toolbar-horizontal.toolbar-fixed:not(.is-always-mobile-nav) .site-header__fixable.js-fixed{
+        top:-33px;
+      }
+      body.toolbar-horizontal.toolbar-fixed.toolbar-tray-open:not(.is-always-mobile-nav) .site-header__fixable.js-fixed{
+        top:7px;
+      }
+    }
+
+.site-header__inner{
+  flex-grow:1;
+  width:calc(100vw - 90px);
+  transition:all 0.3s;
+}
+
+[dir] .site-header__inner{
+  background:white;
+}
+
+@media (min-width: 1200px){
+
+[dir=ltr] .site-header__fixable.js-fixed .site-header__inner{
+    box-shadow:-36px 1px 36px rgba(0, 0, 0, 0.08)
+  }
+
+[dir=rtl] .site-header__fixable.js-fixed .site-header__inner{
+      box-shadow:36px 1px 36px rgba(0, 0, 0, 0.08)
+  }
+    }
+
+@media (min-width: 1200px){
+      body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner{
+        opacity:0;
+      }
+      [dir=ltr] body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner{
+    transform:translateX(-101%);
+      }
+      [dir=rtl] body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner{
+        transform:translateX(101%);
+      }
+    }
+
+.site-header__inner__container{
+  display:flex;
+  justify-content:space-between;
+}
