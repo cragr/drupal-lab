@@ -2,10 +2,11 @@
 
 namespace Drupal\KernelTests\Core\Common;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @covers ::drupal_flush_all_caches
+ * @covers \Drupal\Core\Cache\Rebuilder::rebuildAll
  * @group Common
  */
 class DrupalFlushAllCachesTest extends KernelTestBase {
@@ -16,7 +17,8 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   protected static $modules = ['system'];
 
   /**
-   * Tests that drupal_flush_all_caches() uses core.extension properly.
+   * Tests that Drupal\Core\Cache\Rebuilder::rebuildAll() uses core.extension
+   * properly.
    */
   public function testDrupalFlushAllCachesModuleList() {
     $core_extension = \Drupal::configFactory()->getEditable('core.extension');
@@ -24,7 +26,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     $module['system_test'] = -10;
     $core_extension->set('module', module_config_sort($module))->save();
 
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     $this->assertSame(['system_test', 'system'], array_keys($this->container->getParameter('container.modules')));
   }
