@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Cache\Rebuilder;
+use Drupal\Core\DrupalKernel;
+use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,6 +26,38 @@ use Symfony\Component\HttpFoundation\Request;
  * @see rebuild.php
  */
 function drupal_rebuild($class_loader, Request $request) {
-  @trigger_error('drupal_rebuild() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::safeBootstrap() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
-  Rebuilder::safeBootstrap($class_loader, $request);
+  @trigger_error('drupal_rebuild() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use rebuild.php script instead instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  // Remove Drupal's error and exception handlers; they rely on a working
+  // service container and other subsystems and will only cause a fatal error
+  // that hides the actual error.
+  restore_error_handler();
+  restore_exception_handler();
+
+  // Force kernel to rebuild php cache.
+  PhpStorageFactory::get('twig')->deleteAll();
+
+  // Bootstrap up to where caches exist and clear them.
+  $kernel = new DrupalKernel('prod', $class_loader);
+  $kernel->setSitePath(DrupalKernel::findSitePath($request));
+  $kernel->boot();
+  $kernel->preHandle($request);
+  // Ensure our request includes the session if appropriate.
+  if (PHP_SAPI !== 'cli') {
+    $request->setSession($kernel->getContainer()->get('session'));
+  }
+
+  // Invalidate the container.
+  $kernel->invalidateContainer();
+
+  Rebuilder::binsDeleteAll();
+
+  // Disable recording of cached pages.
+  \Drupal::service('page_cache_kill_switch')->trigger();
+
+  Rebuilder::flushCssJs();
+
+  // Restore Drupal's error and exception handlers.
+  // @see \Drupal\Core\DrupalKernel::boot()
+  set_error_handler('_drupal_error_handler');
+  set_exception_handler('_drupal_exception_handler');
 }
