@@ -54,7 +54,7 @@ function drupal_rebuild($class_loader, Request $request) {
   // Disable recording of cached pages.
   \Drupal::service('page_cache_kill_switch')->trigger();
 
-  Rebuilder::flushCssJs();
+  \Drupal::service('cache.query_string')->reset();
 
   // Restore Drupal's error and exception handlers.
   // @see \Drupal\Core\DrupalKernel::boot()
