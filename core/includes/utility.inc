@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @see rebuild.php
  */
 function drupal_rebuild($class_loader, Request $request) {
-  @trigger_error('drupal_rebuild() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use rebuild.php script instead instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  @trigger_error('drupal_rebuild() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use rebuild.php script instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
   // Remove Drupal's error and exception handlers; they rely on a working
   // service container and other subsystems and will only cause a fatal error
   // that hides the actual error.
