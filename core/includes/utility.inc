@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   The current request.
  *
  * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\Core\Cache\Rebuilder::safeBootstrap() instead.
+ *   rebuild.php script instead.
  *
  * @see https://www.drupal.org/node/3014783
  * @see rebuild.php
