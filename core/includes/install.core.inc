@@ -1731,7 +1731,7 @@ function install_import_translations(&$install_state) {
       $operations[] = ['locale_translation_batch_fetch_import', ['drupal', $language->getId(), []]];
     }
 
-    module_load_include('fetch.inc', 'locale');
+    \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.fetch');
     $batch = [
       'operations' => $operations,
       'title' => t('Updating translations.'),
@@ -1780,7 +1780,7 @@ function _install_prepare_import($langcodes, $server_pattern) {
             'status' => 1,
           ];
           \Drupal::service('locale.project')->set($data['name'], $data);
-          module_load_include('compare.inc', 'locale');
+          \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
           // Reset project information static cache so that it uses the data
           // set above.
           locale_translation_clear_cache_projects();

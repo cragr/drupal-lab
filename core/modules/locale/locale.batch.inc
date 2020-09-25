@@ -181,7 +181,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
     if (isset($source->type)) {
       if ($source->type == LOCALE_TRANSLATION_REMOTE || $source->type == LOCALE_TRANSLATION_LOCAL) {
         $file = $source->files[LOCALE_TRANSLATION_LOCAL];
-        module_load_include('bulk.inc', 'locale');
+        \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.bulk');
         $options += [
           'message' => t('Importing %langcode translation for %project.', ['%langcode' => $langcode, '%project' => $source->project]),
         ];
@@ -216,7 +216,7 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
  *   Batch results.
  */
 function locale_translation_batch_fetch_finished($success, $results) {
-  module_load_include('bulk.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.bulk');
   if ($success) {
     \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
   }
