@@ -257,12 +257,50 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
+   * Loads a module's installation hooks.
+   *
+   * @param string $module
+   *   The name of the module (without the .module extension).
+   *
+   * @return string|false
+   *   The name of the module's install file, if successful; FALSE otherwise.
+   *
+   * @ToDo: before drupal:10.0.0
+   *   Update ModuleHandlerInterface with definition of this method.
+   */
+  public function loadInstall($module) {
+    return $this->loadInclude($module, 'install');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
-    if ($type == 'install') {
-      // Make sure the installation API is available
+    $inactive_modules = [];
+    if ($type === 'install') {
+      // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
+      if (!$this->moduleExists($module)) {
+        $extention_type_order = [
+          'module',
+          'theme',
+          'profile',
+          'theme_engine',
+        ];
+        $definitions = NULL;
+        foreach ($extention_type_order as $extension_type) {
+          try {
+            $definitions = \Drupal::service('extension.list.' . $extension_type)->get($module);
+          }
+          catch (UnknownExtensionException $e) {
+            // Keep try to load other type of extensions.
+          }
+          if ($definitions !== NULL) {
+            $inactive_modules[$module] = $definitions;
+            break;
+          }
+        }
+      }
     }
 
     $name = $name ?: $module;
@@ -270,16 +308,20 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
     }
-    if (isset($this->moduleList[$module])) {
-      $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
+    $module_list = $this->moduleList;
+    if (!empty($inactive_modules)) {
+      // Temporarily add the inactive module definition to handle loading
+      // install module file.
+      $module_list = array_merge($module_list, $inactive_modules);
+    }
+    if (isset($module_list[$module])) {
+      $file = $this->root . '/' . $module_list[$module]->getPath() . "/$name.$type";
       if (is_file($file)) {
         require_once $file;
         $this->includeFileKeys[$key] = $file;
         return $file;
       }
-      else {
-        $this->includeFileKeys[$key] = FALSE;
-      }
+      $this->includeFileKeys[$key] = FALSE;
     }
     return FALSE;
   }

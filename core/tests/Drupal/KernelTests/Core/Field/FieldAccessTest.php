@@ -54,7 +54,7 @@ class FieldAccessTest extends KernelTestBase {
     // The users table is needed for creating dummy user accounts.
     $this->installEntitySchema('user');
     // Register entity_test text field.
-    module_load_install('entity_test');
+    \Drupal::moduleHandler()->loadInstall('entity_test');
     entity_test_install();
   }
 

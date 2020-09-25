@@ -64,7 +64,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     }
 
     // Create the test field.
-    module_load_install('entity_test');
+    \Drupal::moduleHandler()->loadInstall('entity_test');
     entity_test_install();
 
     // Install required default configuration for filter module.

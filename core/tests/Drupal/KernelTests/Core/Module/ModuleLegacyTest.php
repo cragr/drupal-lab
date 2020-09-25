@@ -26,4 +26,14 @@ class ModuleLegacyTest extends KernelTestBase {
     $this->assertStringEndsWith("module_test.file.inc", $filename);
   }
 
+  /**
+   * Test deprecation of module_load_install() function.
+   *
+   * @expectedDeprecation module_load_install() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInstall(). See https://www.drupal.org/project/drupal/issues/697946
+   */
+  public function testModuleLoadInstall() {
+    $filename = module_load_install('node');
+    $this->assertStringEndsWith("node.install", $filename);
+  }
+
 }

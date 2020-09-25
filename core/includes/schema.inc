@@ -153,8 +153,9 @@ function drupal_uninstall_schema($module) {
  *   is returned.
  */
 function drupal_get_module_schema($module, $table = NULL) {
+  $module_handler = \Drupal::moduleHandler();
   // Load the .install file to get hook_schema.
-  module_load_install($module);
+  $module_handler->loadInstall($module);
   $schema = \Drupal::moduleHandler()->invoke($module, 'schema');
 
   if (isset($table)) {

@@ -208,7 +208,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Load the module's .module and .install files.
         $this->moduleHandler->load($module);
-        module_load_install($module);
+        $this->moduleHandler->loadInstall($module);
 
         if (!InstallerKernel::installationAttempted()) {
           // Replace the route provider service with a version that will rebuild
@@ -434,7 +434,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invokeAll('module_preuninstall', [$module]);
 
       // Uninstall the module.
-      module_load_install($module);
+      $this->moduleHandler->loadInstall($module);
       $this->moduleHandler->invoke($module, 'uninstall', [$sync_status]);
 
       // Remove all configuration belonging to the module.

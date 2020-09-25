@@ -113,7 +113,7 @@ function _update_fix_missing_schema() {
     // don't, detect and fix the problem.
     if (!isset($versions[$module])) {
       // Ensure the .install file is loaded.
-      module_load_install($module);
+      $module_handler->loadInstall($module);
       $all_updates = drupal_get_schema_versions($module);
       // If the schema version of a module hasn't been recorded, we cannot
       // know the actual schema version a module is at, because
@@ -669,6 +669,7 @@ function update_retrieve_dependencies() {
   $return = [];
   /** @var \Drupal\Core\Extension\ModuleExtensionList */
   $extension_list = \Drupal::service('extension.list.module');
+  $module_handler = \Drupal::moduleHandler();
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
   foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
@@ -685,7 +686,7 @@ function update_retrieve_dependencies() {
     }
     $function = $module . '_update_dependencies';
     // Ensure install file is loaded.
-    module_load_install($module);
+    $module_handler->loadInstall($module);
     if (function_exists($function)) {
       $updated_dependencies = $function();
       // Each implementation of hook_update_dependencies() returns a

@@ -3,9 +3,11 @@
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the profile selection form.
@@ -20,6 +22,33 @@ class SelectProfileForm extends FormBase {
    * This key must not be a valid profile extension name.
    */
   const CONFIG_INSTALL_PROFILE_KEY = '::existing_config::';
+
+  /**
+   * Module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * SelectProfileForm constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   Module handler service.
+   */
+  public function __construct(ModuleHandlerInterface $module_handler = NULL) {
+    if ($module_handler === NULL) {
+      $module_handler = \Drupal::moduleHandler();
+    }
+    $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('module_handler'));
+  }
 
   /**
    * {@inheritdoc}
@@ -98,7 +127,7 @@ class SelectProfileForm extends FormBase {
         // profile's which implement hook_INSTALL() are not supported.
         // @todo https://www.drupal.org/project/drupal/issues/2982052 Remove
         //   this restriction.
-        module_load_install($extensions['profile']);
+        $this->moduleHandler->loadInstall($extensions['profile']);
         if (!function_exists($extensions['profile'] . '_install')) {
           $form['profile']['#options'][static::CONFIG_INSTALL_PROFILE_KEY] = $this->t('Use existing configuration');
           $form['profile'][static::CONFIG_INSTALL_PROFILE_KEY]['#description'] = [

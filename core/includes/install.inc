@@ -81,10 +81,8 @@ function drupal_load_updates() {
   /** @var \Drupal\Core\Extension\ModuleExtensionList $extension_list_module */
   $extension_list_module = \Drupal::service('extension.list.module');
   foreach (drupal_get_installed_schema_version(NULL, FALSE, TRUE) as $module => $schema_version) {
-    if ($extension_list_module->exists($module) && !$extension_list_module->checkIncompatibility($module)) {
-      if ($schema_version > -1) {
-        module_load_install($module);
-      }
+    if ($schema_version > -1 && $extension_list_module->exists($module) && !$extension_list_module->checkIncompatibility($module)) {
+      \Drupal::moduleHandler()->loadInstall($module);
     }
   }
 }
@@ -1014,7 +1012,7 @@ function drupal_requirements_severity(&$requirements) {
  *   TRUE or FALSE, depending on whether the requirements are met.
  */
 function drupal_check_module($module) {
-  module_load_install($module);
+  \Drupal::moduleHandler()->loadInstall($module);
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
   if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {

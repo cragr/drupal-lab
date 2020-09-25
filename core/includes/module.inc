@@ -15,22 +15,15 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  *
  * @return
  *   The name of the module's install file, if successful; FALSE otherwise.
+ *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0.
+ *   Use \Drupal::moduleHandler()->loadInstall($module);
+ *
+ * @see https://www.drupal.org/node/2948698
  */
 function module_load_install($module) {
-  // Make sure the installation API is available
-  include_once __DIR__ . '/install.inc';
-
-  // Loading include file and install file methods should be different
-  // as loading install happens for both installed and uninstalled module,
-  // that's why instead of use of service install file is loaded in this way.
-  if (function_exists('drupal_get_path')) {
-    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.install";
-    if (is_file($file)) {
-      require_once $file;
-      return $file;
-    }
-  }
-  return FALSE;
+  @trigger_error("module_load_install() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInstall(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
+  return \Drupal::moduleHandler()->loadInclude($module, 'install');
 }
 
 /**
@@ -64,11 +57,6 @@ function module_load_install($module) {
  *   Use \Drupal::moduleHandler()->loadInclude($module, $type, $name = NULL);
  *
  * @see https://www.drupal.org/node/2948698
- *
- * @todo The module_handler service has a loadInclude() method which performs
- *   this same task but only for enabled modules. Figure out a way to move this
- *   functionality entirely into the module_handler while keeping the ability to
- *   load the files of disabled modules.
  */
 function module_load_include($type, $module, $name = NULL) {
   @trigger_error("module_load_include() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
