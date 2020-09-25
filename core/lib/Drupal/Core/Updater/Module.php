@@ -87,6 +87,7 @@ class Module extends Updater implements UpdaterInterface {
     if (!self::canUpdate($this->name)) {
       return [];
     }
+    // Load <module>.install from the <module>.
     \Drupal::moduleHandler()->loadInclude($this->name, 'install');
 
     if (!$updates = drupal_get_schema_versions($this->name)) {

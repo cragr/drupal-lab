@@ -1731,6 +1731,7 @@ function install_import_translations(&$install_state) {
       $operations[] = ['locale_translation_batch_fetch_import', ['drupal', $language->getId(), []]];
     }
 
+    // Load locale.fetch.file.inc from the locale module.
     \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.fetch');
     $batch = [
       'operations' => $operations,

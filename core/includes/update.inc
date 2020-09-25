@@ -280,6 +280,7 @@ function update_invoke_post_update($function, &$context) {
   }
 
   list($module, $name) = explode('_post_update_', $function, 2);
+  // Load <module>.post_update.php from the <module>.
   \Drupal::moduleHandler()->loadInclude($module, 'php', $module . '.post_update');
   if (function_exists($function)) {
     try {
