@@ -3,6 +3,7 @@
 namespace Drupal\Core\Test;
 
 use Drupal\Core\DrupalKernel;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Kernel to mock requests to test simpletest.
@@ -14,7 +15,7 @@ class TestKernel extends DrupalKernel {
    */
   public function __construct($environment, $class_loader, $allow_dumping = TRUE) {
     // Exit if we should be in a test environment but aren't.
-    if (!drupal_valid_test_ua()) {
+    if (!UserAgent::validate(Request::createFromGlobals())) {
       header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
       exit;
     }

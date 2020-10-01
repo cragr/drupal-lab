@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests;
 
+use Drupal\Core\Test\UserAgent;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -33,7 +34,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
     $https_path = $system_path . '/tests/https.php/user/login';
     // Generate a valid simpletest User-Agent to pass validation.
     $this->assertNotFalse(preg_match('/test\d+/', $this->databasePrefix, $matches), 'Database prefix contains test prefix.');
-    $this->agent = drupal_generate_test_ua($matches[0]);
+    $this->agent = UserAgent::generate($matches[0]);
 
     // Test pages only available for testing.
     $this->drupalGet($http_path);
@@ -66,7 +67,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
       $session->setCookie('SIMPLETEST_USER_AGENT', $this->agent);
     }
     else {
-      $session->setCookie('SIMPLETEST_USER_AGENT', drupal_generate_test_ua($this->databasePrefix));
+      $session->setCookie('SIMPLETEST_USER_AGENT', UserAgent::generate($this->databasePrefix));
     }
   }
 

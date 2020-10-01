@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Test\RefreshVariablesTrait;
+use Drupal\Core\Test\UserAgent;
 use Drupal\Core\Url;
 
 /**
@@ -431,13 +432,11 @@ trait UiHelperTrait {
    * Prepare for a request to testing site.
    *
    * The testing site is protected via a SIMPLETEST_USER_AGENT cookie that is
-   * checked by drupal_valid_test_ua().
-   *
-   * @see drupal_valid_test_ua()
+   * checked by \Drupal\Core\Test\UserAgent::validate().
    */
   protected function prepareRequest() {
     $session = $this->getSession();
-    $session->setCookie('SIMPLETEST_USER_AGENT', drupal_generate_test_ua($this->databasePrefix));
+    $session->setCookie('SIMPLETEST_USER_AGENT', UserAgent::generate($this->databasePrefix));
   }
 
   /**

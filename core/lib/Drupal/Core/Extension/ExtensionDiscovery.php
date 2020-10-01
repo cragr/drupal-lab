@@ -6,6 +6,7 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Test\UserAgent;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -195,7 +196,8 @@ class ExtensionDiscovery {
     // Test extensions can also be included for debugging purposes by setting a
     // variable in settings.php.
     if (!isset($include_tests)) {
-      $include_tests = Settings::get('extension_discovery_scan_tests') || drupal_valid_test_ua();
+      $request = \Drupal::hasRequest() ? \Drupal::request() : Request::createFromGlobals();
+      $include_tests = Settings::get('extension_discovery_scan_tests') || UserAgent::validate($request);
     }
 
     $files = [];

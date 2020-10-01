@@ -16,6 +16,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Test\UserAgent;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
@@ -263,11 +264,12 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $test_db = new TestDatabase();
     $this->siteDirectory = $test_db->getTestSitePath();
 
-    // Ensure that all code that relies on drupal_valid_test_ua() can still be
-    // safely executed. This primarily affects the (test) site directory
-    // resolution (used by e.g. LocalStream and PhpStorage).
+    // Ensure that all code that relies on
+    // \Drupal\Core\Test\UserAgent::validate() can still be safely executed.
+    // This primarily affects the (test) site directory resolution
+    // (used by e.g. LocalStream and PhpStorage).
     $this->databasePrefix = $test_db->getDatabasePrefix();
-    drupal_valid_test_ua($this->databasePrefix);
+    UserAgent::validate(Request::createFromGlobals(), $this->databasePrefix);
 
     $settings = [
       'hash_salt' => static::class,

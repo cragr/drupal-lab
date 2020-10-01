@@ -132,7 +132,7 @@ trait TestSetupTrait {
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    * @see \Drupal\simpletest\WebTestBase::curlInitialize()
    * @see \Drupal\simpletest\TestBase::prepareEnvironment()
-   * @see drupal_valid_test_ua()
+   * @see \Drupal\Core\Test\UserAgent::validate()
    */
   protected function prepareDatabasePrefix() {
     $test_db = new TestDatabase();

@@ -2,9 +2,11 @@
 
 namespace Drupal\Core\Test\HttpClientMiddleware;
 
+use Drupal\Core\Test\UserAgent;
 use Drupal\Core\Utility\Error;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Overrides the User-Agent HTTP header for outbound HTTP requests.
@@ -25,12 +27,12 @@ class TestHttpClientMiddleware {
     // prefix were stored statically in a file or database variable.
     return function ($handler) {
       return function (RequestInterface $request, array $options) use ($handler) {
-        if ($test_prefix = drupal_valid_test_ua()) {
-          $request = $request->withHeader('User-Agent', drupal_generate_test_ua($test_prefix));
+        if ($test_prefix = UserAgent::validate(Request::createFromGlobals())) {
+          $request = $request->withHeader('User-Agent', UserAgent::generate($test_prefix));
         }
         return $handler($request, $options)
-          ->then(function (ResponseInterface $response) use ($request) {
-            if (!drupal_valid_test_ua()) {
+          ->then(function (ResponseInterface $response) use ($request, $test_prefix) {
+            if (!$test_prefix) {
               return $response;
             }
             $headers = $response->getHeaders();

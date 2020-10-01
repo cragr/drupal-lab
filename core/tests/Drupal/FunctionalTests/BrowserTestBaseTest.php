@@ -792,7 +792,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Remove the Simpletest private key file so we can test the protection
     // against requests that forge a valid testing user agent to gain access
     // to the installer.
-    // @see drupal_valid_test_ua()
+    // @see \Drupal\Core\Test\UserAgent::validate()
     // Not using File API; a potential error must trigger a PHP warning.
     $install_url = Url::fromUri('base:core/install.php', ['external' => TRUE, 'absolute' => TRUE])->toString();
     $this->drupalGet($install_url);
