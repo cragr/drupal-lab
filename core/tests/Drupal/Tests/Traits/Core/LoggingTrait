@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Traits;
+namespace Drupal\Tests\Traits\Core;
 
 use Drupal\Core\Logger\RfcLogLevel;
 use PHPUnit\Framework\ExpectationFailedException;
