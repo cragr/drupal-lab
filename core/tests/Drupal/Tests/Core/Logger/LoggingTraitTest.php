@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Logger;
 
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Tests\Traits\Core\LoggingTrait.php
+use Drupal\Tests\Traits\Core\LoggingTrait
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\ExpectationFailedException;
 
