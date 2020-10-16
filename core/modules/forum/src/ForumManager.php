@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\comment\CommentManagerInterface;
+use Drupal\history\HistoryRepositoryInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -116,6 +117,13 @@ class ForumManager implements ForumManagerInterface {
   protected $index;
 
   /**
+   * The history repository service.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface
+   */
+  protected $historyRepository;
+
+  /**
    * Constructs the forum manager service.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -138,6 +146,16 @@ class ForumManager implements ForumManagerInterface {
     $this->stringTranslation = $string_translation;
     $this->commentManager = $comment_manager;
     $this->entityFieldManager = $entity_field_manager;
+  }
+
+  /**
+   * Set the history repository service.
+   *
+   * @param \Drupal\history\HistoryRepositoryInterface $history_repository
+   *   The history repository service.
+   */
+  public function setHistoryRepositoryService(HistoryRepositoryInterface $history_repository) {
+    $this->historyRepository = $history_repository;
   }
 
   /**
@@ -321,13 +339,7 @@ class ForumManager implements ForumManagerInterface {
    */
   protected function lastVisit($nid, AccountInterface $account) {
     if (empty($this->history[$nid])) {
-      $result = $this->connection->select('history', 'h')
-        ->fields('h', ['nid', 'timestamp'])
-        ->condition('uid', $account->id())
-        ->execute();
-      foreach ($result as $t) {
-        $this->history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;
-      }
+      $this->history += $this->historyRepository->getLastViewed('node', [$nid]);
     }
     return isset($this->history[$nid]) ? $this->history[$nid] : HISTORY_READ_LIMIT;
   }
@@ -482,7 +494,7 @@ class ForumManager implements ForumManagerInterface {
   public function unreadTopics($term, $uid) {
     $query = $this->connection->select('node_field_data', 'n');
     $query->join('forum', 'f', '[n].[vid] = [f].[vid] AND [f].[tid] = :tid', [':tid' => $term]);
-    $query->leftJoin('history', 'h', '[n].[nid] = [h].[nid] AND [h].[uid] = :uid', [':uid' => $uid]);
+    $query->leftJoin('history', 'h', "[n].[nid] = [h].[entity_id] AND [h].[entity_type] = 'node' AND [h].[uid] = :uid", [':uid' => $uid]);
     $query->addExpression('COUNT([n].[nid])', 'count');
     return $query
       ->condition('status', 1)
@@ -490,7 +502,7 @@ class ForumManager implements ForumManagerInterface {
       //   field language and just fall back to the default language.
       ->condition('n.default_langcode', 1)
       ->condition('n.created', HISTORY_READ_LIMIT, '>')
-      ->isNull('h.nid')
+      ->isNull('h.entity_id')
       ->addTag('node_access')
       ->execute()
       ->fetchField();
