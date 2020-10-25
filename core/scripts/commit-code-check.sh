@@ -1,4 +1,17 @@
 #!/bin/bash
+#
+# This script performs code quality checks.
+#
+# The script makes the following checks:
+# - Spell checking.
+# - File modes.
+# - No changes to vendor and node_modules.
+# - PHPCS checks php and yaml files.
+# - Eslint checks javascript files.
+# - Checks .es6.js and .js files are equivalent.
+# - Stylelint checks css files.
+# - Checks .pcss.css and .css files are equivalent.
+
 # cSpell:disable
 
 # Function to test for command dependencies.
@@ -16,16 +29,6 @@ red=`tput setaf 1 && tput bold`
 green=`tput setaf 2`
 reset=`tput sgr0`
 
-# Ensure we have all the external tools we need
-if ! command_exists yarn ; then
-  echo "yarn not installed, for instructions visit https://yarnpkg.com/lang/en/docs/install"
-  exit 1
-fi
-if ! command_exists composer ; then
-  echo "composer not installed, for instructions visit https://getcomposer.org/"
-  exit 1
-fi
-
 FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor);
 TOP_LEVEL=$(git rev-parse --show-toplevel);
 # Build up a list of absolute file names.
@@ -37,23 +40,27 @@ done
 # This script assumes that composer install and yarn install have already been
 # run and all dependencies are updated.
 
-printf "Checking changed files...\n"
-
 # Check all files for spelling in one go for better performance.
 if ! [[ "$ABS_FILES" == "" ]] ; then
     cd "$TOP_LEVEL/core"
-    echo -e "CSPELL: checking all files"
+    printf "SPELLCHECK\n"
+    printf -- '-%.0s' {1..100}
+    printf "\n"
     yarn run -s spellcheck -c $TOP_LEVEL/core/.cspell.json $ABS_FILES
     if [ "$?" -ne "0" ] ; then
         # If there are failures set the status to a number other than 0.
         STATUS=1
+        printf "\nCSPELL: ${red}failed${reset}\n\n\n"
     else
-        echo -e "CSPELL: ${green}passed${reset}"
+        printf "\nCSPELL: ${green}passed${reset}\n\n\n"
     fi
     cd "$TOP_LEVEL"
 fi
 
 for FILE in $FILES; do
+    printf "\nCHECKING: %s\n" "$FILE"
+    printf -- '-%.0s' {1..100}
+    printf "\n"
     # Standard checks against all files in commit.
     # Ensure the file still exists (i.e. is not being deleted).
     if [ -a $FILE ] ; then
@@ -64,19 +71,19 @@ for FILE in $FILES; do
           STAT="$(stat -c  "%a" $FILE 2>/dev/null)"
         fi
         if [ "$STAT" -ne "644" ] ; then
-            echo "git pre-commit check failed: file $FILE should be 644 not $STAT"
+            printf "${red}git pre-commit check failed:${reset} file $FILE should be 644 not $STAT\n"
             STATUS=1
         fi
       fi
     fi
     # Don't commit changes to vendor.
     if [[ "$FILE" =~ ^vendor/ ]]; then
-      echo "git pre-commit check failed: file in vendor directory being committed ($FILE). Copy the example.gitignore to .gitignore in Drupal root and unstage any changes in vendor."
+      printf "${red}git pre-commit check failed:${reset} file in vendor directory being committed ($FILE). Copy the example.gitignore to .gitignore in Drupal root and unstage any changes in vendor.\n"
       STATUS=1
     fi
     # Don't commit changes to core/node_modules.
     if [[ "$FILE" =~ ^core/node_modules/ ]]; then
-      echo "git pre-commit check failed: file in core/node_modules directory being committed ($FILE)"
+      printf "${red}git pre-commit check failed:${reset} file in core/node_modules directory being committed ($FILE)\n"
       STATUS=1
     fi
 
@@ -91,7 +98,7 @@ for FILE in $FILES; do
             # If there are failures set the status to a number other than 0.
             STATUS=1
         else
-            echo -e "PHPCS: $FILE ${green}passed${reset}"
+            printf "PHPCS: $FILE ${green}passed${reset}\n"
         fi
 
     fi
@@ -141,7 +148,7 @@ for FILE in $FILES; do
           # If there is no .es6.js file then there should be unless the .js is
           # not really Drupal's.
           if ! [[ "$FILE" =~ ^core/assets/vendor ]] && ! [[ "$FILE" =~ ^core/scripts/js ]] && ! [[ "$FILE" =~ ^core/scripts/css ]] && ! [[ "$FILE" =~ core/postcss.config.js ]] && ! [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]]; then
-            echo -e "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.es6.js"
+            printf "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.es6.js\n"
             STATUS=1
           fi
         fi
@@ -174,7 +181,7 @@ for FILE in $FILES; do
       else
         # If there is no .js source file
         if ! [[ -f "$TOP_LEVEL/$BASENAME.js" ]]; then
-          echo -e "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.js"
+          printf "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.js\n"
           STATUS=1
         fi
       fi
@@ -184,7 +191,7 @@ for FILE in $FILES; do
         cd "$TOP_LEVEL/core"
         # Check the coding standards.
         if [[ -f ".eslintrc.passing.json" ]]; then
-          node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
+          node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE" | indent
           CORRECTJS=$?
           if [ "$CORRECTJS" -ne "0" ] ; then
             # No need to write any output the node command will do this for us.
@@ -241,12 +248,13 @@ for FILE in $FILES; do
         if [ "$?" -ne "0" ] ; then
           STATUS=1
         else
-          echo -e "STYLELINT: $FILE ${green}passed${reset}"
+          printf "STYLELINT: $FILE ${green}passed${reset}\n"
         fi
         cd $TOP_LEVEL
       fi
     fi
 
+    printf "\n\n\n"
 done
 
 exit $STATUS
