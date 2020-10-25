@@ -1,16 +1,6 @@
 #!/bin/bash
 # cSpell:disable
 
-if git rev-parse --verify HEAD >/dev/null 2>&1
-then
-    AGAINST=HEAD
-else
-    # Initial commit: diff against an empty tree object
-    AGAINST=4b825dc642cb6eb9a060e54bf8d69288fbee4904
-fi
-
-BRANCH=`git rev-parse --abbrev-ref HEAD`
-
 # Function to test for command dependencies.
 command_exists () {
     type "$1" &> /dev/null ;
@@ -36,7 +26,7 @@ if ! command_exists composer ; then
   exit 1
 fi
 
-FILES=$(git diff --cached --name-only $AGAINST);
+FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor);
 TOP_LEVEL=$(git rev-parse --show-toplevel);
 # Build up a list of absolute file names.
 ABS_FILES=;
