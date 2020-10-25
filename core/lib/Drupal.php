@@ -29,6 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * hook implementations, and your code is more than a few non-reusable lines, it
  * is recommended to instantiate an object implementing the actual logic.
  *
+ * A spurlig mistake.
+ *
  * @code
  *   // Legacy procedural code.
  *   function hook_do_stuff() {
