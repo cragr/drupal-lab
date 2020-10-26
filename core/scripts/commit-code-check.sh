@@ -26,8 +26,43 @@ red=$(tput setaf 1 && tput bold)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
+CACHED=0
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+      echo "Drupal code quality checks"
+      echo " "
+      echo "options:"
+      echo "-h, --help                show brief help"
+      echo "--cached                  checks staged files"
+      exit 0
+      ;;
+    --cached)
+      CACHED=1
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
 # Gets list of files to check.
-FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor)
+if [[ "$CACHED" == "0" ]]; then
+  # For DrupalCI / default behaviour this is the list of all changes in the
+  # working directory.
+  FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor)
+else
+  # Check staged files only.
+  if git rev-parse --verify HEAD >/dev/null 2>&1
+  then
+    AGAINST=HEAD
+  else
+    # Initial commit: diff against an empty tree object
+    AGAINST=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+  fi
+  FILES=$(git diff --cached --name-only $AGAINST);
+fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
 
@@ -37,26 +72,30 @@ for FILE in $FILES; do
   ABS_FILES="$ABS_FILES $TOP_LEVEL/$FILE"
 done
 
+# Exit early if there are no files.
+if [[ "$ABS_FILES" == "" ]]; then
+  printf "There are no files to check. If you have staged a commit use the --cached option.\n"
+  exit;
+fi;
+
 # This script assumes that composer install and yarn install have already been
 # run and all dependencies are updated.
 FINAL_STATUS=0
 
 # Check all files for spelling in one go for better performance.
-if ! [[ "$ABS_FILES" == "" ]]; then
-  cd "$TOP_LEVEL/core"
-  printf "SPELLCHECK\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-  yarn run -s spellcheck -c $TOP_LEVEL/core/.cspell.json $ABS_FILES
-  if [ "$?" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nCSPELL: ${red}failed${reset}\n\n\n"
-  else
-    printf "\nCSPELL: ${green}passed${reset}\n\n\n"
-  fi
-  cd "$TOP_LEVEL"
+cd "$TOP_LEVEL/core"
+printf "SPELLCHECK\n"
+printf -- '-%.0s' {1..100}
+printf "\n"
+yarn run -s spellcheck -c $TOP_LEVEL/core/.cspell.json $ABS_FILES
+if [ "$?" -ne "0" ]; then
+  # If there are failures set the status to a number other than 0.
+  FINAL_STATUS=1
+  printf "\nCSPELL: ${red}failed${reset}\n\n\n"
+else
+  printf "\nCSPELL: ${green}passed${reset}\n\n\n"
 fi
+cd "$TOP_LEVEL"
 
 for FILE in $FILES; do
   printf "\nCHECKING: %s\n" "$FILE"
@@ -77,6 +116,12 @@ for FILE in $FILES; do
         STATUS=1
       fi
     fi
+  fi
+
+  # Don't commit changes to vendor.
+  if [[ "$FILE" =~ ^vendor/ ]]; then
+    printf "${red}git pre-commit check failed:${reset} file in vendor directory being committed ($FILE)\n"
+    STATUS=1
   fi
 
   # Don't commit changes to core/node_modules.
