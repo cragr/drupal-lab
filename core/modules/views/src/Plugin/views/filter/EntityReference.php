@@ -100,6 +100,12 @@ class EntityReference extends ManyToOne {
     $this->selectionPluginManager = $selection_plugin_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->messenger = $messenger;
+
+    // @todo Unify 'entity field'/'field_name' instead of converting back and
+    // forth. https://www.drupal.org/node/2410779
+    if (isset($this->definition['entity field'])) {
+      $this->definition['field_name'] = $this->definition['entity field'];
+    }
   }
 
   /**
