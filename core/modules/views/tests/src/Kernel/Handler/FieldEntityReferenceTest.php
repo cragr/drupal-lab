@@ -130,7 +130,7 @@ class FieldEntityReferenceTest extends ViewsKernelTestBase {
     $view->setDisplay();
     $view->preExecute([]);
     $view->setExposedInput([
-      'field_test_target_id' => [$this->targetNodes[0]->id()]
+      'field_test_target_id' => [$this->targetNodes[0]->id()],
     ]);
     $this->executeView($view);
 
