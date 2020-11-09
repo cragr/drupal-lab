@@ -2,6 +2,10 @@
 #
 # This script performs code quality checks.
 #
+# @internal
+#   This script is not covered by Drupal core's backwards compatibility promise.
+#   It exists only for core development purposes.
+#
 # The script makes the following checks:
 # - Spell checking.
 # - File modes.
