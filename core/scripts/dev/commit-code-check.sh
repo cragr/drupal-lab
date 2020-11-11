@@ -25,12 +25,8 @@ contains_element() {
   return 1
 }
 
-# Set up variables to make coloured output simple.
-red=$(tput setaf 1 && tput bold)
-green=$(tput setaf 2)
-reset=$(tput sgr0)
-
 CACHED=0
+DRUPALCI=0
 while test $# -gt 0; do
   case "$1" in
     -h|--help)
@@ -39,10 +35,15 @@ while test $# -gt 0; do
       echo "options:"
       echo "-h, --help                show brief help"
       echo "--cached                  checks staged files"
+      echo "--drupalci                a special mode for DrupalCI"
       exit 0
       ;;
     --cached)
       CACHED=1
+      shift
+      ;;
+    --drupalci)
+      DRUPALCI=1
       shift
       ;;
     *)
@@ -53,7 +54,7 @@ done
 
 # Gets list of files to check.
 if [[ "$CACHED" == "0" ]]; then
-  # For DrupalCI / default behaviour this is the list of all changes in the
+  # For DrupalCI / default behavior this is the list of all changes in the
   # working directory.
   FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor)
 else
@@ -66,6 +67,19 @@ else
     AGAINST=4b825dc642cb6eb9a060e54bf8d69288fbee4904
   fi
   FILES=$(git diff --cached --name-only $AGAINST);
+fi
+
+# Set up variables to make colored output simple. Color output is disable on
+# DrupalCI because it is breaks reporting.
+# @todo https://www.drupal.org/project/drupalci_testbot/issues/3181869
+if [[ "$DRUPALCI" == "1" ]]; then
+  red=""
+  green=""
+  reset=""
+else
+  red=$(tput setaf 1 && tput bold)
+  green=$(tput setaf 2)
+  reset=$(tput sgr0)
 fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
@@ -88,23 +102,21 @@ FINAL_STATUS=0
 
 # Check all files for spelling in one go for better performance.
 cd "$TOP_LEVEL/core"
-printf "SPELLCHECK\n"
-printf -- '-%.0s' {1..100}
-printf "\n"
 yarn run -s spellcheck -c $TOP_LEVEL/core/.cspell.json $ABS_FILES
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
   FINAL_STATUS=1
-  printf "\nCSPELL: ${red}failed${reset}\n\n\n"
+  printf "\nCSPELL: ${red}failed${reset}\n"
 else
-  printf "\nCSPELL: ${green}passed${reset}\n\n\n"
+  printf "\nCSPELL: ${green}passed${reset}\n"
 fi
 cd "$TOP_LEVEL"
 
+# Print a line to separate spellcheck output from per file output.
+printf -- '-%.0s' {1..100}
+printf "\n"
+
 for FILE in $FILES; do
-  printf "\nCHECKING: %s\n" "$FILE"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
   STATUS=0;
 
   # Ensure the file still exists (i.e. is not being deleted).
@@ -302,12 +314,20 @@ for FILE in $FILES; do
 
   if [[ "$STATUS" == "1" ]]; then
     FINAL_STATUS=1
-    printf "\n%s ${red}failed${reset}\n" "$FILE"
+    printf "%s ${red}failed${reset}\n" "$FILE"
   else
-    printf "\n%s ${green}passed${reset}\n" "$FILE"
+    printf "%s ${green}passed${reset}\n" "$FILE"
   fi
 
-  printf "\n\n\n"
+  # Print a line to separate each file.
+  printf -- '-%.0s' {1..100}
+  printf "\n"
 done
 
+if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
+  printf "${red}Drupal code quality checks failed.${reset}\n"
+  printf "To reproduce this output locally:\n"
+  printf "* Apply the change as a patch\n"
+  printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh\n"
+fi
 exit $FINAL_STATUS
