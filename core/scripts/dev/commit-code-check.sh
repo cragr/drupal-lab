@@ -106,18 +106,22 @@ yarn run -s spellcheck -c $TOP_LEVEL/core/.cspell.json $ABS_FILES
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
   FINAL_STATUS=1
-  printf "\nCSPELL: ${red}failed${reset}\n"
+  printf "\nCSpell: ${red}failed${reset}\n"
 else
-  printf "\nCSPELL: ${green}passed${reset}\n"
+  printf "\nCSpell: ${green}passed${reset}\n"
 fi
 cd "$TOP_LEVEL"
 
-# Print a line to separate spellcheck output from per file output.
+# Add a separator line to make the output easier to read.
+printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
 for FILE in $FILES; do
   STATUS=0;
+  # Print a line to separate spellcheck output from per file output.
+  printf "Checking %s\n" "$FILE"
+  printf "\n"
 
   # Ensure the file still exists (i.e. is not being deleted).
   if [ -a $FILE ]; then
@@ -314,12 +318,14 @@ for FILE in $FILES; do
 
   if [[ "$STATUS" == "1" ]]; then
     FINAL_STATUS=1
-    printf "%s ${red}failed${reset}\n" "$FILE"
+    # There is no need to print a failure note the fail will be described
+    # already.
   else
     printf "%s ${green}passed${reset}\n" "$FILE"
   fi
 
-  # Print a line to separate each file.
+  # Print a line to separate each file's checks.
+  printf "\n"
   printf -- '-%.0s' {1..100}
   printf "\n"
 done
