@@ -27,7 +27,7 @@
       typeof message === 'string'
         ? Drupal.theme('ajaxProgressMessage', message)
         : '';
-    const throbber = '<div class="ajax-progress__throbber">&nbsp;</div>';
+    const throbber = '<div class="ajax-progress__throbber">&nbsp;&nbsp;</div>';
 
     return `<div class="ajax-progress ajax-progress--throbber">${throbber}${messageMarkup}</div>`;
   };
