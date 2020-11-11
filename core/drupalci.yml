@@ -9,7 +9,7 @@ build:
       # Run code quality checks.
       container_command.commit-checks:
         commands:
-          - "bash core/scripts/dev/commit-code-check.sh"
+          - "bash core/scripts/dev/commit-code-check.sh --drupalci"
         halt-on-fail: true
       # run_tests task is executed several times in order of performance speeds.
       # halt-on-fail can be set on the run_tests tasks in order to fail fast.
