@@ -15,7 +15,7 @@
 
         var classRemove = function classRemove($autoCompleteElem) {
           $autoCompleteElem.removeClass('is-autocompleting');
-          $autoCompleteElem.siblings('[data-drupal-selector="autocomplete-message"]').addClass('hidden2');
+          $autoCompleteElem.siblings('[data-drupal-selector="autocomplete-message"]').addClass('hidden');
         };
 
         $input.on('input autocompletesearch autocompleteresponses', function (event) {
