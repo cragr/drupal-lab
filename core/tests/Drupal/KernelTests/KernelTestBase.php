@@ -219,7 +219,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
 
     // Change the current dir to DRUPAL_ROOT.

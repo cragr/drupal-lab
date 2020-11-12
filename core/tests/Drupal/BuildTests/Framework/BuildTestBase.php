@@ -144,7 +144,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     static::checkClassCommandRequirements();
   }
