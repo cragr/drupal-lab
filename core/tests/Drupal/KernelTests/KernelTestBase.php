@@ -229,7 +229,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Allow tests to compare MarkupInterface objects via assertEquals().

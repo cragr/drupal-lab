@@ -101,7 +101,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     return $this->cachebackends[$bin];
   }
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->cachebackends = [];
     $this->defaultValue = $this->randomMachineName(10);
 

@@ -34,7 +34,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->createMigrationConnection();
     $this->sourceDatabase = Database::getConnection('default', 'migrate_drupal_ui');
