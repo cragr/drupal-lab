@@ -105,7 +105,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     $this->cleanupMigrateConnection();
     parent::tearDown();
     $this->databaseDumpFiles = [];

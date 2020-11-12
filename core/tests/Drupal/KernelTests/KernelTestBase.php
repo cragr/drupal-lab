@@ -603,7 +603,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
       $this->kernel->shutdown();

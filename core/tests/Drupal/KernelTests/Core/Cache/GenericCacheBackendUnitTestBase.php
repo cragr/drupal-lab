@@ -110,7 +110,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->setUpCacheBackend();
   }
 
-  protected function tearDown() {
+  protected function tearDown(): void {
     // Destruct the registered backend, each test will get a fresh instance,
     // properly emptying it here ensure that on persistent data backends they
     // will come up empty the next test.

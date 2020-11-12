@@ -92,7 +92,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     Database::removeConnection('migrate_drupal_ui');
     parent::tearDown();
   }
