@@ -218,7 +218,6 @@ class GDToolkit extends ImageToolkitBase {
     catch (\Throwable $t) {
       $this->logger->error("The image toolkit '@toolkit' failed loading image '@image'. Reported error: @class - @message", [
         '@toolkit' => $this->getPluginId(),
-        '@operation' => $operation,
         '@image' => $this->getSource(),
         '@class' => get_class($t),
         '@message' => $t->getMessage(),
@@ -533,17 +532,15 @@ class GDToolkit extends ImageToolkitBase {
     // ini_get() may return -1 or null for memory_limit to indicate there is no
     // limit set.
     $size = ini_get('memory_limit');
-    $total = (!$size || (int) $size === -1) ? -1 : Bytes::toNumber($size);
-    $used = memory_get_usage(TRUE);
-    $free = $total === -1 ? -1 : $total - $used;
-
-    if ($free === -1) {
+    if (!$size || (int) $size === -1) {
       return;
     }
 
+    $total = Bytes::toNumber($size);
+    $free = $total - memory_get_usage(TRUE);
     $required = (int) ($width * $height * $bytes_per_pixel * $tweak_factor);
 
-    if ($required < $free) {
+    if ($required > $free) {
       throw new \RuntimeException(sprintf("Not enough memory (required: %s, free: %s, total: %s) to perform '%s' for file '%s'",
         format_size($required),
         format_size($free),
