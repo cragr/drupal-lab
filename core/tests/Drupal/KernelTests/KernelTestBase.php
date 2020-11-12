@@ -583,7 +583,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function assertPostConditions() {
+  protected function assertPostConditions(): void {
     // Execute registered Drupal shutdown functions prior to tearing down.
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();
