@@ -3,9 +3,11 @@
 namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
+use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
 
 /**
  * Normalizes a LinkCollection object.
@@ -76,7 +78,20 @@ class LinkCollectionNormalizer extends NormalizerBase {
         $link_key = $is_multiple ? sprintf('%s--%s', $key, $this->hashByHref($link)) : $key;
         $attributes = $link->getTargetAttributes();
         $normalization = array_merge(['href' => $link->getHref()], !empty($attributes) ? ['meta' => $attributes] : []);
-        $normalized[$link_key] = new CacheableNormalization($link, $normalization);
+        // Checking access on links is not about access to the link itself;
+        // it is about whether the current user has access to the route that is
+        // *targeted* by the link. This is done on a "best effort" basis. That
+        // is, some links target routes that depend on a request to determine if
+        // they're accessible or not. Some other links might target routes to
+        // which the current user will clearly not have access, in that case
+        // this code proactively removes those links from the response.
+        $access = $link->getUri()->access(NULL, TRUE);
+        $cacheability = CacheableMetadata::createFromObject($link)->addCacheableDependency($access);
+        // Neutral links are included in the response since access will be
+        // definitively checked when the link is followed.
+        $normalized[$link_key] = !$access->isForbidden()
+          ? new CacheableNormalization($cacheability, $normalization)
+          : new CacheableOmission($cacheability);
       }
     }
     return CacheableNormalization::aggregate($normalized);
