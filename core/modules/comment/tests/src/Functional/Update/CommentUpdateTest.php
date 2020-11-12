@@ -25,11 +25,11 @@ class CommentUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests comment_update_9201().
+   * Tests comment_update_9200().
    *
-   * @see comment_update_9201()
+   * @see comment_update_9200()
    */
-  public function testCommentUpdate9101(): void {
+  public function testCommentUpdate9100(): void {
     $config_factory = \Drupal::configFactory();
 
     $config = $config_factory->get('field.field.node.article.comment');

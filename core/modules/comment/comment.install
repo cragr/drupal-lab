@@ -123,7 +123,7 @@ function comment_update_last_removed() {
 /**
  * Set the default value of 'thread_limit' setting for all comment fields.
  */
-function comment_update_9201(array &$sandbox = NULL): void {
+function comment_update_9200(array &$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config): bool {
     if ($field_config->getType() === 'comment') {
       $field_config->setSetting('thread_limit', [
