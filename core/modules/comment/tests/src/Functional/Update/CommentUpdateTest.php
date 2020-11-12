@@ -38,7 +38,7 @@ class CommentUpdateTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     $config = $config_factory->get('field.field.node.article.comment');
-    $this->assertSame(1, $config->get('settings.thread_limit.depth'));
+    $this->assertSame(2, $config->get('settings.thread_limit.depth'));
     $this->assertSame(CommentItemInterface::THREAD_DEPTH_REPLY_MODE_ALLOW, $config->get('settings.thread_limit.mode'));
   }
 

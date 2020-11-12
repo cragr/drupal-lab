@@ -127,7 +127,7 @@ function comment_update_9200(array &$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config): bool {
     if ($field_config->getType() === 'comment') {
       $field_config->setSetting('thread_limit', [
-        'depth' => 1,
+        'depth' => 2,
         'mode' => CommentItemInterface::THREAD_DEPTH_REPLY_MODE_ALLOW,
       ]);
       return TRUE;
