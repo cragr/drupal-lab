@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Plugin\ImageToolkit;
 
+use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Color;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\Exception\FileException;
@@ -211,6 +212,7 @@ class GDToolkit extends ImageToolkitBase {
 
     // Invalidate the image object and return if the load fails.
     try {
+      $this->isMemoryAvailable('load', $this->getWidth(), $this->getHeight());
       $resource = $function($this->getSource());
     }
     catch (\Throwable $t) {
@@ -219,7 +221,7 @@ class GDToolkit extends ImageToolkitBase {
         '@operation' => $operation,
         '@image' => $this->getSource(),
         '@class' => get_class($t),
-        '@message' =>  $t->getMessage(),
+        '@message' => $t->getMessage(),
       ]);
       $this->preLoadInfo = NULL;
       return FALSE;
@@ -492,6 +494,64 @@ class GDToolkit extends ImageToolkitBase {
    */
   protected static function supportedTypes() {
     return [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
+  }
+
+  /**
+   * Checks that there is enough memory available for a GD operation.
+   *
+   * GD functions that create new GD resources will fail fatally if there is
+   * not enough memory available to perform the operation. This method checks
+   * if there is enough memory available before calling the GD function. The
+   * algorithm implemented follows the one described in
+   * http://php.net/manual/en/function.imagecreatetruecolor.php#99623.
+   *
+   * @param string $operation
+   *   The operation for which memory is checked.
+   * @param int $width
+   *   The image width.
+   * @param int $height
+   *   The image height.
+   * @param int $bits_per_pixel
+   *   (optional) The bits per pixel of the image. Defaults to 31, as GD
+   *   internally manages RGB with 8 bits each color + 7 bits for the alpha
+   *   channel.
+   * @param float $tweak_factor
+   *   (optional) A tweak factor as described in
+   *   http://php.net/manual/en/function.imagecreatetruecolor.php#99623.
+   *   Defaults to 1.7.
+   *
+   * @see http://php.net/manual/en/function.imagecreatetruecolor.php#99623
+   *
+   * @throws \RuntimeException
+   *   If the operation can not be performed.
+   */
+  public function isMemoryAvailable(string $operation, int $width, int $height, int $bits_per_pixel = 31, float $tweak_factor = 1.7): void {
+    // Bytes per pixel need to accommodate enough bytes to store all the bits
+    // needed.
+    $bytes_per_pixel = ceil($bits_per_pixel / 8);
+
+    // ini_get() may return -1 or null for memory_limit to indicate there is no
+    // limit set.
+    $size = ini_get('memory_limit');
+    $total = (!$size || (int) $size === -1) ? -1 : Bytes::toNumber($size);
+    $used = memory_get_usage(TRUE);
+    $free = $total === -1 ? -1 : $total - $used;
+
+    if ($free === -1) {
+      return;
+    }
+
+    $required = (int) ($width * $height * $bytes_per_pixel * $tweak_factor);
+
+    if ($required < $free) {
+      throw new \RuntimeException(sprintf("Not enough memory (required: %s, free: %s, total: %s) to perform '%s' for file '%s'",
+        format_size($required),
+        format_size($free),
+        format_size($total),
+        $operation,
+        $this->getSource()
+      ));
+    }
   }
 
 }
