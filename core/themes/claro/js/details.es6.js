@@ -15,7 +15,7 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
-      $(context)
+      $ (context)
         .once('claroDetails')
         .on('click', (event) => {
           if (event.target.nodeName === 'SUMMARY') {

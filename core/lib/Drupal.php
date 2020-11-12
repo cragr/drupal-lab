@@ -29,6 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * hook implementations, and your code is more than a few non-reusable lines, it
  * is recommended to instantiate an object implementing the actual logic.
  *
+ * Spurling mistake.
+ *
  * @code
  *   // Legacy procedural code.
  *   function hook_do_stuff() {
@@ -142,7 +144,7 @@ class Drupal {
   /**
    * The currently active container object, or NULL if not initialized yet.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface|null
+   * @var
    */
   protected static $container;
 
