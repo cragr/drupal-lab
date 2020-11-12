@@ -8,6 +8,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Core\Render\Element;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -60,6 +61,51 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
   }
 
   /**
+   * Tests threaded comments with no depth limitation.
+   *
+   * @covers \Drupal\comment\CommentViewBuilder::buildComponents
+   */
+  public function testNoMaxDepth(): void {
+    // Check that we're using not limited comment threading.
+    $this->assertSame(CommentManagerInterface::COMMENT_MODE_THREADED, FieldConfig::loadByName('entity_test', 'entity_test', 'comment')->getSetting('default_mode'));
+
+    $this->createTestComments();
+
+    /** @var \Drupal\Core\Entity\EntityViewBuilderInterface $view_builder */
+    $view_builder = $this->container->get('entity_type.manager')->getViewBuilder('comment');
+
+    // Reply to 'deepest' comment.
+    $reply = $this->createComment(['pid' => $this->comment[0][0][0]['entity']->id()]);
+    // Reply to reply.
+    $reply_to_reply = $this->createComment(['pid' => $reply->id()]);
+    // Reply to reply of reply.
+    $reply_to_reply_of_reply = $this->createComment(['pid' => $reply_to_reply->id()]);
+
+    // The view builder is responsible to compute the indent for each comment.
+    // @see \Drupal\comment\CommentViewBuilder::buildComponents()
+    $build = $view_builder->viewMultiple([
+      $this->comment[0]['entity'],
+      $this->comment[0][0]['entity'],
+      $this->comment[0][1]['entity'],
+      $this->comment[0][0][0]['entity'],
+      $reply,
+      $reply_to_reply,
+      $reply_to_reply_of_reply,
+    ]);
+    $build = $view_builder->buildMultiple($build);
+
+    // Checking indents of each comment. Note that the build item
+    // #comment_indent value is relative to the previous comment.
+    $this->assertCommentIndent($this->comment[0]['entity'], 0, $build);
+    $this->assertCommentIndent($this->comment[0][0]['entity'], 1, $build);
+    $this->assertCommentIndent($this->comment[0][1]['entity'], 0, $build);
+    $this->assertCommentIndent($this->comment[0][0][0]['entity'], 1, $build);
+    $this->assertCommentIndent($reply, 1, $build);
+    $this->assertCommentIndent($reply_to_reply, 1, $build);
+    $this->assertCommentIndent($reply_to_reply_of_reply, 1, $build);
+  }
+
+  /**
    * Tests threaded comments with depth limitation when replying is allowed.
    *
    * @covers \Drupal\comment\CommentViewBuilder::buildComponents
@@ -91,25 +137,48 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
       $reply,
       $reply_to_reply,
     ]);
-
     $build = $view_builder->buildMultiple($build);
 
     // Checking indents of each comment. Note that the build item
     // #comment_indent value is relative to the previous comment.
-    $this->assertSame($this->comment[0]['entity']->id(), $build[0]['#comment']->id());
-    $this->assertSame(0, $build[0]['#comment_indent']);
-    $this->assertSame($this->comment[0][0]['entity']->id(), $build[1]['#comment']->id());
-    $this->assertSame(1, $build[1]['#comment_indent']);
-    $this->assertSame($this->comment[0][1]['entity']->id(), $build[2]['#comment']->id());
-    $this->assertSame(0, $build[2]['#comment_indent']);
-    $this->assertSame($this->comment[0][0][0]['entity']->id(), $build[3]['#comment']->id());
-    $this->assertSame(1, $build[3]['#comment_indent']);
+    $this->assertCommentIndent($this->comment[0]['entity'], 0, $build);
+    $this->assertCommentIndent($this->comment[0][0]['entity'], 1, $build);
+    $this->assertCommentIndent($this->comment[0][1]['entity'], 0, $build);
+    $this->assertCommentIndent($this->comment[0][0][0]['entity'], 1, $build);
     // Check that the reply to deepest comment shows both with the same indent.
-    $this->assertSame($reply->id(), $build[4]['#comment']->id());
-    $this->assertSame(0, $build[4]['#comment_indent']);
+    $this->assertCommentIndent($reply, 0, $build);
     // Check that the reply to reply has the same indent.
-    $this->assertSame($reply_to_reply->id(), $build[5]['#comment']->id());
-    $this->assertSame(0, $build[5]['#comment_indent']);
+    $this->assertCommentIndent($reply_to_reply, 0, $build);
+
+    // Change the reply mode in order to test that, when reply to the deepest
+    // comment is denied, the thread still shows with the limited depth.
+    FieldConfig::loadByName('entity_test', 'entity_test', 'comment')
+      ->setSetting('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED_DEPTH_LIMIT)
+      ->setSetting('thread_limit', [
+        'depth' => 3,
+        'mode' => CommentItemInterface::THREAD_DEPTH_REPLY_MODE_DENY,
+      ])->save();
+
+    // Rebuild comments.
+    $build = $view_builder->viewMultiple([
+      $this->comment[0]['entity'],
+      $this->comment[0][0]['entity'],
+      $this->comment[0][1]['entity'],
+      $this->comment[0][0][0]['entity'],
+      $reply,
+      $reply_to_reply,
+    ]);
+    $build = $view_builder->buildMultiple($build);
+
+    // Checking that the indents are kept.
+    $this->assertCommentIndent($this->comment[0]['entity'], 0, $build);
+    $this->assertCommentIndent($this->comment[0][0]['entity'], 1, $build);
+    $this->assertCommentIndent($this->comment[0][1]['entity'], 0, $build);
+    $this->assertCommentIndent($this->comment[0][0][0]['entity'], 1, $build);
+    // Check that the reply to deepest comment shows both with the same indent.
+    $this->assertCommentIndent($reply, 0, $build);
+    // Check that the reply to reply has the same indent.
+    $this->assertCommentIndent($reply_to_reply, 0, $build);
   }
 
   /**
@@ -135,6 +204,27 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
     $this->assertCommentHasReplyLink($this->comment[0][1]['entity']);
     // Check that replying to comments on the deepest level is denied.
     $this->assertCommentHasNotReplyLink($this->comment[0][0][0]['entity']);
+  }
+
+  /**
+   * Asserts that a comment has an expected indent within a build.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment to be checked.
+   * @param int $expected_indent
+   *   The expected comment indent. Note that the comment indent value is
+   *   relative to the previous comment.
+   * @param array $build
+   *   A render array that renders a list of comments.
+   */
+  protected function assertCommentIndent(CommentInterface $comment, int $expected_indent, array $build): void {
+    foreach (Element::children($build) as $delta) {
+      if ($build[$delta]['#comment']->id() === $comment->id()) {
+        $this->assertSame($expected_indent, $build[$delta]['#comment_indent']);
+        return;
+      }
+    }
+    $this->fail("Comment with ID {$comment->id()} not found in the build.");
   }
 
   /**

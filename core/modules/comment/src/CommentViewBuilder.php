@@ -122,13 +122,15 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     // Compute the comment maximum indent if any.
     $max_indent = NULL;
+    // The maximum indent could determined only on non-orphan comments.
     if ($commented_entity) {
-      // The maximum indent could determined only on non-orphan comments.
-      $thread_limit_settings = $entity->getCommentedEntity()
+      $field_settings = $commented_entity
         ->getFieldDefinition($entity->getFieldName())
-        ->getSetting('thread_limit');
-      assert($thread_limit_settings['depth'] >= 2, 'Thread depth limit should be greater than or equal to 2.');
-      $max_indent = $thread_limit_settings['mode'] === CommentItemInterface::THREAD_DEPTH_REPLY_MODE_ALLOW ? $thread_limit_settings['depth'] - 1 : NULL;
+        ->getSettings();
+      if ($field_settings['default_mode'] === CommentManagerInterface::COMMENT_MODE_THREADED_DEPTH_LIMIT) {
+        assert($field_settings['thread_limit']['depth'] >= 2, 'Thread depth limit should be greater than or equal to 2.');
+        $max_indent = $field_settings['thread_limit']['depth'] - 1;
+      }
     }
 
     parent::buildComponents($build, $entities, $displays, $view_mode);
