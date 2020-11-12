@@ -69,7 +69,7 @@ else
   FILES=$(git diff --cached --name-only $AGAINST);
 fi
 
-# Set up variables to make colored output simple. Color output is disable on
+# Set up variables to make colored output simple. Color output is disabled on
 # DrupalCI because it is breaks reporting.
 # @todo https://www.drupal.org/project/drupalci_testbot/issues/3181869
 if [[ "$DRUPALCI" == "1" ]]; then
