@@ -69,6 +69,13 @@ else
   FILES=$(git diff --cached --name-only $AGAINST);
 fi
 
+# If the FILES is empty the assume we're on a branch and we want to diff
+# against the Drupal branch. This always DrupalCI to do MR testing.
+if [[ "$FILES" == "" ]]; then
+  AGAINST=$(php -r "include 'vendor/autoload.php'; print preg_replace('#\.[0-9]+-dev#', '.x', \Drupal::VERSION);")
+  FILES=$(git diff --name-only $AGAINST HEAD);
+fi
+
 # Set up variables to make colored output simple. Color output is disabled on
 # DrupalCI because it is breaks reporting.
 # @todo https://www.drupal.org/project/drupalci_testbot/issues/3181869
