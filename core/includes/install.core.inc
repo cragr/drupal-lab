@@ -1906,7 +1906,7 @@ function _install_module_batch($module, $module_name, &$context) {
  */
 function install_check_translations($install_state) {
   if (!is_array($install_state) && (count(func_get_args()) === 2)) {
-    @trigger_error('Calling install_check_translations() with $langcode and $server_pattern arguments instead of the $install_state argument is deprecated is deprecated in drupal:9.2.0. The $install_state argument will be the only accepted parameter in drupal:10.0.0. See https://www.drupal.org/node/3182651', E_USER_DEPRECATED);
+    @trigger_error('Calling install_check_translations() with $langcode and $server_pattern arguments instead of the $install_state argument is deprecated in drupal:9.2.0. The $install_state argument will be the only accepted parameter in drupal:10.0.0. See https://www.drupal.org/node/3182651', E_USER_DEPRECATED);
     $site_path = \Drupal::getContainer()->getParameter('site.path');
     $install_state = [
       'parameters' => [
