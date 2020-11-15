@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
+use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\LogicalNot;
 
@@ -62,7 +63,14 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
-   * @todo
+   * Returns the querystring parameters of an URL.
+   *
+   * @param Drupal\Core\Url|string $url
+   *   An URL object or string.
+   *
+   * @return array
+   *   An associative array of querystring parameters, having the parameter
+   *   names as keys and the parameter values as values.
    */
   private function getUrlQueryStringParameters($url): array {
     if ($url instanceof Url) {
@@ -779,7 +787,10 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
-   * @todo
+   * Asserts that the querystring parameters equal an expected set.
+   *
+   * @param Drupal\Core\Url|string $url
+   *   The expectation URL object or string.
    */
   public function urlQuerystringEquals($url): void {
     if (func_num_args() > 1) {
@@ -787,11 +798,15 @@ class WebAssert extends MinkWebAssert {
     }
     $expected_parameters = $this->getUrlQueryStringParameters($url);
     $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
-    $this->assertEquals($expected_parameters, $actual_parameters, 'Querystring parameters should be equal.');
+    $constraint = new IsEqual($expected_parameters);
+    Assert::assertThat($actual_parameters, $constraint, 'Querystring parameters should be equal.');
   }
 
   /**
-   * @todo
+   * Asserts that the querystring parameters do not equal an expected set.
+   *
+   * @param Drupal\Core\Url|string $url
+   *   The expectation URL object or string.
    */
   public function urlQuerystringDoesNotEqual($url): void {
     if (func_num_args() > 1) {
@@ -799,7 +814,10 @@ class WebAssert extends MinkWebAssert {
     }
     $expected_parameters = $this->getUrlQueryStringParameters($url);
     $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
-    $this->assertNotEquals($expected_parameters, $actual_parameters, 'Querystring parameters should not be equal.');
+    $constraint = new LogicalNot(
+      new IsEqual($expected_parameters)
+    );
+    Assert::assertThat($actual_parameters, $constraint, 'Querystring parameters should not be equal.');
   }
 
   /**
