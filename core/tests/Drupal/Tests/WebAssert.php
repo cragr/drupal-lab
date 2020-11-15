@@ -10,6 +10,7 @@ use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
@@ -798,8 +799,13 @@ class WebAssert extends MinkWebAssert {
     }
     $expected_parameters = $this->getUrlQueryStringParameters($url);
     $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
+    $message = sprintf(
+      'Querystring should be equal to \'%s\', found \'%s\'.',
+      UrlHelper::buildQuery($expected_parameters),
+      UrlHelper::buildQuery($actual_parameters)
+    );
     $constraint = new IsEqual($expected_parameters);
-    Assert::assertThat($actual_parameters, $constraint, 'Querystring parameters should be equal.');
+    Assert::assertThat($actual_parameters, $constraint, $message);
   }
 
   /**
