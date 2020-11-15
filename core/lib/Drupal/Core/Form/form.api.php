@@ -187,6 +187,12 @@ function hook_ajax_render_alter(array &$data) {
  * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
  * called first followed by the more specific.
  *
+ * When you use form elements to expand simple form structures to their complex
+ * internal elements, hook_form_alter no longer works and you need to switch to
+ * an alternative :
+ *  1.#after_build
+ *  2.#process
+ *
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
