@@ -180,18 +180,41 @@ function hook_ajax_render_alter(array &$data) {
  * The call order is as follows: all existing form alter functions are called
  * for module A, then all for module B, etc., followed by all for any base
  * theme(s), and finally for the theme itself. The module order is determined
- * by system weight, then by module name.
+ * by hook_module_implements_alter(), then by system weight, and then by module
+ * name.
  *
  * Within each module, form alter hooks are called in the following order:
  * first, hook_form_alter(); second, hook_form_BASE_FORM_ID_alter(); third,
  * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
  * called first followed by the more specific.
  *
- * When you use form elements to expand simple form structures to their complex
- * internal elements, hook_form_alter no longer works and you need to switch to
- * an alternative :
- *  1.#after_build
- *  2.#process
+ * For some use cases, form alter hooks may not provide an adequate glimpse at
+ * the form array. Forms are built in phases and the form alter hooks are some
+ * of the earliest places to alter the form. Your desired change may require
+ * later changes to already be in place for them to work properly.
+ *
+ * Here are some additional ways to alter a form:
+ *
+ * 1. The "form" #type's default properties are merged into the form array. The
+ *    defaults can be altered in hook_element_info_alter().
+ * 2. The three kinds of form_alter hooks are run (described above).
+ * 3. The form array's #process property contains an array of functions. These
+ *    functions allow for elements to expand to multiple elements, e.g., radios,
+ *    checkboxes and files. Any of the previous form alteration methods can
+ *    alter this list of functions.
+ * 4. Then, recursively, for each element in the form:
+ *    a. The element's #type default info is merged. Same as #1 above.
+ *    b. The element's #process functions are run. Same as #3 above.
+ *    c. The element's #after_build functions are run. Same as #5 below.
+ * 5. The form array's #after_build property contains an array of functions.
+ *    These functions allow the form to be altered before the form finishes
+ *    building and is cached. Any of the previous form alteration methods can
+ *    alter this list of functions.
+ * 6. Any form element (including the root form) can have a #pre_render property
+ *    that contains an array of functions. These functions are run when the form
+ *    is being rendered and should only be used to alter the rendering and not
+ *    for any significant form alterations. Any of the previous form alteration
+ *    methods can alter this list of functions.
  *
  * @param $form
  *   Nested array of form elements that comprise the form.
