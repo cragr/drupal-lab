@@ -51,6 +51,7 @@ class ConfirmFormTest extends BrowserTestBase {
     $this->clickLink(t('ConfirmFormArrayPathTestForm::getCancelText().'));
     // Verify that the form's complex cancel link was followed.
     $this->assertSession()->addressEquals('form-test/confirm-form?destination=admin/config');
+    $this->assertSession()->urlQuerystringEquals('form-test/confirm-form?destination=admin/config');
   }
 
   /**

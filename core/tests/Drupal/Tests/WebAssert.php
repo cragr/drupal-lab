@@ -62,6 +62,18 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * @todo
+   */
+  private function getUrlQueryStringParameters($url): array {
+    if ($url instanceof Url) {
+      $url = $url->setAbsolute()->toString();
+    }
+    $query = parse_url($url, PHP_URL_QUERY) ?? '';
+    parse_str($query, $parameters);
+    return $parameters ?? [];
+  }
+
+  /**
    * Asserts that the current response header has a specific entry.
    *
    * @param string $name
@@ -764,6 +776,30 @@ class WebAssert extends MinkWebAssert {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::addressNotEquals($page);
+  }
+
+  /**
+   * @todo
+   */
+  public function urlQuerystringEquals($url): void {
+    if (func_num_args() > 1) {
+      throw new \ArgumentCountError('Called ' . __METHOD__ . ' with more than one argument');
+    }
+    $expected_parameters = $this->getUrlQueryStringParameters($url);
+    $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
+    $this->assertEquals($expected_parameters, $actual_parameters, 'Querystring parameters should be equal.');
+  }
+
+  /**
+   * @todo
+   */
+  public function urlQuerystringDoesNotEqual($url): void {
+    if (func_num_args() > 1) {
+      throw new \ArgumentCountError('Called ' . __METHOD__ . ' with more than one argument');
+    }
+    $expected_parameters = $this->getUrlQueryStringParameters($url);
+    $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
+    $this->assertNotEquals($expected_parameters, $actual_parameters, 'Querystring parameters should not be equal.');
   }
 
   /**
