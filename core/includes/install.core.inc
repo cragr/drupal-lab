@@ -1905,10 +1905,9 @@ function _install_module_batch($module, $module_name, &$context) {
  *   will contain a requirements error with detailed information.
  */
 function install_check_translations($install_state) {
-  $site_path = \Drupal::getContainer()->getParameter('site.path');
-
   if (!is_array($install_state) && (count(func_get_args()) === 2)) {
     @trigger_error('Calling install_check_translations() with $langcode and $server_pattern arguments instead of the $install_state argument is deprecated is deprecated in drupal:9.2.0. The $install_state argument will be the only accepted parameter in drupal:10.0.0. See https://www.drupal.org/node/3182651', E_USER_DEPRECATED);
+    $site_path = \Drupal::getContainer()->getParameter('site.path');
     $install_state = [
       'parameters' => [
         'langcode' => func_get_arg(0),
@@ -1928,17 +1927,11 @@ function install_check_translations($install_state) {
   $translations_directory_exists = FALSE;
   $online = FALSE;
 
+  // Attempt to create or make writable the translations directory. This will
+  // recursively attempt to create the directory, if possible, so by default it
+  // will also attempt to create the files directory if it does not exist yet.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-
-  // If the translations directory is a subdirectory of the files directory,
-  // first attempt to create or make writable the files directory.
-  $files_directory = $site_path . '/files';
-  if (str_starts_with($translations_directory, $files_directory)) {
-    $file_system->prepareDirectory($files_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
-  }
-
-  // Then, attempt to create or make writable the translations directory.
   $file_system->prepareDirectory($translations_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
   // Get values so the requirements errors can be specific.
