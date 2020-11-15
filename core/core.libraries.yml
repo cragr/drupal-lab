@@ -75,6 +75,7 @@ drupal.ajax:
     - core/drupalSettings
     - core/drupal.progress
     - core/jquery.once
+    - core/loadjs
 
 drupal.announce:
   version: VERSION
@@ -83,6 +84,16 @@ drupal.announce:
   dependencies:
     - core/drupal
     - core/drupal.debounce
+
+loadjs:
+  remote: https://github.com/muicss/loadjs
+  version: 4.2.0
+  license:
+    name: MIT
+    url: https://github.com/muicss/loadjs/blob/master/LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/loadjs/loadjs.min.js: { minified: true }
 
 drupal.autocomplete:
   version: VERSION

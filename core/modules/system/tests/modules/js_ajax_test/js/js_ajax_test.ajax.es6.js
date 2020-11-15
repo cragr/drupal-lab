@@ -26,4 +26,27 @@
       `<div id="js_ajax_test_form_element">${JSON.stringify(data)}</div>`,
     );
   };
+
+  /**
+   * Test Ajax execution Order.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   {@link Drupal.Ajax} object created by {@link Drupal.Ajax}.
+   * @param {object} response
+   *   The response from the Ajax request.
+   * @param {string} response.selector
+   *   A jQuery selector string.
+   */
+  Drupal.AjaxCommands.prototype.jsAjaxTestInsertPromise = function (
+    ajax,
+    response,
+  ) {
+    const exec = $.Deferred();
+    setTimeout(() => {
+      this.insert(ajax, response);
+      exec.resolve();
+    }, Math.random() * 500);
+
+    return exec.promise();
+  };
 })(jQuery, Drupal);

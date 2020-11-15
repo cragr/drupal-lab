@@ -3,9 +3,11 @@
 namespace Drupal\js_ajax_test\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\js_ajax_test\Ajax\JsAjaxTestCommand;
+use Drupal\js_ajax_test\Ajax\JsAjaxTestCommandInsertPromise;
 
 /**
  * Test form for js_ajax_test
@@ -43,6 +45,21 @@ class JsAjaxTestForm extends FormBase {
         'wrapper' => 'js_ajax_test_form_wrapper',
       ],
     ];
+
+    // Button to test for the waitForButton() assertion.
+    $form['test_execution_order_button'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Execute commands button'),
+      '#button_type' => 'primary',
+      '#ajax' => [
+        'callback' => [static::class, 'executeCommands'],
+        'progress' => [
+          'type' => 'throbber',
+          'message' => NULL,
+        ],
+        'wrapper' => 'js_ajax_test_form_wrapper',
+      ],
+    ];
     return $form;
   }
 
@@ -52,6 +69,22 @@ class JsAjaxTestForm extends FormBase {
   public static function addButton(array $form, FormStateInterface $form_state) {
     return (new AjaxResponse())
       ->addCommand(new JsAjaxTestCommand());
+  }
+
+  /**
+   * Ajax callback for the "Execute commands button" button.
+   */
+  public static function executeCommands(array $form, FormStateInterface $form_state) {
+    $selector = '#js_ajax_test_form_wrapper';
+    $response = new AjaxResponse();
+
+    $response->addCommand(new AppendCommand($selector, '1'));
+    $response->addCommand(new JsAjaxTestCommandInsertPromise($selector, '2'));
+    $response->addCommand(new AppendCommand($selector, '3'));
+    $response->addCommand(new AppendCommand($selector, '4'));
+    $response->addCommand(new JsAjaxTestCommandInsertPromise($selector, '5'));
+
+    return $response;
   }
 
   /**

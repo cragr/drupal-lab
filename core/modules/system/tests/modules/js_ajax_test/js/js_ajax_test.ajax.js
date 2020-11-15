@@ -15,4 +15,16 @@
     };
     $domElement.html("<div id=\"js_ajax_test_form_element\">".concat(JSON.stringify(data), "</div>"));
   };
+
+  Drupal.AjaxCommands.prototype.jsAjaxTestInsertPromise = function (ajax, response) {
+    var _this = this;
+
+    var exec = $.Deferred();
+    setTimeout(function () {
+      _this.insert(ajax, response);
+
+      exec.resolve();
+    }, Math.random() * 500);
+    return exec.promise();
+  };
 })(jQuery, Drupal);

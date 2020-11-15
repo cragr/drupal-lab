@@ -11,7 +11,7 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings) {
+(function ($, window, Drupal, drupalSettings, loadjs) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -995,53 +995,77 @@
     // Track if any command is altering the focus so we can avoid changing the
     // focus set by the Ajax command.
     let focusChanged = false;
-    Object.keys(response || {}).forEach((i) => {
-      if (response[i].command && this.commands[response[i].command]) {
-        this.commands[response[i].command](this, response[i], status);
-        if (
-          response[i].command === 'invoke' &&
-          response[i].method === 'focus'
-        ) {
-          focusChanged = true;
-        }
-      }
-    });
+    return (
+      Object.keys(response || {})
+        .reduce(
+          // Add all commands to a single execution queue.
+          (executionQueue, key) =>
+            executionQueue.then(() => {
+              const { command } = response[key];
+              if (command && this.commands[command]) {
+                if (command === 'invoke' && response[key].method === 'focus') {
+                  focusChanged = true;
+                }
 
-    // If the focus hasn't be changed by the ajax commands, try to refocus the
-    // triggering element or one of its parents if that element does not exist
-    // anymore.
-    if (
-      !focusChanged &&
-      this.element &&
-      !$(this.element).data('disable-refocus')
-    ) {
-      let target = false;
+                // When a commands returns a promise, the execution of the rest
+                // of the commands will stop until this promise has been
+                // fulfilled. Usually it is used to wait until the JavaScript
+                // added by the 'add_js' command has loaded before continuing
+                // the execution of the commands.
+                return this.commands[command](this, response[key], status);
+              }
+            }),
+          // Use jQuery deferred instead of native promises to support IE11.
+          $.Deferred().resolve().promise(),
+        )
+        // If the focus hasn't be changed by the ajax commands, try to refocus the
+        // triggering element or one of its parents if that element does not exist
+        // anymore.
+        .then(() => {
+          if (
+            !focusChanged &&
+            this.element &&
+            !$(this.element).data('disable-refocus')
+          ) {
+            let target = false;
 
-      for (let n = elementParents.length - 1; !target && n >= 0; n--) {
-        target = document.querySelector(
-          `[data-drupal-selector="${elementParents[n].getAttribute(
-            'data-drupal-selector',
-          )}"]`,
-        );
-      }
+            for (let n = elementParents.length - 1; !target && n >= 0; n--) {
+              target = document.querySelector(
+                `[data-drupal-selector="${elementParents[n].getAttribute(
+                  'data-drupal-selector',
+                )}"]`,
+              );
+            }
 
-      if (target) {
-        $(target).trigger('focus');
-      }
-    }
+            if (target) {
+              $(target).trigger('focus');
+            }
+          }
 
-    // Reattach behaviors, if they were detached in beforeSerialize(). The
-    // attachBehaviors() called on the new content from processing the response
-    // commands is not sufficient, because behaviors from the entire form need
-    // to be reattached.
-    if (this.$form && document.body.contains(this.$form.get(0))) {
-      const settings = this.settings || drupalSettings;
-      Drupal.attachBehaviors(this.$form.get(0), settings);
-    }
+          // Reattach behaviors, if they were detached in beforeSerialize(). The
+          // attachBehaviors() called on the new content from processing the response
+          // commands is not sufficient, because behaviors from the entire form need
+          // to be reattached.
+          if (this.$form && document.body.contains(this.$form.get(0))) {
+            const settings = this.settings || drupalSettings;
+            Drupal.attachBehaviors(this.$form.get(0), settings);
+          }
 
-    // Remove any response-specific settings so they don't get used on the next
-    // call by mistake.
-    this.settings = null;
+          // Remove any response-specific settings so they don't get used on the next
+          // call by mistake.
+          this.settings = null;
+        })
+        .catch((error) =>
+          console.error(
+            Drupal.t(
+              'An error occurred during the execution of the Ajax response: !error',
+              {
+                '!error': error,
+              },
+            ),
+          ),
+        )
+    );
   };
 
   /**
@@ -1579,5 +1603,55 @@
       }
       messages.add(response.message, response.messageOptions);
     },
+
+    /**
+     * Command to add JS.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {Array} response.data
+     *   A string that contains the JS files to be added.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     */
+    add_js(ajax, response, status) {
+      const deferred = $.Deferred();
+      const parentEl = document.querySelector(response.selector || 'body');
+      const settings = ajax.settings || drupalSettings;
+      const scriptsSrc = response.data.map((script) => {
+        // loadjs requires a unique ID, AJAX instances' `instanceIndex` are
+        // guaranteed to be unique.
+        // @see Drupal.behaviors.AJAX.detach
+        const uniqueBundleID = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleID, {
+          async: !!script.async,
+          before(path, scriptEl) {
+            if (script.defer) {
+              scriptEl.defer = true;
+            }
+            // To avoid synchronous XMLHttpRequest on the main thread and break
+            // load dependency, it should not use jQuery.
+            parentEl.appendChild(scriptEl);
+            // Return `false` to bypass loadjs' default DOM insertion mechanism.
+            return false;
+          },
+        });
+        return uniqueBundleID;
+      });
+      loadjs.ready(scriptsSrc, {
+        success() {
+          Drupal.attachBehaviors(parentEl, settings);
+          // All JS files were loaded and new and old behaviors have
+          // been attached, resolve the promise and let the rest of the commands
+          // execute.
+          deferred.resolve();
+        },
+      });
+      // Returns the promise so that the next commands waits on the completion
+      // of this one to execute, ensuring the JS is loaded before executing.
+      return deferred.promise();
+    },
   };
-})(jQuery, window, Drupal, drupalSettings);
+})(jQuery, window, Drupal, drupalSettings, loadjs);
