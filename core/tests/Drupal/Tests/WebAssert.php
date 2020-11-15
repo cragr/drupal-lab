@@ -803,24 +803,6 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
-   * Asserts that the querystring parameters do not equal an expected set.
-   *
-   * @param Drupal\Core\Url|string $url
-   *   The expectation URL object or string.
-   */
-  public function urlQuerystringDoesNotEqual($url): void {
-    if (func_num_args() > 1) {
-      throw new \ArgumentCountError('Called ' . __METHOD__ . ' with more than one argument');
-    }
-    $expected_parameters = $this->getUrlQueryStringParameters($url);
-    $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
-    $constraint = new LogicalNot(
-      new IsEqual($expected_parameters)
-    );
-    Assert::assertThat($actual_parameters, $constraint, 'Querystring parameters should not be equal.');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function addressMatches($regex) {
