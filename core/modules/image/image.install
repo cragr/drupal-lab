@@ -78,3 +78,24 @@ function image_requirements($phase) {
 function image_update_last_removed() {
   return 8201;
 }
+
+/**
+ * Add the 'lazy_loading_priority' setting to all image field formatter instances.
+ */
+function image_update_9101(&$sandbox) {
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  foreach ($storage->loadMultiple() as $id => $view_display) {
+    $changed = FALSE;
+    /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
+    foreach ($view_display->getComponents() as $field => $component) {
+      if (isset($component['type']) && ($component['type'] === 'image')) {
+        $component['settings']['lazy_loading_settings']['lazy_loading_priority'] = 'lazy';
+        $view_display->setComponent($field, $component);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $view_display->save();
+    }
+  }
+}

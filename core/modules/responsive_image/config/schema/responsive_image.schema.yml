@@ -67,3 +67,16 @@ field.formatter.settings.responsive_image:
     image_link:
       type: string
       label: 'Link image to'
+    lazy_loading_settings:
+      type: mapping
+      label: 'Lazy loading settings'
+      mapping:
+        lazy_loading_priority:
+          type: string
+          label: 'Lazy loading priority'
+        lazy_loading_image_width:
+          type: integer
+          label: 'Image default width'
+        lazy_loading_image_height:
+          type: integer
+          label: 'Image default height'

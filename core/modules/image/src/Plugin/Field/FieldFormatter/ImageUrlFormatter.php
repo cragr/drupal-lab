@@ -35,6 +35,7 @@ class ImageUrlFormatter extends ImageFormatter {
     $element = parent::settingsForm($form, $form_state);
 
     unset($element['image_link']);
+    unset($element['lazy_loading_settings']);
 
     return $element;
   }

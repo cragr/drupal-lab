@@ -102,6 +102,8 @@ class ImageFormatter extends ImageFormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $image_styles = image_style_options(FALSE);
     $description_link = Link::fromTextAndUrl(
       $this->t('Configure Image Styles'),
@@ -161,7 +163,7 @@ class ImageFormatter extends ImageFormatterBase {
       $summary[] = $link_types[$image_link_setting];
     }
 
-    return $summary;
+    return array_merge($summary, parent::settingsSummary());
   }
 
   /**
@@ -217,6 +219,9 @@ class ImageFormatter extends ImageFormatterBase {
       $item = $file->_referringItem;
       $item_attributes = $item->_attributes;
       unset($item->_attributes);
+
+      $lazy_loading_settings = $this->getSetting('lazy_loading_settings');
+      $item_attributes['loading'] = $lazy_loading_settings['lazy_loading_priority'];
 
       $elements[$delta] = [
         '#theme' => 'image_formatter',

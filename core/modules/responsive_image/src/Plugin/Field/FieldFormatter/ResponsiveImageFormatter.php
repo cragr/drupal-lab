@@ -118,6 +118,11 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     return [
       'responsive_image_style' => '',
       'image_link' => '',
+      'lazy_loading_settings' => [
+        'lazy_loading_priority' => 'auto',
+        'lazy_loading_image_width' => '',
+        'lazy_loading_image_height' => '',
+      ],
     ] + parent::defaultSettings();
   }
 
@@ -125,6 +130,8 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $elements = parent::settingsForm($form, $form_state);
+
     $responsive_image_options = [];
     $responsive_image_styles = $this->responsiveImageStyleStorage->loadMultiple();
     if ($responsive_image_styles && !empty($responsive_image_styles)) {
@@ -145,6 +152,32 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
         '#markup' => $this->linkGenerator->generate($this->t('Configure Responsive Image Styles'), new Url('entity.responsive_image_style.collection')),
         '#access' => $this->currentUser->hasPermission('administer responsive image styles'),
         ],
+    ];
+
+    $lazy_loading_settings = $this->getSetting('lazy_loading_settings');
+
+    $image_dimension_states = [
+      'visible' => [
+        ':input[name*="lazy_loading_priority"]' => ['value' => 'lazy'],
+      ],
+    ];
+    $elements['lazy_loading_settings']['lazy_loading_image_width'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Image default width'),
+      '#description' => $this->t("Set the default image width. It is required when 'lazy' priority is selected to avoid layout shitting"),
+      '#default_value' => $lazy_loading_settings['lazy_loading_image_width'],
+      '#field_suffix' => ' ' . t('pixels'),
+      '#min' => 1,
+      '#states' => $image_dimension_states,
+    ];
+    $elements['lazy_loading_settings']['lazy_loading_image_height'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Image default height'),
+      '#description' => $this->t("Set the default image height. It is required when 'lazy' priority is selected to avoid layout shitting"),
+      '#default_value' => $lazy_loading_settings['lazy_loading_image_height'],
+      '#field_suffix' => ' ' . t('pixels'),
+      '#min' => 1,
+      '#states' => $image_dimension_states,
     ];
 
     $link_types = [
@@ -185,7 +218,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       $summary[] = t('Select a responsive image style.');
     }
 
-    return $summary;
+    return array_merge($summary, parent::settingsSummary());
   }
 
   /**
@@ -236,6 +269,22 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       // from the $item so that the field template does not re-render them.
       $item = $file->_referringItem;
       $item_attributes = $item->_attributes;
+
+      // Add lazy loading support.
+      $lazy_loading_settings = $this->getSetting('lazy_loading_settings');
+      $item_attributes['loading'] = $lazy_loading_settings['lazy_loading_priority'];
+      // Set image dimensions to the img tag if 'lazy' priority was set.
+      if ($lazy_loading_settings['lazy_loading_priority'] == 'lazy') {
+        if ($lazy_loading_settings['lazy_loading_image_width'] && $lazy_loading_settings['lazy_loading_image_height']) {
+          $item_attributes['width'] = $lazy_loading_settings['lazy_loading_image_width'];
+          $item_attributes['height'] = $lazy_loading_settings['lazy_loading_image_height'];
+        }
+        else {
+          // Fallback to 'auto' value if lazy priority was set,
+          // but width and height settings were not set correctly.
+          $item_attributes['loading'] = 'auto';
+        }
+      }
       unset($item->_attributes);
 
       $elements[$delta] = [
