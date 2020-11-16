@@ -39,11 +39,15 @@ while test $# -gt 0; do
       echo "--cached                  checks staged files"
       echo "--drupalci                a special mode for DrupalCI"
       echo " "
-      echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.1.x"
+      echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.2.x"
       exit 0
       ;;
     --branch)
       BRANCH="$2"
+      if [[ "$BRANCH" == "" ]]; then
+        printf "The --branch option requires a value. For example: --branch 9.2.x\n"
+        exit;
+      fi
       shift 2
       ;;
     --cached)
