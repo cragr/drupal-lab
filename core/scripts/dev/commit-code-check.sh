@@ -27,6 +27,7 @@ contains_element() {
 
 CACHED=0
 DRUPALCI=0
+BRANCH=""
 while test $# -gt 0; do
   case "$1" in
     -h|--help)
@@ -34,9 +35,16 @@ while test $# -gt 0; do
       echo " "
       echo "options:"
       echo "-h, --help                show brief help"
+      echo "--branch BRANCH           creates list of files to check by comparing against a branch"
       echo "--cached                  checks staged files"
       echo "--drupalci                a special mode for DrupalCI"
+      echo " "
+      echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.1.x"
       exit 0
+      ;;
+    --branch)
+      BRANCH="$2"
+      shift 2
       ;;
     --cached)
       CACHED=1
@@ -59,6 +67,7 @@ if [[ "$DRUPALCI" == "1" ]]; then
   red=""
   green=""
   reset=""
+  DRUPAL_VERSION=$(php -r "include 'vendor/autoload.php'; print preg_replace('#\.[0-9]+-dev#', '.x', \Drupal::VERSION);")
 else
   red=$(tput setaf 1 && tput bold)
   green=$(tput setaf 2)
@@ -66,9 +75,11 @@ else
 fi
 
 # Gets list of files to check.
-if [[ "$CACHED" == "0" ]]; then
-  # For DrupalCI patch testing or when running without --cached, list of all
-  # changes in the working directory.
+if [[ "$BRANCH" != "" ]]; then
+  FILES=$(git diff --name-only $BRANCH HEAD);
+elif [[ "$CACHED" == "0" ]]; then
+  # For DrupalCI patch testing or when running without --cached or --branch,
+  # list of all changes in the working directory.
   FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor)
 else
   # Check staged files only.
@@ -85,8 +96,7 @@ fi
 if [[ "$FILES" == "" ]] && [[ "$DRUPALCI" == "1" ]]; then
   # If the FILES is empty we might be testing a merge request on DrupalCI. We
   # need to diff against the Drupal branch or tag related to the Drupal version.
-  AGAINST=$(php -r "include 'vendor/autoload.php'; print preg_replace('#\.[0-9]+-dev#', '.x', \Drupal::VERSION);")
-  printf "Creating list of files to check by comparing branch to %s\n" "$AGAINST"
+  printf "Creating list of files to check by comparing branch to %s\n" "$DRUPAL_VERSION"
   FILES=$(git diff --name-only $AGAINST HEAD);
 fi
 
@@ -343,5 +353,8 @@ if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
   printf "To reproduce this output locally:\n"
   printf "* Apply the change as a patch\n"
   printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh\n"
+  printf "OR:\n"
+  printf "* From the merge request branch\n"
+  printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh --branch %s\n" "$DRUPAL_VERSION"
 fi
 exit $FINAL_STATUS
