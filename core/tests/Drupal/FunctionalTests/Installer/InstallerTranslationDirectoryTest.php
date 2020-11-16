@@ -2,9 +2,6 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
-use Drupal\Core\Database\Database;
-use Drupal\user\Entity\User;
-
 /**
  * Installs Drupal in German with a non-default translation directory.
  *
