@@ -253,6 +253,10 @@ function install_state_defaults() {
     // The translation directory. This corresponds to the 'translation.path'
     // setting of the 'locale.settings' configuration.
     'translation_directory' => NULL,
+    // The filename pattern for translation files. This corresponds to the
+    //'translation.default_filename' setting of the 'locale.settings'
+    // configuration.
+    'translation_filename_pattern' => '%project-%version.%language.po',
     // Installation tasks can set this to TRUE to force the page request to
     // end (even if there is no themeable output), in the case of an interactive
     // installation. This is needed only rarely; for example, it would be used
@@ -437,13 +441,17 @@ function install_begin_request($class_loader, &$install_state) {
   else {
     $install_state['translation_directory'] = $site_path . '/files/translations';
   }
+  if (isset($GLOBALS['config']['locale.settings']['translation']['default_filename'])) {
+    $install_state['translation_filename_pattern'] = $GLOBALS['config']['locale.settings']['translation']['default_filename'];
+  }
 
   // Register the file translation service.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = $container->get('file_system');
   $container->set('string_translator.file_translation', new FileTranslation(
     $install_state['translation_directory'],
-    $file_system
+    $file_system,
+    $install_state['translation_filename_pattern']
   ));
   $container->get('string_translation')
     ->addTranslator($container->get('string_translator.file_translation'));
@@ -1432,15 +1440,15 @@ function install_download_translation(&$install_state) {
  *   TRUE on success, FALSE on failure.
  */
 function install_retrieve_file($uri, $destination) {
-  $parsed_url = parse_url($uri);
+  $path = $destination;
+
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   if (is_dir($file_system->realpath($destination))) {
+    @trigger_error('Passing a directory to install_retrieve_file() as the $destination argument is deprecated in drupal:9.2.0. Only filenames will be accepted as the $destination parameter in drupal:10.0.0. See https://www.drupal.org/node/XXXXXXX', E_USER_DEPRECATED);
+    $parsed_url = parse_url($uri);
     // Prevent URIs with triple slashes when gluing parts together.
     $path = str_replace('///', '//', "$destination/") . $file_system->basename($parsed_url['path']);
-  }
-  else {
-    $path = $destination;
   }
 
   try {
@@ -1762,7 +1770,6 @@ function install_import_translations(&$install_state) {
  */
 function _install_prepare_import($langcodes, $server_pattern) {
   \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-  $matches = [];
 
   foreach ($langcodes as $langcode) {
     // Get the translation files located in the translations directory.
@@ -1770,30 +1777,27 @@ function _install_prepare_import($langcodes, $server_pattern) {
     // Pick the first file which matches the language, if any.
     $file = reset($files);
     if (is_object($file)) {
-      $filename = $file->filename;
-      preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
+      $version = !empty($file->version) ? $file->version : \Drupal::VERSION;
       // Get the version information.
-      if ($version = $matches[1]) {
-        $info = _install_get_version_info($version);
-        // Picking the first file does not necessarily result in the right file. So
-        // we check if at least the major version number is available.
-        if ($info['major']) {
-          $core = $info['major'] . '.x';
-          $data = [
-            'name' => 'drupal',
-            'project_type' => 'module',
-            'core' => $core,
-            'version' => $version,
-            'server_pattern' => $server_pattern,
-            'status' => 1,
-          ];
-          \Drupal::service('locale.project')->set($data['name'], $data);
-          module_load_include('compare.inc', 'locale');
-          // Reset project information static cache so that it uses the data
-          // set above.
-          locale_translation_clear_cache_projects();
-          locale_translation_check_projects_local(['drupal'], [$langcode]);
-        }
+      $info = _install_get_version_info($version);
+      // Picking the first file does not necessarily result in the right file. So
+      // we check if at least the major version number is available.
+      if ($info['major']) {
+        $core = $info['major'] . '.x';
+        $data = [
+          'name' => 'drupal',
+          'project_type' => 'module',
+          'core' => $core,
+          'version' => $version,
+          'server_pattern' => $server_pattern,
+          'status' => 1,
+        ];
+        \Drupal::service('locale.project')->set($data['name'], $data);
+        module_load_include('compare.inc', 'locale');
+        // Reset project information static cache so that it uses the data
+        // set above.
+        locale_translation_clear_cache_projects();
+        locale_translation_check_projects_local(['drupal'], [$langcode]);
       }
     }
   }
@@ -1908,6 +1912,7 @@ function install_check_translations($langcode, $install_state) {
     $install_state = [
       'server_pattern' => $install_state,
       'translation_directory' => $site_path . '/files/translations',
+      'translation_filename_pattern' => '%project-%version.%language.po',
     ];
   }
 
@@ -2047,7 +2052,8 @@ function install_check_translations($langcode, $install_state) {
   }
 
   if ($translations_directory_exists && $readable && $writable && $translation_available) {
-    $translation_downloaded = install_retrieve_file($translation_url, $translations_directory);
+    $translation_filename = strtr($install_state['translation_filename_pattern'], $variables);
+    $translation_downloaded = install_retrieve_file($translation_url, $translations_directory . '/' . $translation_filename);
 
     if (!$translation_downloaded) {
       $requirements['translation downloaded'] = [

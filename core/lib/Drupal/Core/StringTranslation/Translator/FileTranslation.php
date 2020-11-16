@@ -31,17 +31,40 @@ class FileTranslation extends StaticTranslation {
   protected $fileSystem;
 
   /**
+   *  The filename pattern of the translation files.
+   *
+   * @var string
+   */
+  protected $filenamePattern;
+
+  /**
    * Constructs a StaticTranslation object.
    *
    * @param string $directory
    *   The directory to retrieve file translations from.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
+   * @param string $filename_pattern
+   *   The filename pattern of the translation files. The following placeholders
+   *   can be used for compatibility with
+   *   locale_translation_build_server_pattern():
+   *   - "%project": Will be replaced with "drupal".
+   *   - "%version": Will be replaced with a pattern matching versions.
+   *   - "%core": Will be replaced with "all".
+   *   - "%language": Will be replaced with the given language code or a pattern
+   *     matching language codes.
+   *
+   * @see locale_translation_build_server_pattern()
    */
-  public function __construct($directory, FileSystemInterface $file_system) {
+  public function __construct($directory, FileSystemInterface $file_system, $filename_pattern = NULL) {
     parent::__construct();
     $this->directory = $directory;
     $this->fileSystem = $file_system;
+    if (!isset($filename_pattern)) {
+      @trigger_error('Constructing a \Drupal\Core\StringTranslation\Translator\FileTranslation instance without a $filename_pattern argument is deprecated in drupal:9.2.0. The $filename argument will be required in drupal:10.0.0. See https://www.drupal.org/node/XXXXXXX', E_USER_DEPRECATED);
+      $filename_pattern = '%project-%version.%language.po';
+    }
+    $this->filenamePattern = $filename_pattern;
   }
 
   /**
@@ -99,10 +122,17 @@ class FileTranslation extends StaticTranslation {
    *   String file pattern.
    */
   protected function getTranslationFilesPattern($langcode = NULL) {
-    // The file name matches: drupal-[release version].[language code].po
-    // When provided the $langcode is use as language code. If not provided all
-    // language codes will match.
-    return '!drupal-[0-9a-z\.-]+\.' . (!empty($langcode) ? preg_quote($langcode, '!') : '[^\.]+') . '\.po$!';
+    // The file name matches the configured pattern, by default:
+    // "drupal-[release version].[language code].po". If provided, the given
+    // $langcode is used as the language code, otherwise all language codes will
+    // match.
+    $variables = [
+      '%project' => 'drupal',
+      '%version' => '[0-9a-z\.-]+',
+      '%core' => 'all',
+      '%language' => $langcode ? preg_quote($langcode, '!') : '[^\.]+',
+    ];
+    return '!' . strtr(preg_quote($this->filenamePattern, '!'), $variables) . '$!';
   }
 
   /**
