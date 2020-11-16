@@ -1408,7 +1408,7 @@ function install_select_language(&$install_state) {
 function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
   // if possible.
-  $requirements = install_check_translations($install_state);
+  $requirements = install_check_translations($install_state['parameters']['langcode'], $install_state);
   // Render requirements if any warnings or errors returned.
   if ($output = install_display_requirements($install_state, $requirements)) {
     return $output;
@@ -1710,7 +1710,7 @@ function install_download_additional_translations_operations(&$install_state) {
     // process and there is no way back. We will not import what we cannot
     // download.
     if (!isset($install_state['translations'][$langcode])) {
-      $operations[] = ['install_check_translations', [$langcode, $install_state['server_pattern']]];
+      $operations[] = ['install_check_translations', [$langcode, $install_state]];
     }
   }
   return $operations;
@@ -1895,6 +1895,8 @@ function _install_module_batch($module, $module_name, &$context) {
 /**
  * Checks installation requirements and reports any errors.
  *
+ * @param string $langcode
+ *   Language code to check for download.
  * @param array $install_state
  *   An array of information about the current installation state.
  *
@@ -1902,23 +1904,15 @@ function _install_module_batch($module, $module_name, &$context) {
  *   Requirements compliance array. If the translation cannot be downloaded this
  *   will contain a requirements error with detailed information.
  */
-function install_check_translations($install_state) {
-  if (!is_array($install_state) && (count(func_get_args()) === 2)) {
-    @trigger_error('Calling install_check_translations() with $langcode and $server_pattern arguments instead of the $install_state argument is deprecated in drupal:9.2.0. The $install_state argument will be the only accepted parameter in drupal:10.0.0. See https://www.drupal.org/node/3182651', E_USER_DEPRECATED);
+function install_check_translations($langcode, $install_state) {
+  if (is_string($install_state)) {
+    @trigger_error('Calling install_check_translations() with the $server_pattern argument instead of the $install_state argument is deprecated in drupal:9.2.0. The $server_pattern argument will no longer be accepted in drupal:10.0.0. See https://www.drupal.org/node/3182651', E_USER_DEPRECATED);
     $site_path = \Drupal::getContainer()->getParameter('site.path');
     $install_state = [
-      'parameters' => [
-        'langcode' => func_get_arg(0),
-      ],
-      'server_pattern' => func_get_arg(1),
+      'server_pattern' => $install_state,
       'translation_directory' => $site_path . '/files/translations',
     ];
   }
-
-  $requirements = [];
-
-  $langcode = $install_state['parameters']['langcode'];
-  $translations_directory = $install_state['translation_directory'];
 
   $readable = FALSE;
   $writable = FALSE;
@@ -1930,6 +1924,7 @@ function install_check_translations($install_state) {
   // will also attempt to create the files directory if it does not exist yet.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
+  $translations_directory = $install_state['translation_directory'];
   $file_system->prepareDirectory($translations_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
   // Get values so the requirements errors can be specific.
@@ -1976,6 +1971,7 @@ function install_check_translations($install_state) {
     }
   }
 
+  $requirements = [];
   // If the translations directory does not exist, throw an error.
   if (!$translations_directory_exists) {
     $requirements['translations directory exists'] = [
