@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity;
 
+@trigger_error('The ' . __NAMESPACE__ . '\EntityBundleAccessCheck is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, specify the list of bundles in the entity parameter, under "bundle" key, as a sequence. See https://www.drupal.org/node/3155569', E_USER_DEPRECATED);
+
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -10,6 +12,12 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Provides an entity bundle checker for the _entity_bundles route requirement.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead,
+ *   specify the list of bundles in the entity parameter, under "bundle" key, as
+ *   a sequence.
+ *
+ * @see https://www.drupal.org/node/3155569
  */
 class EntityBundleAccessCheck implements AccessInterface {
 
