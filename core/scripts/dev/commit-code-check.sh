@@ -52,10 +52,23 @@ while test $# -gt 0; do
   esac
 done
 
+# Set up variables to make colored output simple. Color output is disabled on
+# DrupalCI because it is breaks reporting.
+# @todo https://www.drupal.org/project/drupalci_testbot/issues/3181869
+if [[ "$DRUPALCI" == "1" ]]; then
+  red=""
+  green=""
+  reset=""
+else
+  red=$(tput setaf 1 && tput bold)
+  green=$(tput setaf 2)
+  reset=$(tput sgr0)
+fi
+
 # Gets list of files to check.
 if [[ "$CACHED" == "0" ]]; then
-  # For DrupalCI / default behavior this is the list of all changes in the
-  # working directory.
+  # For DrupalCI patch testing or when running without --cached, list of all
+  # changes in the working directory.
   FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor)
 else
   # Check staged files only.
@@ -69,24 +82,12 @@ else
   FILES=$(git diff --cached --name-only $AGAINST);
 fi
 
-# If the FILES is empty the assume we're on a branch and we want to diff
-# against the Drupal branch. This always DrupalCI to do MR testing.
-if [[ "$FILES" == "" ]]; then
+if [[ "$FILES" == "" ]] && [[ "$DRUPALCI" == "1" ]]; then
+  # If the FILES is empty we might be testing a merge request on DrupalCI. We
+  # need to diff against the Drupal branch or tag related to the Drupal version.
   AGAINST=$(php -r "include 'vendor/autoload.php'; print preg_replace('#\.[0-9]+-dev#', '.x', \Drupal::VERSION);")
+  printf "Creating list of files to check by comparing branch to %s\n" "$AGAINST"
   FILES=$(git diff --name-only $AGAINST HEAD);
-fi
-
-# Set up variables to make colored output simple. Color output is disabled on
-# DrupalCI because it is breaks reporting.
-# @todo https://www.drupal.org/project/drupalci_testbot/issues/3181869
-if [[ "$DRUPALCI" == "1" ]]; then
-  red=""
-  green=""
-  reset=""
-else
-  red=$(tput setaf 1 && tput bold)
-  green=$(tput setaf 2)
-  reset=$(tput sgr0)
 fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
