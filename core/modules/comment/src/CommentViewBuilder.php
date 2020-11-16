@@ -121,7 +121,7 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     // Compute the comment maximum indent if any.
     $max_indent = NULL;
-    // The maximum indent could determined only on non-orphan comments.
+    // The maximum indent can only be determined for non-orphan comments.
     if ($commented_entity) {
       $field_settings = $commented_entity
         ->getFieldDefinition($entity->getFieldName())
