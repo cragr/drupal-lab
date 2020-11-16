@@ -157,7 +157,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       // Turbolinks to be implemented without altering core.
       // @see https://github.com/rails/turbolinks/
       $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
-      $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
+      if (isset($ajax_page_state['libraries']) && is_string($ajax_page_state['libraries'])) {
+        $libraries = explode(',', $ajax_page_state['libraries']);
+        $assets->setAlreadyLoadedLibraries($libraries);
+      }
       $variables = $this->processAssetLibraries($assets, $attachment_placeholders);
       // $variables now contains the markup to load the asset libraries. Update
       // $attached with the final list of libraries and JavaScript settings, so
