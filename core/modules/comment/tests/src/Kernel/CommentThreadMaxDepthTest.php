@@ -46,6 +46,13 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
   protected $comment = [];
 
   /**
+   * Render array build containing a list of comments.
+   *
+   * @var array
+   */
+  protected $build;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -71,9 +78,6 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
 
     $this->createTestComments();
 
-    /** @var \Drupal\Core\Entity\EntityViewBuilderInterface $view_builder */
-    $view_builder = $this->container->get('entity_type.manager')->getViewBuilder('comment');
-
     // Reply to 'deepest' comment.
     $reply = $this->createComment(['pid' => $this->comment[0][0][0]['entity']->id()]);
     // Reply to reply.
@@ -83,7 +87,7 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
 
     // The view builder is responsible to compute the indent for each comment.
     // @see \Drupal\comment\CommentViewBuilder::buildComponents()
-    $build = $view_builder->viewMultiple([
+    $this->buildComments([
       $this->comment[0]['entity'],
       $this->comment[0][0]['entity'],
       $this->comment[0][1]['entity'],
@@ -92,17 +96,16 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
       $reply_to_reply,
       $reply_to_reply_of_reply,
     ]);
-    $build = $view_builder->buildMultiple($build);
 
     // Checking indents of each comment. Note that the build item
     // #comment_indent value is relative to the previous comment.
-    $this->assertCommentIndent($this->comment[0]['entity'], 0, $build);
-    $this->assertCommentIndent($this->comment[0][0]['entity'], 1, $build);
-    $this->assertCommentIndent($this->comment[0][1]['entity'], 0, $build);
-    $this->assertCommentIndent($this->comment[0][0][0]['entity'], 1, $build);
-    $this->assertCommentIndent($reply, 1, $build);
-    $this->assertCommentIndent($reply_to_reply, 1, $build);
-    $this->assertCommentIndent($reply_to_reply_of_reply, 1, $build);
+    $this->assertCommentIsNotIndented($this->comment[0]['entity']);
+    $this->assertCommentIsIndented($this->comment[0][0]['entity']);
+    $this->assertCommentIsNotIndented($this->comment[0][1]['entity']);
+    $this->assertCommentIsIndented($this->comment[0][0][0]['entity']);
+    $this->assertCommentIsIndented($reply);
+    $this->assertCommentIsIndented($reply_to_reply);
+    $this->assertCommentIsIndented($reply_to_reply_of_reply);
   }
 
   /**
@@ -119,9 +122,6 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
       ])->save();
     $this->createTestComments();
 
-    /** @var \Drupal\Core\Entity\EntityViewBuilderInterface $view_builder */
-    $view_builder = $this->container->get('entity_type.manager')->getViewBuilder('comment');
-
     // Reply to 'deepest' comment.
     $reply = $this->createComment(['pid' => $this->comment[0][0][0]['entity']->id()]);
     // Reply to reply.
@@ -129,7 +129,7 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
 
     // The view builder is responsible to compute the indent for each comment.
     // @see \Drupal\comment\CommentViewBuilder::buildComponents()
-    $build = $view_builder->viewMultiple([
+    $this->buildComments([
       $this->comment[0]['entity'],
       $this->comment[0][0]['entity'],
       $this->comment[0][1]['entity'],
@@ -137,18 +137,17 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
       $reply,
       $reply_to_reply,
     ]);
-    $build = $view_builder->buildMultiple($build);
 
     // Checking indents of each comment. Note that the build item
     // #comment_indent value is relative to the previous comment.
-    $this->assertCommentIndent($this->comment[0]['entity'], 0, $build);
-    $this->assertCommentIndent($this->comment[0][0]['entity'], 1, $build);
-    $this->assertCommentIndent($this->comment[0][1]['entity'], 0, $build);
-    $this->assertCommentIndent($this->comment[0][0][0]['entity'], 1, $build);
+    $this->assertCommentIsNotIndented($this->comment[0]['entity']);
+    $this->assertCommentIsIndented($this->comment[0][0]['entity']);
+    $this->assertCommentIsNotIndented($this->comment[0][1]['entity']);
+    $this->assertCommentIsIndented($this->comment[0][0][0]['entity']);
     // Check that the reply to deepest comment shows both with the same indent.
-    $this->assertCommentIndent($reply, 0, $build);
+    $this->assertCommentIsNotIndented($reply);
     // Check that the reply to reply has the same indent.
-    $this->assertCommentIndent($reply_to_reply, 0, $build);
+    $this->assertCommentIsNotIndented($reply_to_reply);
 
     // Change the reply mode in order to test that, when reply to the deepest
     // comment is denied, the thread still shows with the limited depth.
@@ -160,7 +159,7 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
       ])->save();
 
     // Rebuild comments.
-    $build = $view_builder->viewMultiple([
+    $this->buildComments([
       $this->comment[0]['entity'],
       $this->comment[0][0]['entity'],
       $this->comment[0][1]['entity'],
@@ -168,17 +167,16 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
       $reply,
       $reply_to_reply,
     ]);
-    $build = $view_builder->buildMultiple($build);
 
     // Checking that the indents are kept.
-    $this->assertCommentIndent($this->comment[0]['entity'], 0, $build);
-    $this->assertCommentIndent($this->comment[0][0]['entity'], 1, $build);
-    $this->assertCommentIndent($this->comment[0][1]['entity'], 0, $build);
-    $this->assertCommentIndent($this->comment[0][0][0]['entity'], 1, $build);
+    $this->assertCommentIsNotIndented($this->comment[0]['entity']);
+    $this->assertCommentIsIndented($this->comment[0][0]['entity']);
+    $this->assertCommentIsNotIndented($this->comment[0][1]['entity']);
+    $this->assertCommentIsIndented($this->comment[0][0][0]['entity']);
     // Check that the reply to deepest comment shows both with the same indent.
-    $this->assertCommentIndent($reply, 0, $build);
+    $this->assertCommentIsNotIndented($reply);
     // Check that the reply to reply has the same indent.
-    $this->assertCommentIndent($reply_to_reply, 0, $build);
+    $this->assertCommentIsNotIndented($reply_to_reply);
   }
 
   /**
@@ -207,20 +205,42 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
   }
 
   /**
-   * Asserts that a comment has an expected indent within a build.
+   * Asserts that a comment is indented in a build.
    *
    * @param \Drupal\comment\CommentInterface $comment
    *   The comment to be checked.
-   * @param int $expected_indent
-   *   The expected comment indent. Note that the comment indent value is
-   *   relative to the previous comment.
-   * @param array $build
-   *   A render array that renders a list of comments.
    */
-  protected function assertCommentIndent(CommentInterface $comment, int $expected_indent, array $build): void {
-    foreach (Element::children($build) as $delta) {
-      if ($build[$delta]['#comment']->id() === $comment->id()) {
-        $this->assertSame($expected_indent, $build[$delta]['#comment_indent']);
+  protected function assertCommentIsIndented(CommentInterface $comment): void {
+    $this->commentIndentAssertHelper($comment, 1);
+  }
+
+  /**
+   * Asserts that a comment is not indented in a build.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment to be checked.
+   */
+  protected function assertCommentIsNotIndented(CommentInterface $comment): void {
+    $this->commentIndentAssertHelper($comment, 0);
+  }
+
+  /**
+   * Provides common code for comment indent assertion methods.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment to be checked.
+   * @param int $indent
+   *   The indent value. Allowed values: 0, 1.
+   */
+  protected function commentIndentAssertHelper(CommentInterface $comment, int $indent): void {
+    assert(in_array($indent, [0, 1], TRUE), 'Only 0 or 1 are allowed');
+    foreach (Element::children($this->build) as $delta) {
+      if ($this->build[$delta]['#comment']->id() === $comment->id()) {
+        $message = [
+          'Comment with ID %s is indented but it should not be.',
+          'Comment with ID %s is not indented but it should be.',
+        ];
+        $this->assertSame($indent, $this->build[$delta]['#comment_indent'], sprintf($message[$indent], $comment->id()));
         return;
       }
     }
@@ -283,6 +303,18 @@ class CommentThreadMaxDepthTest extends KernelTestBase {
     $this->comment[0][0][0]['entity'] = $this->createComment([
       'pid' => $this->comment[0][0]['entity']->id(),
     ]);
+  }
+
+  /**
+   * Creates a build render array given a list of comments.
+   *
+   * @param array $comments
+   *   A list of comments to build.
+   */
+  protected function buildComments(array $comments): void {
+    /** @var \Drupal\Core\Entity\EntityViewBuilderInterface $view_builder */
+    $view_builder = $this->container->get('entity_type.manager')->getViewBuilder('comment');
+    $this->build = $view_builder->buildMultiple($view_builder->viewMultiple($comments));
   }
 
 }
