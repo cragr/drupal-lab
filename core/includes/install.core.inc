@@ -1895,10 +1895,8 @@ function _install_module_batch($module, $module_name, &$context) {
 /**
  * Checks installation requirements and reports any errors.
  *
- * @param string $langcode
- *   Language code to check for download.
- * @param string $server_pattern
- *   Server access pattern (to replace language code, version number, etc. in).
+ * @param array $install_state
+ *   An array of information about the current installation state.
  *
  * @return array
  *   Requirements compliance array. If the translation cannot be downloaded this
