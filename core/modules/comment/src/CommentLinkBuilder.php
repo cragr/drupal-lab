@@ -103,25 +103,23 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           // or a link to add new comments if the user has permission, the
           // entity is open to new comments, and there currently are none.
           if ($field->access('view only', $this->currentUser)) {
-            if ($field->comment_count > 0) {
-              $links['comment-comments'] = [
-                'title' => $this->formatPlural($field->comment_count, '1 comment', '@count comments'),
-                'attributes' => ['title' => $this->t('Jump to the first comment.')],
-                'fragment' => 'comments',
-                'url' => $entity->toUrl(),
+            $links['comment-comments'] = [
+              'title' => $this->formatPlural($field->comment_count, '1 comment', '@count comments'),
+              'attributes' => ['title' => $this->t('Jump to the first comment.')],
+              'fragment' => 'comments',
+              'url' => $entity->toUrl(),
+            ];
+            if ($this->moduleHandler->moduleExists('history')) {
+              $links['comment-new-comments'] = [
+                'title' => '',
+                'url' => Url::fromRoute('<current>'),
+                'attributes' => [
+                  'class' => 'hidden',
+                  'title' => $this->t('Jump to the first new comment.'),
+                  'data-history-node-last-comment-timestamp' => $field->last_comment_timestamp,
+                  'data-history-node-field-name' => $field_name,
+                ],
               ];
-              if ($this->moduleHandler->moduleExists('history')) {
-                $links['comment-new-comments'] = [
-                  'title' => '',
-                  'url' => Url::fromRoute('<current>'),
-                  'attributes' => [
-                    'class' => 'hidden',
-                    'title' => $this->t('Jump to the first new comment.'),
-                    'data-history-node-last-comment-timestamp' => $field->last_comment_timestamp,
-                    'data-history-node-field-name' => $field_name,
-                  ],
-                ];
-              }
             }
           }
           // Provide a link to new comment form.
@@ -162,8 +160,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
               // Show the "post comment" link if the form is on another page, or
               // if there are existing comments that the link will skip past.
               $separate_form_location = $comment_form_location === CommentItemInterface::FORM_SEPARATE_PAGE;
-              $existing_comments = $field->comment_count > 0 && $field->access('view only', $this->currentUser);
-              if ($separate_form_location || $existing_comments) {
+              if ($separate_form_location || $field->access('view only', $this->currentUser)) {
                 $links['comment-add'] = [
                   'title' => $this->t('Add new comment'),
                   'attributes' => ['title' => $this->t('Share your thoughts and opinions.')],
