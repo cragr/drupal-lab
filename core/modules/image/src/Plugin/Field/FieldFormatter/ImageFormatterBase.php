@@ -17,8 +17,8 @@ abstract class ImageFormatterBase extends FileFormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'lazy_loading_settings' => [
-        'lazy_loading_priority' => 'lazy',
+      'image_loading' => [
+        'priority' => 'lazy',
       ],
     ];
   }
@@ -36,17 +36,17 @@ abstract class ImageFormatterBase extends FileFormatterBase {
     ];
     $performance_description = $this->t('By default, all image assets are rendered with native browser lazy loading attributes included (<em>loading="lazy"</em>). This improves performance by allowing <a href=":link">modern browsers</a> to lazily load images without JavaScript. It is sometimes desirable to override this default to force browsers to download an image as soon as possible using the "<em>eager</em>" value instead.', [':link' => 'https://caniuse.com/loading-lazy-attr']);
 
-    $lazy_loading_settings = $this->getSetting('lazy_loading_settings');
-    $element['lazy_loading_settings'] = [
+    $image_loading_settings = $this->getSetting('image_loading');
+    $element['image_loading'] = [
       '#type' => 'details',
       '#title' => $this->t('Performance'),
       '#weight' => 10,
       '#description' => $performance_description,
     ];
-    $element['lazy_loading_settings']['lazy_loading_priority'] = [
+    $element['image_loading']['priority'] = [
       '#title' => $this->t('Lazy loading priority'),
       '#type' => 'select',
-      '#default_value' => $lazy_loading_settings['lazy_loading_priority'],
+      '#default_value' => $image_loading_settings['priority'],
       '#options' => $lazy_load_options,
       '#description' => $description_link,
       '#empty_value' => 'auto',
@@ -59,9 +59,9 @@ abstract class ImageFormatterBase extends FileFormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $lazy_loading_settings = $this->getSetting('lazy_loading_settings');
+    $image_loading_settings = $this->getSetting('image_loading');
     $summary[] = $this->t('Lazy loading priority: @priority', [
-      '@priority' => $lazy_loading_settings['lazy_loading_priority'],
+      '@priority' => $image_loading_settings['priority'],
     ]);
     return $summary;
   }

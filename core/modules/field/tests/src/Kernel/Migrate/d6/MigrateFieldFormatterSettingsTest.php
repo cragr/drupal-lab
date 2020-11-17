@@ -146,8 +146,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = [
       'image_style' => '',
       'image_link' => '',
-      'lazy_loading_settings' => [
-        'lazy_loading_priority' => 'lazy',
+      'image_loading' => [
+        'priority' => 'lazy',
       ],
     ];
     $component = $display->getComponent('field_test_imagefield');

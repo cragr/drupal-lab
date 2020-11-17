@@ -30,11 +30,11 @@ class ImageLazyLoadUpdateTest extends UpdatePathTestBase {
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
     $view_display = $storage->load('node.article.default');
     $component = $view_display->getComponent('field_image');
-    $this->assertArrayNotHasKey('lazy_loading_settings', $component['settings']);
+    $this->assertArrayNotHasKey('image_loading', $component['settings']);
     $this->runUpdates();
     $view_display = $storage->load('node.article.default');
     $component = $view_display->getComponent('field_image');
-    $this->assertArrayHasKey('lazy_loading_settings', $component['settings']);
-    $this->assertEquals('lazy', $component['settings']['lazy_loading_settings']['lazy_loading_priority']);
+    $this->assertArrayHasKey('image_loading', $component['settings']);
+    $this->assertEquals('lazy', $component['settings']['image_loading']['priority']);
   }
 }

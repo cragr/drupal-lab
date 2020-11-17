@@ -220,8 +220,8 @@ class ImageFormatter extends ImageFormatterBase {
       $item_attributes = $item->_attributes;
       unset($item->_attributes);
 
-      $lazy_loading_settings = $this->getSetting('lazy_loading_settings');
-      $item_attributes['loading'] = $lazy_loading_settings['lazy_loading_priority'];
+      $image_loading_settings = $this->getSetting('image_loading');
+      $item_attributes['loading'] = $image_loading_settings['priority'];
 
       $elements[$delta] = [
         '#theme' => 'image_formatter',

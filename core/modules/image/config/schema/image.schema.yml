@@ -142,11 +142,11 @@ field.formatter.settings.image:
     image_style:
       type: string
       label: 'Image style'
-    lazy_loading_settings:
+    image_loading:
       type: mapping
-      label: 'Lazy loading settings'
+      label: 'Image loading settings'
       mapping:
-        lazy_loading_priority:
+        priority:
           type: string
           label: 'Lazy loading priority'
 

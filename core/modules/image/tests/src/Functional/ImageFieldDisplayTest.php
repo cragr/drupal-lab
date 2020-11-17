@@ -236,11 +236,11 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
     $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
 
-    // Test the image "lazy_loading_priority" setting formatter works.
+    // Test the image loading "priority" setting formatter works.
     $display_options['type'] = 'image';
     $display_options['settings']['image_link'] = '';
     $display_options['settings']['image_style'] = '';
-    $display_options['settings']['lazy_loading_settings']['lazy_loading_priority'] = 'eager';
+    $display_options['settings']['image_loading']['priority'] = 'eager';
     $display->setComponent($field_name, $display_options)
       ->save();
 
@@ -256,7 +256,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseContains($default_output);
 
-    // Test the image "lazy_loading_priority" setting formatter work together with "image_style" setting.
+    // Test the image loading "priority" setting formatter work together with "image_style" setting.
     $display_options['settings']['image_style'] = 'thumbnail';
     $display->setComponent($field_name, $display_options)
       ->save();
