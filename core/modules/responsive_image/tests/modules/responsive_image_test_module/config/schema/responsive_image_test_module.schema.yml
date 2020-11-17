@@ -15,7 +15,7 @@ field.formatter.settings.responsive_image_test:
       mapping:
         priority:
           type: string
-          label: 'Lazy loading priority'
+          label: 'Loading priority'
         image_width:
           type: integer
           label: 'Image default width'

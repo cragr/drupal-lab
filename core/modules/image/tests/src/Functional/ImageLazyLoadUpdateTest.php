@@ -23,7 +23,7 @@ class ImageLazyLoadUpdateTest extends UpdatePathTestBase {
   /**
    * Test lazy-load new setting upgrade path.
    *
-   * @see image_update_9001
+   * @see image_post_update_image_loading_priority
    */
   public function testUpdate() {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
@@ -37,4 +37,5 @@ class ImageLazyLoadUpdateTest extends UpdatePathTestBase {
     $this->assertArrayHasKey('image_loading', $component['settings']);
     $this->assertEquals('lazy', $component['settings']['image_loading']['priority']);
   }
+
 }

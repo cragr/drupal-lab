@@ -148,7 +148,7 @@ field.formatter.settings.image:
       mapping:
         priority:
           type: string
-          label: 'Lazy loading priority'
+          label: 'Loading priority'
 
 field.formatter.settings.image_url:
   type: mapping

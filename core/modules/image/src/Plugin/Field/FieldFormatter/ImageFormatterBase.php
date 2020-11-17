@@ -44,7 +44,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
       '#description' => $performance_description,
     ];
     $element['image_loading']['priority'] = [
-      '#title' => $this->t('Lazy loading priority'),
+      '#title' => $this->t('Loading priority'),
       '#type' => 'select',
       '#default_value' => $image_loading_settings['priority'],
       '#options' => $lazy_load_options,
@@ -60,7 +60,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
    */
   public function settingsSummary() {
     $image_loading_settings = $this->getSetting('image_loading');
-    $summary[] = $this->t('Lazy loading priority: @priority', [
+    $summary[] = $this->t('Loading priority: @priority', [
       '@priority' => $image_loading_settings['priority'],
     ]);
     return $summary;
