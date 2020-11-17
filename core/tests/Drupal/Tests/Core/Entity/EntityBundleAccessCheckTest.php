@@ -92,7 +92,7 @@ class EntityBundleAccessCheckTest extends UnitTestCase {
     $route_match = $route_match->reveal();
 
     $access_check = new EntityBundleAccessCheck();
-    $this->expectDeprecation('The Drupal\Core\Entity\EntityBundleAccessCheck is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, specify the list of bundles in the entity parameter, under "bundle" key, as a sequence. See https://www.drupal.org/node/3155569');
+    $this->expectDeprecation('The Drupal\Core\Entity\EntityBundleAccessCheck is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Specify the list of bundles in the entity parameter, under "bundle" key, as a sequence, instead. See https://www.drupal.org/node/3155569');
     $this->assertEquals($access_result, $access_check->access($route, $route_match, $account));
   }
 
