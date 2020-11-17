@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Provides an entity bundle checker for the _entity_bundles route requirement.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead,
+ * @todo Deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead,
  *   specify the list of bundles in the entity parameter, under "bundle" key, as
  *   a sequence.
  *
