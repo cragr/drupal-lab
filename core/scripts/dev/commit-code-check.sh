@@ -101,7 +101,8 @@ if [[ "$FILES" == "" ]] && [[ "$DRUPALCI" == "1" ]]; then
   # If the FILES is empty we might be testing a merge request on DrupalCI. We
   # need to diff against the Drupal branch or tag related to the Drupal version.
   printf "Creating list of files to check by comparing branch to %s\n" "$DRUPAL_VERSION"
-  FILES=$(git diff --name-only $DRUPAL_VERSION HEAD);
+  # On DrupalCI there's a merge commit so we can compare to HEAD~1.
+  FILES=$(git diff --name-only HEAD~1 HEAD);
 fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
