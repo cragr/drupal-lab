@@ -16,7 +16,7 @@
 
 .ui-dialog.ui-dialog-off-canvas {
   /* Layer the dialog just under the toolbar. */
-  z-index: 501;
+  z-index: 502;
   padding: 0;
   color: #ddd;
   border-radius: 0;
