@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -27,7 +29,7 @@ class FilterImageStylePostUpdateTest extends UpdatePathTestBase {
    *
    * @see image_post_update_enable_filter_image_style()
    */
-  public function testFilterImageStylePostUpdate() {
+  public function testFilterImageStylePostUpdate(): void {
     $config_trail = 'filters.filter_html.settings.allowed_html';
 
     // A format with an enabled filter_html filter.

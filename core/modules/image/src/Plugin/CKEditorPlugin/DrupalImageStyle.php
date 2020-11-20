@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\image\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
@@ -21,21 +23,21 @@ class DrupalImageStyle extends CKEditorPluginBase implements CKEditorPluginConte
   /**
    * {@inheritdoc}
    */
-  public function getFile() {
+  public function getFile(): string {
     return 'core/modules/image/js/plugins/drupalimagestyle/plugin.js';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfig(Editor $editor) {
+  public function getConfig(Editor $editor): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getButtons() {
+  public function getButtons(): array {
     // Do not provide button. The drupalimagestyle plugin provides the button
     // for us.
     return [];
@@ -44,7 +46,7 @@ class DrupalImageStyle extends CKEditorPluginBase implements CKEditorPluginConte
   /**
    * {@inheritdoc}
    */
-  public function isEnabled(Editor $editor) {
+  public function isEnabled(Editor $editor): bool {
     if (!$editor->hasAssociatedFilterFormat()) {
       return FALSE;
     }

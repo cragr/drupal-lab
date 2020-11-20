@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Form\FormState;
@@ -71,7 +73,7 @@ class EditorImageStyleDialogTest extends EntityKernelTestBase {
    * @return array|\Symfony\Component\HttpFoundation\Response
    *   The submitted form.
    */
-  protected function setUpForm($enable_image_filter) {
+  protected function setUpForm(bool $enable_image_filter) {
     $format = FilterFormat::create([
       'format' => $this->randomMachineName(),
       'name' => $this->randomString(),
@@ -147,19 +149,21 @@ class EditorImageStyleDialogTest extends EntityKernelTestBase {
   /**
    * Tests that style selection is hidden when filter_image_style is disabled.
    */
-  public function testDialogNoStyles() {
+  public function testDialogNoStyles(): void {
     $this->assertArrayNotHasKey('image_style', $this->setUpForm(FALSE));
   }
 
   /**
    * Tests EditorImageDialog when filter_image_style is enabled.
    */
-  public function testDialogStyles() {
+  public function testDialogStyles(): void {
     $form = $this->setUpForm(TRUE);
 
-    $this->assertEquals(['', 'large', 'medium', 'thumbnail', 'wide'], array_keys($form['image_style']['selection']['#options']));
-
-    $this->assertEquals('medium', $form['image_style']['selection']['#default_value']);
+    $this->assertSame(
+      ['', 'large', 'medium', 'thumbnail', 'wide'],
+      array_keys($form['image_style']['selection']['#options'])
+    );
+    $this->assertSame('medium', $form['image_style']['selection']['#default_value']);
   }
 
 }

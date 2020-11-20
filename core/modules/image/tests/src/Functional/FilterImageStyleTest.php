@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\Url;
@@ -63,8 +65,11 @@ class FilterImageStyleTest extends BrowserTestBase {
 
   /**
    * Helper function to create a test node with configurable image html.
+   *
+   * @param string $image_html
+   *   The image HTML markup.
    */
-  protected function nodeHelper($image_html) {
+  protected function nodeHelper(string $image_html): void {
     $node = $this->drupalCreateNode([
       'type' => 'page',
       'title' => $this->randomString(),
@@ -84,7 +89,7 @@ class FilterImageStyleTest extends BrowserTestBase {
   /**
    * Tests that images not uploaded through media module are unmolested.
    */
-  public function testImageNoStyle() {
+  public function testImageNoStyle(): void {
     $file_url = Url::fromUri('base:core/themes/stark/screenshot.png')->toString();
 
     $image_html = '<img src="' . $file_url . '" width="220">';
@@ -103,7 +108,7 @@ class FilterImageStyleTest extends BrowserTestBase {
   /**
    * Tests image style modification of images.
    */
-  public function testImageStyle() {
+  public function testImageStyle(): void {
     $this->assertArrayHasKey('medium', $this->container->get('entity_type.manager')->getStorage('image_style')->loadMultiple());
 
     $file = File::create(['uri' => 'core/themes/stark/screenshot.png']);

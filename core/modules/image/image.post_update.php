@@ -21,8 +21,8 @@ function image_removed_post_updates() {
 /**
  * Update filter formats to allow the use of the image style filter.
  */
-function image_post_update_enable_filter_image_style(array &$sandbox) {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'filter_format', function (FilterFormatInterface $format) {
+function image_post_update_enable_filter_image_style(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'filter_format', function (FilterFormatInterface $format): bool {
     /** @var \Drupal\filter\Plugin\FilterInterface $filter */
     if (!($filter = $format->filters('filter_html')) || !$filter->status) {
       return FALSE;

@@ -491,7 +491,7 @@ function image_field_config_delete(FieldConfigInterface $field) {
  *
  * @see \Drupal\editor\Form\EditorImageDialog::buildForm()
  */
-function image_form_editor_image_dialog_alter(array &$form, FormStateInterface $form_state) {
+function image_form_editor_image_dialog_alter(array &$form, FormStateInterface $form_state): void {
   /** @var \Drupal\editor\EditorInterface $editor */
   $editor = $form_state->getBuildInfo()['args'][0];
 
@@ -543,11 +543,16 @@ function image_form_editor_image_dialog_alter(array &$form, FormStateInterface $
  *
  * Ensures the image shown in the text editor matches the chosen image style.
  *
+ * @param array $form
+ *   The form render array
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state object.
+ *
+ * @see image_form_editor_image_dialog_alter()
  * @see \Drupal\editor\Form\EditorImageDialog::buildForm()
  * @see \Drupal\editor\Form\EditorImageDialog::validateForm()
- * @see image_form_editor_image_dialog_alter()
  */
-function image_form_editor_image_dialog_validate(array &$form, FormStateInterface $form_state) {
+function image_form_editor_image_dialog_validate(array &$form, FormStateInterface $form_state): void {
   // There is no file yet to apply an image style so no need to validate.
   if (empty($form_state->getValue('fid')[0])) {
     return;

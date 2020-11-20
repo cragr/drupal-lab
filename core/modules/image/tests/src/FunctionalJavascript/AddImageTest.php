@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\Tests\image\FunctionalJavascript;
 
 use Drupal\Core\Url;
@@ -60,7 +62,7 @@ class AddImageTest extends WebDriverTestBase {
   /**
    * Tests if an image can be placed inline with the data-image-style attribute.
    */
-  public function testDataImageStyleElement() {
+  public function testDataImageStyleElement(): void {
     $image_url = Url::fromUri('base:core/themes/bartik/screenshot.png')->toString();
 
     $this->drupalGet('node/add/page');
