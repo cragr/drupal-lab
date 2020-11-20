@@ -285,4 +285,18 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    */
   public function tips($long = FALSE);
 
+  /**
+   * Allows the plugin to react when one of its dependencies are deleted.
+   *
+   * @param array $dependencies
+   *   An array of dependencies that will be deleted keyed by dependency type.
+   *
+   * @return bool
+   *   TRUE if the plugin settings have been changed, FALSE if not.
+   *
+   *
+   * @todo Move this a generic interface in https://www.drupal.org/node/2579743.
+   */
+  public function onDependencyRemoval(array $dependencies): bool;
+
 }

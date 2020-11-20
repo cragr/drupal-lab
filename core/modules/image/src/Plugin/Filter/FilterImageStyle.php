@@ -108,7 +108,7 @@ class FilterImageStyle extends FilterBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function process($text, $langcode): FilterProcessResult {
-    // Process the filter if no image style img elements are found.
+    // Don't process the filter if no image style img elements are found.
     if (stristr($text, 'data-image-style') === FALSE) {
       return new FilterProcessResult($text);
     }
@@ -160,7 +160,7 @@ class FilterImageStyle extends FilterBase implements ContainerFactoryPluginInter
   /**
    * Returns a list of image styles to be used as '#options' in select elements.
    *
-   * @return array
+   * @return string[]
    *   An associative array of image style labels keyed by their image style ID.
    */
   public function getAllowedImageStylesAsOptions(): array {
@@ -327,6 +327,39 @@ class FilterImageStyle extends FilterBase implements ContainerFactoryPluginInter
       ];
     }
     return $this->t('You can display images using site-wide styles by adding a <code>data-image-style</code> attribute.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies(): array {
+    $dependencies = parent::calculateDependencies();
+
+    if ($this->settings['allowed_styles']) {
+      foreach ($this->getAllowedImageStyles() as $image_style) {
+        $dependencies[$image_style->getConfigDependencyKey()][] = $image_style->getConfigDependencyName();
+      }
+    }
+
+    return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies): bool {
+    $changed = parent::onDependencyRemoval($dependencies);
+
+    if ($this->settings['allowed_styles']) {
+      foreach ($this->getAllowedImageStyles() as $image_style_id => $image_style) {
+        if (isset($dependencies[$image_style->getConfigDependencyKey()][$image_style->getConfigDependencyName()])) {
+          unset($this->settings['allowed_styles'][array_search($image_style_id, $this->settings['allowed_styles'])]);
+          $changed = TRUE;
+        }
+      }
+    }
+
+    return $changed;
   }
 
 }
