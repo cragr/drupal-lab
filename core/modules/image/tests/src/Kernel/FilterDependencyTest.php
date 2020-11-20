@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\filter\Kernel;
+namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\filter\Entity\FilterFormat;
@@ -20,14 +20,14 @@ class FilterDependencyTest extends KernelTestBase {
   protected static $modules = [
     'dblog',
     'filter',
-    'filter_test',
     'image',
+    'image_style_filter_test',
   ];
 
   /**
-   * @covers \Drupal\filter\Entity\FilterFormat::onDependencyRemoval
    * @covers \Drupal\image\Plugin\Filter\FilterImageStyle::calculateDependencies
    * @covers \Drupal\image\Plugin\Filter\FilterImageStyle::onDependencyRemoval
+   * @covers \Drupal\filter\Entity\FilterFormat::onDependencyRemoval
    */
   public function testDependencyRemoval(): void {
     $this->installSchema('dblog', ['watchdog']);
@@ -127,7 +127,7 @@ class FilterDependencyTest extends KernelTestBase {
     $format = FilterFormat::load('format');
 
     // Check that an unresolved removed dependency disables the filter.
-    // @see \Drupal\filter_test\Plugin\Filter\FilterTestImageStyle::onDependencyRemoval()
+    // @see \Drupal\image_style_filter_test\FilterTestImageStyle::onDependencyRemoval()
     $this->assertEmpty($format->filters('filter_image_style')->getConfiguration()['settings']['allowed_styles']);
     $this->assertEmpty($format->getDependencies());
     $this->assertFalse($format->filters('filter_image_style')->getConfiguration()['status']);

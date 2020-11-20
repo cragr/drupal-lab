@@ -5,8 +5,6 @@
  * Test module for Filter module hooks and functions not used in core.
  */
 
-use Drupal\filter_test\Plugin\Filter\FilterTestImageStyle;
-
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
@@ -26,11 +24,4 @@ function filter_test_filter_format_update($format) {
  */
 function filter_test_filter_format_disable($format) {
   \Drupal::messenger()->addStatus('hook_filter_format_disable invoked.');
-}
-
-/**
- * Implements hook_filter_info_alter().
- */
-function filter_test_filter_info_alter(array &$info) {
-  $info['filter_image_style']['class'] = FilterTestImageStyle::class;
 }
