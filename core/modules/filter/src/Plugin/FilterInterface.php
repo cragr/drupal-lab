@@ -294,7 +294,6 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * @return bool
    *   TRUE if the plugin settings have been changed, FALSE if not.
    *
-   *
    * @todo Move to a generic interface in https://www.drupal.org/node/2579743.
    */
   public function onDependencyRemoval(array $dependencies): bool;
