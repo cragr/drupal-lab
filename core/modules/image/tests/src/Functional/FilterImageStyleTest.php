@@ -70,7 +70,7 @@ class FilterImageStyleTest extends BrowserTestBase {
    *   The image HTML markup.
    */
   protected function nodeHelper(string $image_html): void {
-    $node = $this->drupalCreateNode([
+    $node = $this->createNode([
       'type' => 'page',
       'title' => $this->randomString(),
       'body' => [
@@ -100,8 +100,8 @@ class FilterImageStyleTest extends BrowserTestBase {
     $this->assertNotEmpty($image_element);
 
     $this->assertFalse($image_element->hasAttribute('class'));
-    $this->assertEquals($file_url, $image_element->getAttribute('src'));
-    $this->assertEquals('220', $image_element->getAttribute('width'));
+    $this->assertSame($file_url, $image_element->getAttribute('src'));
+    $this->assertSame('220', $image_element->getAttribute('width'));
     $this->assertFalse($image_element->hasAttribute('height'));
   }
 
@@ -122,8 +122,8 @@ class FilterImageStyleTest extends BrowserTestBase {
     $this->assertNotEmpty($image_element);
 
     $this->assertStringContainsString('medium', $image_element->getAttribute('src'));
-    $this->assertEquals('220', $image_element->getAttribute('width'));
-    $this->assertEquals('164', $image_element->getAttribute('height'));
+    $this->assertSame('220', $image_element->getAttribute('width'));
+    $this->assertSame('164', $image_element->getAttribute('height'));
   }
 
 }
