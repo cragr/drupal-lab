@@ -303,7 +303,7 @@ class FilterImageStyle extends FilterBase implements ContainerFactoryPluginInter
     // The allowed styles can be a select list or checkboxes. Checkboxes should
     // be filtered to remove unselected options and it doesn't harm selects.
     if (isset($this->settings['allowed_styles'])) {
-      $this->settings['allowed_styles'] = array_filter($this->settings['allowed_styles']);
+      $this->settings['allowed_styles'] = array_values(array_filter($this->settings['allowed_styles']));
     }
     return $this;
   }
