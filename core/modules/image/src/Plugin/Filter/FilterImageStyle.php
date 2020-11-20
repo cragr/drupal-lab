@@ -163,7 +163,7 @@ class FilterImageStyle extends FilterBase implements ContainerFactoryPluginInter
    * @return array
    *   An associative array of image style labels keyed by their image style ID.
    */
-  public function getAllowedImageStyleOptions(): array {
+  public function getAllowedImageStylesAsOptions(): array {
     return array_map(function (ImageStyleInterface $image_style): string {
       return $image_style->label();
     }, $this->getAllowedImageStyles());
@@ -311,14 +311,20 @@ class FilterImageStyle extends FilterBase implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
-  public function tips($long = FALSE): MarkupInterface {
+  public function tips($long = FALSE) {
     if ($long) {
-      if (empty($this->settings['allowed_styles'])) {
-        return $this->t('Any image style may be used by adding a <code>data-image-style</code> attribute whose value is the image style machine-name. The image file <code>data-entity-uuid</code> should be also present.');
-      }
-      return $this->t('You can display images using site-wide styles by adding a <code>data-image-style</code> attribute whose values is the image style machine-name. The following image styles can be used: @image-style-list. . The image file <code>data-entity-uuid</code> should be also present.', [
-        '@image-style-list' => implode(', ', $this->getAllowedImageStyleOptions()),
-      ]);
+      return [
+        [
+          '#markup' => $this->t('You can display images using site-wide styles by adding a <code>data-image-style</code> attribute whose values is the image style machine-name. The following image styles can be used:'),
+        ],
+        [
+          '#theme' => 'item_list',
+          '#items' => $this->getAllowedImageStylesAsOptions(),
+        ],
+        [
+          '#markup' => $this->t('The image file <code>data-entity-uuid</code> should be also present.'),
+        ],
+      ];
     }
     return $this->t('You can display images using site-wide styles by adding a <code>data-image-style</code> attribute.');
   }

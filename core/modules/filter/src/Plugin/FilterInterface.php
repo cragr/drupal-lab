@@ -277,8 +277,9 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *   (FALSE), or whether a more elaborate filter tips should be returned for
    *   template_preprocess_filter_tips() (TRUE).
    *
-   * @return string|null
-   *   Translated text to display as a tip, or NULL if this filter has no tip.
+   * @return array|\Drupal\Component\Render\MarkupInterface|string|null
+   *   Translated text to display as a tip. Can be a render array, a translated
+   *   markup, a string or NULL if this filter has no tip.
    *
    * @todo Split into getSummaryItem() and buildGuidelines().
    */

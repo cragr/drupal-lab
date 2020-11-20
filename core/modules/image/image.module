@@ -511,7 +511,7 @@ function image_form_editor_image_dialog_alter(array &$form, FormStateInterface $
     '#title' => t('Use image style'),
     '#type' => 'select',
     '#default_value' => isset($image_element['data-image-style']) ? $image_element['data-image-style'] : '',
-    '#options' => $filter->getAllowedImageStyleOptions(),
+    '#options' => $filter->getAllowedImageStylesAsOptions(),
     '#empty_value' => '',
     // Set #parents in order to make the selected value an image attribute,
     // named 'data-image-style', in the same way as other image attributes, such as
