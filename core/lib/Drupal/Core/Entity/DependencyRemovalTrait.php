@@ -4,6 +4,9 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
+/**
+ * Provides reusable code for config entities handling their dependency removal.
+ */
 trait DependencyRemovalTrait {
 
   /**
