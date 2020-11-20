@@ -169,6 +169,7 @@ filter_settings.filter_image_style:
     allowed_styles:
       type: sequence
       label: 'Allowed image styles'
+      orderby: value
       sequence:
         type: string
         label: 'Image style ID'
