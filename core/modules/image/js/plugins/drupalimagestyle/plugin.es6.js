@@ -7,7 +7,7 @@
  * attribute to be set.
  */
 
-(function(CKEDITOR) {
+(function (CKEDITOR) {
   /**
    * Finds an element by its name.
    *
@@ -28,7 +28,7 @@
     }
 
     let found = null;
-    element.forEach(el => {
+    element.forEach((el) => {
       if (el.name === name) {
         found = el;
         // Stop here.
@@ -45,7 +45,7 @@
       // data-image-style attributes.
       editor.on(
         'widgetDefinition',
-        event => {
+        (event) => {
           const widgetDefinition = event.data;
           if (widgetDefinition.name !== 'image') {
             return;
@@ -73,7 +73,7 @@
 
           // Decorate downcast().
           const originalDowncast = widgetDefinition.downcast;
-          widgetDefinition.downcast = function(element) {
+          widgetDefinition.downcast = function (element) {
             let img = originalDowncast.call(this, element);
             if (!img) {
               img = findElementByName(element, 'img');
@@ -91,7 +91,7 @@
 
           // Decorate upcast().
           const originalUpcast = widgetDefinition.upcast;
-          widgetDefinition.upcast = function(element, data) {
+          widgetDefinition.upcast = function (element, data) {
             if (
               element.name !== 'img' ||
               !element.attributes['data-entity-type'] ||
