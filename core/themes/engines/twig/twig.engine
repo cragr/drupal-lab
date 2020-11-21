@@ -77,8 +77,8 @@ function twig_render_template($template_file, array $variables) {
   if ($twig_service->isDebug()) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
     $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . Html::escape($variables['theme_hook_original']) . "' -->";
-    // We don't output the template suggestions if there are only one as it
-    // would be somewhat redundant with the THEME HOOK above.
+    // If there is only one template suggestion file, we don't output it, since
+    // it would be somewhat redundant with the THEME HOOK above.
     if (count($variables['template_suggestions']) > 1) {
       $extension = twig_extension();
       $current_template = basename($template_file);
