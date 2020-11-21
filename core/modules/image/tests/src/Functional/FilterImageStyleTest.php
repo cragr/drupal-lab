@@ -96,7 +96,7 @@ class FilterImageStyleTest extends BrowserTestBase {
     $this->nodeHelper($image_html);
 
     /** @var \Behat\Mink\Element\NodeElement $img_element */
-    $image_element = $this->getSession()->getPage()->find('css', "img");
+    $image_element = $this->getSession()->getPage()->find('css', 'img');
     $this->assertNotEmpty($image_element);
 
     $this->assertFalse($image_element->hasAttribute('class'));
