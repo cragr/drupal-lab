@@ -143,7 +143,9 @@ class ThemeManager implements ThemeManagerInterface {
 
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
+    $template_suggestions = [$hook];
     if (is_array($hook)) {
+      $template_suggestions = $hook;
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -183,6 +185,19 @@ class ThemeManager implements ThemeManagerInterface {
     }
 
     $info = $theme_registry->get($hook);
+
+    // We've found a template implementation, but we need to let the template
+    // engine know about all possible suggestions (for discoverability). The
+    // code above only iteratively strips '__' parts from $hook if the hook was
+    // not found in the theme registry. If the #theme was an array, that also
+    // means $hook was the last element in that array. So we know it is safe to
+    // always grab the last suggestion from that array in order to find all
+    // possible template suggestions from the #theme value.
+    $possible_hook = $template_suggestions[array_key_last($template_suggestions)];
+    while ($pos = strrpos($possible_hook, '__')) {
+      $possible_hook = substr($possible_hook, 0, $pos);
+      $template_suggestions[] = $possible_hook;
+    }
 
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
@@ -244,13 +259,25 @@ class ThemeManager implements ThemeManagerInterface {
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
+    // Merge these new suggestions into our previous list of all possible
+    // template suggestions.
+    $reversed_suggestions = array_reverse($suggestions);
+    if (!in_array($hook, $reversed_suggestions)) {
+      // Make sure $hook is not actually replaced in the array_splice below.
+      $reversed_suggestions[] = $hook;
+    }
+    $hook_position = array_search($hook, $template_suggestions, TRUE);
+    array_splice($template_suggestions, $hook_position, 1, $reversed_suggestions);
+
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
     // '#theme' => 'node', but a module can add 'node__article' as a suggestion
     // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
     // an alternate template file for article nodes.
+    $template_suggestion = $hook;
     foreach (array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
+        $template_suggestion = $suggestion;
         $info = $theme_registry->get($suggestion);
         break;
       }
@@ -381,6 +408,10 @@ class ThemeManager implements ThemeManagerInterface {
       if (isset($theme_hook_suggestion)) {
         $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
       }
+      // Add two read-only variables that help the template engine understand
+      // how the template was chosen from among all suggestions.
+      $variables['template_suggestions'] = $template_suggestions;
+      $variables['template_suggestion'] = $template_suggestion;
       $output = $render_function($template_file, $variables);
     }
 
