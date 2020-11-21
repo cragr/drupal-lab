@@ -381,7 +381,11 @@ class ThemeManager implements ThemeManagerInterface {
       if (!isset($default_attributes)) {
         $default_attributes = new Attribute();
       }
-      foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
+      foreach ([
+        'attributes',
+        'title_attributes',
+        'content_attributes',
+      ] as $key) {
         if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
           if ($variables[$key]) {
             $variables[$key] = new Attribute($variables[$key]);
@@ -425,8 +429,9 @@ class ThemeManager implements ThemeManagerInterface {
    *   The current route match.
    */
   protected function initTheme(RouteMatchInterface $route_match = NULL) {
-    // Determine the active theme for the theme negotiator service. This includes
-    // the default theme as well as really specific ones like the ajax base theme.
+    // Determine the active theme for the theme negotiator service. This
+    // includes the default theme as well as really specific ones like the ajax
+    // base theme.
     if (!$route_match) {
       $route_match = \Drupal::routeMatch();
     }
@@ -451,8 +456,8 @@ class ThemeManager implements ThemeManagerInterface {
       $extra_types = $type;
       $type = array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
-      // than !empty() both when $type is passed as a string, or as an array with
-      // one item.
+      // than !empty() both when $type is passed as a string, or as an array
+      // with one item.
       if (empty($extra_types)) {
         unset($extra_types);
       }
