@@ -84,4 +84,32 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     $this->assertRaw('<em class="placeholder">' . count($this->dataSet()) . '</em> items found.');
   }
 
+  /**
+   * Tests the views theme suggestions in debug mode.
+   */
+  public function testThemeSuggestionsInDebug() {
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->rebuildContainer();
+    $this->resetAll();
+
+    $build = [
+      '#type' => 'view',
+      '#name' => 'test_page_display',
+      '#display_id' => 'default',
+      '#arguments' => [],
+    ];
+
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
+    $output = $renderer->renderRoot($build);
+    $expected = '   * views-view--test-page-display--default.html.twig' . PHP_EOL
+      . '   * views-view--default.html.twig' . PHP_EOL
+      . '   * views-view--test-page-display.html.twig' . PHP_EOL
+      . '   x views-view.html.twig' . PHP_EOL;
+    $this->assertTrue(strpos($output, $expected) !== FALSE);
+  }
+
 }

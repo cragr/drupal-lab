@@ -117,6 +117,31 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   }
 
   /**
+   * Tests hook_theme_suggestions_HOOK() with direct array suggestions.
+   */
+  public function testArraySuggestions() {
+    $this->drupalGet('theme-test/array-suggestions');
+    $this->assertText('Template for testing suggestion hooks with an array of theme suggestions.');
+
+    $this->drupalGet('/theme-test/array-suggestions-specific');
+    $this->assertText('Template for testing suggestion hooks with an array of theme suggestions, overrides a less specific suggestion.');
+
+    // Enable the theme_suggestions_test module to test modules implementing
+    // suggestions hooks.
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
+
+    // Install test_theme to provide a template for the suggestion added in
+    // theme_suggestions_test module.
+    $this->config('system.theme')
+      ->set('default', 'test_theme')
+      ->save();
+
+    $this->resetAll();
+    $this->drupalGet('theme-test/array-suggestions');
+    $this->assertText('Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_HOOK().');
+  }
+
+  /**
    * Tests execution order of theme suggestion alter hooks.
    *
    * Hook hook_theme_suggestions_alter() should fire before

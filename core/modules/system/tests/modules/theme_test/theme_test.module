@@ -33,6 +33,12 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_general_suggestions'] = [
     'variables' => [],
   ];
+  $items['theme_test_array_suggestions'] = [
+    'variables' => [],
+  ];
+  $items['theme_test_array_suggestions__implemented'] = [
+    'variables' => [],
+  ];
   $items['theme_test_foo'] = [
     'variables' => ['foo' => NULL],
   ];

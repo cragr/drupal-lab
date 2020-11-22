@@ -94,10 +94,44 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
+   * Menu callback for testing direct suggestions without implementation.
+   */
+  public function specificSuggestion() {
+    return ['#theme' => 'theme_test_specific_suggestions__not__found'];
+  }
+
+  /**
    * Menu callback for testing suggestion alter hooks with specific suggestions.
    */
   public function specificSuggestionAlter() {
     return ['#theme' => 'theme_test_specific_suggestions__variant'];
+  }
+
+  /**
+   * Menu callback for testing suggestion hooks with an array of theme hooks.
+   */
+  public function arraySuggestions() {
+    return [
+      '#theme' => [
+        'theme_test_array_suggestions__not_implemented',
+        'theme_test_array_suggestions__not_implemented_2',
+        'theme_test_array_suggestions',
+      ],
+    ];
+  }
+
+  /**
+   * Menu callback for testing suggestion hooks with an array of theme hooks.
+   */
+  public function arraySuggestionsSpecific() {
+    return [
+      '#theme' => [
+        'theme_test_array_suggestions__implemented__not_implemented',
+        'theme_test_array_suggestions__implemented',
+        'theme_test_array_suggestions__not_implemented',
+        'theme_test_array_suggestions',
+      ],
+    ];
   }
 
   /**

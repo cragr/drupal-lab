@@ -25,22 +25,30 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests debug markup added to Twig template output.
+   * {@inheritdoc}
    */
-  public function testTwigDebugMarkup() {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-    $extension = twig_extension();
+  protected function setUp() {
+    parent::setUp();
+
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
     $this->drupalCreateContentType(['type' => 'page']);
+
     // Enable debug, rebuild the service container, and clear all caches.
     $parameters = $this->container->getParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->resetAll();
+  }
 
+  /**
+   * Tests debug markup added to Twig template output.
+   */
+  public function testTwigDebugMarkup() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $extension = twig_extension();
     $cache = $this->container->get('theme.registry')->get();
     // Create array of Twig templates.
     $templates = drupal_find_theme_templates($cache, $extension, drupal_get_path('theme', 'test_theme'));
@@ -84,6 +92,67 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $build = $builder->view($node);
     $output = $renderer->renderRoot($build);
     $this->assertStringNotContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup not found in theme output when debug is disabled.');
+  }
+
+  /**
+   * Tests debug markup for array suggestions and hook_theme_suggestions_HOOK().
+   */
+  public function testArraySuggestionsTwigDebugMarkup() {
+    \Drupal::service('module_installer')->install(['theme_suggestions_test']);
+    $extension = twig_extension();
+    $this->drupalGet('theme-test/array-suggestions');
+    $output = $this->getRawContent();
+
+    $expected = "THEME HOOK: 'theme_test_array_suggestions'";
+    $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
+
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * theme-test-array-suggestions--not-implemented' . $extension . PHP_EOL
+      . '   * theme-test-array-suggestions--not-implemented-2' . $extension . PHP_EOL
+      . '   x theme-test-array-suggestions--suggestion-from-hook' . $extension . PHP_EOL
+      . '   * theme-test-array-suggestions' . $extension . PHP_EOL
+      . '-->';
+    $message = 'Suggested template files found in order and correct suggestion shown as current template.';
+    $this->assertTrue(strpos($output, $expected) !== FALSE, $message);
+  }
+
+  /**
+   * Tests debug markup for specific suggestions without implementation.
+   */
+  public function testUnimplementedSpecificSuggestionsTwigDebugMarkup() {
+    $extension = twig_extension();
+    $this->drupalGet('theme-test/specific-suggestion');
+    $output = $this->getRawContent();
+
+    $expected = "THEME HOOK: 'theme_test_specific_suggestions__not__found'";
+    $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
+
+    $message = 'Suggested template files found in order and base template shown as current template.';
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * theme-test-specific-suggestions--not--found' . $extension . PHP_EOL
+      . '   * theme-test-specific-suggestions--not' . $extension . PHP_EOL
+      . '   x theme-test-specific-suggestions' . $extension . PHP_EOL
+      . '-->';
+    $this->assertTrue(strpos($output, $expected) !== FALSE, $message);
+  }
+
+  /**
+   * Tests debug markup for specific suggestions.
+   */
+  public function testSpecificSuggestionsTwigDebugMarkup() {
+    $extension = twig_extension();
+    $this->drupalGet('theme-test/specific-suggestion-alter');
+    $output = $this->getRawContent();
+
+    $expected = "THEME HOOK: 'theme_test_specific_suggestions__variant'";
+    $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
+
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   x theme-test-specific-suggestions--variant' . $extension . PHP_EOL
+      . '   * theme-test-specific-suggestions' . $extension . PHP_EOL
+      . '-->';
+    $message = 'Suggested template files found in order and suggested template shown as current.';
+    $this->assertTrue(strpos($output, $expected) !== FALSE, $message);
   }
 
 }
