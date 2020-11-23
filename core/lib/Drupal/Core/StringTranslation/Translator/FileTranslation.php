@@ -31,7 +31,7 @@ class FileTranslation extends StaticTranslation {
   protected $fileSystem;
 
   /**
-   *  The filename pattern of the translation files.
+   * The filename pattern of the translation files.
    *
    * @var string
    */

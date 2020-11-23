@@ -254,7 +254,7 @@ function install_state_defaults() {
     // setting of the 'locale.settings' configuration.
     'translation_directory' => NULL,
     // The filename pattern for translation files. This corresponds to the
-    //'translation.default_filename' setting of the 'locale.settings'
+    // 'translation.default_filename' setting of the 'locale.settings'
     // configuration.
     'translation_filename_pattern' => '%project-%version.%language.po',
     // Installation tasks can set this to TRUE to force the page request to

@@ -18,63 +18,38 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
   protected static $modules = ['system'];
 
   /**
-   * @var \Drupal\Core\StringTranslation\Translator\FileTranslation
+   * @dataProvider providerTestFilesPattern
    */
-  protected $fileTranslation;
+  public function testFilesPattern($filename_pattern, $langcode, $filename, $match) {
+    $file_translation = new FileTranslation('filename', $this->container->get('file_system'), $filename_pattern);
+    $file_pattern_method = new \ReflectionMethod('\Drupal\Core\StringTranslation\Translator\FileTranslation', 'getTranslationFilesPattern');
+    $file_pattern_method->setAccessible(TRUE);
 
-  /**
-   * @var \ReflectionMethod
-   */
-  protected $filePatternMethod;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->fileTranslation = new FileTranslation('filename', $this->container->get('file_system'));
-    $method = new \ReflectionMethod('\Drupal\Core\StringTranslation\Translator\FileTranslation', 'getTranslationFilesPattern');
-    $method->setAccessible(TRUE);
-    $this->filePatternMethod = $method;
-  }
-
-  /**
-   * @dataProvider providerValidTranslationFiles
-   */
-  public function testFilesPatternValid($langcode, $filename) {
-    $pattern = $this->filePatternMethod->invoke($this->fileTranslation, $langcode);
-    $this->assertNotEmpty(preg_match($pattern, $filename));
+    $pattern = $file_pattern_method->invoke($file_translation, $langcode);
+    $this->assertSame($match, preg_match($pattern, $filename));
   }
 
   /**
    * @return array
    */
-  public function providerValidTranslationFiles() {
+  public function providerTestFilesPattern() {
     return [
-      ['hu', 'drupal-8.0.0-alpha1.hu.po'],
-      ['ta', 'drupal-8.10.10-beta12.ta.po'],
-      ['hi', 'drupal-8.0.0.hi.po'],
-    ];
-  }
-
-  /**
-   * @dataProvider providerInvalidTranslationFiles
-   */
-  public function testFilesPatternInvalid($langcode, $filename) {
-    $pattern = $this->filePatternMethod->invoke($this->fileTranslation, $langcode);
-    $this->assertEmpty(preg_match($pattern, $filename));
-  }
-
-  /**
-   * @return array
-   */
-  public function providerInvalidTranslationFiles() {
-    return [
-      ['hu', 'drupal-alpha1-*-hu.po'],
-      ['ta', 'drupal-beta12.ta'],
-      ['hi', 'drupal-hi.po'],
-      ['de', 'drupal-dummy-de.po'],
-      ['hu', 'drupal-10.0.1.alpha1-hu.po'],
+      ['%project-%version.%language.po', 'hu', 'drupal-8.0.0-alpha1.hu.po', 1],
+      ['%project-%version.%language.po', 'ta', 'drupal-8.10.10-beta12.ta.po', 1],
+      ['%project-%version.%language.po', 'hi', 'drupal-8.0.0.hi.po', 1],
+      ['%project-%version.%language.po', 'hu', 'drupal-alpha1-*-hu.po', 0],
+      ['%project-%version.%language.po', 'ta', 'drupal-beta12.ta', 0],
+      ['%project-%version.%language.po', 'hi', 'drupal-hi.po', 0],
+      ['%project-%version.%language.po', 'de', 'drupal-dummy-de.po', 0],
+      ['%project-%version.%language.po', 'hu', 'drupal-10.0.1.alpha1-hu.po', 0],
+      ['%project.%language.po', 'hu', 'drupal.hu.po', 1],
+      ['%project.%language.po', 'hu', 'drupal-8.0.0-alpha1.hu.po', 0],
+      ['%project-%core-%version.%language.po', 'hu', 'drupal-all-8.0.0-alpha1.hu.po', 1],
+      ['%project-%core-%version.%language.po', 'hu', 'drupal-8.0.0-alpha1.hu.po', 0],
+      ['%project-%version.%language!.po', 'hu', 'drupal-8.0.0-alpha1.hu!.po', 1],
+      ['%project-%version.%language!.po', 'hu', 'drupal-8.0.0-alpha1.hu.po', 0],
+      ['%project-%version.%language!.po', 'hu', 'drupal-8.0.0-alpha1.hu!!.po', 0],
+      ['%project-%version.%language!.po', 'hu!', 'drupal-8.0.0-alpha1.hu!!.po', 1],
     ];
   }
 
