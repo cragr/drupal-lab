@@ -107,6 +107,8 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     $output = $renderer->renderRoot($build);
     $expected = '   * views-view--test-page-display--default.html.twig' . PHP_EOL
       . '   * views-view--default.html.twig' . PHP_EOL
+      . '   * views-view--tag1.html.twig' . PHP_EOL
+      . '   * views-view--tag2.html.twig' . PHP_EOL
       . '   * views-view--test-page-display.html.twig' . PHP_EOL
       . '   x views-view.html.twig' . PHP_EOL;
     $this->assertTrue(strpos($output, $expected) !== FALSE);
