@@ -27,7 +27,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp():void {
     parent::setUp();
 
     \Drupal::service('theme_installer')->install(['test_theme']);
@@ -101,7 +101,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['theme_suggestions_test']);
     $extension = twig_extension();
     $this->drupalGet('theme-test/array-suggestions');
-    $output = $this->getRawContent();
+    $output = $this->getSession()->getPage()->getContent();
 
     $expected = "THEME HOOK: 'theme_test_array_suggestions'";
     $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
@@ -122,7 +122,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   public function testUnimplementedSpecificSuggestionsTwigDebugMarkup() {
     $extension = twig_extension();
     $this->drupalGet('theme-test/specific-suggestion');
-    $output = $this->getRawContent();
+    $output = $this->getSession()->getPage()->getContent();
 
     $expected = "THEME HOOK: 'theme_test_specific_suggestions__not__found'";
     $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
@@ -142,7 +142,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   public function testSpecificSuggestionsTwigDebugMarkup() {
     $extension = twig_extension();
     $this->drupalGet('theme-test/specific-suggestion-alter');
-    $output = $this->getRawContent();
+    $output = $this->getSession()->getPage()->getContent();
 
     $expected = "THEME HOOK: 'theme_test_specific_suggestions__variant'";
     $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
