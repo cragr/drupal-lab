@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Installer;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\KernelTests\KernelTestBase;
@@ -17,7 +16,7 @@ class InstallerLanguageTest extends KernelTestBase {
   /**
    * Tests that the installer can find translation files.
    *
-   * @param string[]
+   * @param string[] $files
    *   A list of test files to create.
    * @param string $filename_pattern
    *   The filename pattern to search with.
