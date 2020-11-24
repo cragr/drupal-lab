@@ -311,6 +311,7 @@ class ContentEntityTest extends KernelTestBase {
     $ids = $node_source->getIds();
     $this->assertArrayHasKey('langcode', $ids);
     $this->assertArrayHasKey('nid', $ids);
+    $this->assertTrue(count($ids) === 2);
     $fields = $node_source->fields();
     $this->assertArrayHasKey('nid', $fields);
     $this->assertArrayHasKey('vid', $fields);
