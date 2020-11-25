@@ -56,7 +56,7 @@ class ForumIndexTest extends BrowserTestBase {
     $this->clickLink(t('Add new @node_type', ['@node_type' => 'Forum topic']));
     $this->assertSession()->addressEquals('node/add/forum');
     $this->assertSession()->urlQuerystringEquals("?forum_id=$tid");
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($title);

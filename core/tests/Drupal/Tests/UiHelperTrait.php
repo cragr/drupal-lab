@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests;
 
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Driver\GoutteDriver;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
@@ -107,9 +108,9 @@ trait UiHelperTrait {
       $this->metaRefreshCount = 0;
     }
 
-    // Log only for WebDriverTestBase tests because for Goutte we log with
-    // ::getResponseLogHandler.
-    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
+    // Log only for WebDriverTestBase tests because for tests using
+    // DrupalTestBrowser we log with ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !$this->isTestUsingGuzzleClient()) {
       $out = $this->getSession()->getPage()->getContent();
       $html_output = 'POST request to: ' . $action .
         '<hr />Ending URL: ' . $this->getSession()->getCurrentUrl();
@@ -137,7 +138,7 @@ trait UiHelperTrait {
    *
    *   // Second step in form.
    *   $edit = array(...);
-   *   $this->drupalPostForm(NULL, $edit, 'Save');
+   *   $this->submitForm($edit, 'Save');
    *   @endcode
    * @param array $edit
    *   Field data in an associative array. Changes the current input fields
@@ -202,6 +203,9 @@ trait UiHelperTrait {
     if ($edit === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858', E_USER_DEPRECATED);
       $edit = [];
+    }
+    if ($path === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() with $path set to NULL is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858', E_USER_DEPRECATED);
     }
 
     if (isset($path)) {
@@ -339,9 +343,9 @@ trait UiHelperTrait {
       $this->metaRefreshCount = 0;
     }
 
-    // Log only for WebDriverTestBase tests because for Goutte we log with
-    // ::getResponseLogHandler.
-    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
+    // Log only for WebDriverTestBase tests because for BrowserKitDriver we log
+    // with ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !$this->isTestUsingGuzzleClient()) {
       $html_output = 'GET request to: ' . $url .
         '<hr />Ending URL: ' . $this->getSession()->getCurrentUrl();
       $html_output .= '<hr />' . $out;
@@ -465,9 +469,9 @@ trait UiHelperTrait {
   protected function click($css_selector) {
     $starting_url = $this->getSession()->getCurrentUrl();
     $this->getSession()->getDriver()->click($this->cssSelectToXpath($css_selector));
-    // Log only for WebDriverTestBase tests because for Goutte we log with
-    // ::getResponseLogHandler.
-    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
+    // Log only for WebDriverTestBase tests because for BrowserKitDriver we log
+    // with ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !$this->isTestUsingGuzzleClient()) {
       $out = $this->getSession()->getPage()->getContent();
       $html_output =
         'Clicked element with CSS selector: ' . $css_selector .
@@ -551,6 +555,24 @@ trait UiHelperTrait {
    */
   protected function cssSelect($selector) {
     return $this->getSession()->getPage()->findAll('css', $selector);
+  }
+
+  /**
+   * Determines if test is using DrupalTestBrowser.
+   *
+   * @return bool
+   *   TRUE if test is using DrupalTestBrowser.
+   */
+  protected function isTestUsingGuzzleClient() {
+    $driver = $this->getSession()->getDriver();
+    if ($driver instanceof GoutteDriver) {
+      // Legacy support of GoutteDriver.
+      return TRUE;
+    }
+    if ($driver instanceof BrowserKitDriver) {
+      return $driver->getClient() instanceof DrupalTestBrowser;
+    }
+    return FALSE;
   }
 
 }
