@@ -214,7 +214,7 @@
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
   z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the grey separator. */
   color: #003cc5;
-  border-color: var(--color-lightdiamond) transparent;
+  border-color: #dedfe4 transparent;
   background-color: #fff;
   box-shadow: 0
 2px
@@ -285,7 +285,7 @@ rgba(0, 0, 0, 0.1);
   color: #222330;
   border: 1px
 solid
-var(--color-lightdiamond);
+#dedfe4;
   border-radius: 2px;
   background-color: #fff;
   box-shadow: 0
