@@ -30,6 +30,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   of this bundle.
  * - include_translations: (optional) Indicates if the entity translations
  *   should be included, defaults to TRUE.
+ * - include_revisions: (optional) Indicates if the entity revisions
+ *   should be included, defaults to FALSE. If this is set on a non revisionable
+ *   entity type, the revision ID is included in keys and flattened, nothing
+ *   else happens. This allows to use the same migration with or without
+ *   revisions (think user_revision module).
  *
  * Examples:
  *
@@ -38,6 +43,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @code
  * source:
  *   plugin: content_entity:node
+ * @endcode
+ *
+ * This will return all node revisions, from every bundle and every translation.
+ * @code
+ * source:
+ *   plugin: content_entity:node
+ *   include_revisions: true
  * @endcode
  *
  * This will only return nodes of type 'article' in their default language.
@@ -214,6 +226,11 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
       ->getStorage($this->entityType->id())
       ->getQuery()
       ->accessCheck(FALSE);
+    if (!empty($this->configuration['include_revisions'])) {
+      if ($this->entityType->isRevisionable()) {
+        $query->allRevisions();
+      }
+    }
     if (!empty($this->configuration['bundle'])) {
       $query->condition($this->entityType->getKey('bundle'), $this->configuration['bundle']);
     }
@@ -265,7 +282,8 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
-    if ($this->entityType->isRevisionable()) {
+    // @fixme Rebase this once #3184627 landed
+    if (!empty($this->configuration['include_revisions'])) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
     }
