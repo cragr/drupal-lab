@@ -243,12 +243,14 @@
     }
   });
 
-  CKEDITOR.plugins.image2.getLinkAttributesParser = function () {
-    return CKEDITOR.plugins.drupallink.parseLinkAttributes;
-  };
-  CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
-    return CKEDITOR.plugins.drupallink.getLinkAttributes;
-  };
+  if (CKEDITOR.plugins.externals.drupallink) {
+    CKEDITOR.plugins.image2.getLinkAttributesParser = function () {
+      return CKEDITOR.plugins.drupallink.parseLinkAttributes;
+    };
+    CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
+      return CKEDITOR.plugins.drupallink.getLinkAttributes;
+    };
+  }
 
   CKEDITOR.plugins.drupalimage = {
     getFocusedWidget: getFocusedWidget
