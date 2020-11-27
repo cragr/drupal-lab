@@ -13,6 +13,7 @@ function addAsset(dependency, { unminified = false, minified = false, importName
   return [
     {
       input: 'entry',
+      context: 'this',
       output: {
         name: dependency,
         file: `assets/vendor/${dependency}/${sourceFile}`,
@@ -24,6 +25,7 @@ function addAsset(dependency, { unminified = false, minified = false, importName
     },
     {
       input: `assets/vendor/${dependency}/${sourceFile}`,
+      context: 'this',
       output: {
         name: dependency,
         file: `assets/vendor/${dependency}/${minifiedFile}`,
@@ -40,53 +42,28 @@ function addAsset(dependency, { unminified = false, minified = false, importName
 }
 
 export default [
-  addAsset('picturefill'),
-  addAsset('js-cookie', { unminified: 'js.cookie.js' }),
-  addAsset('jquery-form', { unminified: 'jquery.form.js' }),
-  addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
-
+  //addAsset('picturefill'),
+  //addAsset('jquery'),
+  //addAsset('js-cookie', { unminified: 'js.cookie.js' }),
+  //addAsset('jquery-form', { unminified: 'jquery.form.js' }),
+  //addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
+  //addAsset('underscore', { unminified: 'underscore.js', minified: 'underscore-min.js', importName: 'underscore/underscore' }),
 
   (() => {
     const [step1, step2] = addAsset('sortable', {
       unminified: 'Sortable.js',
-      importName: 'sortablejs',
+      importName: 'sortablejs/dist/sortable.umd',
     });
 
-    return [{
-      ...step1,
-      output: {
-        ...step2.output,
-        name: 'Sortable',
-        //format: 'iife',
+    return [
+        {
+        ...step1,
+        output: {
+          ...step2.output,
+          name: 'Sortable',
+        }
       }
-    }];
-  })(),
-
-  (() => {
-    const [step1, step2] = addAsset('jquery');
-    step1.context = 'this';
-    step2.context = 'this';
-
-    // Add normalize here for a lack of a better place.
-    //step1.plugins.push(
-    //  copy({
-    //    src: 'node_modules/normalize.css/normalize.css',
-    //    dest: 'assets/vendor/normalize-css/',
-    //  })
-    //);
-
-    return [step1, step2];
-  })(),
-
-  (() => {
-    const [step1, step2] = addAsset('underscore', {
-      unminified: 'underscore.js',
-      minified: 'underscore-min.js',
-      importName: 'underscore/underscore',
-    });
-    step1.context = 'this';
-    step2.context = 'this';
-    return [step1, step2];
+    ];
   })(),
 
   (() => {
