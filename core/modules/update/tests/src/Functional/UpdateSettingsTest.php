@@ -22,7 +22,12 @@ class UpdateSettingsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer themes']);
     $this->drupalLogin($admin_user);
