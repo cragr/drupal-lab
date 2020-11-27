@@ -50,6 +50,14 @@ export default [
     step1.context = 'this';
     step2.context = 'this';
 
+    // Add normalize here for a lack of a better place.
+    //step1.plugins.push(
+    //  copy({
+    //    src: 'node_modules/normalize.css/normalize.css',
+    //    dest: 'assets/vendor/normalize-css/',
+    //  })
+    //);
+
     return [step1, step2];
   })(),
 
@@ -65,21 +73,17 @@ export default [
 
   (() => {
     const [step1, step2] = addAsset('popperjs', {
-      importName: '@popperjs/core',
+      unminified: 'popper.js',
     });
+    // Override the plugins because popperjs needs some extra help.
+    step1.plugins = [
+      virtual({ entry: `
+        import * as Popper from "@popperjs/core";
+      `}),
+      resolve(),
+    ];
 
     return [step1, step2];
   })(),
 
-  (() => {
-    const [step1, step2] = addAsset('normalize-css');
-    step1.plugins = [
-      copy({
-        src: 'node_modules/normalize.css/normalize.css',
-        dest: 'assets/vendor/normalize-css/',
-      })
-    ];
-
-    return [];// [step1];
-  })(),
 ].flat();
