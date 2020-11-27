@@ -40,10 +40,11 @@ function addAsset(dependency, { unminified = false, minified = false, importName
 }
 
 export default [
+  addAsset('picturefill'),
+  addAsset('js-cookie', { unminified: 'js.cookie.js' }),
+  addAsset('jquery-form', { unminified: 'jquery.form.js' }),
   addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
   addAsset('sortable', { unminified: 'Sortable.js', importName: 'sortablejs' }),
-  addAsset('jquery-form', { unminified: 'jquery.form.js' }),
-  addAsset('js-cookie', { unminified: 'js.cookie.js' }),
 
   (() => {
     const [step1, step2] = addAsset('jquery');
