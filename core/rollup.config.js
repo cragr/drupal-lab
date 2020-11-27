@@ -50,7 +50,9 @@ function addAsset(dependency, opts = {}, callback = false) {
 }
 
 export default [
+  // ok.
   addAsset('picturefill'),
+  // ok.
   addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
   addAsset('underscore', { unminified: 'underscore.js', minified: 'underscore-min.js', 'name': 'underscore/underscore' }),
 
@@ -59,7 +61,7 @@ export default [
     step2.output.format = 'iife';
     return [step1, step2];
   }),
-  //ok
+  // ok.
   addAsset('js-cookie', { unminified: 'js.cookie.js', 'import': 'js-cookie', 'name': 'Cookies', 'export': true }, ([step1, step2]) => {
     // Prevent leaking variables.
     step2.output.format = 'iife';
