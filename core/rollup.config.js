@@ -5,12 +5,12 @@ import buble from '@rollup/plugin-buble';
 import virtual from '@rollup/plugin-virtual';
 
 
-function addAsset(dependency, { unminified = false, minified = false, importName = false } = {}) {
+function addAsset(dependency, { unminified = false, minified = false, importName = false } = {}, callback = false) {
   const sourceFile = unminified || `${dependency}.js`;
   const minifiedFile = minified || sourceFile.replace(/js$/, 'min.js');
   const nameImport = importName || dependency;
   if (!dependency) { return [[], []]; }
-  return [
+  const steps = [
     {
       input: 'entry',
       context: 'this',
@@ -40,7 +40,8 @@ function addAsset(dependency, { unminified = false, minified = false, importName
         }),
       ],
     }
-  ]
+  ];
+  return callback && callback(steps) || steps;
 }
 
 export default [
@@ -50,33 +51,22 @@ export default [
   addAsset('jquery-form', { unminified: 'jquery.form.js' }),
   addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
   addAsset('underscore', { unminified: 'underscore.js', minified: 'underscore-min.js', importName: 'underscore/underscore' }),
-
-  (() => {
-    const [step1, step2] = addAsset('popperjs', {
-      unminified: 'popper.js',
-      importName: '@popperjs/core/dist/umd/popper',
-    });
+  addAsset('popperjs', { unminified: 'popper.js', importName: '@popperjs/core/dist/umd/popper' }, ([step1, step2]) => {
     // Prevent leaking variables.
     step2.output.format = 'iife';
-
     return [step1, step2];
-  })(),
+  }),
 
-  (() => {
-    const [step1, step2] = addAsset('sortable', {
-      unminified: 'Sortable.js',
-      importName: 'sortablejs/dist/sortable.umd',
-    });
-
-    // Sortable is already minified, no need to reminify it.
-    return [{
+  addAsset('sortable', { unminified: 'Sortable.js', importName: 'sortablejs/dist/sortable.umd' }, ([step1, step2]) => [
+    {
       ...step1,
       output: {
+        // Sortable is already minified, no need to reminify it.
         ...step2.output,
         name: 'Sortable',
         sourcemap: false,
       }
-    }];
-  })(),
+    }
+  ]),
 
 ].flat();
