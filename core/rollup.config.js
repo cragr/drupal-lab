@@ -44,7 +44,23 @@ export default [
   addAsset('js-cookie', { unminified: 'js.cookie.js' }),
   addAsset('jquery-form', { unminified: 'jquery.form.js' }),
   addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
-  addAsset('sortable', { unminified: 'Sortable.js', importName: 'sortablejs' }),
+
+
+  (() => {
+    const [step1, step2] = addAsset('sortable', {
+      unminified: 'Sortable.js',
+      importName: 'sortablejs',
+    });
+
+    return [{
+      ...step1,
+      output: {
+        ...step2.output,
+        name: 'Sortable',
+        //format: 'iife',
+      }
+    }];
+  })(),
 
   (() => {
     const [step1, step2] = addAsset('jquery');
@@ -66,9 +82,10 @@ export default [
     const [step1, step2] = addAsset('underscore', {
       unminified: 'underscore.js',
       minified: 'underscore-min.js',
+      importName: 'underscore/underscore',
     });
-    step1.output.format = 'iife';
-
+    step1.context = 'this';
+    step2.context = 'this';
     return [step1, step2];
   })(),
 
