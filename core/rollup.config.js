@@ -5,10 +5,11 @@ import copy from 'rollup-plugin-copy';
 import virtual from '@rollup/plugin-virtual';
 
 
-function asset(dependency, { source = false, minified = false, name = false }) {
-  const sourceFile = source || `${dependency}.js`;
+function addAsset(dependency, { unminified = false, minified = false, importName = false } = {}) {
+  const sourceFile = unminified || `${dependency}.js`;
   const minifiedFile = minified || sourceFile.replace(/js$/, 'min.js');
-  const importDependency = name || dependency;
+  const nameImport = importName || dependency;
+  if (!dependency) { return [[], []]; }
   return [
     {
       input: 'entry',
@@ -17,7 +18,7 @@ function asset(dependency, { source = false, minified = false, name = false }) {
         file: `assets/vendor/${dependency}/${sourceFile}`,
       },
       plugins: [
-        virtual({ entry: `import "${importDependency}";` }),
+        virtual({ entry: `import "${nameImport}";` }),
         resolve(),
       ],
     },
@@ -26,6 +27,7 @@ function asset(dependency, { source = false, minified = false, name = false }) {
       output: {
         name: dependency,
         file: `assets/vendor/${dependency}/${minifiedFile}`,
+        sourcemap: true,
       },
       plugins: [
         buble({ transforms: { modules: false } }),
@@ -37,62 +39,40 @@ function asset(dependency, { source = false, minified = false, name = false }) {
   ]
 }
 
-const files = [
-  ...(() => {
-    const [step1, step2] = asset('jquery');
+export default [
+  addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
+  addAsset('sortable', { unminified: 'Sortable.js', importName: 'sortablejs' }),
+  addAsset('jquery-form', { unminified: 'jquery.form.js' }),
+  addAsset('js-cookie', { unminified: 'js.cookie.js' }),
+
+  (() => {
+    const [step1, step2] = addAsset('jquery');
     step1.context = 'this';
     step2.context = 'this';
 
     return [step1, step2];
   })(),
-  ...(() => {
-    const [step1, step2] = asset('underscore', {
-      source: 'underscore.js',
+
+  (() => {
+    const [step1, step2] = addAsset('underscore', {
+      unminified: 'underscore.js',
       minified: 'underscore-min.js',
     });
     step1.output.format = 'iife';
 
     return [step1, step2];
   })(),
-  ...(() => {
-    const [step1, step2] = asset('backbone', {
-      source: 'backbone.js',
-      minified: 'backbone-min.js',
+
+  (() => {
+    const [step1, step2] = addAsset('popperjs', {
+      importName: '@popperjs/core',
     });
 
     return [step1, step2];
   })(),
-  ...(() => {
-    const [step1, step2] = asset('sortable', {
-      name: 'sortablejs',
-      source: 'Sortable.js',
-    });
 
-    return [step1, step2];
-  })(),
-  ...(() => {
-    const [step1, step2] = asset('popperjs', {
-      name: '@popperjs/core',
-    });
-
-    return [step1, step2];
-  })(),
-  ...(() => {
-    const [step1, step2] = asset('jquery-form', {
-      source: 'jquery.form.js',
-    });
-
-    return [step1, step2];
-  })(),
-  ...(() => {
-    const [step1, step2] = asset('js-cookie', {
-      source: 'js.cookie.js',
-    });
-
-    return [step1, step2];
-  })(),
-  ...(() => {
-    const [step1, step2] = asset('normalize-css');
+  (() => {
+    const [step1, step2] = addAsset('normalize-css');
     step1.plugins = [
       copy({
         src: 'node_modules/normalize.css/normalize.css',
@@ -102,6 +82,4 @@ const files = [
 
     return [];// [step1];
   })(),
-];
-
-export default files;
+].flat();
