@@ -55,15 +55,14 @@ export default [
       importName: 'sortablejs/dist/sortable.umd',
     });
 
-    return [
-        {
-        ...step1,
-        output: {
-          ...step2.output,
-          name: 'Sortable',
-        }
+    return [{
+      ...step1,
+      output: {
+        ...step2.output,
+        name: 'Sortable',
+        sourcemap: false,
       }
-    ];
+    }];
   })(),
 
   (() => {
