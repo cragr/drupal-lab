@@ -1,7 +1,7 @@
 import { terser } from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import buble from '@rollup/plugin-buble';
-import copy from 'rollup-plugin-copy';
+//import copy from 'rollup-plugin-copy';
 import virtual from '@rollup/plugin-virtual';
 
 
@@ -14,6 +14,7 @@ function addAsset(dependency, { unminified = false, minified = false, importName
     {
       input: 'entry',
       context: 'this',
+      treeshake: false,
       output: {
         name: dependency,
         file: `assets/vendor/${dependency}/${sourceFile}`,
@@ -26,6 +27,7 @@ function addAsset(dependency, { unminified = false, minified = false, importName
     {
       input: `assets/vendor/${dependency}/${sourceFile}`,
       context: 'this',
+      treeshake: false,
       output: {
         name: dependency,
         file: `assets/vendor/${dependency}/${minifiedFile}`,
@@ -42,12 +44,23 @@ function addAsset(dependency, { unminified = false, minified = false, importName
 }
 
 export default [
-  //addAsset('picturefill'),
-  //addAsset('jquery'),
-  //addAsset('js-cookie', { unminified: 'js.cookie.js' }),
-  //addAsset('jquery-form', { unminified: 'jquery.form.js' }),
-  //addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
-  //addAsset('underscore', { unminified: 'underscore.js', minified: 'underscore-min.js', importName: 'underscore/underscore' }),
+  addAsset('picturefill'),
+  addAsset('jquery'),
+  addAsset('js-cookie', { unminified: 'js.cookie.js' }),
+  addAsset('jquery-form', { unminified: 'jquery.form.js' }),
+  addAsset('backbone', { unminified: 'backbone.js', minified: 'backbone-min.js' }),
+  addAsset('underscore', { unminified: 'underscore.js', minified: 'underscore-min.js', importName: 'underscore/underscore' }),
+
+  (() => {
+    const [step1, step2] = addAsset('popperjs', {
+      unminified: 'popper.js',
+      importName: '@popperjs/core/dist/umd/popper',
+    });
+    // Prevent leaking variables.
+    step2.output.format = 'iife';
+
+    return [step1, step2];
+  })(),
 
   (() => {
     const [step1, step2] = addAsset('sortable', {
@@ -55,6 +68,7 @@ export default [
       importName: 'sortablejs/dist/sortable.umd',
     });
 
+    // Sortable is already minified, no need to reminify it.
     return [{
       ...step1,
       output: {
@@ -63,21 +77,6 @@ export default [
         sourcemap: false,
       }
     }];
-  })(),
-
-  (() => {
-    const [step1, step2] = addAsset('popperjs', {
-      unminified: 'popper.js',
-    });
-    // Override the plugins because popperjs needs some extra help.
-    step1.plugins = [
-      virtual({ entry: `
-        import * as Popper from "@popperjs/core";
-      `}),
-      resolve(),
-    ];
-
-    return [step1, step2];
   })(),
 
 ].flat();
