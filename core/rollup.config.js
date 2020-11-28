@@ -12,6 +12,26 @@ const def = {
 
 export default [
 
+  //
+  [
+    {
+      ...def,
+      output: { file: '' },
+      plugins: [
+        virtual({ entry: '' }),
+        resolve(),
+        copy({
+          targets: [
+            {
+              src: 'node_modules/normalize.css/normalize.css',
+              dest: 'assets/vendor/normalize-css',
+            }
+          ],
+        }),
+      ],
+    },
+  ],
+
   // es6-promise.
   [
     {
@@ -48,9 +68,14 @@ export default [
       plugins: [
         virtual({ entry: 'import "farbtastic/farbtastic";' }),
         resolve(),
-        copy([
-          {src: '', dest: ''},
-        ]),
+        copy({
+          targets: [
+            {
+              src: ['marker.png', 'mask.png', 'wheel.png', 'farbtastic.css'].map(file => `node_modules/farbtastic/${file}`),
+              dest: 'assets/vendor/farbtastic',
+            }
+          ],
+        }),
       ],
     },
     {

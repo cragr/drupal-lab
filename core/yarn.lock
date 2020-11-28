@@ -6425,6 +6425,13 @@ rollup-plugin-copy@^3.3.0:
     globby "10.0.1"
     is-plain-object "^3.0.0"
 
+rollup-plugin-import-css@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-import-css/-/rollup-plugin-import-css-1.1.2.tgz#788e648322d0d73c7b9d0da32fb1abdc72dcc8bd"
+  integrity sha512-Vgoku4JTpdi6RDBbJXk7CdlQFKI+PXk6OwxLzDSfyCGgm/HfxlM1odrfK8WpyqSVH4r2chZnSf2wn58FEji9eQ==
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+
 rollup-plugin-terser@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/rollup-plugin-terser/-/rollup-plugin-terser-7.0.2.tgz#e8fbba4869981b2dc35ae7e8a502d5c6c04d324d"
