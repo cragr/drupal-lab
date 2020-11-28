@@ -21,7 +21,9 @@ class Insert extends QueryInsert {
       return parent::execute();
     }
     else {
-      return $this->connection->query('INSERT INTO {' . $this->table . '} DEFAULT VALUES', [], $this->queryOptions);
+      $stmt = $this->connection->prepareStatement('INSERT INTO {' . $this->table . '} DEFAULT VALUES', $this->queryOptions);
+      $stmt->execute(NULL, $this->queryOptions);
+      return $this->connection->lastInsertId();
     }
   }
 
