@@ -12,25 +12,13 @@ const def = {
 
 export default [
 
-  //addAsset('sortable', { unminified: 'Sortable.js', 'import': 'sortablejs/dist/sortable.umd', 'name': 'Sortable' }, ([step1, step2]) => [
-  //  {
-  //    ...step1,
-  //    output: {
-  //      // Sortable is already minified, no need to reminify it.
-  //      ...step2.output,
-  //      sourcemap: false,
-  //    }
-  //  }
-  //]),
-
-
   // SortableJS.
   [
     {
       ...def,
       output: { file: 'assets/vendor/sortable/Sortable.js' },
       plugins: [
-        virtual({ entry: 'import "sortablejs";' }),
+        virtual({ entry: 'import Sortable from "sortablejs/modular/sortable.complete.esm"; export default Sortable;' }),
         resolve()
       ],
     },
@@ -41,6 +29,8 @@ export default [
         {
           file: 'assets/vendor/sortable/Sortable.min.js',
           sourcemap: true,
+          format: 'iife',
+          name: 'Sortable',
         },
       ],
       plugins: [terser({
