@@ -1,7 +1,7 @@
 import { terser } from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import buble from '@rollup/plugin-buble';
-//import copy from 'rollup-plugin-copy';
+import copy from 'rollup-plugin-copy';
 import virtual from '@rollup/plugin-virtual';
 
 const def = {
@@ -11,6 +11,35 @@ const def = {
 }
 
 export default [
+
+  // farbtastic.
+  [
+    {
+      ...def,
+      output: { file: 'assets/vendor/farbtastic/farbtastic.raw.js' },
+      plugins: [
+        virtual({ entry: 'import "farbtastic/farbtastic";' }),
+        resolve(),
+        copy([
+          {src: '', dest: ''},
+        ]),
+      ],
+    },
+    {
+      ...def,
+      input: 'assets/vendor/farbtastic/farbtastic.raw.js',
+      output: [
+        {
+          file: 'assets/vendor/farbtastic/farbtastic.js',
+          sourcemap: true,
+        },
+      ],
+      plugins: [terser({
+        compress: { inline: false },
+        format: { comments: false },
+      })],
+    }
+  ],
 
   // SortableJS.
   [
