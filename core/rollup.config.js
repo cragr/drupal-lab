@@ -47,19 +47,45 @@ export default [
   //  }
   //]),
 
+
+  // Backbone
+  [
+    {
+      ...def,
+      output: { file: 'assets/vendor/backbone.js' },
+      plugins: [
+        virtual({ entry: 'import "backbone";' }),
+        resolve()
+      ],
+    },
+    {
+      ...def,
+      input: 'assets/vendor/backbone/backbone.js',
+      output: [
+        {
+          file: 'assets/vendor/backbone/backbone-min.js',
+          sourcemap: true,
+        },
+      ],
+      plugins: [terser({ format: { comments: false } })],
+    }
+  ],
+
   // jQuery
   [
     {
       ...def,
-      output: { name: 'jQuery', file: 'assets/vendor/jquery/jquery.js' },
-      plugins: [virtual({ entry: 'import "jquery";' }), resolve() ],
+      output: { file: 'assets/vendor/jquery/jquery.js' },
+      plugins: [
+        virtual({ entry: 'import "jquery";' }),
+        resolve()
+      ],
     },
     {
       ...def,
       input: 'assets/vendor/jquery/jquery.js',
       output: [
         {
-          name: 'jQuery',
           file: 'assets/vendor/jquery/jquery.min.js',
           sourcemap: true,
         },
@@ -82,12 +108,7 @@ export default [
   [
     {
       ...def,
-      output: [
-        {
-          name: 'picturefill',
-          file: 'assets/vendor/picturefill/picturefill.js',
-        },
-      ],
+      output: { file: 'assets/vendor/picturefill/picturefill.js' },
       plugins: [
         virtual({ entry: 'import "picturefill";' }),
         resolve(),
@@ -98,17 +119,14 @@ export default [
       input: 'assets/vendor/picturefill/picturefill.js',
       output: [
         {
-          name: 'picturefill',
           file: 'assets/vendor/picturefill/picturefill.min.js',
           sourcemap: true,
         },
       ],
-      plugins: [
-        buble({ transforms: { modules: false } }),
-        terser({ format: { comments: false } }),
-      ],
+      plugins: [terser({ format: { comments: false } })],
     },
   ],
+
 ].flat();
 
 
