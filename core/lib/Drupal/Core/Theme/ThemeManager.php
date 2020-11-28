@@ -145,7 +145,8 @@ class ThemeManager implements ThemeManagerInterface {
     // implementation.
     $template_suggestions = [$hook];
     if (is_array($hook)) {
-      $template_suggestions = $hook;
+      // Ensure $template_suggestions has continuous numeric keys.
+      $template_suggestions = array_values($hook);
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -193,10 +194,10 @@ class ThemeManager implements ThemeManagerInterface {
     // means $hook was the last element in that array. So we know it is safe to
     // always grab the last suggestion from that array in order to find all
     // possible template suggestions from the #theme value.
-    $possible_hook = $template_suggestions[array_key_last($template_suggestions)];
-    while ($pos = strrpos($possible_hook, '__')) {
-      $possible_hook = substr($possible_hook, 0, $pos);
-      $template_suggestions[] = $possible_hook;
+    $hook_name = $template_suggestions[array_key_last($template_suggestions)];
+    while ($pos = strrpos($hook_name, '__')) {
+      $hook_name = substr($hook_name, 0, $pos);
+      $template_suggestions[] = $hook_name;
     }
 
     // If a renderable array is passed as $variables, then set $variables to
@@ -262,12 +263,38 @@ class ThemeManager implements ThemeManagerInterface {
     // Merge these new suggestions into our previous list of all possible
     // template suggestions.
     $reversed_suggestions = array_reverse($suggestions);
-    if (!in_array($hook, $reversed_suggestions)) {
-      // Make sure $hook is not actually replaced in the array_splice below.
-      $reversed_suggestions[] = $hook;
+    $hook_position = array_search($hook, $reversed_suggestions);
+    if ($hook_position === FALSE) {
+      $hook_position = count($reversed_suggestions);
     }
-    $hook_position = array_search($hook, $template_suggestions, TRUE);
-    array_splice($template_suggestions, $hook_position, 1, $reversed_suggestions);
+    // Get the suggestions before and after the chosen $hook.
+    $most_specific_suggestions = array_slice($reversed_suggestions, 0, $hook_position);
+    $least_specific_suggestions = array_slice($reversed_suggestions, $hook_position + 1);
+
+    // Scan through the template suggestions from the end to the beginning to
+    // find the first and last occurrence of the base hook.
+    $base_hook_key = FALSE;
+    foreach (array_reverse($template_suggestions, TRUE) as $key => $hook_name) {
+      // Find the base hook for this hook suggestion.
+      $base_hook_name = $hook_name;
+      if ($pos = strpos($base_hook_name, '__')) {
+        $base_hook_name = substr($base_hook_name, 0, $pos);
+      }
+      if ($base_hook_name === $base_theme_hook) {
+        if ($base_hook_key === FALSE) {
+          // Insert the least specific suggestions just before the last
+          // occurrence of the base hook.
+          $prevent_duplicate = in_array($hook_name, $least_specific_suggestions)
+            ? 1
+            : 0;
+          array_splice($template_suggestions, $key, $prevent_duplicate, $least_specific_suggestions);
+        }
+        $base_hook_key = $key;
+      }
+    }
+    // Insert the most specific suggestions just before the first occurrence of
+    // the base hook.
+    array_splice($template_suggestions, $base_hook_key, 0, $most_specific_suggestions);
 
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
