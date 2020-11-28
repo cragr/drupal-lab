@@ -3,6 +3,8 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
  * General class for an abstracted INSERT query.
@@ -31,9 +33,6 @@ class Insert extends Query implements \Countable {
    *   Array of database options.
    */
   public function __construct($connection, $table, array $options = []) {
-    if (!isset($options['return'])) {
-      $options['return'] = Database::RETURN_INSERT_ID;
-    }
     parent::__construct($connection, $options);
     $this->table = $table;
   }
@@ -82,12 +81,26 @@ class Insert extends Query implements \Countable {
     // we wrap it in a transaction so that it is atomic where possible. On many
     // databases, such as SQLite, this is also a notable performance boost.
     $transaction = $this->connection->startTransaction();
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
 
     try {
-      $sql = (string) $this;
       foreach ($this->insertValues as $insert_values) {
-        $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
+        $stmt->execute($insert_values, $this->queryOptions);
+        $last_insert_id = $this->connection->lastInsertId();
       }
+    }
+    catch (\PDOException $e) {
+      // One of the INSERTs failed, rollback the whole batch.
+      $transaction->rollBack();
+
+      $message = $e->getMessage() . ": " . (string) $this . "; ";
+
+      // Match all SQLSTATE 23xxx errors.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      }
+
+      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
     catch (\Exception $e) {
       // One of the INSERTs failed, rollback the whole batch.
