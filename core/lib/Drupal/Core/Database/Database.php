@@ -34,6 +34,10 @@ abstract class Database {
 
   /**
    * Flag to indicate a query call should return the "last insert id".
+   *
+   * @deprecated in drupal:9.TODO.0 and is removed from drupal:10.0.0. TODO.
+   *
+   * @see https://www.drupal.org/node/TODO
    */
   const RETURN_INSERT_ID = 3;
 

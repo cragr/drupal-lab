@@ -340,9 +340,9 @@ abstract class Connection {
    *   - Database::RETURN_AFFECTED: Return the number of rows affected by an
    *     UPDATE or DELETE query. Be aware that means the number of rows actually
    *     changed, not the number of rows matched by the WHERE clause.
-   *   - Database::RETURN_INSERT_ID: Return the sequence ID (primary key)
-   *     created by an INSERT statement on a table that contains a serial
-   *     column.
+   *   - Database::RETURN_INSERT_ID: (deprecated) Return the sequence ID
+   *     (primary key) created by an INSERT statement on a table that contains a
+   *     serial column.
    *   - Database::RETURN_NULL: Do not return anything, as there is no
    *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
@@ -774,7 +774,7 @@ abstract class Connection {
    *   - If $options['return'] === self::RETURN_AFFECTED,
    *     returns the number of rows affected by the query
    *     (not the number matched).
-   *   - If $options['return'] === self::RETURN_INSERT_ID,
+   *   - If $options['return'] === self::RETURN_INSERT_ID, (deprecated)
    *     returns the generated insert ID of the last query as a string.
    *   - If either $options['return'] === self::RETURN_NULL, or
    *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
@@ -835,6 +835,7 @@ abstract class Connection {
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:
+          @trigger_error(' Passing Database::RETURN_INSERT_ID as value for $options[\'return\'] to ' . __METHOD__ . ' is deprecated in drupal:9.TODO.0 and is removed in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO ', E_USER_DEPRECATED);
           $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
           return $this->connection->lastInsertId($sequence_name);
 
@@ -888,15 +889,7 @@ abstract class Connection {
         $query_string = $query;
       }
       $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        $exception = new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-      }
-      else {
-        $exception = new DatabaseExceptionWrapper($message, 0, $e);
-      }
-
-      throw $exception;
+      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
 
     return NULL;
@@ -1076,6 +1069,32 @@ abstract class Connection {
   public function insert($table, array $options = []) {
     $class = $this->getDriverClass('Insert');
     return new $class($this, $table, $options);
+  }
+
+  /**
+   * Returns the ID of the last inserted row or sequence value.
+   *
+   * This method should normally be used only within database driver code.
+   *
+   * This is a proxy to invoke lastInsertId() from the wrapped connection.
+   * If a sequence name is not specified for the name parameter, this returns a
+   * string representing the row ID of the last row that was inserted into the
+   * database.
+   * If a sequence name is specified for the name parameter, this returns a
+   * string representing the last value retrieved from the specified sequence
+   * object.
+   *
+   * @param string|null $name
+   *   (Optional) Name of the sequence object from which the ID should be
+   *   returned.
+   *
+   * @return string|false
+   *   The value returned by the wrapped connection.
+   *
+   * @see \PDO::lastInsertId
+   */
+  public function lastInsertId(?string $name = NULL) {
+    return $this->connection->lastInsertId($name);
   }
 
   /**

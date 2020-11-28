@@ -314,8 +314,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     try {
       if (!$original) {
         // Generate a new mlid.
-        $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
-        $link['mlid'] = $this->connection->insert($this->table, $options)
+        $link['mlid'] = $this->connection->insert($this->table, $this->options)
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])
           ->execute();
         $fields = $this->preSave($link, []);

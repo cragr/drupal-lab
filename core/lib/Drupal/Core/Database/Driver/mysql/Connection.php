@@ -102,24 +102,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
-    // In case of attempted INSERT of a record with an undefined column and no
-    // default value indicated in schema, MySql returns a 1364 error code.
-    // Throw an IntegrityConstraintViolationException here like the other
-    // drivers do, to avoid the parent class to throw a generic
-    // DatabaseExceptionWrapper instead.
-    if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
-      $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
-      $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-      throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
-    }
-
-    parent::handleQueryException($e, $query, $args, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function open(array &$connection_options = []) {
     if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
       // Only used during the installer version check, as a fallback from utf8mb4.
@@ -329,7 +311,8 @@ class Connection extends DatabaseConnection {
   }
 
   public function nextId($existing_id = 0) {
-    $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', [], ['return' => Database::RETURN_INSERT_ID]);
+    $this->query('INSERT INTO {sequences} () VALUES ()');
+    $new_id = $this->lastInsertId();
     // This should only happen after an import or similar event.
     if ($existing_id >= $new_id) {
       // If we INSERT a value manually into the sequences table, on the next
@@ -340,7 +323,8 @@ class Connection extends DatabaseConnection {
       // UPDATE in such a way that the UPDATE does not do anything. This way,
       // duplicate keys do not generate errors but everything else does.
       $this->query('INSERT INTO {sequences} (value) VALUES (:value) ON DUPLICATE KEY UPDATE value = value', [':value' => $existing_id]);
-      $new_id = $this->query('INSERT INTO {sequences} () VALUES ()', [], ['return' => Database::RETURN_INSERT_ID]);
+      $this->query('INSERT INTO {sequences} () VALUES ()');
+      $new_id = $this->lastInsertId();
     }
     $this->needsCleanup = TRUE;
     return $new_id;

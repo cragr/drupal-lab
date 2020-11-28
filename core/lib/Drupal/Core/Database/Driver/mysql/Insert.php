@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 /**
@@ -29,7 +31,30 @@ class Insert extends QueryInsert {
       $values = $this->fromQuery->getArguments();
     }
 
-    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
+    try {
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      $stmt->execute($values, $this->queryOptions);
+      $last_insert_id = $this->connection->lastInsertId();
+    }
+    catch (\PDOException $e) {
+      $message = $e->getMessage() . ": " . (string) $this . "; ";
+
+      // In case of attempted INSERT of a record with an undefined column and no
+      // default value indicated in schema, MySql returns a 1364 error code.
+      // Throw an IntegrityConstraintViolationException here like the other
+      // drivers do, to avoid the parent class to throw a generic
+      // DatabaseExceptionWrapper instead.
+      if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
+        throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
+      }
+
+      // Match all SQLSTATE 23xxx errors.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      }
+
+      throw new DatabaseExceptionWrapper($message, 0, $e);
+    }
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = [];
