@@ -45,6 +45,7 @@
     "cross-env": "^7.0.2",
     "cspell": "^4.0.63",
     "dotenv-safe": "^8.2.0",
+    "es6-promise": "^4.2.8",
     "eslint": "^7.10.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.7.0",
