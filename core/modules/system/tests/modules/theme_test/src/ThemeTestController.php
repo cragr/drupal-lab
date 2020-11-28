@@ -33,7 +33,9 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing a theme override.
    */
   public function testTemplate() {
-    return ['#markup' => \Drupal::theme()->render('theme_test_template_test', [])];
+    return [
+      '#markup' => \Drupal::theme()->render('theme_test_template_test', []),
+    ];
   }
 
   /**
@@ -55,21 +57,28 @@ class ThemeTestController extends ControllerBase {
   /**
    * Calls a theme hook suggestion.
    *
-   * @return string
+   * @return array
    *   An HTML string containing the themed output.
    */
   public function testSuggestion() {
-    return ['#markup' => \Drupal::theme()->render(['theme_test__suggestion', 'theme_test'], [])];
+    return [
+      '#markup' => \Drupal::theme()->render([
+        'theme_test__suggestion',
+        'theme_test',
+      ], []),
+    ];
   }
 
   /**
    * Tests themed output generated in a request listener.
    *
-   * @return string
+   * @return array
    *   Content in theme_test_output GLOBAL.
    */
   public function testRequestListener() {
-    return ['#markup' => $GLOBALS['theme_test_output']];
+    return [
+      '#markup' => $GLOBALS['theme_test_output'],
+    ];
   }
 
   /**
@@ -94,13 +103,6 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
-   * Menu callback for testing direct suggestions without implementation.
-   */
-  public function specificSuggestion() {
-    return ['#theme' => 'theme_test_specific_suggestions__not__found'];
-  }
-
-  /**
    * Menu callback for testing suggestion alter hooks with specific suggestions.
    */
   public function specificSuggestionAlter() {
@@ -108,22 +110,16 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
-   * Menu callback for testing suggestion hooks with an array of theme hooks.
+   * Menu callback for testing direct suggestions without implementation.
    */
-  public function arraySuggestions() {
-    return [
-      '#theme' => [
-        'theme_test_array_suggestions__not_implemented',
-        'theme_test_array_suggestions__not_implemented_2',
-        'theme_test_array_suggestions',
-      ],
-    ];
+  public function specificSuggestionNotFound() {
+    return ['#theme' => 'theme_test_specific_suggestions__variant_not_found__too'];
   }
 
   /**
    * Menu callback for testing suggestion hooks with an array of theme hooks.
    */
-  public function arraySuggestionsSpecific() {
+  public function arraySuggestions() {
     return [
       '#theme' => [
         'theme_test_array_suggestions__implemented__not_implemented',

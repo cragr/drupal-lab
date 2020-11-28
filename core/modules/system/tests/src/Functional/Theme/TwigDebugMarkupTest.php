@@ -25,6 +25,13 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Shared renderer for each test.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp():void {
@@ -40,15 +47,16 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->resetAll();
+
+    $this->renderer = $this->container->get('renderer');
   }
 
   /**
    * Tests debug markup added to Twig template output.
    */
   public function testTwigDebugMarkup() {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
     $extension = twig_extension();
+    $xss_suggestion = Html::escape('node--<script type="text/javascript">alert(\'yo\');</script>') . $extension;
     $cache = $this->container->get('theme.registry')->get();
     // Create array of Twig templates.
     $templates = drupal_find_theme_templates($cache, $extension, drupal_get_path('theme', 'test_theme'));
@@ -58,11 +66,19 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $node = $this->drupalCreateNode();
     $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $build = $builder->view($node);
-    $output = $renderer->renderRoot($build);
+    $output = $this->renderer->renderRoot($build);
     $this->assertStringContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup found in theme output when debug is enabled.');
     $this->assertStringContainsString("THEME HOOK: 'node'", $output, 'Theme call information found.');
-    $this->assertStringContainsString('* node--1--full' . $extension . PHP_EOL . '   x node--1' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   * node' . $extension, $output, 'Suggested template files found in order and node ID specific template shown as current template.');
-    $this->assertStringContainsString(Html::escape('node--<script type="text/javascript">alert(\'yo\');</script>'), (string) $output);
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * ' . $xss_suggestion . PHP_EOL
+      . '   * node--1--full' . $extension . PHP_EOL
+      . '   x node--1' . $extension . PHP_EOL
+      . '   * node--page--full' . $extension . PHP_EOL
+      . '   * node--page' . $extension . PHP_EOL
+      . '   * node--full' . $extension . PHP_EOL
+      . '   * node' . $extension . PHP_EOL
+      . '-->';
+    $this->assertStringContainsString($expected, $output, 'Suggested template files found in order and node ID specific template shown as current template.');
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . $extension;
     $this->assertStringContainsString("BEGIN OUTPUT from '$template_filename'", $output, 'Full path to current template file found.');
 
@@ -70,17 +86,37 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     // debug markup are correct.
     $node2 = $this->drupalCreateNode();
     $build = $builder->view($node2);
-    $output = $renderer->renderRoot($build);
-    $this->assertStringContainsString('* node--2--full' . $extension . PHP_EOL . '   * node--2' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   x node' . $extension, $output, 'Suggested template files found in order and base template shown as current template.');
+    $output = $this->renderer->renderRoot($build);
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * ' . $xss_suggestion . PHP_EOL
+      . '   * node--2--full' . $extension . PHP_EOL
+      . '   * node--2' . $extension . PHP_EOL
+      . '   * node--page--full' . $extension . PHP_EOL
+      . '   * node--page' . $extension . PHP_EOL
+      . '   * node--full' . $extension . PHP_EOL
+      . '   x node' . $extension . PHP_EOL
+      . '-->';
+    $this->assertStringContainsString($expected, $output, 'Suggested template files found in order and base template shown as current template.');
 
     // Create another node and make sure the template suggestions shown in the
     // debug markup are correct.
     $node3 = $this->drupalCreateNode();
     $build = ['#theme' => 'node__foo__bar'];
     $build += $builder->view($node3);
-    $output = $renderer->renderRoot($build);
+    $output = $this->renderer->renderRoot($build);
     $this->assertStringContainsString("THEME HOOK: 'node__foo__bar'", $output, 'Theme call information found.');
-    $this->assertStringContainsString('* node--foo--bar' . $extension . PHP_EOL . '   * node--foo' . $extension . PHP_EOL . '   * node--&lt;script type=&quot;text/javascript&quot;&gt;alert(&#039;yo&#039;);&lt;/script&gt;' . $extension . PHP_EOL . '   * node--3--full' . $extension . PHP_EOL . '   * node--3' . $extension . PHP_EOL . '   * node--page--full' . $extension . PHP_EOL . '   * node--page' . $extension . PHP_EOL . '   * node--full' . $extension . PHP_EOL . '   x node' . $extension, $output, 'Suggested template files found in order and base template shown as current template.');
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * ' . $xss_suggestion . PHP_EOL
+      . '   * node--3--full' . $extension . PHP_EOL
+      . '   * node--3' . $extension . PHP_EOL
+      . '   * node--page--full' . $extension . PHP_EOL
+      . '   * node--page' . $extension . PHP_EOL
+      . '   * node--full' . $extension . PHP_EOL
+      . '   * node--foo--bar' . $extension . PHP_EOL
+      . '   * node--foo' . $extension . PHP_EOL
+      . '   x node' . $extension . PHP_EOL
+      . '-->';
+    $this->assertStringContainsString($expected, $output, 'Suggested template files found in order and base template shown as current template.');
 
     // Disable debug, rebuild the service container, and clear all caches.
     $parameters = $this->container->getParameter('twig.config');
@@ -90,7 +126,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->resetAll();
 
     $build = $builder->view($node);
-    $output = $renderer->renderRoot($build);
+    $output = $this->renderer->renderRoot($build);
     $this->assertStringNotContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup not found in theme output when debug is disabled.');
   }
 
@@ -103,17 +139,19 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->drupalGet('theme-test/array-suggestions');
     $output = $this->getSession()->getPage()->getContent();
 
-    $expected = "THEME HOOK: 'theme_test_array_suggestions'";
-    $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
+    $expected = "THEME HOOK: 'theme_test_array_suggestions__implemented'";
+    $this->assertStringContainsString($expected, $output, 'Theme call information found.');
 
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * theme-test-array-suggestions--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+      . '   * theme-test-array-suggestions--implemented--not-implemented' . $extension . PHP_EOL
+      . '   x theme-test-array-suggestions--implemented' . $extension . PHP_EOL
       . '   * theme-test-array-suggestions--not-implemented' . $extension . PHP_EOL
-      . '   * theme-test-array-suggestions--not-implemented-2' . $extension . PHP_EOL
-      . '   x theme-test-array-suggestions--suggestion-from-hook' . $extension . PHP_EOL
+      . '   * theme-test-array-suggestions--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
       . '   * theme-test-array-suggestions' . $extension . PHP_EOL
       . '-->';
     $message = 'Suggested template files found in order and correct suggestion shown as current template.';
-    $this->assertTrue(strpos($output, $expected) !== FALSE, $message);
+    $this->assertStringContainsString($expected, $output, $message);
   }
 
   /**
@@ -121,19 +159,19 @@ class TwigDebugMarkupTest extends BrowserTestBase {
    */
   public function testUnimplementedSpecificSuggestionsTwigDebugMarkup() {
     $extension = twig_extension();
-    $this->drupalGet('theme-test/specific-suggestion');
+    $this->drupalGet('theme-test/specific-suggestion-not-found');
     $output = $this->getSession()->getPage()->getContent();
 
-    $expected = "THEME HOOK: 'theme_test_specific_suggestions__not__found'";
-    $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
+    $expected = "THEME HOOK: 'theme_test_specific_suggestions__variant_not_found__too'";
+    $this->assertStringContainsString($expected, $output, 'Theme call information found.');
 
     $message = 'Suggested template files found in order and base template shown as current template.';
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   * theme-test-specific-suggestions--not--found' . $extension . PHP_EOL
-      . '   * theme-test-specific-suggestions--not' . $extension . PHP_EOL
+      . '   * theme-test-specific-suggestions--variant-not-found--too' . $extension . PHP_EOL
+      . '   * theme-test-specific-suggestions--variant-not-found' . $extension . PHP_EOL
       . '   x theme-test-specific-suggestions' . $extension . PHP_EOL
       . '-->';
-    $this->assertTrue(strpos($output, $expected) !== FALSE, $message);
+    $this->assertStringContainsString($expected, $output, $message);
   }
 
   /**
@@ -145,14 +183,14 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $output = $this->getSession()->getPage()->getContent();
 
     $expected = "THEME HOOK: 'theme_test_specific_suggestions__variant'";
-    $this->assertTrue(strpos($output, $expected) !== FALSE, 'Theme call information found.');
+    $this->assertStringContainsString($expected, $output, 'Theme call information found.');
 
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
       . '   x theme-test-specific-suggestions--variant' . $extension . PHP_EOL
       . '   * theme-test-specific-suggestions' . $extension . PHP_EOL
       . '-->';
     $message = 'Suggested template files found in order and suggested template shown as current.';
-    $this->assertTrue(strpos($output, $expected) !== FALSE, $message);
+    $this->assertStringContainsString($expected, $output, $message);
   }
 
 }

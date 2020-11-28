@@ -67,13 +67,6 @@ suggestion_provided:
   requirements:
     _access: 'TRUE'
 
-theme_test.specific_suggestion:
-  path: '/theme-test/specific-suggestion'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::specificSuggestion'
-  requirements:
-    _access: 'TRUE'
-
 specific_suggestion_alter:
   path: '/theme-test/specific-suggestion-alter'
   defaults:
@@ -81,17 +74,17 @@ specific_suggestion_alter:
   requirements:
     _access: 'TRUE'
 
+theme_test.specific_suggestion_not_found:
+  path: '/theme-test/specific-suggestion-not-found'
+  defaults:
+    _controller: '\Drupal\theme_test\ThemeTestController::specificSuggestionNotFound'
+  requirements:
+    _access: 'TRUE'
+
 theme_test.array_suggestions:
   path: '/theme-test/array-suggestions'
   defaults:
     _controller: '\Drupal\theme_test\ThemeTestController::arraySuggestions'
-  requirements:
-    _access: 'TRUE'
-
-theme_test.array_suggestions_specific:
-  path: '/theme-test/array-suggestions-specific'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::arraySuggestionsSpecific'
   requirements:
     _access: 'TRUE'
 

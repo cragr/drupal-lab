@@ -37,6 +37,7 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'variables' => [],
   ];
   $items['theme_test_array_suggestions__implemented'] = [
+    'base hook' => 'theme_test_array_suggestions',
     'variables' => [],
   ];
   $items['theme_test_foo'] = [
@@ -113,7 +114,7 @@ function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$varia
  *   An associative array containing:
  *   - elements: An associative array containing the properties of the element.
  */
-function template_preprocess_theme_test_render_element(&$variables) {
+function template_preprocess_theme_test_render_element(array &$variables) {
   $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
 }
 
@@ -165,4 +166,11 @@ function theme_test_theme_suggestions_node(array $variables) {
  * Implements template_preprocess_HOOK() for theme_test_registered_by_module.
  */
 function template_preprocess_theme_test_registered_by_module() {
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_array_suggestions(array $variables) {
+  return ['theme_test_array_suggestions__from_hook_theme_suggestions_hook'];
 }
