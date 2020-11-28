@@ -1,6 +1,5 @@
 import { terser } from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
-import buble from '@rollup/plugin-buble';
 import copy from 'rollup-plugin-copy';
 import virtual from '@rollup/plugin-virtual';
 

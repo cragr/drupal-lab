@@ -894,15 +894,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.5.4.tgz#de25b5da9f727985a3757fd59b5d028aba75841a"
   integrity sha512-ZpKr+WTb8zsajqgDkvCEWgp6d5eJT6Q63Ng2neTbzBO76Lbe91vX/iVIW9dikq+Fs3yEo+ls4cxeXABD2LtcbQ==
 
-"@rollup/plugin-buble@^0.21.3":
-  version "0.21.3"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-buble/-/plugin-buble-0.21.3.tgz#1649a915b1d051a4f430d40e7734a7f67a69b33e"
-  integrity sha512-Iv8cCuFPnMdqV4pcyU+OrfjOfagPArRQ1PyQjx5KgHk3dARedI+8PNTLSMpJts0lQJr8yF2pAU4GxpxCBJ9HYw==
-  dependencies:
-    "@rollup/pluginutils" "^3.0.8"
-    "@types/buble" "^0.19.2"
-    buble "^0.20.0"
-
 "@rollup/plugin-node-resolve@^10.0.0":
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-10.0.0.tgz#44064a2b98df7530e66acf8941ff262fc9b4ead8"
@@ -920,7 +911,7 @@
   resolved "https://registry.yarnpkg.com/@rollup/plugin-virtual/-/plugin-virtual-2.0.3.tgz#0afc88d75c1e1378ab290b8e9898d4edb5be0d74"
   integrity sha512-pw6ziJcyjZtntQ//bkad9qXaBx665SgEL8C8KI5wO8G5iU5MPxvdWrQyVaAvjojGm9tJoS8M9Z/EEepbqieYmw==
 
-"@rollup/pluginutils@^3.0.8", "@rollup/pluginutils@^3.1.0":
+"@rollup/pluginutils@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-3.1.0.tgz#706b4524ee6dc8b103b3c995533e5ad680c02b9b"
   integrity sha512-GksZ6pr6TpIjHm8h9lSQ8pi8BE9VeubNT0OMJ3B5uZJ8pz73NPiqOtCog/x2/QzM1ENChPKxMDhiQuRHsqc+lg==
@@ -948,13 +939,6 @@
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@testim/chrome-version/-/chrome-version-1.0.7.tgz#0cd915785ec4190f08a3a6acc9b61fc38fb5f1a9"
   integrity sha512-8UT/J+xqCYfn3fKtOznAibsHpiuDshCb0fwgWxRazTT19Igp9ovoXMPhXyLD6m3CKQGTMHgqoxaFfMWaL40Rnw==
-
-"@types/buble@^0.19.2":
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/@types/buble/-/buble-0.19.2.tgz#a4289d20b175b3c206aaad80caabdabe3ecdfdd1"
-  integrity sha512-uUD8zIfXMKThmFkahTXDGI3CthFH1kMg2dOm3KLi4GlC5cbARA64bEcUMbbWdWdE73eoc/iBB9PiTMqH0dNS2Q==
-  dependencies:
-    magic-string "^0.25.0"
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -1048,20 +1032,10 @@
   dependencies:
     "@types/node" "*"
 
-acorn-dynamic-import@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/acorn-dynamic-import/-/acorn-dynamic-import-4.0.0.tgz#482210140582a36b83c3e342e1cfebcaa9240948"
-  integrity sha512-d3OEjQV4ROpoflsnUA8HozoIR504TFxNivYEUi6uwz0IYhBkTDXGuWlNdMtybRt3nqVx/L6XqMt0FxkXuWKZhw==
-
 acorn-jsx@^5.2.0:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.1.tgz#fc8661e11b7ac1539c47dbfea2e72b3af34d267b"
   integrity sha512-K0Ptm/47OKfQRpNQ2J/oIN/3QYiK6FwW+eJbILhsdxh2WTLdl+30o8aGdTbm5JbffpFFAg/g+zi1E+jvJha5ng==
-
-acorn@^6.4.1:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.2.tgz#35866fd710528e92de10cf06016498e47e39e1e6"
-  integrity sha512-XtGIhXwF8YM8bJhGxG5kXgjkEuNGLTkoYqVE+KMR+aspr4KGYmKYg7yUe3KghyQ9yheNwLnjmzh/7+gfDBmHCQ==
 
 acorn@^7.4.0:
   version "7.4.1"
@@ -1478,19 +1452,6 @@ browserslist@^4.12.0, browserslist@^4.14.5, browserslist@^4.14.7, browserslist@^
     electron-to-chromium "^1.3.591"
     escalade "^3.1.1"
     node-releases "^1.1.66"
-
-buble@^0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/buble/-/buble-0.20.0.tgz#a143979a8d968b7f76b57f38f2e7ce7cfe938d1f"
-  integrity sha512-/1gnaMQE8xvd5qsNBl+iTuyjJ9XxeaVxAMF86dQ4EyxFJOZtsgOS8Ra+7WHgZTam5IFDtt4BguN0sH0tVTKrOw==
-  dependencies:
-    acorn "^6.4.1"
-    acorn-dynamic-import "^4.0.0"
-    acorn-jsx "^5.2.0"
-    chalk "^2.4.2"
-    magic-string "^0.25.7"
-    minimist "^1.2.5"
-    regexpu-core "4.5.4"
 
 buffer-crc32@~0.2.3:
   version "0.2.13"
@@ -4567,13 +4528,6 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-magic-string@^0.25.0, magic-string@^0.25.7:
-  version "0.25.7"
-  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.7.tgz#3f497d6fd34c669c6798dcb821f2ef31f5445051"
-  integrity sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==
-  dependencies:
-    sourcemap-codec "^1.4.4"
-
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -5100,11 +5054,6 @@ object.values@^1.1.1:
     define-properties "^1.1.3"
     es-abstract "^1.18.0-next.1"
     has "^1.0.3"
-
-once-dom@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/once-dom/-/once-dom-3.5.0.tgz#ce7be2e3b5074546cbe56bc867fed2b12b6f00f1"
-  integrity sha512-MEmGsE7c9EiTTbrqDD4qEGlJVGedpG4YqOA/3OrsxIujzVJYb/wvC+KLynwoCpaZ4fiaLxb8Nr1N8FDBo83T9Q==
 
 once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
@@ -6132,7 +6081,7 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
-regenerate-unicode-properties@^8.0.2, regenerate-unicode-properties@^8.2.0:
+regenerate-unicode-properties@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-8.2.0.tgz#e5de7111d655e7ba60c057dbe9ff37c87e65cdec"
   integrity sha512-F9DjY1vKLo/tPePDycuH3dn9H1OTPIkVD9Kz4LODu+F2C75mgjAJ7x/gwy6ZcSNRAAkhNlJSOHRe8k3p+K9WhA==
@@ -6177,18 +6126,6 @@ regexpp@^3.1.0:
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.1.0.tgz#206d0ad0a5648cffbdb8ae46438f3dc51c9f78e2"
   integrity sha512-ZOIzd8yVsQQA7j8GCSlPGXwg5PfmA1mrq0JP4nGhh54LaKN3xdai/vHUDu74pKwV8OxseMS65u2NImosQcSD0Q==
 
-regexpu-core@4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-4.5.4.tgz#080d9d02289aa87fe1667a4f5136bc98a6aebaae"
-  integrity sha512-BtizvGtFQKGPUcTy56o3nk1bGRp4SZOTYrDtGNlqCQufptV5IkkLN6Emw+yunAJjzf+C9FQFtvq7IoA3+oMYHQ==
-  dependencies:
-    regenerate "^1.4.0"
-    regenerate-unicode-properties "^8.0.2"
-    regjsgen "^0.5.0"
-    regjsparser "^0.6.0"
-    unicode-match-property-ecmascript "^1.0.4"
-    unicode-match-property-value-ecmascript "^1.1.0"
-
 regexpu-core@^4.7.1:
   version "4.7.1"
   resolved "https://registry.yarnpkg.com/regexpu-core/-/regexpu-core-4.7.1.tgz#2dea5a9a07233298fbf0db91fa9abc4c6e0f8ad6"
@@ -6201,12 +6138,12 @@ regexpu-core@^4.7.1:
     unicode-match-property-ecmascript "^1.0.4"
     unicode-match-property-value-ecmascript "^1.2.0"
 
-regjsgen@^0.5.0, regjsgen@^0.5.1:
+regjsgen@^0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/regjsgen/-/regjsgen-0.5.2.tgz#92ff295fb1deecbf6ecdab2543d207e91aa33733"
   integrity sha512-OFFT3MfrH90xIW8OOSyUrk6QHD5E9JOTeGodiJeBS3J6IwlgzJMNE/1bZklWz5oTg+9dCMyEetclvCVXOPoN3A==
 
-regjsparser@^0.6.0, regjsparser@^0.6.4:
+regjsparser@^0.6.4:
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/regjsparser/-/regjsparser-0.6.4.tgz#a769f8684308401a66e9b529d2436ff4d0666272"
   integrity sha512-64O87/dPDgfk8/RQqC4gkZoGyyWFIEUTTh80CU6CWuK5vkCGyekIx+oKcEIYtP/RAxSQltCZHCNu/mdd7fqlJw==
@@ -6424,13 +6361,6 @@ rollup-plugin-copy@^3.3.0:
     fs-extra "^8.1.0"
     globby "10.0.1"
     is-plain-object "^3.0.0"
-
-rollup-plugin-import-css@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-import-css/-/rollup-plugin-import-css-1.1.2.tgz#788e648322d0d73c7b9d0da32fb1abdc72dcc8bd"
-  integrity sha512-Vgoku4JTpdi6RDBbJXk7CdlQFKI+PXk6OwxLzDSfyCGgm/HfxlM1odrfK8WpyqSVH4r2chZnSf2wn58FEji9eQ==
-  dependencies:
-    "@rollup/pluginutils" "^3.1.0"
 
 rollup-plugin-terser@^7.0.2:
   version "7.0.2"
@@ -6670,11 +6600,6 @@ source-map@~0.7.2:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
-
-sourcemap-codec@^1.4.4:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
-  integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
 spdx-correct@^3.0.0:
   version "3.1.1"
@@ -7329,7 +7254,7 @@ unicode-match-property-ecmascript@^1.0.4:
     unicode-canonical-property-names-ecmascript "^1.0.4"
     unicode-property-aliases-ecmascript "^1.0.4"
 
-unicode-match-property-value-ecmascript@^1.1.0, unicode-match-property-value-ecmascript@^1.2.0:
+unicode-match-property-value-ecmascript@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/unicode-match-property-value-ecmascript/-/unicode-match-property-value-ecmascript-1.2.0.tgz#0d91f600eeeb3096aa962b1d6fc88876e64ea531"
   integrity sha512-wjuQHGQVofmSJv1uVISKLE5zO2rNGzM/KCYZch/QQvez7C1hUhBIuZ701fYXExuufJFMPhv2SyL8CyoIfMLbIQ==
