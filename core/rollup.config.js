@@ -12,7 +12,7 @@ const def = {
 
 export default [
 
-  //
+  // normalize.css
   [
     {
       ...def,
