@@ -12,10 +12,38 @@ const def = {
 
 export default [
 
+  // es6-promise.
+  [
+    {
+      ...def,
+      output: { file: 'assets/vendor/es6-promise/es6-promise.auto.js' },
+      plugins: [
+        virtual({ entry: 'import "es6-promise/dist/es6-promise.auto";' }),
+        resolve(),
+      ],
+    },
+    {
+      ...def,
+      input: 'assets/vendor/es6-promise/es6-promise.auto.js',
+      output: [
+        {
+          file: 'assets/vendor/es6-promise/es6-promise.auto.min.js',
+          sourcemap: true,
+        },
+      ],
+      plugins: [terser({
+        compress: { inline: false },
+        format: { comments: false },
+      })],
+    }
+  ],
+
   // farbtastic.
   [
     {
       ...def,
+      // The minified file is called farbtastic.js, change the name for the
+      // unminified file.
       output: { file: 'assets/vendor/farbtastic/farbtastic.raw.js' },
       plugins: [
         virtual({ entry: 'import "farbtastic/farbtastic";' }),
@@ -63,7 +91,6 @@ export default [
         },
       ],
       plugins: [terser({
-        //compress: { inline: false },
         format: { comments: false },
       })],
     }
