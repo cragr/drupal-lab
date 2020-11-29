@@ -330,8 +330,7 @@ class Connection extends DatabaseConnection {
   }
 
   public function nextId($existing_id = 0) {
-    $this->query('INSERT INTO {sequences} () VALUES ()');
-    $new_id = $this->lastInsertId();
+    $new_id = $this->insert('sequences')->execute();
     // This should only happen after an import or similar event.
     if ($existing_id >= $new_id) {
       // If we INSERT a value manually into the sequences table, on the next
@@ -342,8 +341,7 @@ class Connection extends DatabaseConnection {
       // UPDATE in such a way that the UPDATE does not do anything. This way,
       // duplicate keys do not generate errors but everything else does.
       $this->query('INSERT INTO {sequences} (value) VALUES (:value) ON DUPLICATE KEY UPDATE value = value', [':value' => $existing_id]);
-      $this->query('INSERT INTO {sequences} () VALUES ()');
-      $new_id = $this->lastInsertId();
+      $new_id = $this->insert('sequences')->execute();
     }
     $this->needsCleanup = TRUE;
     return $new_id;
