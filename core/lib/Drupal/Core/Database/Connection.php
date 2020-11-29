@@ -340,7 +340,7 @@ abstract class Connection {
    *   - Database::RETURN_AFFECTED: Return the number of rows affected by an
    *     UPDATE or DELETE query. Be aware that means the number of rows actually
    *     changed, not the number of rows matched by the WHERE clause.
-   *   - Database::RETURN_INSERT_ID: (deprecated) Return the sequence ID
+   *   - (deprecated) Database::RETURN_INSERT_ID: Return the sequence ID
    *     (primary key) created by an INSERT statement on a table that contains a
    *     serial column.
    *   - Database::RETURN_NULL: Do not return anything, as there is no
@@ -775,8 +775,8 @@ abstract class Connection {
    *   - If $options['return'] === self::RETURN_AFFECTED,
    *     returns the number of rows affected by the query
    *     (not the number matched).
-   *   - If $options['return'] === self::RETURN_INSERT_ID, (deprecated)
-   *     returns the generated insert ID of the last query as a string.
+   *   - (deprecated) If $options['return'] === self::RETURN_INSERT_ID, returns
+   *     the generated insert ID of the last query as a string.
    *   - If either $options['return'] === self::RETURN_NULL, or
    *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
    *     returns NULL.
