@@ -17,9 +17,11 @@ function theme_test_theme($existing, $type, $theme, $path) {
   ];
   $items['theme_test_template_test'] = [
     'template' => 'theme_test.template_test',
+    'variables' => [],
   ];
   $items['theme_test_template_test_2'] = [
     'template' => 'theme_test.template_test',
+    'variables' => [],
   ];
   $items['theme_test_suggestion_provided'] = [
     'variables' => [],
@@ -38,6 +40,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
   ];
   $items['theme_test_array_suggestions__implemented'] = [
     'base hook' => 'theme_test_array_suggestions',
+    'variables' => [],
+  ];
+  $items['theme_test_xss_suggestion'] = [
     'variables' => [],
   ];
   $items['theme_test_foo'] = [
@@ -155,9 +160,9 @@ function theme_test_system_info_alter(array &$info, Extension $file, $type) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function theme_test_theme_suggestions_node(array $variables) {
+function theme_test_theme_suggestions_theme_test_xss_suggestion(array $variables) {
   $xss = '<script type="text/javascript">alert(\'yo\');</script>';
-  $suggestions[] = 'node__' . $xss;
+  $suggestions[] = 'theme_test_xss_suggestion__' . $xss;
 
   return $suggestions;
 }
