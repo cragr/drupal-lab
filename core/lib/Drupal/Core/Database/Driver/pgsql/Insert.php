@@ -19,6 +19,9 @@ use Drupal\Core\Database\Query\Insert as QueryInsert;
  */
 class Insert extends QueryInsert {
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     if (!$this->preExecute()) {
       return NULL;
@@ -102,26 +105,21 @@ class Insert extends QueryInsert {
       // PostgreSQL requires the table name to be specified explicitly when
       // requesting the last insert ID.
       if (!isset($last_insert_id)) {
-        if ($this->queryOptions['return'] === Database::RETURN_INSERT_ID && $sequence_name !== NULL) {
-          // cspell:ignore currval
-          $last_insert_id = $this->connection->query("SELECT currval('$sequence_name')")->fetchField();
-        }
-        else {
-          $last_insert_id = NULL;
-        }
+        // cspell:ignore currval
+        $last_insert_id = $sequence_name !== NULL ? $this->connection->query("SELECT currval('$sequence_name')")->fetchField() : NULL;
       }
       $this->connection->releaseSavepoint();
     }
     catch (\PDOException $e) {
       $this->connection->rollbackSavepoint();
-      $message = $e->getMessage() . ": " . $stmt->getQueryString();
-      // Match all SQLSTATE 23xxx errors.
+      $message = $e->getMessage() . ": " . (string) $this;
+
+      // SQLSTATE 23xxx errors indicate an integrity constraint violation.
       if (substr($e->getCode(), -6, -3) == '23') {
         throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
       }
-      else {
-        throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
-      }
+
+      throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();

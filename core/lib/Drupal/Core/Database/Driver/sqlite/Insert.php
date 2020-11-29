@@ -13,17 +13,33 @@ use Drupal\Core\Database\Query\Insert as QueryInsert;
  */
 class Insert extends QueryInsert {
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     if (!$this->preExecute()) {
       return NULL;
     }
-    if (count($this->insertFields) || !empty($this->fromQuery)) {
-      return parent::execute();
+
+    try {
+      if (count($this->insertFields) || !empty($this->fromQuery)) {
+        return parent::execute();
+      }
+      else {
+        $stmt = $this->connection->prepareStatement('INSERT INTO {' . $this->table . '} DEFAULT VALUES', $this->queryOptions);
+        $stmt->execute(NULL, $this->queryOptions);
+        return $this->connection->lastInsertId();
+      }
     }
-    else {
-      $stmt = $this->connection->prepareStatement('INSERT INTO {' . $this->table . '} DEFAULT VALUES', $this->queryOptions);
-      $stmt->execute(NULL, $this->queryOptions);
-      return $this->connection->lastInsertId();
+    catch (\PDOException $e) {
+      $message = $e->getMessage() . ": " . (string) $this;
+
+      // SQLSTATE 23xxx errors indicate an integrity constraint violation.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      }
+
+      throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
     }
   }
 

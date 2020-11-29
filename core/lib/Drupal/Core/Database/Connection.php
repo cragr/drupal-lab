@@ -894,7 +894,15 @@ abstract class Connection {
         $query_string = $query;
       }
       $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-      throw new DatabaseExceptionWrapper($message, 0, $e);
+      // Match all SQLSTATE 23xxx errors.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        $exception = new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      }
+      else {
+        $exception = new DatabaseExceptionWrapper($message, 0, $e);
+      }
+
+      throw $exception;
     }
 
     return NULL;
