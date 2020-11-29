@@ -23,12 +23,20 @@ class Insert extends QueryInsert {
       return NULL;
     }
 
+    // If we're selecting from a SelectQuery, finish building the query and
+    // pass it back, as any remaining options are irrelevant.
+    if (!empty($this->fromQuery)) {
+      $sql = (string) $this;
+      // The SelectQuery may contain arguments, load and pass them through.
+      return $this->connection->query($sql, $this->fromQuery->getArguments(), $this->queryOptions);
+    }
+
     // We wrap the insert in a transaction so that it is atomic where possible.
     // In SQLite, this is also a notable performance boost.
     $transaction = $this->connection->startTransaction();
 
     try {
-      if (count($this->insertFields) || !empty($this->fromQuery)) {
+      if (count($this->insertFields)) {
         $last_insert_id = 0;
 
         // Each insert happens in its own query.
