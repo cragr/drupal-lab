@@ -12,6 +12,7 @@ const def = {
 export default [
 
   // once.
+  /*
   [
     {
       ...def,
@@ -36,7 +37,7 @@ export default [
         format: { comments: false },
       })],
     }
-  ],
+  ],*/
 
   // normalize.css
   [
