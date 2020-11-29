@@ -103,7 +103,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
-    @trigger_error('Calling '__METHOD__ ' is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
+    @trigger_error('Calling ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
     // In case of attempted INSERT of a record with an undefined column and no
     // default value indicated in schema, MySql returns a 1364 error code.
     // Throw an IntegrityConstraintViolationException here like the other
