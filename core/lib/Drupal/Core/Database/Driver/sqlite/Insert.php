@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 /**
