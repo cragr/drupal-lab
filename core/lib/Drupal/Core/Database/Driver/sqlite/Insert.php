@@ -21,9 +21,26 @@ class Insert extends QueryInsert {
       return NULL;
     }
 
+    // We wrap the insert in a transaction so that it is atomic where possible.
+    // In SQLite, this is also a notable performance boost.
+    $transaction = $this->connection->startTransaction();
+
     try {
       if (count($this->insertFields) || !empty($this->fromQuery)) {
-        return parent::execute();
+        $last_insert_id = 0;
+
+        // Each insert happens in its own query.
+        $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+        foreach ($this->insertValues as $insert_values) {
+          $stmt->execute($insert_values, $this->queryOptions);
+          $last_insert_id = $this->connection->lastInsertId();
+        }
+
+        // Re-initialize the values array so that we can re-use this query.
+        $this->insertValues = [];
+
+        // Transaction commits here when $transaction looses scope.
+        return $last_insert_id;
       }
       else {
         $stmt = $this->connection->prepareStatement('INSERT INTO {' . $this->table . '} DEFAULT VALUES', $this->queryOptions);
@@ -32,6 +49,9 @@ class Insert extends QueryInsert {
       }
     }
     catch (\PDOException $e) {
+      // One of the INSERTs failed, rollback the whole batch.
+      $transaction->rollBack();
+
       $message = $e->getMessage() . ": " . (string) $this;
 
       // SQLSTATE 23xxx errors indicate an integrity constraint violation.
