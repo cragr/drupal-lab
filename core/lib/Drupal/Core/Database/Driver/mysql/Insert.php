@@ -41,6 +41,7 @@ class Insert extends QueryInsert {
     }
     catch (\PDOException $e) {
       $message = $e->getMessage() . ": " . (string) $this;
+      $code = is_int($e->getCode()) ? $e->getCode() : 0;
 
       // SQLSTATE 23xxx errors indicate an integrity constraint violation. Also,
       // in case of attempted INSERT of a record with an undefined column and no
@@ -49,10 +50,10 @@ class Insert extends QueryInsert {
         substr($e->getCode(), -6, -3) == '23' ||
         ($e->errorInfo[1] ?? NULL) === 1364
       ) {
-        throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
+        throw new IntegrityConstraintViolationException($message, $code, $e);
       }
 
-      throw new DatabaseExceptionWrapper($message, 0, $e);
+      throw new DatabaseExceptionWrapper($message, $code, $e);
     }
 
     // Re-initialize the values array so that we can re-use this query.

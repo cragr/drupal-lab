@@ -111,14 +111,16 @@ class Insert extends QueryInsert {
     }
     catch (\PDOException $e) {
       $this->connection->rollbackSavepoint();
+
       $message = $e->getMessage() . ": " . (string) $this;
+      $code = is_int($e->getCode()) ? $e->getCode() : 0;
 
       // SQLSTATE 23xxx errors indicate an integrity constraint violation.
       if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+        throw new IntegrityConstraintViolationException($message, $code, $e);
       }
 
-      throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
+      throw new DatabaseExceptionWrapper($message, $code, $e);
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
