@@ -1,4 +1,4 @@
-/*! js-cookie v3.0.0-rc.1 | MIT */
+/*! js-cookie v3.0.0-rc.0 | MIT */
 function assign (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
@@ -11,13 +11,10 @@ function assign (target) {
 
 var defaultConverter = {
   read: function (value) {
-    return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent)
+    return value.replace(/%3B/g, ';')
   },
   write: function (value) {
-    return encodeURIComponent(value).replace(
-      /%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,
-      decodeURIComponent
-    )
+    return value.replace(/;/g, '%3B')
   }
 };
 
@@ -36,11 +33,9 @@ function init (converter, defaultAttributes) {
       attributes.expires = attributes.expires.toUTCString();
     }
 
-    key = encodeURIComponent(key)
-      .replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent)
-      .replace(/[()]/g, escape);
+    key = defaultConverter.write(key).replace(/=/g, '%3D');
 
-    value = converter.write(value, key);
+    value = converter.write(String(value), key);
 
     var stringifiedAttributes = '';
     for (var attributeName in attributes) {
@@ -54,13 +49,6 @@ function init (converter, defaultAttributes) {
         continue
       }
 
-      // Considers RFC 6265 section 5.2:
-      // ...
-      // 3.  If the remaining unparsed-attributes contains a %x3B (";")
-      //     character:
-      // Consume the characters of the unparsed-attributes up to,
-      // not including, the first %x3B (";") character.
-      // ...
       stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
     }
 
@@ -79,19 +67,12 @@ function init (converter, defaultAttributes) {
     for (var i = 0; i < cookies.length; i++) {
       var parts = cookies[i].split('=');
       var value = parts.slice(1).join('=');
+      var foundKey = defaultConverter.read(parts[0]).replace(/%3D/g, '=');
+      jar[foundKey] = converter.read(value, foundKey);
 
-      if (value[0] === '"') {
-        value = value.slice(1, -1);
+      if (key === foundKey) {
+        break
       }
-
-      try {
-        var foundKey = defaultConverter.read(parts[0]);
-        jar[foundKey] = converter.read(value, foundKey);
-
-        if (key === foundKey) {
-          break
-        }
-      } catch (e) {}
     }
 
     return key ? jar[key] : jar
