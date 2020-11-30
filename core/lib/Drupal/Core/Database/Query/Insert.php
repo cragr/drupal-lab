@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
@@ -61,6 +60,8 @@ class Insert extends Query implements \Countable {
    *   That makes it safe to use in multi-insert loops.
    */
   public function execute() {
+    @trigger_error('Calling ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement their own method without calling the parent instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+
     // If validation fails, simply return NULL. Note that validation routines
     // in preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {

@@ -102,6 +102,25 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
+  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
+    // In case of attempted INSERT of a record with an undefined column and no
+    // default value indicated in schema, MySql returns a 1364 error code.
+    // Throw an IntegrityConstraintViolationException here like the other
+    // drivers do, to avoid the parent class to throw a generic
+    // DatabaseExceptionWrapper instead.
+    if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
+      @trigger_error('Calling ' . __METHOD__ . ' during insert operations through Connection::query() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+      $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
+      $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
+      throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
+    }
+
+    parent::handleQueryException($e, $query, $args, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function open(array &$connection_options = []) {
     if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
       // Only used during the installer version check, as a fallback from utf8mb4.

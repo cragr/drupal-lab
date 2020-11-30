@@ -5,7 +5,6 @@ namespace Drupal\Core\Entity\Sql;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Entity\ContentEntityInterface;
