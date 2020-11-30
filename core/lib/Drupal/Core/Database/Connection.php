@@ -343,8 +343,8 @@ abstract class Connection {
    *   - (deprecated) Database::RETURN_INSERT_ID: Return the sequence ID
    *     (primary key) created by an INSERT statement on a table that contains a
    *     serial column.
-   *   - Database::RETURN_NULL: Do not return anything, as there is no
-   *     meaningful value to return. That is the case for INSERT queries on
+   *   - (deprecated) Database::RETURN_NULL: Do not return anything, as there is
+   *     no meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
    * - throw_exception: By default, the database system will catch any errors
    *   on a query as an Exception, log it, and then rethrow it so that code
@@ -777,9 +777,10 @@ abstract class Connection {
    *     (not the number matched).
    *   - (deprecated) If $options['return'] === self::RETURN_INSERT_ID, returns
    *     the generated insert ID of the last query as a string.
-   *   - If either $options['return'] === self::RETURN_NULL, or
-   *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
-   *     returns NULL.
+   *   - (deprecated) If $options['return'] === self::RETURN_NULL, returns
+   *     NULL.
+   *   - If an exception occurs and $options['throw_exception'] evaluates to
+   ^     FALSE, returns NULL.
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
@@ -843,6 +844,7 @@ abstract class Connection {
           return $this->connection->lastInsertId($sequence_name);
 
         case Database::RETURN_NULL:
+          @trigger_error(' Passing Database::RETURN_NULL as value for $options[\'return\'] to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
           return NULL;
 
         default:
