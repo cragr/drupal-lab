@@ -109,7 +109,7 @@ class Connection extends DatabaseConnection {
     // drivers do, to avoid the parent class to throw a generic
     // DatabaseExceptionWrapper instead.
     if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
-      @trigger_error('Calling ' . __METHOD__ . ' during insert operations through Connection::query() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' during insert operations through Connection::query() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
       $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
       $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
       throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
