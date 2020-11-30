@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
-
 /**
  * General class for an abstracted INSERT query.
  *
@@ -89,19 +86,6 @@ class Insert extends Query implements \Countable {
         $stmt->execute($insert_values, $this->queryOptions);
         $last_insert_id = $this->connection->lastInsertId();
       }
-    }
-    catch (\PDOException $e) {
-      // One of the INSERTs failed, rollback the whole batch.
-      $transaction->rollBack();
-
-      $message = $e->getMessage() . ": " . (string) $this . "; ";
-
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-      }
-
-      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
     catch (\Exception $e) {
       // One of the INSERTs failed, rollback the whole batch.
