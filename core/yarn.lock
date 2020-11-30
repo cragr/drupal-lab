@@ -4097,6 +4097,10 @@ jest-worker@^26.2.1:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
+"joyride@https://github.com/zurb/joyride/archive/v2.1.0.tar.gz":
+  version "0.0.0"
+  resolved "https://github.com/zurb/joyride/archive/v2.1.0.tar.gz#e4f339e05434e8a5e2a6ae0a2e46c86ddd99ed9e"
+
 jquery-form@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/jquery-form/-/jquery-form-4.3.0.tgz#7d3961c314a1f2d15298f4af1d3943f54f4149c6"
