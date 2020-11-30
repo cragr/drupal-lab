@@ -140,6 +140,28 @@ export default [
       plugins: [terser({ compress: { inline: false } })],
     }
   ],
+  // jquery-once.
+  [
+    {
+      ...def,
+      output: { file: 'assets/vendor/jquery-once/jquery.once.js' },
+      plugins: [
+        virtual({ entry: 'import "jquery-once";' }),
+        resolve(),
+      ],
+    },
+    {
+      ...def,
+      input: 'assets/vendor/jquery-once/jquery.once.js',
+      output: [
+        {
+          file: 'assets/vendor/jquery-once/jquery.once.min.js',
+          sourcemap: true,
+        },
+      ],
+      plugins: [terser({ compress: { inline: false } })],
+    }
+  ],
   // jquery-form.
   [
     {
@@ -316,6 +338,35 @@ export default [
         },
       ],
       plugins: [terser({ compress: { inline: false } })],
+    }
+  ],
+
+  // jquery joyride.
+  [
+    {
+      ...def,
+      // The minified file is called farbtastic.js, change the name for the
+      // unminified file.
+      output: { file: 'assets/vendor/jquery-joyride/jquery.joyride-2.1.raw.js' },
+      plugins: [
+        virtual({ entry: 'import "joyride/jquery.joyride-2.1";' }),
+        resolve(),
+      ],
+    },
+    {
+      ...def,
+      input: 'assets/vendor/jquery-joyride/jquery.joyride-2.1.raw.js',
+      output: [
+        {
+          file: 'assets/vendor/jquery-joyride/jquery.joyride-2.1.js',
+          sourcemap: true,
+        },
+      ],
+      plugins: [terser({
+        compress: { inline: false },
+        // Keep the library header documentation.
+        format: { comments: /ZURB/ },
+      })],
     }
   ],
 
