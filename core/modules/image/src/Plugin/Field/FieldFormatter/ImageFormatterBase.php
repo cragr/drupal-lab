@@ -34,7 +34,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
       'lazy' => $this->t('Lazy'),
       'eager' => $this->t('Eager'),
     ];
-    $performance_description = $this->t('By default, all image assets are rendered with native browser lazy loading attributes included (<em>loading="lazy"</em>). This improves performance by allowing <a href=":link">modern browsers</a> to lazily load images without JavaScript. It is sometimes desirable to override this default to force browsers to download an image as soon as possible using the "<em>eager</em>" value instead.', [':link' => 'https://caniuse.com/loading-lazy-attr']);
+    $performance_description = $this->t('Image assets are rendered with native browser loading attribute of (<em>loading="lazy"</em>) by default. This improves performance by allowing <a href=":link">modern browsers</a> to lazily load images without JavaScript. It is sometimes desirable to override this default to force browsers to download an image as soon as possible using the "<em>eager</em>" value instead.', [':link' => 'https://caniuse.com/loading-lazy-attr']);
 
     $image_loading_settings = $this->getSetting('image_loading');
     $element['image_loading'] = [
@@ -49,7 +49,6 @@ abstract class ImageFormatterBase extends FileFormatterBase {
       '#default_value' => $image_loading_settings['priority'],
       '#options' => $lazy_load_options,
       '#description' => $description_link,
-      '#empty_value' => 'auto',
     ];
 
     return $element;

@@ -119,7 +119,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       'responsive_image_style' => '',
       'image_link' => '',
       'image_loading' => [
-        'priority' => 'auto',
+        'priority' => 'eager',
         'image_width' => 100,
         'image_height' => 100,
       ],
@@ -160,11 +160,14 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       'visible' => [
         ':input[name*="priority"]' => ['value' => 'lazy'],
       ],
+      'required' => [
+        ':input[name*="priority"]' => ['value' => 'lazy'],
+      ],
     ];
     $elements['image_loading']['image_width'] = [
       '#type' => 'number',
       '#title' => $this->t('Image default width'),
-      '#description' => $this->t("Set the default image width. It is required when 'lazy' priority is selected to avoid layout shitting"),
+      '#description' => $this->t("Set the default image width to avoid layout shifting."),
       '#default_value' => $image_loading_settings['image_width'],
       '#field_suffix' => ' ' . t('pixels'),
       '#min' => 1,
@@ -173,7 +176,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     $elements['image_loading']['image_height'] = [
       '#type' => 'number',
       '#title' => $this->t('Image default height'),
-      '#description' => $this->t("Set the default image height. It is required when 'lazy' priority is selected to avoid layout shitting"),
+      '#description' => $this->t("Set the default image height to avoid layout shifting."),
       '#default_value' => $image_loading_settings['image_height'],
       '#field_suffix' => ' ' . t('pixels'),
       '#min' => 1,

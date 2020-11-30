@@ -327,8 +327,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#uri' => file_url_transform_relative($large_style->buildUrl($image->getSource())),
     ];
-    // Assert loading attribute is added and it has set 'auto' as default value.
-    $fallback_image['#attributes']['loading'] = 'auto';
+    // Assert loading attribute is added and it has set 'eager' as
+    // its default value.
+    $fallback_image['#attributes']['loading'] = 'eager';
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
@@ -454,7 +455,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $medium_style = ImageStyle::load('medium');
     $node = $node_storage->load($nid);
     $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
-    $this->assertRaw('<img loading="auto" srcset="' . file_url_transform_relative($medium_style->buildUrl($image_uri)) . ' 1x, ' . file_url_transform_relative($large_style->buildUrl($image_uri)) . ' 2x"');
+    $this->assertRaw('<img loading="eager" srcset="' . file_url_transform_relative($medium_style->buildUrl($image_uri)) . ' 1x, ' . file_url_transform_relative($large_style->buildUrl($image_uri)) . ' 2x"');
   }
 
   /**
