@@ -17,7 +17,7 @@ class UpdateSettingsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['update_test', 'update', 'language', 'block'];
+  protected static $modules = ['update_test', 'update', 'language', 'block'];
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,11 @@ class UpdateSettingsTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer modules', 'administer themes']);
+    $admin_user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -39,16 +43,15 @@ class UpdateSettingsTest extends BrowserTestBase {
   public function testNotificationsSetting() {
     $this->drupalGet(Url::fromRoute('update.settings'));
     // Checkbox should be checked so expected message on the page should be:
-    $this->assertText('Uncheck to hide system notifications for available updates. Hiding it may have security implications.');
+    $this->assertSession()->pageTextContains('Uncheck to hide system notifications for available updates. Hiding it may have security implications.');
 
-    $this->drupalPostForm(
-      Url::fromRoute('update.settings'),
+    $this->submitForm(
       ['update_system_notifications' => 0],
       'Save configuration'
     );
 
     // Checkbox should be unchecked so expected message on the page should be:
-    $this->assertText('Check to show system notifications for available updates. Hiding it may have security implications.');
+    $this->assertSession()->pageTextContains('Check to show system notifications for available updates. Hiding it may have security implications.');
   }
 
 }
