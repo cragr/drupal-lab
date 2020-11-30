@@ -838,7 +838,7 @@ abstract class Connection {
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:
-          @trigger_error(' Passing Database::RETURN_INSERT_ID as value for $options[\'return\'] to ' . __METHOD__ . ' is deprecated in drupal:9.TODO.0 and is removed in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO ', E_USER_DEPRECATED);
+          @trigger_error(' Passing Database::RETURN_INSERT_ID as value for $options[\'return\'] to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
           $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
           return $this->connection->lastInsertId($sequence_name);
 
