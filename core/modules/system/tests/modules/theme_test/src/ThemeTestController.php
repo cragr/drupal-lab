@@ -82,55 +82,6 @@ class ThemeTestController extends ControllerBase {
   }
 
   /**
-   * Menu callback for testing suggestion alter hooks with template files.
-   */
-  public function suggestionProvided() {
-    return ['#theme' => 'theme_test_suggestion_provided'];
-  }
-
-  /**
-   * Menu callback for testing suggestion alter hooks with template files.
-   */
-  public function suggestionAlter() {
-    return ['#theme' => 'theme_test_suggestions'];
-  }
-
-  /**
-   * Menu callback for testing hook_theme_suggestions_alter().
-   */
-  public function generalSuggestionAlter() {
-    return ['#theme' => 'theme_test_general_suggestions'];
-  }
-
-  /**
-   * Menu callback for testing suggestion alter hooks with specific suggestions.
-   */
-  public function specificSuggestionAlter() {
-    return ['#theme' => 'theme_test_specific_suggestions__variant'];
-  }
-
-  /**
-   * Menu callback for testing direct suggestions without implementation.
-   */
-  public function specificSuggestionNotFound() {
-    return ['#theme' => 'theme_test_specific_suggestions__variant_not_found__too'];
-  }
-
-  /**
-   * Menu callback for testing suggestion hooks with an array of theme hooks.
-   */
-  public function arraySuggestions() {
-    return [
-      '#theme' => [
-        'theme_test_array_suggestions__implemented__not_implemented',
-        'theme_test_array_suggestions__implemented',
-        'theme_test_array_suggestions__not_implemented',
-        'theme_test_array_suggestions',
-      ],
-    ];
-  }
-
-  /**
    * Controller to ensure that no theme is initialized.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse

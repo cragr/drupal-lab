@@ -46,48 +46,6 @@ theme_test.request_listener:
   requirements:
     _access: 'TRUE'
 
-suggestion_alter:
-  path: '/theme-test/suggestion-alter'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::suggestionAlter'
-  requirements:
-    _access: 'TRUE'
-
-theme_test.general_suggestion_alter:
-  path: '/theme-test/general-suggestion-alter'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::generalSuggestionAlter'
-  requirements:
-    _access: 'TRUE'
-
-suggestion_provided:
-  path: '/theme-test/suggestion-provided'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::suggestionProvided'
-  requirements:
-    _access: 'TRUE'
-
-specific_suggestion_alter:
-  path: '/theme-test/specific-suggestion-alter'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::specificSuggestionAlter'
-  requirements:
-    _access: 'TRUE'
-
-theme_test.specific_suggestion_not_found:
-  path: '/theme-test/specific-suggestion-not-found'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::specificSuggestionNotFound'
-  requirements:
-    _access: 'TRUE'
-
-theme_test.array_suggestions:
-  path: '/theme-test/array-suggestions'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::arraySuggestions'
-  requirements:
-    _access: 'TRUE'
-
 theme_test.non_html:
   path: '/theme-test/non-html'
   defaults:

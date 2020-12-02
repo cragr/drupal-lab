@@ -6,11 +6,28 @@
  */
 
 /**
+ * Implements hook_theme().
+ */
+function theme_suggestions_test_theme($existing, $type, $theme, $path) {
+  $items['theme_test_general_suggestions__module_override'] = [
+    'base hook' => 'theme_test_general_suggestions',
+    'variables' => [],
+  ];
+  $items['theme_test_suggestions__module_override'] = [
+    'base hook' => 'theme_test_suggestions',
+    'variables' => [],
+  ];
+  return $items;
+}
+
+/**
  * Implements hook_theme_suggestions_alter().
  */
 function theme_suggestions_test_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
-  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
-  if ($hook == 'theme_test_general_suggestions') {
+  if ($hook === 'theme_test_suggestions') {
+    \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
+  }
+  if ($hook === 'theme_test_general_suggestions') {
     $suggestions[] = $hook . '__module_override';
   }
 }
@@ -18,21 +35,14 @@ function theme_suggestions_test_theme_suggestions_alter(array &$suggestions, arr
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+function theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables, $hook) {
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
-  $suggestions[] = 'theme_test_suggestions__module_override';
+  $suggestions[] = $hook . '__module_override';
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function theme_suggestions_test_theme_suggestions_theme_test_specific_suggestions_alter(array &$suggestions, array $variables) {
-  $suggestions[] = 'theme_test_specific_suggestions__variant__foo';
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK_alter().
- */
-function theme_suggestions_test_theme_suggestions_theme_test_array_suggestions_alter(array &$suggestions, array $variables) {
-  $suggestions[] = 'theme_test_array_suggestions__from_hook_theme_suggestions_hook_alter';
+function theme_suggestions_test_theme_suggestions_theme_test_specific_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  $suggestions[] = $hook . '__variant__foo';
 }
