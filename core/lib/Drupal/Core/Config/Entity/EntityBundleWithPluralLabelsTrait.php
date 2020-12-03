@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config\Entity;
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -50,11 +51,11 @@ trait EntityBundleWithPluralLabelsTrait {
    * ]
    * @endcode
    * Each value is a definite singular/plural count label with the plural
-   * variants separated by ETX (PluralTranslatableMarkup::DELIMITER).
+   * variants separated by ETX (PoItem::DELIMITER).
    *
    * @var string[]|null
    *
-   * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup::DELIMITER
+   * @see \Drupal\Component\Gettext\PoItem::DELIMITER
    */
   protected $label_count;
 
@@ -101,7 +102,7 @@ trait EntityBundleWithPluralLabelsTrait {
       $index = $count > 1 ? 1 : 0;
     }
 
-    $label_count = empty($label_count_versions[$context]) ? [] : explode(PluralTranslatableMarkup::DELIMITER, $label_count_versions[$context]);
+    $label_count = empty($label_count_versions[$context]) ? [] : explode(PoItem::DELIMITER, $label_count_versions[$context]);
     if (!empty($label_count[$index])) {
       return new FormattableMarkup($label_count[$index], ['@count' => $count]);
     }
