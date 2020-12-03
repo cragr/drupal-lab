@@ -151,13 +151,20 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->entityFieldManager = $this->createMock(EntityFieldManagerInterface::class);
 
     $this->entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
+    $this->entityTypeBundleInfo->expects($this->any())
+      ->method('getBundleInfo')
+      ->with($this->entityTypeId)
+      ->will($this->returnValue([
+        $this->bundle => [
+          'translatable' => TRUE,
+        ],
+      ]));
 
     $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
 
     $this->typedDataManager = $this->createMock(TypedDataManagerInterface::class);
     $this->typedDataManager->expects($this->any())
       ->method('getDefinition')
-      ->with('entity')
       ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
 
     $english = new Language(['id' => 'en']);
@@ -308,14 +315,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::isTranslatable
    */
   public function testIsTranslatable() {
-    $this->entityTypeBundleInfo->expects($this->any())
-      ->method('getBundleInfo')
-      ->with($this->entityTypeId)
-      ->will($this->returnValue([
-        $this->bundle => [
-          'translatable' => TRUE,
-        ],
-      ]));
     $this->languageManager->expects($this->any())
       ->method('isMultilingual')
       ->will($this->returnValue(TRUE));
