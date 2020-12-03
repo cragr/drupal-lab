@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeTypeInterface;
 
 /**
