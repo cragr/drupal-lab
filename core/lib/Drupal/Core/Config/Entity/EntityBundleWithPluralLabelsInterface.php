@@ -13,7 +13,7 @@ interface EntityBundleWithPluralLabelsInterface {
    * @return string|null
    *   The singular label or NULL if it cannot be computed.
    */
-  public function getSingularLabel();
+  public function getSingularLabel(): ?string;
 
   /**
    * Returns the plural label of the bundle.
@@ -21,14 +21,14 @@ interface EntityBundleWithPluralLabelsInterface {
    * @return string|null
    *   The plural label or NULL if it cannot be computed.
    */
-  public function getPluralLabel();
+  public function getPluralLabel(): ?string;
 
   /**
    * Gets the count label of the bundle.
    *
    * @param int $count
    *   The item count to display if the plural form was requested.
-   * @param string $context
+   * @param string $context|null
    *   (optional) The optional context of the count label. A bundle entity can
    *   define unlimited definite singular/plural count labels in order to cover
    *   various contexts where they are used. Pass the context, as a string
