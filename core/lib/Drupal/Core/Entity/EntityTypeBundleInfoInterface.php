@@ -37,4 +37,31 @@ interface EntityTypeBundleInfoInterface {
    */
   public function clearCachedBundles();
 
+  /**
+   * Gets the count label for a given bundle.
+   *
+   * @param string $entity_type_id
+   *   The bundle's entity type ID.
+   * @param string $bundle
+   *   The bundle.
+   * @param int $count
+   *   The item count to display if the plural form was requested.
+   * @param string|null $variant
+   *   (optional) The optional variant of the count label. A bundle entity can
+   *   define unlimited definite singular/plural count labels in order to cover
+   *   various contexts where they are used. Pass the variant, as a string
+   *   identifier, to get the appropriate version of the count label. Omit the
+   *   variant if there's only one version of the definite singular/plural count
+   *   label. Defaults to NULL.
+   *
+   * @return string|null
+   *   The count label. NULL if is returned in one of the following cases:
+   *   - The bundle didn't define a 'label_count' variant list.
+   *   - There's no plural formula for the given $count.
+   *
+   * @throws \InvalidArgumentException
+   *   If the passed entity type, bundle or variant doesn't exist.
+   */
+  public function getBundleCountLabel(string $entity_type_id, string $bundle, int $count, ?string $variant = NULL): ?string;
+
 }
