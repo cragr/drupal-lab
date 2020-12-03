@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
+use Drupal\Core\Config\Entity\EntityBundleWithPluralLabelsInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -98,6 +99,13 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
             foreach ($this->entityTypeManager->getStorage($bundle_entity_type)->loadMultiple() as $entity) {
               $this->bundleInfo[$type][$entity->id()]['label'] = $entity->label();
+              if ($entity instanceof EntityBundleWithPluralLabelsInterface) {
+                $this->bundleInfo[$type][$entity->id()] += [
+                  'label_singular' => $entity->get('label_singular'),
+                  'label_plural' => $entity->get('label_plural'),
+                  'label_count' => $entity->get('label_count'),
+                ];
+              }
             }
           }
           // If entity type bundles are not supported and
