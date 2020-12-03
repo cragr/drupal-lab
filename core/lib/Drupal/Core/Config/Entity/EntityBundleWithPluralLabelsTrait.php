@@ -4,8 +4,6 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Allows bundle configuration entities to support label plural variants.
@@ -63,12 +61,6 @@ trait EntityBundleWithPluralLabelsTrait {
    * {@inheritdoc}
    */
   public function getSingularLabel(): ?string {
-    // Provide a fallback in case label_singular is not set yet.
-    if (empty($this->label_singular)) {
-      if ($label = $this->label()) {
-        $this->label_singular = mb_strtolower($label);
-      }
-    }
     return $this->label_singular;
   }
 
@@ -76,14 +68,6 @@ trait EntityBundleWithPluralLabelsTrait {
    * {@inheritdoc}
    */
   public function getPluralLabel(): ?string {
-    // Provide a fallback in case label_plural is not set yet.
-    if (empty($this->label_plural)) {
-      if ($label = $this->label()) {
-        $arguments = ['@label' => mb_strtolower($label)];
-        $options = ['langcode' => $this->language()->getId()];
-        $this->label_plural = new TranslatableMarkup('@label items', $arguments, $options);
-      }
-    }
     return $this->label_plural;
   }
 
@@ -91,24 +75,20 @@ trait EntityBundleWithPluralLabelsTrait {
    * {@inheritdoc}
    */
   public function getCountLabel(int $count, ?string $variant = NULL): ?string {
-    $label_count_versions = (array) $this->label_count;
+    $label_count_variants = (array) $this->label_count;
+    if ($label_count_variants) {
+      // If no variant ID was passed, pickup the first version of count label.
+      $variant = $variant ?: key($label_count_variants);
+      $index = static::getPluralIndex($count);
+      if ($index === -1) {
+        // If the index cannot be computed, fallback to a single plural variant.
+        $index = $count > 1 ? 1 : 0;
+      }
 
-    // If the context was not passed, pickup the first version of count label.
-    $context = $context ?: key($label_count_versions);
-
-    $index = static::getPluralIndex($count);
-    if ($index === -1) {
-      // If the index cannot be computed, fallback to a single plural variant.
-      $index = $count > 1 ? 1 : 0;
-    }
-
-    $label_count = empty($label_count_versions[$context]) ? [] : explode(PoItem::DELIMITER, $label_count_versions[$context]);
-    if (!empty($label_count[$index])) {
-      return new FormattableMarkup($label_count[$index], ['@count' => $count]);
-    }
-    if (($singular = $this->getSingularLabel()) && ($plural = $this->getPluralLabel())) {
-      $arguments = ['@singular' => $singular, '@plural' => $plural];
-      return new PluralTranslatableMarkup($count, '1 @singular', '@count @plural', $arguments);
+      $label_count = !empty($label_count_variants[$variant]) ? explode(PoItem::DELIMITER, $label_count_variants[$variant]) : [];
+      if (!empty($label_count[$index])) {
+        return new FormattableMarkup($label_count[$index], ['@count' => $count]);
+      }
     }
     return NULL;
   }
