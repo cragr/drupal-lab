@@ -80,7 +80,7 @@ class ContextHandler implements ContextHandlerInterface {
    * @return bool
    *   TRUE if any of the contexts satisfy the constraints, FALSE otherwise.
    */
-  private function isAnyContextMatching(array $contexts, ContextDefinitionInterface $definition) {
+  private function isAnyContextMatching(array $contexts, ContextDefinitionInterface $definition): bool {
     foreach ($contexts as $context) {
       if ($definition->isSatisfiedBy($context)) {
         return TRUE;
