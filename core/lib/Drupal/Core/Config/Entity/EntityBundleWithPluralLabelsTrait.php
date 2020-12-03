@@ -15,36 +15,36 @@ trait EntityBundleWithPluralLabelsTrait {
   /**
    * The indefinite singular name of the bundle.
    *
-   * @var string
+   * @var string|null
    */
   protected $label_singular;
 
   /**
    * The indefinite plural name of the bundle.
    *
-   * @var string
+   * @var string|null
    */
   protected $label_plural;
 
   /**
-   * A list of definite singular/plural count label versions.
+   * A list of definite singular/plural count label variants.
    *
    * Unlimited definite singular/plural count labels can be defined in order to
    * cover various contexts where they are used. The array keys are strings,
    * identifying the context. For example, a site might need two or more
    * versions of the count labels:
-   * - singular '1 item', plural '@count items',
-   * - singular '1 item was found', plural '@count items were found'.
+   * - singular '1 article', plural '@count article',
+   * - singular '1 article was found', plural '@count articles were found'.
    * For this case the value of this property is:
    * @code
    * [
-   *   'default' => "1 item\x03@count items",
-   *   'items_found' => "1 item was found\x03@count items were found",
+   *   'default' => "1 article\x03@count article",
+   *   'items_found' => "1 article was found\x03@count articles were found",
    * ]
    * @endcode
    * Note that the context ('default', 'items_found') is an arbitrary string
    * identifier used to retrieve the desired version. If there's only one
-   * context, the context identifier can be omitted:
+   * variant, the identifier can be omitted:
    * @code
    * [
    *   "1 item\x03@count items",
@@ -120,9 +120,9 @@ trait EntityBundleWithPluralLabelsTrait {
    *   Number to return plural for.
    *
    * @return int
-   *   The numeric index of the plural variant to use for this $langcode and
-   *   $count combination or -1 if the language was not found or does not have a
-   *   plural formula.
+   *   The numeric index of the plural variant to use for the current language
+   *   and the given $count number or -1 if the language was not found or does
+   *   not have a plural formula.
    *
    * @todo Remove this method when https://www.drupal.org/node/2766857 gets in.
    */
