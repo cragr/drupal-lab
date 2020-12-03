@@ -62,7 +62,7 @@ trait EntityBundleWithPluralLabelsTrait {
   /**
    * {@inheritdoc}
    */
-  public function getSingularLabel() {
+  public function getSingularLabel(): ?string {
     // Provide a fallback in case label_singular is not set yet.
     if (empty($this->label_singular)) {
       if ($label = $this->label()) {
@@ -75,7 +75,7 @@ trait EntityBundleWithPluralLabelsTrait {
   /**
    * {@inheritdoc}
    */
-  public function getPluralLabel() {
+  public function getPluralLabel(): ?string {
     // Provide a fallback in case label_plural is not set yet.
     if (empty($this->label_plural)) {
       if ($label = $this->label()) {
@@ -90,7 +90,7 @@ trait EntityBundleWithPluralLabelsTrait {
   /**
    * {@inheritdoc}
    */
-  public function getCountLabel($count, $context = NULL) {
+  public function getCountLabel(int $count, ?string $variant = NULL): ?string {
     $label_count_versions = (array) $this->label_count;
 
     // If the context was not passed, pickup the first version of count label.
@@ -126,7 +126,7 @@ trait EntityBundleWithPluralLabelsTrait {
    *
    * @todo Remove this method when https://www.drupal.org/node/2766857 gets in.
    */
-  protected static function getPluralIndex($count) {
+  protected static function getPluralIndex(int $count): int {
     // We have to test both if the function and the service exist since in
     // certain situations it is possible that locale code might be loaded but
     // the service does not exist. For example, where the parent test site has

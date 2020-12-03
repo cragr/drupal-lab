@@ -39,6 +39,6 @@ interface EntityBundleWithPluralLabelsInterface {
    * @return string|null
    *   The count label or NULL if it cannot be computed.
    */
-  public function getCountLabel($count, $context = NULL);
+  public function getCountLabel(int $count, ?string $variant = NULL): ?string;
 
 }
