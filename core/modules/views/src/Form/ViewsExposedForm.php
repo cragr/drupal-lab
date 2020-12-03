@@ -154,7 +154,7 @@ class ViewsExposedForm extends FormBase {
       $form['#attributes']['data-drupal-target-view'] = $view->dom_id;
     }
     // Otherwise, rely on the view ID + display ID combination, assuming that
-    // multiple exposed form blocks will be controlling the very same views
+    // multiple exposed form blocks will be controlling the very same views.
     else {
       $form['#attributes']['data-drupal-target-view'] = $view->storage->id() . '-' . $display['id'];
     }

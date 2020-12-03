@@ -126,13 +126,12 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Ensure that page view exposed form (displayed as block) does not
     // affect other two block views.
-
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-page-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
     // Filter by article.
     $this->submitForm(['type' => 'article'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-page-exposed-form"]/following::span[1][text()="Page A"]');
 
     // Verify that only page view has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -154,7 +153,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $form_id = $element->getAttribute('id');
     // Filter by page.
     $this->submitForm(['type' => 'page'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-page-exposed-form"]/following::span[1][text()="Article A"]');
 
     // Verify that only page view has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -174,19 +173,18 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-page-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
-    // Disable filter
+    // Disable filter.
     $this->submitForm(['type' => 'All'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElement('xpath', '//div[@id="block-page-exposed-form"]/following::span[1][text()="Article A"]');
 
     // Ensure that the first block view exposed form does not affect the page
     // view and the other block view.
-
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-one-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
     // Filter by article.
     $this->submitForm(['type' => 'article'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-block-one-exposed-form"]//*[text()="Page A"]');
 
     // Verify that only the first block view has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -208,7 +206,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $form_id = $element->getAttribute('id');
     // Filter by page.
     $this->submitForm(['type' => 'page'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-block-one-exposed-form"]//*[text()="Article A"]');
 
     // Verify that only the first block view has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -228,19 +226,18 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-one-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
-    // Disable filter
+    // Disable filter.
     $this->submitForm(['type' => 'All'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElement('xpath', '//div[@id="block-block-one-exposed-form"]//*[text()="Article A"]');
 
     // Ensure that the second block view exposed form does not affect the page
     // view and the other block view.
-
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-two-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
     // Filter by article.
     $this->submitForm(['type' => 'article'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-block-two-exposed-form"]//*[text()="Page A"]');
 
     // Verify that only the second block view has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -262,7 +259,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $form_id = $element->getAttribute('id');
     // Filter by page.
     $this->submitForm(['type' => 'page'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-block-two-exposed-form"]//*[text()="Article A"]');
 
     // Verify that only the second block view has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -282,32 +279,31 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-two-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
-    // Disable filter
+    // Disable filter.
     $this->submitForm(['type' => 'All'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElement('xpath', '//div[@id="block-block-two-exposed-form"]//*[text()="Article A"]');
 
     // Ensure that the all forms works when used one by one.
-
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-page-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
     // Filter by article.
     $this->submitForm(['type' => 'article'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-page-exposed-form"]/following::span[1][text()="Page A"]');
 
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-one-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
     // Filter by page.
     $this->submitForm(['type' => 'page'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-block-one-exposed-form"]//*[text()="Page A"]');
 
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-two-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
     // Filter by page.
     $this->submitForm(['type' => 'article'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementRemoved('xpath', '//div[@id="block-block-two-exposed-form"]//*[text()="Page A"]');
 
     // Verify that all views has been filtered.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
@@ -327,9 +323,9 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     // Find the form HTML ID.
     $element = $assert_session->elementExists('css', '#block-block-two-exposed-form .views-exposed-form');
     $form_id = $element->getAttribute('id');
-    // Disable filter
+    // Disable filter.
     $this->submitForm(['type' => 'All'], 'Apply', $form_id);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElement('xpath', '//div[@id="block-block-two-exposed-form"]//*[text()="Page A"]');
 
     // Verify that all views has been filtered one more time.
     $views = $this->getSession()->getPage()->findAll('css', '.views-element-container');
