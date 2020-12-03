@@ -587,7 +587,30 @@ abstract class EntityBase implements EntityInterface {
    */
   public function getTypedData() {
     if (!isset($this->typedData)) {
-      $class = \Drupal::typedDataManager()->getDefinition('entity')['class'];
+      // At a minimum, check for a data type derivative specific to this entity
+      // type, then fall back to the generic "entity" data type ID.
+      $data_type_ids = ['entity', "entity:{$this->getEntityTypeId()}"];
+
+      // Incorporate the bundle as "entity:$entity_type:$bundle", if applicable.
+      // (This condition is copied directly from the entity data type deriver.)
+      //
+      // @see \Drupal\Core\Entity\Plugin\DataType\Deriver::getDerivativeDefinitions()
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo($this->getEntityTypeId());
+      if (count($bundles) > 1 || $this->getEntityType()->getKey('bundle')) {
+        $data_type_ids[] = "entity:{$this->getEntityTypeId()}:{$this->bundle()}";
+      }
+
+      // Continually process each data type ID until a data type class name is
+      // found, or all data type IDs have been exhausted.
+      $typed_data_manager = \Drupal::typedDataManager();
+      for ($class = NULL; !$class && $data_type_ids; $data_type_id = array_pop($data_type_ids)) {
+        // Check if a data type class name can be found for this data type ID.
+        $definition = $typed_data_manager->getDefinition($data_type_id, FALSE);
+        if (is_array($definition) && array_key_exists('class', $definition)) {
+          $class = $definition['class'];
+        }
+      }
+
       $this->typedData = $class::createFromEntity($this);
     }
     return $this->typedData;
