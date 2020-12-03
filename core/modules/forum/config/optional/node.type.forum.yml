@@ -11,3 +11,7 @@ help: ''
 new_revision: false
 preview_mode: 1
 display_submitted: true
+label_singular: 'forum topic'
+label_plural: 'forum topics'
+label_count:
+  - "1 forum topic\x03@count forum topics"

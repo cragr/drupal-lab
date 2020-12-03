@@ -8,6 +8,7 @@ source:
   constants:
     preview: 1 # DRUPAL_OPTIONAL
     create_body: false
+    null_value: null
 process:
   type: type
   name: name
@@ -23,5 +24,8 @@ process:
   create_body_label: body_label
   'third_party_settings/menu_ui/available_menus': available_menus
   'third_party_settings/menu_ui/parent': parent
+  label_singular: 'constants/null_value'
+  label_plural: 'constants/null_value'
+  label_count: 'constants/null_value'
 destination:
   plugin: entity:node_type

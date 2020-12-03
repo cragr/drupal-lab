@@ -14,3 +14,7 @@ help: ''
 new_revision: true
 preview_mode: 1
 display_submitted: false
+label_singular: recipe
+label_plural: recipes
+label_count:
+  - "1 recipe\x03@count recipes"

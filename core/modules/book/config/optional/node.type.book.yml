@@ -11,3 +11,7 @@ help: ''
 new_revision: true
 preview_mode: 1
 display_submitted: true
+label_singular: 'book page'
+label_plural: 'book pages'
+label_count:
+  - "1 book page\x03@count book pages"
