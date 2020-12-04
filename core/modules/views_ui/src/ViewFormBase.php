@@ -156,7 +156,7 @@ abstract class ViewFormBase extends EntityForm {
    */
   public function getDisplayLabel(ViewUI $view, $display_id, $check_changed = TRUE) {
     $display = $view->get('display');
-    $title = $display_id == 'default' ? $this->t('Master') : $display[$display_id]['display_title'];
+    $title = $display_id == 'default' ? $this->t('Default') : $display[$display_id]['display_title'];
     $title = views_ui_truncate($title, 25);
 
     if ($check_changed && !empty($view->changed_display[$display_id])) {
