@@ -5,6 +5,7 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 
@@ -72,6 +73,14 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
     elseif (strstr($format, 'text/javascript') || strstr($format, 'application/json')) {
       $data = Json::decode($content);
+    }
+    elseif (strstr($format, 'text/html')) {
+      try {
+        $data = Json::decode($content);
+      }
+      catch (InvalidDataTypeException $e) {
+        throw new ResourceException('The fetched resource did not have a valid Content-Type header and could not be parsed with JSON', $url);
+      }
     }
     // If the response is neither XML nor JSON, we are in bat country.
     else {
