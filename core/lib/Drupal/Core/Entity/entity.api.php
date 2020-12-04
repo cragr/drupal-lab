@@ -881,11 +881,11 @@ function hook_entity_bundle_info() {
   $bundles['user']['user']['label_plural'] = t('users');
   $bundles['user']['user']['label_count'] = [
     // This variant misses a key and is identifiable by its array delta.
-    t('1 user\x03@count users'),
+    t("1 user\x03@count users"),
     // The following variants have a meaningful identifier as key.
-    'search results' => t('1 user is found\x03@count users were found'),
-    'with_markup' => t('<span>1</span> user\x03<span>@count</span> users'),
-    'no count' => t('User\x03Users'),
+    'search results' => t("1 user is found\x03@count users were found"),
+    'with_markup' => t("<span>1</span> user\x03<span>@count</span> users"),
+    'no count' => t("User\x03Users"),
   ];
   return $bundles;
 }
@@ -903,7 +903,7 @@ function hook_entity_bundle_info() {
  */
 function hook_entity_bundle_info_alter(&$bundles) {
   $bundles['user']['user']['label'] = t('Full account');
-  $bundles['user']['user']['label_count']['search results'] = t('1 user is registered\x03@count users are registered');
+  $bundles['user']['user']['label_count']['search results'] = t("1 user is registered\x03@count users are registered");
 }
 
 /**
