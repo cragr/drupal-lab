@@ -35,7 +35,7 @@ use Drupal\Component\Utility\ToStringTrait;
  * @method $this sub(\DateInterval $interval)
  * @method int getOffset()
  * @method int getTimestamp()
- * @method \DateTimeZone getTimezone()
+ * @method \DateTimeZone getTimeZone()
  */
 class DateTimePlus {
 
@@ -252,25 +252,19 @@ class DateTimePlus {
     if (!$date instanceof \DateTime) {
       throw new \InvalidArgumentException('The date cannot be created from a format.');
     }
-    else {
-      // Functions that parse date is forgiving, it might create a date that
-      // is not exactly a match for the provided value, so test for that by
-      // re-creating the date/time formatted string and comparing it to the input. For
-      // instance, an input value of '11' using a format of Y (4 digits) gets
-      // created as '0011' instead of '2011'.
-      if ($date instanceof DateTimePlus) {
-        $test_time = $date->format($format, $settings);
-      }
-      elseif ($date instanceof \DateTime) {
-        $test_time = $date->format($format);
-      }
-      $datetimeplus->setTimestamp($date->getTimestamp());
-      $datetimeplus->setTimezone($date->getTimezone());
-
-      if ($settings['validate_format'] && $test_time != $time) {
-        throw new \UnexpectedValueException('The created date does not match the input value.');
-      }
+    // Functions that parse date is forgiving, it might create a date that
+    // is not exactly a match for the provided value, so test for that by
+    // re-creating the date/time formatted string and comparing it to the input. For
+    // instance, an input value of '11' using a format of Y (4 digits) gets
+    // created as '0011' instead of '2011'.
+    $test_time = $date->format($format);
+    if ($settings['validate_format'] && $test_time != $time) {
+      throw new \UnexpectedValueException('The created date does not match the input value.');
     }
+
+    $datetimeplus->setTimestamp($date->getTimestamp());
+    $datetimeplus->setTimezone($date->getTimezone());
+
     return $datetimeplus;
   }
 
@@ -699,13 +693,13 @@ class DateTimePlus {
       if (isset($settings['timezone'])) {
         $dateTimeObject->setTimezone(new \DateTimeZone($settings['timezone']));
       }
-      $value = $dateTimeObject->format($format);
+      return $dateTimeObject->format($format);
     }
     catch (\Exception $e) {
       $this->errors[] = $e->getMessage();
     }
 
-    return $value;
+    return NULL;
   }
 
   /**

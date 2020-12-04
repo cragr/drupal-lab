@@ -57,6 +57,7 @@ class DiffFormatter {
    */
   public function format(Diff $diff) {
     $xi = $yi = 1;
+    $x0 = $y0 = 0;
     $block = FALSE;
     $context = [];
 

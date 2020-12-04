@@ -10,6 +10,9 @@ parameters:
   paths:
     # Just this part is enabled for checking for now, expand later.
     - lib/Drupal/Component
+  # PHPStan cannot find files in this test directory automatically.
+  scanDirectories:
+    - tests/Drupal/Tests
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static\\(\\)\\.$#"
@@ -30,3 +33,22 @@ parameters:
       message: "#^Variable \\$base in isset\\(\\) is never defined\\.$#"
       count: 1
       path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    # Drupal core bug, see https://www.drupal.org/project/drupal/issues/3186626
+    -
+      message: "#^Variable \\$proxy_class_shortname might not be defined\\.$#"
+      count: 1
+      path: lib/Drupal/Component/ProxyBuilder/ProxyBuilder.php
+    # Usage of getFallbackPluginId() is ok here and guarded by an interface
+    # check in the related method.
+    -
+      message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerBase\\:\\:getFallbackPluginId\\(\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Component/Plugin/PluginManagerBase.php
+    # DiffEngine is third party legacy code where we want to ignore some
+    # undefined variable/property errors.
+    -
+      message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:#"
+      path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
+    -
+      message: "#^Variable .+ might not be defined\\.$#"
+      path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
