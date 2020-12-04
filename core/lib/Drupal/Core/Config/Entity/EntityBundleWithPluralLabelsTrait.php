@@ -59,15 +59,25 @@ trait EntityBundleWithPluralLabelsTrait {
   /**
    * {@inheritdoc}
    */
-  public function getSingularLabel(): ?string {
-    return $this->label_singular;
+  public function setSingularLabel(string $singular_label): EntityBundleWithPluralLabelsInterface {
+    $this->label_singular = $singular_label;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluralLabel(): ?string {
-    return $this->label_plural;
+  public function setPluralLabel(string $plural_label): EntityBundleWithPluralLabelsInterface {
+    $this->label_plural = $plural_label;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCountLabel(array $count_label): EntityBundleWithPluralLabelsInterface {
+    $this->label_count = $count_label;
+    return $this;
   }
 
 }

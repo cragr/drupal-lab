@@ -8,19 +8,33 @@ namespace Drupal\Core\Config\Entity;
 interface EntityBundleWithPluralLabelsInterface {
 
   /**
-   * Returns the singular label of the bundle.
+   * Sets the singular label of the bundle.
    *
-   * @return string|null
-   *   The singular label or NULL if it was not set.
+   * @param string $singular_label
+   *   The singular label.
+   *
+   * @return $this
    */
-  public function getSingularLabel(): ?string;
+  public function setSingularLabel(string $singular_label): self;
 
   /**
-   * Returns the plural label of the bundle.
+   * Sets the plural label of the bundle.
    *
-   * @return string|null
-   *   The plural label or NULL if it was not set.
+   * @param string $plural_label
+   *   The plural label.
+   *
+   * @return $this
    */
-  public function getPluralLabel(): ?string;
+  public function setPluralLabel(string $plural_label): self;
+
+  /**
+   * Sets the count label.
+   *
+   * @param string[] $count_label
+   *   The list of count label variants.
+   *
+   * @return $this
+   */
+  public function setCountLabel(array $count_label): self;
 
 }
