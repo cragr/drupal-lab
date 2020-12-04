@@ -87,7 +87,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
     else {
       try {
-        $data = $this->fallbackDecoder->decode($content);
+        $data = $this->fallbackDecoder::decode($content);
       }
       catch (InvalidDataTypeException $e) {
         throw new ResourceException($e->getMessage(), $url, [], $e);
