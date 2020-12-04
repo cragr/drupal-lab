@@ -413,7 +413,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
 
     $messenger->deleteAll();
 
-    // If the master display is shown in the UI, warnings should be shown for
+    // If the default display is shown in the UI, warnings should be shown for
     // this display as well.
     $this->config('views.settings')->set('ui.show.master_display', TRUE)->save();
 
