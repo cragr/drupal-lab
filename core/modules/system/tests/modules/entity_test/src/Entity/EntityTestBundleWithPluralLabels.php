@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Config\Entity\EntityBundleWithPluralLabelsInterface;

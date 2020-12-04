@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Component\Gettext\PoItem;
-
 /**
  * Allows bundle configuration entities to support label plural variants.
  */

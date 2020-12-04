@@ -46,7 +46,7 @@ function entity_bundle_test_entity_bundle_info_alter(array &$bundles): void {
     $bundles['entity_test_with_bundle']['article']['label_plural'] = 'article items';
     $bundles['entity_test_with_bundle']['article']['label_count'] = [
       "1 article item\x03@count article items",
-      'search results' =>  "1 article item was found\x03@count article items were found",
+      'search results' => "1 article item was found\x03@count article items were found",
     ];
 
     // Bundle defined via hook_entity_bundle_info().
@@ -54,7 +54,7 @@ function entity_bundle_test_entity_bundle_info_alter(array &$bundles): void {
     $bundles['entity_test']['artist']['label_plural'] = 'creators';
     $bundles['entity_test']['artist']['label_count'] = [
       "1 creator\x03@count creators",
-      'search results' =>  "1 creator was awarded\x03@count creators were awarded",
+      'search results' => "1 creator was awarded\x03@count creators were awarded",
     ];
   }
 }
