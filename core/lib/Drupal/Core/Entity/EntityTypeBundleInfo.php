@@ -138,22 +138,18 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBundleCountLabel(string $entity_type_id, string $bundle, int $count, ?string $variant = NULL): ?string {
+  public function getBundleCountLabel(string $entity_type_id, string $bundle, int $count, $variant): ?string {
     if (!$bundles_info = $this->getBundleInfo($entity_type_id)) {
       throw new \InvalidArgumentException("The '{$entity_type_id}' doesn't exist.");
     }
     $bundle_info = $bundles_info[$bundle] ?? NULL;
     if (!$bundle_info) {
-      throw new \InvalidArgumentException("The '{$entity_type_id}' entity type bundle {$bundle} doesn't exist.");
+      throw new \InvalidArgumentException("The '{$entity_type_id}' entity type bundle '{$bundle}' doesn't exist.");
     }
 
     if (!empty($bundle_info['label_count'])) {
-      if (!$variant) {
-        // If no variant ID was passed, pickup the first version of count label.
-        $variant = $variant ?: key($bundle_info['label_count']);
-      }
-      elseif (empty($bundle_info['label_count'][$variant])) {
-        throw new \InvalidArgumentException("There's no variant '{$variant}' defined in label_count for bundle '{$bundle}' of '{$entity_type_id}'.");
+      if (empty($bundle_info['label_count'][$variant])) {
+        throw new \InvalidArgumentException("There's no variant '{$variant}' defined in label_count for bundle '{$bundle}' of '{$entity_type_id}' entity type.");
       }
 
       $index = static::getPluralIndex($count);

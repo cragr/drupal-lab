@@ -27,9 +27,9 @@ trait EntityBundleWithPluralLabelsTrait {
    * A list of definite singular/plural count label variants.
    *
    * Unlimited definite singular/plural count labels can be defined in order to
-   * cover various contexts where they are used. The array keys are strings,
-   * identifying the context. For example, a site might need two or more
-   * versions of the count labels:
+   * cover various contexts where they are used. The array keys are strings or
+   * integers, identifying the count label variant. For instance, a site might
+   * need two or more versions of the count labels:
    * - singular '1 article', plural '@count article',
    * - singular '1 article was found', plural '@count articles were found'.
    * For this case the value of this property is:
@@ -40,8 +40,8 @@ trait EntityBundleWithPluralLabelsTrait {
    * ]
    * @endcode
    * Note that the context ('default', 'items_found') is an arbitrary string
-   * identifier used to retrieve the desired version. If there's only one
-   * variant, the identifier can be omitted:
+   * identifier used to retrieve the desired version. If the array keys are
+   * missed, the array item integer index is used as variant ID:
    * @code
    * [
    *   "1 item\x03@count items",
