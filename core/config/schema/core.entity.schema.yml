@@ -382,9 +382,11 @@ bundle_entity_with_plural_labels:
     label_singular:
       type: label
       label: 'Indefinite singular name'
+      translation context: 'Bundle singular label'
     label_plural:
       type: label
       label: 'Indefinite plural name'
+      translation context: 'Bundle plural label'
     label_count:
       type: sequence
       nullable: true
@@ -392,6 +394,7 @@ bundle_entity_with_plural_labels:
       sequence:
         type: plural_label
         label: 'Count label'
+        translation context: 'Bundle count label variant'
 
 block.settings.field_block:*:*:*:
   type: block_settings
