@@ -3,6 +3,7 @@
 namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
@@ -31,20 +32,30 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $providers;
 
   /**
+   * The fallback resource decoder.
+   *
+   * @var \Drupal\Component\Serialization\SerializationInterface
+   */
+  protected $fallbackDecoder;
+
+  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
    *   The HTTP client.
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
    *   The oEmbed provider repository service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
    *   (optional) The cache backend.
+   * @param \Drupal\Component\Serialization\SerializationInterface|null $fallback_decoder
+   *   (optional) The fallback resource decoder.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL, SerializationInterface $fallback_decoder = NULL) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
     $this->cacheBackend = $cache_backend;
     $this->useCaches = isset($cache_backend);
+    $this->fallbackDecoder = $fallback_decoder ?: new Json();
   }
 
   /**
@@ -74,17 +85,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
     elseif (strstr($format, 'text/javascript') || strstr($format, 'application/json')) {
       $data = Json::decode($content);
     }
-    elseif (strstr($format, 'text/html')) {
+    else {
       try {
-        $data = Json::decode($content);
+        $data = $this->fallbackDecoder->decode($content);
       }
       catch (InvalidDataTypeException $e) {
-        throw new ResourceException('The fetched resource did not have a valid Content-Type header and could not be parsed with JSON', $url);
+        throw new ResourceException($e->getMessage(), $url, [], $e);
       }
-    }
-    // If the response is neither XML nor JSON, we are in bat country.
-    else {
-      throw new ResourceException('The fetched resource did not have a valid Content-Type header.', $url);
     }
 
     $this->cacheSet($cache_id, $data);
