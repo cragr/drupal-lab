@@ -7,6 +7,7 @@ parameters:
     - install
     - module
     - php
+    - theme
   paths:
     # Just this part is enabled for checking for now, expand later.
     - lib/Drupal/Component
