@@ -230,7 +230,7 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
   // - this is the default display.
   // - there is no default shown and just one additional display (mostly page)
   //   and the current display is defaulted.
-  if ($current_display->isDefaultDisplay() || ($current_display->isDefaulted($section) && !\Drupal::config('views.settings')->get('ui.show.master_display') && count($displays) <= 2)) {
+  if ($current_display->isDefaultDisplay() || ($current_display->isDefaulted($section) && !\Drupal::config('views.settings')->get('ui.show.default_display') && count($displays) <= 2)) {
     return;
   }
 

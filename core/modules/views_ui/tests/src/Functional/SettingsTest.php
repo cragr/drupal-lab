@@ -47,7 +47,7 @@ class SettingsTest extends UITestBase {
 
     // Configure to always show the default display.
     $edit = [
-      'ui_show_master_display' => TRUE,
+      'ui_show_default_display' => TRUE,
     ];
     $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
@@ -64,7 +64,7 @@ class SettingsTest extends UITestBase {
     // If you have a view without a page or block the default display should be
     // still shown.
     $edit = [
-      'ui_show_master_display' => FALSE,
+      'ui_show_default_display' => FALSE,
     ];
     $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 

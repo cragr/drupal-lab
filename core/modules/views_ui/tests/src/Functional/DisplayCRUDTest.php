@@ -35,7 +35,7 @@ class DisplayCRUDTest extends UITestBase {
    */
   public function testAddDisplay() {
     // Show the default display.
-    $this->config('views.settings')->set('ui.show.master_display', TRUE)->save();
+    $this->config('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);

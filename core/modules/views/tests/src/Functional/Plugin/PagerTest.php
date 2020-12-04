@@ -49,7 +49,7 @@ class PagerTest extends ViewTestBase {
    */
   public function testStorePagerSettings() {
     // Show the default display so the override selection is shown.
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     $admin_user = $this->drupalCreateUser([
       'administer views',

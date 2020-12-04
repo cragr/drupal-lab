@@ -415,7 +415,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
 
     // If the default display is shown in the UI, warnings should be shown for
     // this display as well.
-    $this->config('views.settings')->set('ui.show.master_display', TRUE)->save();
+    $this->config('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     $errors = $view->validate();
     $messages = $messenger->messagesByType(MessengerInterface::TYPE_WARNING);
@@ -428,7 +428,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
     $this->assertSame('<em class="placeholder">Page 2</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">Page 1</em> display which uses different settings than the <em class="placeholder">Page 2</em> display for: <em class="placeholder">' . $unequal_options_text . '</em>. To make sure users see the exact same result when clicking the link, please check that the settings are the same.', $messages[3]->__toString());
 
     $messenger->deleteAll();
-    $this->config('views.settings')->set('ui.show.master_display', FALSE)->save();
+    $this->config('views.settings')->set('ui.show.default_display', FALSE)->save();
   }
 
 }

@@ -209,7 +209,7 @@ class DisplayTest extends UITestBase {
     $xss_markup = '"><script>alert(123)</script>';
     $view = $this->randomView();
     $view = View::load($view['id']);
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     foreach ([$xss_markup, '&quot;><script>alert(123)</script>'] as $input) {
       $display =& $view->getDisplay('page_1');
@@ -278,14 +278,14 @@ class DisplayTest extends UITestBase {
     $this->assertNoText('All displays');
 
     // Test that the override option is shown when default display is on.
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertText('All displays');
 
     // Test that the override option is shown if the current display is
     // overridden so that the option to revert is available.
     $this->submitForm(['override[dropdown]' => 'page_1'], 'Apply');
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', FALSE)->save();
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', FALSE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertText('Revert to default');
   }
