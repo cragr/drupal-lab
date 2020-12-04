@@ -123,7 +123,7 @@ class ZfExtensionManagerSfContainer implements ReaderManagerInterface, WriterMan
   }
 
   /**
-   * @param $class
+   * @param string $class
    */
   public function setStandalone($class) {
     if (!is_subclass_of($class, ReaderManagerInterface::class) && !is_subclass_of($class, WriterManagerInterface::class)) {

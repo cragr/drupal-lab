@@ -248,6 +248,12 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     $line = fgets($this->fd);
     $this->finished = ($line === FALSE);
 
+    // Initialize common values for error logging.
+    $log_vars = [
+      '%uri' => $this->getURI(),
+      '%line' => $this->lineNumber,
+    ];
+
     if (!$this->finished) {
 
       if ($this->lineNumber == 0) {
@@ -259,12 +265,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
 
       // Track the line number for error reporting.
       $this->lineNumber++;
-
-      // Initialize common values for error logging.
-      $log_vars = [
-        '%uri' => $this->getURI(),
-        '%line' => $this->lineNumber,
-      ];
+      $log_vars['%line'] = $this->lineNumber;
 
       // Trim away the linefeed. \\n might appear at the end of the string if
       // another line continuing the same string follows. We can remove that.
@@ -349,7 +350,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         $quoted = $this->parseQuoted($line);
         if ($quoted === FALSE) {
           // The message id must be wrapped in quotes.
-          $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: invalid format for "msgid" on line %line.', $log_vars, $log_vars);
+          $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: invalid format for "msgid" on line %line.', $log_vars);
           return FALSE;
         }
 
