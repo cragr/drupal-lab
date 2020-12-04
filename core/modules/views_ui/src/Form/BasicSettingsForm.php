@@ -80,7 +80,7 @@ class BasicSettingsForm extends ConfigFormBase {
 
     $form['basic']['ui_show_default_display'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Always show the master (default) display'),
+      '#title' => $this->t('Always show the default display'),
       '#default_value' => $config->get('ui.show.default_display'),
     ];
 
