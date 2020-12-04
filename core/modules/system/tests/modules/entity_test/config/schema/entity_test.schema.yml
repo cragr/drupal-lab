@@ -27,3 +27,13 @@ entity_test.entity_test_bundle.*:
     description:
       type: text
       label: 'Description'
+
+entity_test.entity_test_bundle_plural_labels.*:
+  type: bundle_entity_with_plural_labels
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'Machine-readable name'
