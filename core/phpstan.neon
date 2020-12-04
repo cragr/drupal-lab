@@ -1,0 +1,32 @@
+# PHPStan is not run on Drupal CI yet, so this file is just a helper for
+# manually running PHPStan.
+parameters:
+  level: 1
+  fileExtensions:
+    - inc
+    - install
+    - module
+    - php
+  paths:
+    # Just this part is enabled for checking for now, expand later.
+    - lib/Drupal/Component
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static\\(\\)\\.$#"
+    # Local variables created from including a PHP file, we cannot fix that.
+    -
+      message: "#^Undefined variable\\: \\$overrides$#"
+      count: 1
+      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    -
+      message: "#^Variable \\$overrides in isset\\(\\) is never defined\\.$#"
+      count: 1
+      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    -
+      message: "#^Undefined variable\\: \\$base$#"
+      count: 1
+      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    -
+      message: "#^Variable \\$base in isset\\(\\) is never defined\\.$#"
+      count: 1
+      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
