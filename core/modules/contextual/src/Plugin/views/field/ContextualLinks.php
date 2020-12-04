@@ -113,11 +113,11 @@ class ContextualLinks extends FieldPluginBase {
         $path = strip_tags(Html::decodeEntities(strtr($path, $tokens)));
 
         $links[$field] = [
-          'path' => $path,
+          'href' => $path,
           'title' => $title,
         ];
         if (!empty($this->options['destination'])) {
-          $links[$field]['options']['query'] = $this->getDestinationArray();
+          $links[$field]['query'] = $this->getDestinationArray();
         }
       }
     }
@@ -126,7 +126,11 @@ class ContextualLinks extends FieldPluginBase {
     if (!empty($links)) {
       $contextual_links = [
         'contextual' => [
-          'route_parameters' => $links,
+          '',
+          [],
+          [
+            'contextual-views-field-links' => UrlHelper::encodePath(Json::encode($links)),
+          ],
         ],
       ];
 
