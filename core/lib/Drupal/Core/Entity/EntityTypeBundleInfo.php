@@ -110,7 +110,9 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
         $this->moduleHandler->alterDeprecated('Altering information for bundles stored in config entities is deprecated in drupal:9.2.0 and not removed from drupal:10.0.0. Use different methods to alter the label for bundles stored as config entities. See https://www.drupal.org/node/3186694', 'entity_bundle_info', $config_entity_bundle_info);
-        $this->bundleInfo += $config_entity_bundle_info;
+        // Bundles stored as config entities are overriding those defined via
+        // hook_entity_bundle_info().
+        $this->bundleInfo = $config_entity_bundle_info + $this->bundleInfo;
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }
