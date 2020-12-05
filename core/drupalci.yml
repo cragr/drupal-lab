@@ -4,6 +4,9 @@
 build:
   assessment:
     validate_codebase:
+      container_command:
+        commands: "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze"
+        halt-on-fail: true
       phplint:
       eslint:
         # A test must pass eslinting standards check in order to continue processing.
