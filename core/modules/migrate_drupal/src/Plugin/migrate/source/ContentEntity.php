@@ -32,9 +32,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   should be included, defaults to TRUE.
  * - include_revisions: (optional) Indicates if the entity revisions
  *   should be included, defaults to FALSE. If this is set on a non revisionable
- *   entity type, the revision ID is included in keys and flattened, nothing
- *   else happens. This allows to use the same migration with or without
- *   revisions (think user_revision module).
+ *   entity type, it is silently ignored. This allows to use the same migration
+ *   with or without revisions (think user_revision module).
+ *   Note that changing this option (or when set, changing the revisionability
+ *   of an entity type) for an **existing** migration is not supported and needs
+ *   manual change of source IDs in the migrate_map table.
  *
  * Examples:
  *
@@ -282,8 +284,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
-    // @fixme Rebase this once #3184627 landed
-    if (!empty($this->configuration['include_revisions'])) {
+    if (!empty($this->configuration['include_revisions']) && $this->entityType->isRevisionable()) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
     }
