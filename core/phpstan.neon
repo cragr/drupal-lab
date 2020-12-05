@@ -11,8 +11,22 @@ parameters:
   paths:
     # Just this part is enabled for checking for now, expand later.
     - lib/Drupal/Component
-  # PHPStan cannot find files in this test directory automatically.
+    - lib/Drupal/Core/Access
+    - lib/Drupal/Core/Action
+    - lib/Drupal/Core/Ajax
+    - lib/Drupal/Core/Annotation
+    - lib/Drupal/Core/Archiver
+    - lib/Drupal/Core/Asset
+    - lib/Drupal/Core/Authentication
+    - lib/Drupal/Core/Batch
+    - lib/Drupal/Core/Block
+    - lib/Drupal/Core/Breadcrumb
+    - lib/Drupal/Core/Cache
+  # Scan constants in legacy include files.
+  bootstrapFiles:
+    - includes/common.inc
   scanDirectories:
+    # PHPStan cannot find files in this test directory automatically.
     - tests/Drupal/Tests
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
@@ -53,3 +67,12 @@ parameters:
     -
       message: "#^Variable .+ might not be defined\\.$#"
       path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
+    # ExecutableInterface is defined a bit sloppy, in core it is used with an
+    # optional parameter. I think we cannot fix that.
+    - "#^Method Drupal\\\\Core\\\\Executable\\\\ExecutableInterface\\:\\:execute\\(\\) invoked with 1 parameter, 0 required\\.$#"
+    # The Broken Block plugin might call undefined methods, but we don't care
+    # because the block is broken anyway.
+    -
+      message: "#^Call to an undefined method Drupal\\\\Core\\\\Block\\\\Plugin\\\\Block\\\\Broken\\:\\:addContextAssignmentElement\\(\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Core/Block/Plugin/Block/Broken.php
