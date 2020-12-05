@@ -22,6 +22,8 @@ parameters:
     - lib/Drupal/Core/Block
     - lib/Drupal/Core/Breadcrumb
     - lib/Drupal/Core/Cache
+    - lib/Drupal/Core/CacheDecorator
+    - lib/Drupal/Core/Command
   # Scan constants in legacy include files.
   bootstrapFiles:
     - includes/common.inc
