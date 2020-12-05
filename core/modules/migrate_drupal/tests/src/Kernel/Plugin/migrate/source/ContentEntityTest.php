@@ -241,12 +241,17 @@ class ContentEntityTest extends KernelTestBase {
     ContentEntity::create($this->container, $configuration, 'content_entity:node', $plugin_definition, $migration);
   }
 
+  /**
+   * Provide migration configuration, iterating all options.
+   */
   public function migrationConfigurationProvider() {
     foreach ([FALSE, TRUE] as $include_translations) {
       foreach ([FALSE, TRUE] as $include_revisions) {
         yield [
-          'include_translations' => $include_translations,
-          'include_revisions' => $include_revisions,
+          [
+            'include_translations' => $include_translations,
+            'include_revisions' => $include_revisions,
+          ]
         ];
       }
     }
