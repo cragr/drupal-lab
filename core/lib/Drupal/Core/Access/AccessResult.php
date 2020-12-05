@@ -162,6 +162,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
 
     if ($access_result instanceof AccessResultReasonInterface) {
       if (count($permissions) === 1) {
+        $permission = reset($permissions);
         $access_result->setReason("The '$permission' permission is required.");
       }
       elseif (count($permissions) > 1) {
