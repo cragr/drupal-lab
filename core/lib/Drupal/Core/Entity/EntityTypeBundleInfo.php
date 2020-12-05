@@ -92,12 +92,13 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
       }
       else {
         $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
+        $config_entity_bundle_info = [];
         foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
           // First look for entity types that act as bundles for others, load them
           // and add them as bundles.
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
             foreach ($this->entityTypeManager->getStorage($bundle_entity_type)->loadMultiple() as $entity) {
-              $this->bundleInfo[$type][$entity->id()]['label'] = $entity->label();
+              $config_entity_bundle_info[$type][$entity->id()]['label'] = $entity->label();
             }
           }
           // If entity type bundles are not supported and
@@ -108,6 +109,8 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
+        $this->moduleHandler->alterDeprecated('Altering information for bundles stored in config entities is deprecated in drupal:9.2.0 and not removed from drupal:10.0.0. Use different methods to alter the label for bundles stored as config entities. See https://www.drupal.org/node/3186694', 'entity_bundle_info', $config_entity_bundle_info);
+        $this->bundleInfo += $config_entity_bundle_info;
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }

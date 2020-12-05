@@ -21,6 +21,7 @@ class EntityBundleLabelTest extends KernelTestBase {
   /**
    * @covers ::getAllBundleInfo
    * @see entity_test_entity_bundle_info_alter()
+   * @group legacy
    */
   public function testLabelAltering(): void {
     $bundle_entity = EntityTestBundle::create([
@@ -28,8 +29,11 @@ class EntityBundleLabelTest extends KernelTestBase {
       'label' => 'Alterable label',
     ]);
     $bundle_entity->save();
+    $this->expectDeprecation('The deprecated alter hook hook_entity_bundle_info_alter() is implemented in these functions: entity_test_entity_bundle_info_alter. Altering information for bundles stored in config entities is deprecated in drupal:9.2.0 and not removed from drupal:10.0.0. Use different methods to alter the label for bundles stored as config entities. See https://www.drupal.org/node/3186694');
     $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo('entity_test_with_bundle')['bundle_with_alterable_label'];
-    $this->assertSame($bundle_info['label'], $bundle_entity->label());
+    $this->assertNotSame($bundle_info['label'], $bundle_entity->label());
+    $this->assertSame('Alterable label', $bundle_entity->label());
+    $this->assertSame('Altered', $bundle_info['label']);
   }
 
 }
