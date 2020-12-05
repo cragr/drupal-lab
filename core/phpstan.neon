@@ -28,6 +28,9 @@ parameters:
   bootstrapFiles:
     - includes/common.inc
   scanDirectories:
+    # Scan function definitions in legacy include and module files.
+    - includes
+    - modules
     # PHPStan cannot find files in this test directory automatically.
     - tests/Drupal/Tests
   ignoreErrors:
