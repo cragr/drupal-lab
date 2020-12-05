@@ -3,12 +3,14 @@
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\ContentEntity;
 use Drupal\node\Entity\Node;
@@ -239,20 +241,57 @@ class ContentEntityTest extends KernelTestBase {
     ContentEntity::create($this->container, $configuration, 'content_entity:node', $plugin_definition, $migration);
   }
 
+  public function migrationConfigurationProvider() {
+    foreach ([FALSE, TRUE] as $include_translations) {
+      foreach ([FALSE, TRUE] as $include_revisions) {
+        yield [
+          'include_translations' => $include_translations,
+          'include_revisions' => $include_revisions,
+        ];
+      }
+    }
+  }
+
+  /**
+   * Reusable helper to assert IDs structure.
+   * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
+   *   The source plugin.
+   * @param array $configuration
+   *   The source plugin configuration (Nope, no getter available).
+   */
+  protected function assertCorrectIds(MigrateSourceInterface $source, array $configuration) {
+    $ids = $source->getIds();
+    list(, $entity_type_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $source->getPluginId());
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+
+    $this->assertArrayHasKey($entity_type->getKey('id'), $ids);
+    $ids_count_expected = 1;
+
+    // Yes, langcode only depends on entity type, not source configuration.
+    if ($entity_type->isTranslatable()) {
+      $ids_count_expected++;
+      $this->assertArrayHasKey($entity_type->getKey('langcode'), $ids);
+    }
+
+    if ($entity_type->isRevisionable() && !empty($configuration['include_revisions'])) {
+      $ids_count_expected++;
+      $this->assertArrayHasKey($entity_type->getKey('revision'), $ids);
+    }
+
+    $this->assertEquals($ids_count_expected, count($ids));
+  }
+
   /**
    * Tests user source plugin.
+   *
+   * @dataProvider migrationConfigurationProvider
    */
-  public function testUserSource() {
-    $configuration = [
-      'include_translations' => FALSE,
-    ];
+  public function testUserSource(array $configuration) {
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:user'));
     $user_source = $this->sourcePluginManager->createInstance('content_entity:user', $configuration, $migration);
     $this->assertSame('users', $user_source->__toString());
     $this->assertEquals(1, $user_source->count());
-    $ids = $user_source->getIds();
-    $this->assertArrayHasKey('langcode', $ids);
-    $this->assertArrayHasKey('uid', $ids);
+    $this->assertCorrectIds($user_source, $configuration);
     $fields = $user_source->fields();
     $this->assertArrayHasKey('name', $fields);
     $this->assertArrayHasKey('pass', $fields);
@@ -269,8 +308,10 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests file source plugin.
+   *
+   * @dataProvider migrationConfigurationProvider
    */
-  public function testFileSource() {
+  public function testFileSource(array $configuration) {
     $file = File::create([
       'filename' => 'foo.txt',
       'uid' => $this->user->id(),
@@ -278,15 +319,11 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $file->save();
 
-    $configuration = [
-      'include_translations' => FALSE,
-    ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:file'));
     $file_source = $this->sourcePluginManager->createInstance('content_entity:file', $configuration, $migration);
     $this->assertSame('files', $file_source->__toString());
     $this->assertEquals(1, $file_source->count());
-    $ids = $file_source->getIds();
-    $this->assertArrayHasKey('fid', $ids);
+    $this->assertCorrectIds($file_source, $configuration);
     $fields = $file_source->fields();
     $this->assertArrayHasKey('fid', $fields);
     $this->assertArrayHasKey('filemime', $fields);
@@ -303,14 +340,15 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests node source plugin.
+   *
+   * @dataProvider migrationConfigurationProvider
    */
-  public function testNodeSource() {
+  public function testNodeSource(array $configuration) {
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node'));
-    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', ['bundle' => $this->bundle], $migration);
+    $configuration += ['bundle' => $this->bundle];
+    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', $configuration, $migration);
     $this->assertSame('content items', $node_source->__toString());
-    $ids = $node_source->getIds();
-    $this->assertArrayHasKey('langcode', $ids);
-    $this->assertArrayHasKey('nid', $ids);
+    $this->assertCorrectIds($node_source, $configuration);
     $fields = $node_source->fields();
     $this->assertArrayHasKey('nid', $fields);
     $this->assertArrayHasKey('vid', $fields);
@@ -341,8 +379,10 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests media source plugin.
+   *
+   * @dataProvider migrationConfigurationProvider
    */
-  public function testMediaSource() {
+  public function testMediaSource(array $configuration) {
     $values = [
       'id' => 'image',
       'label' => 'Image',
@@ -357,17 +397,14 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $media->save();
 
-    $configuration = [
-      'include_translations' => FALSE,
+    $configuration += [
       'bundle' => 'image',
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:media'));
     $media_source = $this->sourcePluginManager->createInstance('content_entity:media', $configuration, $migration);
     $this->assertSame('media items', $media_source->__toString());
     $this->assertEquals(1, $media_source->count());
-    $ids = $media_source->getIds();
-    $this->assertArrayHasKey('langcode', $ids);
-    $this->assertArrayHasKey('mid', $ids);
+    $this->assertCorrectIds($media_source, $configuration);
     $fields = $media_source->fields();
     $this->assertArrayHasKey('bundle', $fields);
     $this->assertArrayHasKey('mid', $fields);
@@ -386,8 +423,10 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests term source plugin.
+   *
+   * @dataProvider migrationConfigurationProvider
    */
-  public function testTermSource() {
+  public function testTermSource(array $configuration) {
     $term2 = Term::create([
       'vid' => $this->vocabulary,
       'name' => 'Granny Smith',
@@ -396,18 +435,14 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $term2->save();
 
-    $configuration = [
-      'include_translations' => FALSE,
+    $configuration += [
       'bundle' => $this->vocabulary,
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:taxonomy_term'));
     $term_source = $this->sourcePluginManager->createInstance('content_entity:taxonomy_term', $configuration, $migration);
     $this->assertSame('taxonomy terms', $term_source->__toString());
     $this->assertEquals(2, $term_source->count());
-    $ids = $term_source->getIds();
-    $this->assertArrayHasKey('langcode', $ids);
-    $this->assertArrayHasKey('revision_id', $ids);
-    $this->assertArrayHasKey('tid', $ids);
+    $this->assertCorrectIds($term_source, $configuration);
     $fields = $term_source->fields();
     $this->assertArrayHasKey('vid', $fields);
     $this->assertArrayHasKey('revision_id', $fields);
