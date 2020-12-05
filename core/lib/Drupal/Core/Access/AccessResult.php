@@ -161,16 +161,10 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     $access_result = static::allowedIf($access)->addCacheContexts(empty($permissions) ? [] : ['user.permissions']);
 
     if ($access_result instanceof AccessResultReasonInterface) {
-      if (count($permissions) === 1) {
-        $permission = reset($permissions);
-        $access_result->setReason("The '$permission' permission is required.");
-      }
-      elseif (count($permissions) > 1) {
-        $quote = function ($s) {
-          return "'$s'";
-        };
-        $access_result->setReason(sprintf("The following permissions are required: %s.", implode(" $conjunction ", array_map($quote, $permissions))));
-      }
+      $quote = function ($s) {
+        return "'$s'";
+      };
+      $access_result->setReason(sprintf("The following permissions are required: %s.", implode(" $conjunction ", array_map($quote, $permissions))));
     }
 
     return $access_result;
