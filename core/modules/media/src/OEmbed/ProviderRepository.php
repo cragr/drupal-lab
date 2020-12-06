@@ -4,9 +4,9 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 
@@ -14,8 +14,6 @@ use GuzzleHttp\Exception\RequestException;
  * Retrieves and caches information about oEmbed providers.
  */
 class ProviderRepository implements ProviderRepositoryInterface {
-
-  use UseCacheBackendTrait;
 
   /**
    * How long the provider data should be cached, in seconds.
@@ -46,6 +44,20 @@ class ProviderRepository implements ProviderRepositoryInterface {
   protected $time;
 
   /**
+   * Key value store.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $keyValue;
+
+  /**
+   * Logger.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a ProviderRepository instance.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -54,40 +66,61 @@ class ProviderRepository implements ProviderRepositoryInterface {
    *   The config factory service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   (optional) The cache backend.
+   * @param \Drupal\Core\Cache\CacheBackendInterface|\Drupal\Core\KeyValueStore\KeyValueFactoryInterface|null $key_value
+   *   (optional) Key value factory.
    * @param int $max_age
    *   (optional) How long the cache data should be kept. Defaults to a week.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface|null $logger_factory
+   *   (optional) Logger factory.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, CacheBackendInterface $cache_backend = NULL, $max_age = 604800) {
+  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, $key_value = NULL, $max_age = 604800, LoggerChannelFactoryInterface $logger_factory = NULL) {
     $this->httpClient = $http_client;
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
-    $this->cacheBackend = $cache_backend;
     $this->maxAge = (int) $max_age;
+    if (!($key_value instanceof KeyValueFactoryInterface)) {
+      @trigger_error('The keyvalue service should be passed to ProviderRepository::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      $key_value = \Drupal::service('keyvalue');
+    }
+    if (is_null($logger_factory)) {
+      @trigger_error('The logger.factory service should be passed to ProviderRepository::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      $key_value = \Drupal::service('logger.factory');
+    }
+    $this->keyValue = $key_value->get('media.oembed');
+    $this->logger = $logger_factory->get('media');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAll() {
-    $cache_id = 'media:oembed_providers';
-
-    $cached = $this->cacheGet($cache_id);
-    if ($cached) {
-      return $cached->data;
+    $current_time = $this->time->getCurrentTime();
+    if (($cached = $this->keyValue->get('providers')) && $cached['expires'] > $current_time) {
+      return $cached['data'];
     }
 
     try {
       $response = $this->httpClient->request('GET', $this->providersUrl);
     }
     catch (RequestException $e) {
+      if (isset($cached['data'])) {
+        // Use the expired data.
+        $this->logger->error('Remote oEmbed providers database returned invalid or empty list, using previous - this may contain out of date information');
+        return $cached['data'];
+      }
+      // We have no previous data and the request failed.
       throw new ProviderException("Could not retrieve the oEmbed provider database from $this->providersUrl", NULL, $e);
     }
 
     $providers = Json::decode((string) $response->getBody());
 
     if (!is_array($providers) || empty($providers)) {
+      if (isset($cached['data'])) {
+        // Use the expired data.
+        $this->logger->error('Remote oEmbed providers database returned invalid or empty list, using previous - this may contain out of date information');
+        return $cached['data'];
+      }
+      // We have no previous data and the current data is corrupt.
       throw new ProviderException('Remote oEmbed providers database returned invalid or empty list.');
     }
 
@@ -103,7 +136,10 @@ class ProviderRepository implements ProviderRepositoryInterface {
       }
     }
 
-    $this->cacheSet($cache_id, $keyed_providers, $this->time->getCurrentTime() + $this->maxAge);
+    $this->keyValue->set('providers', [
+      'data' => $keyed_providers,
+      'expires' => $current_time + $this->maxAge,
+    ]);
     return $keyed_providers;
   }
 
