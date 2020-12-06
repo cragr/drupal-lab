@@ -60,10 +60,10 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests \Drupal\image\ImageStyleInterface::buildUri().
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStylePath() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $scheme = 'public';
     $actual = $this->style->buildUri("$scheme://foo/bar.gif");
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
@@ -78,11 +78,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL using the "public://" scheme.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlAndPathPublic() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('public');
   }
 
@@ -90,11 +90,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL using the "private://" scheme.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlAndPathPrivate() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('private');
   }
 
@@ -102,11 +102,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL with the "public://" scheme and unclean URLs.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlAndPathPublicUnclean() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('public', FALSE);
   }
 
@@ -114,11 +114,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL with the "private://" schema and unclean URLs.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlAndPathPrivateUnclean() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('private', FALSE);
   }
 
@@ -126,11 +126,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL with the "public://" schema and language prefix.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlAndPathPublicLanguage() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('public', TRUE, TRUE, 'fr');
   }
 
@@ -138,11 +138,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL with the "private://" schema and language prefix.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlAndPathPrivateLanguage() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('private', TRUE, TRUE, 'fr');
   }
 
@@ -150,11 +150,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests an image style URL with a file URL that has an extra slash in it.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlExtraSlash() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $this->doLegacyImageStyleUrlAndPathTests('public', TRUE, TRUE);
   }
 
@@ -162,10 +162,10 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
    * Tests that an invalid source image returns a 404.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageStyleUrlForMissingSourceImage() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $non_existent_uri = 'public://foo.png';
     $generated_url = $this->style->buildUrl($non_existent_uri);
     $this->drupalGet($generated_url);

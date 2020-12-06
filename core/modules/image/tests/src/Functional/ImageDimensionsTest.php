@@ -37,10 +37,10 @@ class ImageDimensionsTest extends BrowserTestBase {
    * Test styled image dimensions cumulatively.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testLegacyImageDimensions() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     $image_factory = $this->container->get('image.factory');
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');

@@ -36,11 +36,11 @@ class FileMoveTest extends BrowserTestBase {
    * Tests moving a randomly generated image.
    *
    * @group legacy
-   *
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::createDerivative method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testNormalLegacy() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::createDerivative method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     // Pick a file for testing.
     $file = File::create((array) current($this->drupalGetTestFiles('image')));
 

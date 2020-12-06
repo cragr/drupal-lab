@@ -47,33 +47,33 @@ class ImageStyleLegacyTest extends KernelTestBase {
 
   /**
    * @covers ::buildUri
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testBuildUri() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $this->assertSame('public://styles/test/public/test.png', $this->imageStyle->buildUri('public://test.png'));
   }
 
   /**
    * @covers ::buildUrl
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testBuildUrl() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUrl method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $this->assertStringContainsString('files/styles/test/public/test.png?itok=', $this->imageStyle->buildUrl('public://test.png'));
   }
 
   /**
    * @covers ::createDerivative
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::createDerivative method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testCreateDerivative() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::createDerivative method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $this->assertIsBool($this->imageStyle->createDerivative('public://test.png', 'public://test_derivative.png'));
   }
 
   /**
    * @covers ::transformDimensions
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::transformDimensions method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testTransformDimensions() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::transformDimensions method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $dimensions = ['width' => 100, 'height' => 200];
     $this->assertNull($this->imageStyle->transformDimensions($dimensions, 'public://test.png'));
     $this->assertEquals([
@@ -84,25 +84,25 @@ class ImageStyleLegacyTest extends KernelTestBase {
 
   /**
    * @covers ::getDerivativeExtension
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::getDerivativeExtension method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testGetDerivativeExtension() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::getDerivativeExtension method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $this->assertSame('png', $this->imageStyle->getDerivativeExtension('png'));
   }
 
   /**
    * @covers ::getPathToken
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::getPathToken method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testGetPathToken() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::getPathToken method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $this->assertNotEmpty($this->imageStyle->getPathToken('public://test.png'));
   }
 
   /**
    * @covers ::supportsUri
-   * @expectedDeprecation The Drupal\image\Entity\ImageStyle::supportsUri method is deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function testSupportsUri() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::supportsUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
     $this->assertTrue($this->imageStyle->supportsUri('public://test.png'));
   }
 
