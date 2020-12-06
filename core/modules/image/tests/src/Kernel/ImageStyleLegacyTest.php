@@ -20,7 +20,7 @@ class ImageStyleLegacyTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'image', 'image_module_test'];
+  protected static $modules = ['system', 'image', 'image_module_test'];
 
   /**
    * An image style for testing.
