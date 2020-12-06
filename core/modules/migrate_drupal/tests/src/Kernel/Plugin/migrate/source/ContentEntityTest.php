@@ -245,16 +245,17 @@ class ContentEntityTest extends KernelTestBase {
    * Provide migration configuration, iterating all options.
    */
   public function migrationConfigurationProvider() {
+    $data = [];
     foreach ([FALSE, TRUE] as $include_translations) {
       foreach ([FALSE, TRUE] as $include_revisions) {
-        yield [
-          [
-            'include_translations' => $include_translations,
-            'include_revisions' => $include_revisions,
-          ]
+        $configuration = [
+          'include_translations' => $include_translations,
+          'include_revisions' => $include_revisions,
         ];
+        $data[http_build_query($configuration)] = [$configuration];
       }
     }
+    return $data;
   }
 
   /**
