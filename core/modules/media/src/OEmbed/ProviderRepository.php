@@ -84,7 +84,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
     }
     if (is_null($logger_factory)) {
       @trigger_error('The logger.factory service should be passed to ProviderRepository::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
-      $key_value = \Drupal::service('logger.factory');
+      $logger_factory = \Drupal::service('logger.factory');
     }
     $this->keyValue = $key_value->get('media.oembed');
     $this->logger = $logger_factory->get('media');
