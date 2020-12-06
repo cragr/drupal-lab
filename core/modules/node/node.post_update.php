@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\node\NodeTypeInterface;
 
 /**
  * Implements hook_removed_post_updates().
