@@ -376,7 +376,7 @@ class ContentEntityTest extends KernelTestBase {
       $this->assertEquals(1, $values['vid']);
     }
     else {
-      $this->assertEquals([1], $values['vid']);
+      $this->assertEquals([0 => ['value' => 1]], $values['vid']);
     }
     $this->assertEquals('en', $values['langcode']);
     $this->assertEquals(1, $values['status'][0]['value']);
@@ -442,7 +442,7 @@ class ContentEntityTest extends KernelTestBase {
       $this->assertEquals(1, $values['vid']);
     }
     else {
-      $this->assertEquals([1], $values['vid']);
+      $this->assertEquals([0 => ['value' => 1]], $values['vid']);
     }
     $this->assertEquals('Foo media', $values['name'][0]['value']);
     $this->assertNull($values['thumbnail'][0]['title']);
