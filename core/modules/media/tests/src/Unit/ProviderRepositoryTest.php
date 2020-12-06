@@ -33,7 +33,7 @@ class ProviderRepositoryTest extends UnitTestCase {
    *   Current time.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value
    *   Key value store.
-   * @param \GuzzleHttp\Psr7\Response ...$responses
+   * @param \GuzzleHttp\Psr7\Response $responses
    *   Responses to use.
    *
    * @return \Drupal\media\OEmbed\ProviderRepositoryInterface
@@ -56,7 +56,6 @@ class ProviderRepositoryTest extends UnitTestCase {
     );
   }
 
-
   /**
    * Tests a successful fetch.
    */
@@ -64,7 +63,7 @@ class ProviderRepositoryTest extends UnitTestCase {
     $history = [];
     $time = time();
     $key_value = new KeyValueMemoryFactory();
-    $repo = $this->getTestRepository($history, $time, $key_value,  new Response(200, [], '[{
+    $repo = $this->getTestRepository($history, $time, $key_value, new Response(200, [], '[{
           "provider_name": "YouTube",
           "provider_url": "https:\/\/www.youtube.com\/",
           "endpoints": [
@@ -174,6 +173,64 @@ class ProviderRepositoryTest extends UnitTestCase {
     );
     $this->expectException(ProviderException::class);
     $oembed_repository->get('YouTube');
+  }
+
+  /**
+   * Tests that invalid values without primed data throws an exception.
+   */
+  public function testThatAnEmptyKeyValueAndInvalidResponseThrowsAnException() {
+    $history = [];
+    $oembed_repository = $this->getTestRepository(
+      $history,
+      time(),
+      new KeyValueMemoryFactory(),
+      new Response(200, [], 'this is not json')
+    );
+    $this->expectException(ProviderException::class);
+    $oembed_repository->get('YouTube');
+  }
+
+  /**
+   * Tests a successful fetch but with a single corrupt item.
+   */
+  public function testThatCorrupItemsAreIgnored() {
+    $history = [];
+    $time = time();
+    $key_value = new KeyValueMemoryFactory();
+    $repo = $this->getTestRepository($history, $time, $key_value, new Response(200, [], '[{
+          "provider_name": "YouTube",
+          "provider_url": "https:\/\/www.youtube.com\/",
+          "endpoints": [
+              {
+                  "schemes": [
+                      "https:\/\/*.youtube.com\/watch*",
+                      "https:\/\/*.youtube.com\/v\/*",
+                      "https:\/\/youtu.be\/*"
+                  ],
+                  "url": "https:\/\/www.youtube.com\/oembed",
+                  "discovery": true
+              }
+          ]
+      },{
+          "provider_name": "Uncle Daryl\'s videos",
+          "provider_url": "not a real url",
+          "endpoints": []
+      }]'));
+    $youtube = new Provider('YouTube', 'https://www.youtube.com/', [
+      [
+        'schemes' => [
+          'https://*.youtube.com/watch*',
+          'https://*.youtube.com/v/*',
+          'https://youtu.be/*',
+        ],
+        'url' => 'https://www.youtube.com/oembed',
+        'discovery' => TRUE,
+      ],
+    ]);
+    $this->assertEquals($youtube, $repo->get('YouTube'));
+    $this->assertEquals(['data' => ['YouTube' => $youtube], 'expires' => $time + 604800], $key_value->get('media.oembed')->get('providers'));
+    $this->expectException(\InvalidArgumentException::class);
+    $repo->get("Uncle Daryl's videos");
   }
 
   /**
