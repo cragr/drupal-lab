@@ -57,14 +57,19 @@ class EntityTypeBundleInfoPluralLabelTest extends KernelTestBase {
    */
   public function testLabelsForBundlesAsConfigEntities(): void {
     // Test bundles stored in config entities.
-    $this->setBundle('entity_test_with_bundle', 'article');
+    $this->setTestingBundle('entity_test_with_bundle', 'article');
 
+    /** @var \Drupal\Core\Config\Entity\EntityBundleWithPluralLabelsInterface $bundle_entity */
     $bundle_entity = EntityTestBundleWithPluralLabels::create([
       'id' => 'article',
       'label' => 'Article',
     ]);
     $bundle_entity->save();
 
+    // Check the config entity getters.
+    $this->assertNull($bundle_entity->getSingularLabel());
+    $this->assertNull($bundle_entity->getPluralLabel());
+    $this->assertNull($bundle_entity->getCountLabel());
     // Check that bundle info returns no label with bundle undefined labels.
     $this->assertSingularLabel(NULL);
     $this->assertPluralLabel(NULL);
@@ -83,7 +88,14 @@ class EntityTypeBundleInfoPluralLabelTest extends KernelTestBase {
       ])
       ->save();
 
-    // Check that labels are correctly returned.
+    // Check the config entity getters.
+    $this->assertSame('article', $bundle_entity->getSingularLabel());
+    $this->assertSame('articles', $bundle_entity->getPluralLabel());
+    $this->assertSame([
+      "1 article\x03@count articles",
+      'search results' => "1 article was found\x03@count articles were found",
+    ], $bundle_entity->getCountLabel());
+    // Check that labels are correctly returned by the bundle info service.
     $this->assertSingularLabel('article');
     $this->assertPluralLabel('articles');
     $this->assertCountLabel(1, 0, '1 article');
@@ -97,13 +109,21 @@ class EntityTypeBundleInfoPluralLabelTest extends KernelTestBase {
     // Also, clear the bundle info cache, to get fresh bundle definitions.
     $this->bundleInfo->clearCachedBundles();
 
-    // Check that altered labels are correctly returned.
+    // Check that altered labels are returned by the bundle info service.
     $this->assertSingularLabel('article item');
     $this->assertPluralLabel('article items');
     $this->assertCountLabel(1, 0, '1 article item');
     $this->assertCountLabel(100, 0, '100 article items');
     $this->assertCountLabel(1, 'search results', '1 article item was found');
     $this->assertCountLabel(100, 'search results', '100 article items were found');
+    // However, the getters are still showing the stored values.
+    // @see https://www.drupal.org/project/drupal/issues/3186688
+    $this->assertSame('article', $bundle_entity->getSingularLabel());
+    $this->assertSame('articles', $bundle_entity->getPluralLabel());
+    $this->assertSame([
+      "1 article\x03@count articles",
+      'search results' => "1 article was found\x03@count articles were found",
+    ], $bundle_entity->getCountLabel());
   }
 
   /**
@@ -114,7 +134,7 @@ class EntityTypeBundleInfoPluralLabelTest extends KernelTestBase {
   public function testLabelsForBundlesWithoutConfigEntities(): void {
     // Test entities with bundles not stored in config entities.
     // @see entity_bundle_test_entity_bundle_info()
-    $this->setBundle('entity_test', 'artist');
+    $this->setTestingBundle('entity_test', 'artist');
 
     // Check that labels are correctly returned.
     $this->assertSingularLabel('artist');
@@ -224,7 +244,7 @@ class EntityTypeBundleInfoPluralLabelTest extends KernelTestBase {
    * @param string $bundle
    *   The bundle.
    */
-  protected function setBundle(string $entity_type_id, string $bundle): void {
+  protected function setTestingBundle(string $entity_type_id, string $bundle): void {
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
   }

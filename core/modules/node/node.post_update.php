@@ -22,11 +22,7 @@ function node_removed_post_updates() {
  * Add plural label variants to node-type entities.
  */
 function node_post_update_plural_variants(array &$sandbox): void {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'node_type', function (NodeTypeInterface $node_type): bool {
-    $node_type
-      ->set('label_singular', NULL)
-      ->set('label_plural', NULL)
-      ->set('label_count', NULL);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'node_type', function (): bool {
     return TRUE;
   });
 }

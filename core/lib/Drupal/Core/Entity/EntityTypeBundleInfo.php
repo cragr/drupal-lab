@@ -103,9 +103,9 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
               $this->bundleInfo[$type][$entity->id()]['label'] = $entity->label();
               if ($entity instanceof EntityBundleWithPluralLabelsInterface) {
                 $this->bundleInfo[$type][$entity->id()] += [
-                  'label_singular' => $entity->get('label_singular'),
-                  'label_plural' => $entity->get('label_plural'),
-                  'label_count' => $entity->get('label_count'),
+                  'label_singular' => $entity->getSingularLabel(),
+                  'label_plural' => $entity->getPluralLabel(),
+                  'label_count' => $entity->getCountLabel(),
                 ];
               }
             }
