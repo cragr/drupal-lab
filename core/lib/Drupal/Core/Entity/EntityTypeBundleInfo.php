@@ -92,14 +92,14 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
       }
       else {
         $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
-        $config_entity_bundle_ids = [];
+        $config_entity_bundle_labels = [];
         foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
           // First look for entity types that act as bundles for others, load them
           // and add them as bundles.
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
             foreach ($this->entityTypeManager->getStorage($bundle_entity_type)->loadMultiple() as $entity) {
               $this->bundleInfo[$type][$entity->id()]['label'] = $entity->label();
-              $config_entity_bundle_ids[$type][$entity->id()] = $entity->label();
+              $config_entity_bundle_labels[$type][$entity->id()] = $entity->label();
             }
           }
           // If entity type bundles are not supported and
@@ -110,10 +110,8 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
-
         // Check for altered labels of bundles stored as config entities.
-        $this->checkConfigEnityBundleAlteredLabels($config_entity_bundle_ids);
-
+        $this->checkConfigEnityBundleAlteredLabels($config_entity_bundle_labels);
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }
@@ -134,15 +132,15 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   /**
    * Checks for altered labels of bundles stored as config entities.
    *
-   * @param array $config_entity_bundle_ids
-   *   A list of labels of config entity bundles grouped b entity type.
+   * @param array $config_entity_bundle_labels
+   *   A list of labels of config entity bundles grouped by entity type.
    */
-  protected function checkConfigEnityBundleAlteredLabels(array $config_entity_bundle_ids): void {
+  protected function checkConfigEnityBundleAlteredLabels(array $config_entity_bundle_labels): void {
     // Collect the IDs of all bundles stored as config entities whose labels
     // were altered via hook_entity_bundle_info_alter().
     $altered_label_bundles = [];
-    foreach ($config_entity_bundle_ids as $entity_type_id => $all_bundle_info) {
-      foreach ($all_bundle_info as $bundle => $label) {
+    foreach ($config_entity_bundle_labels as $entity_type_id => $bundles) {
+      foreach ($bundles as $bundle => $label) {
         $altered_label = $this->bundleInfo[$entity_type_id][$bundle]['label'] ?? NULL;
         if ($altered_label !== $label) {
           $altered_label_bundles[$entity_type_id][] = $bundle;
@@ -150,9 +148,15 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
       }
     }
     if ($altered_label_bundles) {
-      $altered_label_bundles_string = trim(array_reduce(array_keys($altered_label_bundles), function (string $string, string $entity_type_id) use ($altered_label_bundles): string {
-        return implode(', ', $altered_label_bundles[$entity_type_id]) . " ({$entity_type_id}) ";
-      }, ''));
+      $altered_label_bundles_string = trim(
+        array_reduce(
+          array_keys($altered_label_bundles),
+          function (string $string, string $entity_type_id) use ($altered_label_bundles): string {
+            return $string . implode(', ', $altered_label_bundles[$entity_type_id]) . " ({$entity_type_id}) ";
+          },
+          ''
+        )
+      );
       // @todo Convert deprecation to exception in drupal:10.0.0.
       @trigger_error("Using hook_entity_bundle_info_alter() to alter the label of bundles stored as config entities is deprecated in drupal:9.2.0 and is not permitted in drupal:10.0.0. Label altered bundles: {$altered_label_bundles_string}. Use different methods to alter the label for bundles stored as config entities. See https://www.drupal.org/node/3186694", E_USER_DEPRECATED);
     }
