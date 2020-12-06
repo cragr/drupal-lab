@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\WidgetInterface;
 
 /**
  * Implements callback_allowed_values_function().
@@ -65,7 +66,8 @@ function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $d
 function options_test_options_list_alter(array &$options, array $context) {
   $expected_context = [
     'fieldDefinition' => FieldDefinitionInterface::class,
-    'entity' => EntityInterface::class
+    'entity' => EntityInterface::class,
+    'widget' => WidgetInterface::class,
   ];
   foreach ($expected_context as $key => $interface) {
     if (!isset($context[$key])) {
