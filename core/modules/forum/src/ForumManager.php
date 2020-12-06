@@ -4,6 +4,7 @@ namespace Drupal\forum;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -160,7 +161,7 @@ class ForumManager implements ForumManagerInterface {
     }
 
     $query = $this->connection->select('forum_index', 'f')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
     $query->fields('f');
     $query

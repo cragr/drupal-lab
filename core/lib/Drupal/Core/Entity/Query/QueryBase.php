@@ -289,10 +289,7 @@ abstract class QueryBase implements QueryInterface {
     // Even when not using SQL, storing the element PagerSelectExtender is as
     // good as anywhere else.
     if (!isset($element)) {
-      $element = PagerSelectExtender::$maxElement++;
-    }
-    elseif ($element >= PagerSelectExtender::$maxElement) {
-      PagerSelectExtender::$maxElement = $element + 1;
+      $element = \Drupal::service('pager.manager')->getMaxPagerElementId() + 1;
     }
 
     $this->pager = [

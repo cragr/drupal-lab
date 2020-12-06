@@ -3,6 +3,7 @@
 namespace Drupal\database_test\Form;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
@@ -38,7 +39,7 @@ class DatabaseTestForm extends FormBase {
     $count_query->addExpression('COUNT(u.uid)');
 
     $query = $query
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
     $query
       ->fields('u', ['uid'])

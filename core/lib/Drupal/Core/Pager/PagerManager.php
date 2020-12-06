@@ -90,12 +90,9 @@ class PagerManager implements PagerManagerInterface {
   }
 
   /**
-   * Gets the extent of the pager page element IDs.
-   *
-   * @return int
-   *   The maximum element ID available, -1 if there are no elements.
+   * {@inheritdoc}
    */
-  protected function getMaxPagerElementId() {
+  public function getMaxPagerElementId() {
     return empty($this->pagers) ? -1 : max(array_keys($this->pagers));
   }
 
