@@ -65,7 +65,7 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
     $callback = $form_state->prepareCallback($callback);
 
     // Sanity check the callback.
-    if (is_array($triggering_element['#array_parents'])) {
+    if (isset($triggering_element['#array_parents']) && is_array($triggering_element['#array_parents'])) {
       $array_parents_string = implode(':', $triggering_element['#array_parents']);
     }
     else {
