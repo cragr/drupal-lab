@@ -91,25 +91,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function query($query, array $args = [], $options = []) {
-    try {
-      return parent::query($query, $args, $options);
-    }
-    catch (DatabaseException $e) {
-      if ($e->getPrevious()->errorInfo[1] == 1153) {
-        // If a max_allowed_packet error occurs the message length is truncated.
-        // This should prevent the error from recurring if the exception is
-        // logged to the database using dblog or the like.
-        $message = Unicode::truncateBytes($e->getMessage(), self::MIN_MAX_ALLOWED_PACKET);
-        $e = new DatabaseExceptionWrapper($message, $e->getCode(), $e->getPrevious());
-      }
-      throw $e;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function open(array &$connection_options = []) {
     if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
       // Only used during the installer version check, as a fallback from utf8mb4.
