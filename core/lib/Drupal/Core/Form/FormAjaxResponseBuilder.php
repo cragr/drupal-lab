@@ -72,7 +72,8 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
 
     // Sanity check the callback.
     if (empty($triggering_element['#ajax']['callback'])) {
-      throw new HttpException(500, sprintf('The specified #ajax callback is empty for triggering form element with array parents "%s".',
+      throw new HttpException(500, sprintf('The specified #ajax callback is empty for triggering form element "%s" with array parents "%s".',
+        $triggering_element['#name'],
         $array_parents_string
       ));
     }
@@ -81,8 +82,9 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
     $callback = $form_state->prepareCallback($callback);
 
     if (!is_callable($callback)) {
-      throw new HttpException(500, sprintf('The specified #ajax callback %s is not callable for triggering form element with array parents "%s".',
+      throw new HttpException(500, sprintf('The specified #ajax callback %s is not callable for triggering form element "%s" with array parents "%s".',
         print_r($callback, TRUE),
+        $triggering_element['#name'],
         $array_parents_string
       ));
     }
