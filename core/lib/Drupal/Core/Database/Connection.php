@@ -795,15 +795,7 @@ abstract class Connection {
     // We allow either a pre-bound statement object (deprecated) or a literal
     // string. In either case, we want to end up with an executed statement
     // object, which we pass to StatementInterface::execute.
-    if ($query instanceof StatementInterface) {
-      @trigger_error('Passing a StatementInterface object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
-      $stmt = $query;
-    }
-    elseif ($query instanceof \PDOStatement) {
-      @trigger_error('Passing a \\PDOStatement object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
-      $stmt = $query;
-    }
-    else {
+    if (is_string($query)) {
       try {
         $this->expandArguments($query, $args);
         // To protect against SQL injection, Drupal only supports executing one
@@ -826,16 +818,24 @@ abstract class Connection {
         $this->exceptionHandler($this, $e)->handleStatementException($query, $args, $options);
       }
     }
+    elseif ($query instanceof StatementInterface) {
+      @trigger_error('Passing a StatementInterface object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
+      $stmt = $query;
+    }
+    elseif ($query instanceof \PDOStatement) {
+      @trigger_error('Passing a \\PDOStatement object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
+      $stmt = $query;
+    }
 
     try {
+      if (is_string($query)) {
+        $stmt->execute($args, $options);
+      }
       if ($query instanceof StatementInterface) {
         $stmt->execute(NULL, $options);
       }
       elseif ($query instanceof \PDOStatement) {
         $stmt->execute();
-      }
-      else {
-        $stmt->execute($args, $options);
       }
 
       // Depending on the type of query we may need to return a different value.
@@ -865,11 +865,11 @@ abstract class Connection {
       // Most database drivers will return NULL here, but some of them
       // (e.g. the SQLite driver) may need to re-run the query, so the return
       // value will be the same as for static::query().
-      if ($query instanceof \PDOStatement) {
-        return $this->handleQueryException($e, $query, $args, $options);
+      if (is_string($query)) {
+        return $this->exceptionHandler($this, $e)->handleExecutionException($stmt, $args, $options);
       }
       else {
-        return $this->exceptionHandler($this, $e)->handleExecutionException($stmt, $args, $options);
+        return $this->handleQueryException($e, $query, $args, $options);
       }
     }
   }
