@@ -197,8 +197,16 @@ class Connection extends DatabaseConnection {
       'init_commands' => [],
     ];
 
+    $sql_mode = "ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY";
+    $version_server = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
+    $txn_isolation = 'transaction_isolation';
+    if (version_compare($version_server, '8.0.11', '<')) {
+      $sql_mode .= ',NO_AUTO_CREATE_USER';
+      $txn_isolation = 'tx_isolation';
+    }
     $connection_options['init_commands'] += [
-      'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY'",
+      'sql_mode' => "SET sql_mode = '$sql_mode'",
+      'isolation' => "SET SESSION " . $txn_isolation . " = 'READ-COMMITTED'",
     ];
 
     // Execute initial commands.
