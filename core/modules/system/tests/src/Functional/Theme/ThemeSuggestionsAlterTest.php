@@ -563,7 +563,10 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   x theme-test-base4' . $extension . PHP_EOL
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
-          . '   * theme-suggestions-base4-test-alternate' . $extension . PHP_EOL
+          // 'theme-suggestions-base4-test-alternate' is not listed here. While
+          // it would seem to make sense to list the base hook here, when one
+          // hook specifies a different base hook, Drupal will use that base
+          // hook's suggestions, but not the base hook itself.
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL,
         ],
         'unexpected' => [],
@@ -578,7 +581,10 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   x theme-test-base4' . $extension . PHP_EOL
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
-          . '   * theme-suggestions-base4-test-alternate' . $extension . PHP_EOL
+          // 'theme-suggestions-base4-test-alternate' is not listed here. While
+          // it would seem to make sense to list the base hook here, when one
+          // hook specifies a different base hook, Drupal will use that base
+          // hook's suggestions, but not the base hook itself.
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL,
         ],
         'unexpected' => [
@@ -598,7 +604,10 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   x theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
-          . '   * theme-suggestions-base4-test-alternate' . $extension . PHP_EOL
+          // 'theme-suggestions-base4-test-alternate' is not listed here. While
+          // it would seem to make sense to list the base hook here, when one
+          // hook specifies a different base hook, Drupal will use that base
+          // hook's suggestions, but not the base hook itself.
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL,
         ],
         'unexpected' => [],

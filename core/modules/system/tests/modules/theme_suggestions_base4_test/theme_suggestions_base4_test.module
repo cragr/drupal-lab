@@ -21,7 +21,6 @@ function theme_suggestions_base4_test_theme($existing, $type, $theme, $path) {
  */
 function theme_suggestions_base4_test_theme_suggestions_theme_suggestions_base4_test_alternate(array $variables) {
   return [
-    'theme_suggestions_base4_test_alternate',
     'theme_suggestions_base4_test_alternate__from_hook_theme_suggestions_hook',
   ];
 }

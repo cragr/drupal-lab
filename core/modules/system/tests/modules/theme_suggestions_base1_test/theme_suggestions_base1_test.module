@@ -20,7 +20,6 @@ function theme_suggestions_base1_test_theme($existing, $type, $theme, $path) {
  */
 function theme_suggestions_base1_test_theme_suggestions_theme_test_base1(array $variables) {
   return [
-    'theme_test_base1',
     'theme_test_base1__from_hook_theme_suggestions_hook',
     'theme_test_base1__from_hook_theme_suggestions_hook_too',
   ];
