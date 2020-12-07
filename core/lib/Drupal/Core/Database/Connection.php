@@ -792,21 +792,19 @@ abstract class Connection {
     $options += $this->defaultOptions();
     assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
-    try {
-      // We allow either a pre-bound statement object (deprecated) or a literal
-      // string. In either case, we want to end up with an executed statement
-      // object, which we pass to PDOStatement::execute.
-      if ($query instanceof StatementInterface) {
-        @trigger_error('Passing a StatementInterface object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
-        $stmt = $query;
-        $stmt->execute(NULL, $options);
-      }
-      elseif ($query instanceof \PDOStatement) {
-        @trigger_error('Passing a \\PDOStatement object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
-        $stmt = $query;
-        $stmt->execute();
-      }
-      else {
+    // We allow either a pre-bound statement object (deprecated) or a literal
+    // string. In either case, we want to end up with an executed statement
+    // object, which we pass to StatementInterface::execute.
+    if ($query instanceof StatementInterface) {
+      @trigger_error('Passing a StatementInterface object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
+      $stmt = $query;
+    }
+    elseif ($query instanceof \PDOStatement) {
+      @trigger_error('Passing a \\PDOStatement object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
+      $stmt = $query;
+    }
+    else {
+      try {
         $this->expandArguments($query, $args);
         // To protect against SQL injection, Drupal only supports executing one
         // statement at a time.  Thus, the presence of a SQL delimiter (the
@@ -823,6 +821,20 @@ abstract class Connection {
           throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
         }
         $stmt = $this->prepareStatement($query, $options);
+      }
+      catch (\Exception $e) {
+        $this->exceptionHandler($this, $e)->handleStatementException($query, $args, $options);
+      }
+    }
+
+    try {
+      if ($query instanceof StatementInterface) {
+        $stmt->execute(NULL, $options);
+      }
+      elseif ($query instanceof \PDOStatement) {
+        $stmt->execute();
+      }
+      else {
         $stmt->execute($args, $options);
       }
 
@@ -846,13 +858,19 @@ abstract class Connection {
 
         default:
           throw new \PDOException('Invalid return directive: ' . $options['return']);
+
       }
     }
-    catch (\PDOException $e) {
+    catch (\Exception $e) {
       // Most database drivers will return NULL here, but some of them
       // (e.g. the SQLite driver) may need to re-run the query, so the return
       // value will be the same as for static::query().
-      return $this->handleQueryException($e, $query, $args, $options);
+      if ($query instanceof \PDOStatement) {
+        return $this->handleQueryException($e, $query, $args, $options);
+      }
+      else {
+        return $this->exceptionHandler($this, $e)->handleExecutionException($stmt, $args, $options);
+      }
     }
   }
 
@@ -875,8 +893,14 @@ abstract class Connection {
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   $this->handleException() instead.
+   *
+   * @see https://www.drupal.org/node/TODO
    */
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Use $this->handleException() instead. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
     if ($options['throw_exception']) {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
@@ -990,6 +1014,10 @@ abstract class Connection {
       }
       else {
         switch ($class) {
+          case 'ExceptionHandler':
+            $this->driverClasses[$class] = ExceptionHandler::class;
+            break;
+
           case 'Condition':
             $this->driverClasses[$class] = Condition::class;
             break;
@@ -1036,6 +1064,22 @@ abstract class Connection {
       }
     }
     return $this->driverClasses[$class];
+  }
+
+  /**
+   * Returns the database exceptions handler.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Drupal database connection object.
+   * @param \Exception $exception
+   *   The exception.
+   *
+   * @return \Drupal\Core\Database\ExceptionHandler
+   *   The database exceptions handler.
+   */
+  public function exceptionHandler(Connection $connection, \Exception $exception) {
+    $class = $this->getDriverClass('ExceptionHandler');
+    return new $class($connection, $exception);
   }
 
   /**
