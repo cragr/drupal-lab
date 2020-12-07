@@ -167,7 +167,7 @@ class DrupalDateTime extends DateTimePlus {
    * Magic __sleep() method to avoid serializing formatTranslationCache.
    */
   public function __sleep() {
-    return ['langcode', 'dateTimeObject']
+    return ['langcode', 'dateTimeObject'];
   }
 
 }
