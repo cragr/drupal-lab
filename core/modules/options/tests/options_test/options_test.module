@@ -5,11 +5,8 @@
  * Helper module for the List module tests.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Field\WidgetInterface;
 
 /**
  * Implements callback_allowed_values_function().
@@ -64,18 +61,13 @@ function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $d
  * For testing, return options that map context keys to their classes.
  */
 function options_test_options_list_alter(array &$options, array $context) {
-  $expected_context = [
-    'fieldDefinition' => FieldDefinitionInterface::class,
-    'entity' => EntityInterface::class,
-    'widget' => WidgetInterface::class,
-  ];
-  foreach ($expected_context as $key => $interface) {
-    if (!isset($context[$key])) {
-      throw new \UnexpectedValueException("Missing context key $key.");
-    }
-    if (!$context[$key] instanceof $interface) {
-      $class = get_class($context[$key]);
-      throw new \UnexpectedValueException("Unexpected context key $key of type $class, expected interface $interface.");
-    }
+  _options_test_options_list_alter_args(func_get_args());
+}
+
+function _options_test_options_list_alter_args(array $args = NULL) {
+  static $static = NULL;
+  if (isset($args)) {
+    $static = $args;
   }
+  return $static;
 }
