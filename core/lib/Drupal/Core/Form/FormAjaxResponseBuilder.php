@@ -63,7 +63,7 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
       throw new HttpException(500, 'No triggering element found for the Ajax request.');
     }
 
-    if (is_array($triggering_element['#array_parents'])) {
+    if (!empty($triggering_element['#array_parents'])) {
       $array_parents_string = implode(':', $triggering_element['#array_parents']);
     }
     else {
