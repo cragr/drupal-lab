@@ -388,7 +388,13 @@ class ContentEntityTest extends KernelTestBase {
       $values = $node_source->current()->getSource();
       $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
       $this->assertEquals(1, $values['nid']);
-      $this->assertEquals(1, $values['vid']);
+      // IDs are un-delta'ed.
+      if ($configuration['include_revisions']) {
+        $this->assertEquals(1, $values['vid']);
+      }
+      else {
+        $this->assertEquals([0 => ['value' => 1]], $values['vid']);
+      }
       $this->assertEquals('fr', $values['langcode']);
       $this->assertEquals(1, $values['status'][0]['value']);
       $this->assertEquals('Pommes', $values['title'][0]['value']);
