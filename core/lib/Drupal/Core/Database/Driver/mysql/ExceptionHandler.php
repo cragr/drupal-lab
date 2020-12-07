@@ -37,6 +37,15 @@ class ExceptionHandler extends BaseExceptionHandler {
       ) {
         throw new IntegrityConstraintViolationException($message, $code, $this->exception);
       }
+
+      // If a max_allowed_packet error occurs the message length is truncated.
+      // This should prevent the error from recurring if the exception is logged
+      // to the database using dblog or the like.
+      if (($this->exception->errorInfo[1] ?? NULL) === 1153) {
+        $message = Unicode::truncateBytes($this->exception->getMessage(), Connection::MIN_MAX_ALLOWED_PACKET);
+        throw new DatabaseExceptionWrapper($message, $this->exception->getCode(), $this->exception);
+      }
+
       throw new DatabaseExceptionWrapper($message, 0, $this->exception);
     }
 
