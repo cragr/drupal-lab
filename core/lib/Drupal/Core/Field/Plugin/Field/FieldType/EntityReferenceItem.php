@@ -124,13 +124,13 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
           'unsigned' => TRUE,
         ],
       ];
-      $entity_field_manager = \Drupal::service('entity_field.manager');
-      $fieldStorageDefinitions = $entity_field_manager->getActiveFieldStorageDefinitions($target_type_info->id());
-      $target_id_definition = $fieldStorageDefinitions[$target_type_info->getKey('id')];
+      if($field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($target_type, $target_type)) {
+        $target_id_definition = $field_storage_definitions[$target_type_info->getKey('id')];
 
-      // Set size from field settings, if different from default 'normal' value
-      if(!empty($target_id_definition->getSetting('size')) && $target_id_definition->getSetting('size') !== 'normal') {
-        $columns['target_id']['size'] = $target_id_definition->getSetting('size');
+        // Set size from field settings, if different from default 'normal' value
+        if(!empty($target_id_definition->getSetting('size')) && $target_id_definition->getSetting('size') !== 'normal') {
+          $columns['target_id']['size'] = $target_id_definition->getSetting('size');
+        }
       }
     }
     else {
