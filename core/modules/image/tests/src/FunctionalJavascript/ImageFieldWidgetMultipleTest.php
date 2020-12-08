@@ -31,7 +31,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
   /**
    * Tests image widget element support multiple upload correctly.
    */
-  public function testWidgetElementMultipleUploads() {
+  public function testWidgetElementMultipleUploads(): void {
     $image_factory = \Drupal::service('image.factory');
     $file_system = \Drupal::service('file_system');
     $web_driver = $this->getSession()->getDriver();
@@ -67,8 +67,8 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
     foreach ($paths as $delta => $path) {
       $node_image = $node->{$field_name}[$delta];
       $original_image = $image_factory->get($path);
-      $this->assertEquals($node_image->width, $original_image->getWidth(), "Correct width of image #$delta");
-      $this->assertEquals($node_image->height, $original_image->getHeight(), "Correct height of image #$delta");
+      $this->assertEquals($original_image->getWidth(), $node_image->width, "Correct width of image #$delta");
+      $this->assertEquals($original_image->getHeight(), $node_image->height, "Correct height of image #$delta");
     }
   }
 
