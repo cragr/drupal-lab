@@ -79,16 +79,10 @@ class ExceptionHandler {
    *   An associative array of options to control how the database operation is
    *   run.
    *
-   * @return \Drupal\Core\Database\StatementInterface|int|null
-   *   Most database drivers will rethrow a Drupal database exception when a PDO
-   *   exception is thrown by a database operation, but some of them may need to
-   *   re-run the query, so they can also return a
-   *   \Drupal\Core\Database\StatementInterface object or an integer.
-   *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
    */
-  public function handleExecutionException(StatementInterface $statement, array $arguments = [], array $options = []) {
+  public function handleExecutionException(StatementInterface $statement, array $arguments = [], array $options = []): void {
     $throw_exception = $options['throw_exception'] ?? FALSE;
     if (!$throw_exception) {
       return;
