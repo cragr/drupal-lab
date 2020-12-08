@@ -561,7 +561,7 @@ abstract class Connection {
         $this->connection->prepare($query, $options['pdo'] ?? []);
     }
     catch (\Exception $e) {
-      $this->exceptionHandler($this, $e)->handleStatementException($query, [], $options);
+      $this->exceptionHandler($e)->handleStatementException($query, $options);
     }
   }
 
@@ -868,7 +868,7 @@ abstract class Connection {
       // (e.g. the SQLite driver) may need to re-run the query, so the return
       // value will be the same as for static::query().
       if (is_string($query)) {
-        return $this->exceptionHandler($this, $e)->handleExecutionException($stmt, $args, $options);
+        return $this->exceptionHandler($e)->handleExecutionException($stmt, $args, $options);
       }
       else {
         return $this->handleQueryException($e, $query, $args, $options);
