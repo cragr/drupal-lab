@@ -1072,17 +1072,15 @@ abstract class Connection {
   /**
    * Returns the database exceptions handler.
    *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   Drupal database connection object.
    * @param \Exception $exception
    *   The exception.
    *
    * @return \Drupal\Core\Database\ExceptionHandler
    *   The database exceptions handler.
    */
-  public function exceptionHandler(Connection $connection, \Exception $exception) {
+  public function exceptionHandler(\Exception $exception) {
     $class = $this->getDriverClass('ExceptionHandler');
-    return new $class($connection, $exception);
+    return new $class($exception);
   }
 
   /**
