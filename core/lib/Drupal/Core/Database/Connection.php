@@ -1017,16 +1017,16 @@ abstract class Connection {
       }
       else {
         switch ($class) {
-          case 'ExceptionHandler':
-            $this->driverClasses[$class] = ExceptionHandler::class;
-            break;
-
           case 'Condition':
             $this->driverClasses[$class] = Condition::class;
             break;
 
           case 'Delete':
             $this->driverClasses[$class] = Delete::class;
+            break;
+
+          case 'ExceptionHandler':
+            $this->driverClasses[$class] = ExceptionHandler::class;
             break;
 
           case 'Insert':

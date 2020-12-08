@@ -150,6 +150,11 @@ class ConnectionTest extends UnitTestCase {
         'Delete',
       ],
       [
+        'Drupal\Core\Database\Query\ExceptionHandler',
+        'Drupal\corefake\Driver\Database\corefake',
+        'ExceptionHandler',
+      ],
+      [
         'Drupal\Core\Database\Query\Insert',
         'Drupal\corefake\Driver\Database\corefake',
         'Insert',
@@ -200,6 +205,11 @@ class ConnectionTest extends UnitTestCase {
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Delete',
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
         'Delete',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\ExceptionHandler',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'ExceptionHandler',
       ],
       [
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Insert',
