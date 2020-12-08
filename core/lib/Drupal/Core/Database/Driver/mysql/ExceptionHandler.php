@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\ExceptionHandler as BaseExceptionHandler;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
