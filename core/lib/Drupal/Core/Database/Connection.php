@@ -833,7 +833,7 @@ abstract class Connection {
       if (is_string($query)) {
         $stmt->execute($args, $options);
       }
-      if ($query instanceof StatementInterface) {
+      elseif ($query instanceof StatementInterface) {
         $stmt->execute(NULL, $options);
       }
       elseif ($query instanceof \PDOStatement) {
