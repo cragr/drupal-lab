@@ -150,7 +150,7 @@ class ConnectionTest extends UnitTestCase {
         'Delete',
       ],
       [
-        'Drupal\Core\Database\Query\ExceptionHandler',
+        'Drupal\Core\Database\ExceptionHandler',
         'Drupal\corefake\Driver\Database\corefake',
         'ExceptionHandler',
       ],
