@@ -58,12 +58,7 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
     $this->expectDeprecation('Passing a StatementInterface object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
     $this->expectDeprecation('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222');
     $this->expectException(DatabaseExceptionWrapper::class);
-    $stmt = Database::getConnection()->insert('test');
-    $stmt->fields([
-      'name' => 'Yoko',
-      'age' => '29',
-      'this_field' => 'does_not_exist',
-    ]);
+    $stmt = Database::getConnection()->prepareStatement('SELECT * FROM {does_not_exist}', []);
     Database::getConnection()->query($stmt);
   }
 
