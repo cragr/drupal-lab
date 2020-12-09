@@ -332,10 +332,11 @@ class ThemeManager implements ThemeManagerInterface {
           // Since we are searching from the end of $template_suggestions, we
           // have just now found the last occurrence of the base hook. Insert
           // the least specific suggestions just before this last occurrence of
-          // the base hook. However, in the unusual case that the
-          // $base_theme_hook differs from the "base" of $hook, we need to
-          // insert the suggestions after $hook.
-          $insertion_point = $base_theme_hook === $base_of_hook ? $key : $key + 1;
+          // the base hook, assuming it is the base theme hook. However, under
+          // some edge cases, the last occurrence of the base hook will be a
+          // specific suggestion and won't be the actual base hook, so we need
+          // to insert the suggestions after this last occurrence.
+          $insertion_point = $hook_name === $base_theme_hook ? $key : $key + 1;
           $prevent_duplicate = in_array($hook_name, $least_specific_suggestions) ? 1 : 0;
           array_splice(
             $template_suggestions,
