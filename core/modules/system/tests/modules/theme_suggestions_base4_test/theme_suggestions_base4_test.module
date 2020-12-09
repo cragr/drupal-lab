@@ -31,4 +31,3 @@ function theme_suggestions_base4_test_theme_suggestions_theme_suggestions_base4_
 function theme_suggestions_base4_test_theme_suggestions_theme_suggestions_base4_test_alternate_alter(array &$suggestions, array $variables, $hook) {
   $suggestions[] = $hook . '__from_hook_theme_suggestions_hook_alter';
 }
-

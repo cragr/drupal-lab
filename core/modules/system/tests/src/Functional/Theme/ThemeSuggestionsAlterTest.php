@@ -195,6 +195,9 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           'Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_alter().',
           "<!-- BEGIN OUTPUT from 'core/modules/system/tests/themes/test_theme/templates/theme-test-general-suggestions--theme-override$extension' -->",
         ],
+        'unexpected' => [
+          'Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().',
+        ],
       ],
     ];
   }
@@ -435,7 +438,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           'theme_test_base4',
           'theme_test_base3__from_theme_property',
           'theme_test_base3',
-          'theme_test_base2__variant_not_implemented',
+          'theme_test_base2__from_theme_property__without_base',
           'theme_test_base1__from_theme_property__too',
         ],
       ],
@@ -464,7 +467,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
           . '   * theme-test-base3' . $extension . PHP_EOL
-          . '   * theme-test-base2--variant-not-implemented' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property' . $extension . PHP_EOL
           . '   x theme-test-base1' . $extension . PHP_EOL
@@ -477,7 +480,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
         ],
       ],
       'Confirm unexpanded theme_test_base2 suggestion would be used if expanded' => [
-        'modules' => ['theme_suggestions_base2_test'],
+        'modules' => ['theme_suggestions_base2_ignored_test'],
         'theme' => '',
         'expected' => [
           'This theme_test_base2 template is implemented, but never used.',
@@ -486,7 +489,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
           . '   * theme-test-base3' . $extension . PHP_EOL
-          . '   * theme-test-base2--variant-not-implemented' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
           . '   x theme-test-base2' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property' . $extension . PHP_EOL
@@ -495,6 +498,8 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
         ],
         'unexpected' => [],
       ],
+      // This is a duplicate of testThemeSuggestionsOrdering, but in an array
+      // context.
       '#theme property suggestions always override ones from hook_theme_suggestions_hook' => [
         'modules' => ['theme_suggestions_base1_test'],
         'theme' => '',
@@ -505,7 +510,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
           . '   * theme-test-base3' . $extension . PHP_EOL
-          . '   * theme-test-base2--variant-not-implemented' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter--but-reordered' . $extension . PHP_EOL
@@ -517,6 +522,31 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
         ],
         'unexpected' => [],
       ],
+      'specific #theme property suggestions always override ones from hook_theme_suggestions_hook' => [
+        'modules' => ['theme_suggestions_base2_test'],
+        'theme' => '',
+        'expected' => [
+          'This theme_test_base2__from_theme_property__without_base template is implemented.',
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          . '   x theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base1' . $extension . PHP_EOL
+          . '-->' . PHP_EOL,
+        ],
+        'unexpected' => [
+          'This theme_test_base2__from_hook_theme_suggestions_hook template is implemented, but never used.',
+          'This theme_test_base2 template is implemented, but never used.',
+          'x theme-test-base2' . $extension . PHP_EOL,
+          '* theme-test-base2' . $extension . PHP_EOL,
+        ],
+      ],
       'adding a new template implementation does not change order of suggestions' => [
         'modules' => ['theme_suggestions_base1_test'],
         'theme' => 'test_theme',
@@ -527,7 +557,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
           . '   * theme-test-base3' . $extension . PHP_EOL
-          . '   * theme-test-base2--variant-not-implemented' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter--but-reordered' . $extension . PHP_EOL
