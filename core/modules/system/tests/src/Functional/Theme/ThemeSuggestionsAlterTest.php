@@ -569,7 +569,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
         ],
         'unexpected' => [],
       ],
-      'ordering is correct when no suggestions from hook_theme_suggestions_HOOK_alter' => [
+      'ordering is correct when no suggestions from hook_theme_suggestions_HOOK' => [
         'modules' => ['theme_suggestions_base3_test'],
         'theme' => '',
         'expected' => [
