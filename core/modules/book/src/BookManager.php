@@ -1012,8 +1012,13 @@ class BookManager implements BookManagerInterface {
     if ($link['access']) {
       // The node label will be the value for the current user's language.
       $link['title'] = $node->label();
-      $link['options'] = [];
     }
+    else {
+      // Ensure keys are always present
+      $link['title'] = '';
+    }
+    $link['options'] = [];
+
     return $link;
   }
 
