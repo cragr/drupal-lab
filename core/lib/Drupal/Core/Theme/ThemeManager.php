@@ -145,62 +145,48 @@ class ThemeManager implements ThemeManagerInterface {
     // to use for Twig debug comments. Note: this list is entirely separate from
     // the list of $suggestions created later that is passed to
     // theme_suggestions alter hooks.
-    $template_suggestions = [$hook];
+    $is_hook_array = is_array($hook);
+    $hook = $is_hook_array ? array_values($hook) : [$hook];
+    $template_suggestions = $hook;
 
-    // If an array of hook candidates were passed, use the first one that has an
-    // implementation.
-    if (is_array($hook)) {
-      // Ensure $template_suggestions has continuous numeric keys.
-      $template_suggestions = array_values($hook);
-      foreach ($hook as $candidate) {
-        if ($theme_registry->has($candidate)) {
-          break;
-        }
-      }
-      $hook = $candidate;
+    // The last element element in our template suggestions gets special
+    // treatment. While the other elements must match exactly, the final element
+    // is expanded to create multiple possible matches by iteratively striping
+    // everything after the last '__' delimiter.
+    $last_hook = $hook[array_key_last($hook)];
+    $suggestion = $last_hook;
+    while ($pos = strrpos($suggestion, '__')) {
+      $suggestion = substr($suggestion, 0, $pos);
+      $template_suggestions[] = $suggestion;
     }
-    // Save the original theme hook, so it can be supplied to theme variable
-    // preprocess callbacks.
-    $original_hook = $hook;
 
-    // If there's no implementation, check for more generic fallbacks.
-    // If there's still no implementation, log an error and return an empty
-    // string.
-    if (!$theme_registry->has($hook)) {
-      // Iteratively strip everything after the last '__' delimiter, until an
-      // implementation is found.
-      while ($pos = strrpos($hook, '__')) {
-        $hook = substr($hook, 0, $pos);
-        if ($theme_registry->has($hook)) {
-          break;
-        }
+    // Use the first hook candidate that has an implementation.
+    foreach ($template_suggestions as $candidate) {
+      if ($theme_registry->has($candidate)) {
+        // Save the original theme hook, so it can be supplied to theme variable
+        // preprocess callbacks.
+        $original_hook = in_array($candidate, $hook) ? $candidate : $last_hook;
+        break;
       }
-      if (!$theme_registry->has($hook)) {
-        // Only log a message when not trying theme suggestions ($hook being an
-        // array).
-        if (!isset($candidate)) {
-          \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
-        }
-        // There is no theme implementation for the hook passed. Return FALSE so
-        // the function calling
-        // \Drupal\Core\Theme\ThemeManagerInterface::render() can differentiate
-        // between a hook that exists and renders an empty string, and a hook
-        // that is not implemented.
-        return FALSE;
+    }
+    $hook = $candidate;
+
+    // If there's no implementation, log an error and return an empty string.
+    if (!isset($original_hook)) {
+      // Only log a message when not trying theme suggestions ($hook being an
+      // array).
+      if (!$is_hook_array) {
+        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
       }
+      // There is no theme implementation for the hook passed. Return FALSE so
+      // the function calling
+      // \Drupal\Core\Theme\ThemeManagerInterface::render() can differentiate
+      // between a hook that exists and renders an empty string, and a hook
+      // that is not implemented.
+      return FALSE;
     }
 
     $info = $theme_registry->get($hook);
-
-    // If $hook is an array of strings, the code above only expands the final
-    // element in the array. We need to let the template engine know about all
-    // possible $template_suggestions (for discoverability), so we grab the last
-    // element and expand it.
-    $hook_name = $template_suggestions[array_key_last($template_suggestions)];
-    while ($pos = strrpos($hook_name, '__')) {
-      $hook_name = substr($hook_name, 0, $pos);
-      $template_suggestions[] = $hook_name;
-    }
 
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
@@ -244,19 +230,30 @@ class ThemeManager implements ThemeManagerInterface {
       $base_theme_hook = $hook;
     }
 
+    // The $hook's theme registry may specify a "base hook" that differs from
+    // the base string of $hook. If so, we need to be aware of both strings.
+    $base_of_hook = explode('__', $hook)[0];
+
     // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
-    // Make a copy of the initial suggestions for later.
-    $suggestions_copy = $suggestions;
-    // If the theme implementation was invoked with a direct theme suggestion
-    // like '#theme' => 'node__article', add it to the suggestions array before
-    // invoking suggestion alter hooks.
-    if (isset($info['base hook'])) {
-      $suggestions[] = $hook;
-      $suggestions_include_specific_hook = TRUE;
-    }
-    else {
-      $suggestions_include_specific_hook = FALSE;
+
+    // Add all the template suggestions with the same base to the suggestions
+    // array before invoking suggestion alter hooks.
+    $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
+    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
+      $suggestion_base = explode('__', $suggestion)[0];
+      if (($suggestion_base === $base_theme_hook || $suggestion_base === $base_of_hook)) {
+        if ($suggestion !== $base_theme_hook) {
+          $suggestions[] = $suggestion;
+        }
+        // For suggestions we are adding to the alter hooks, remove them from
+        // $template_suggestions for now. But, ensure that we leave one entry
+        // for the base hook so we can splice in the suggestions later.
+        if ($contains_base_hook && $suggestion !== $base_theme_hook
+          || !$contains_base_hook && $suggestion !== $hook) {
+          unset($template_suggestions[$key]);
+        }
+      }
     }
 
     // Invoke hook_theme_suggestions_alter() and
@@ -268,94 +265,14 @@ class ThemeManager implements ThemeManagerInterface {
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
-    // In order to properly merge these new suggestions into our previous list
-    // of all possible template suggestions, we need to determine where each
-    // suggestion comes from and order them like so:
-    //
-    // 1. More-specific suggestions from the #theme list that aren't for the
-    //    $base_theme_hook.
-    // 2. Suggestions for $base_theme_hook from:
-    //    a. hook_theme_suggestions_alter(), hook_theme_suggestions_HOOK_alter()
-    //    b. #theme list
-    //    c. hook_theme_suggestions_HOOK()
-    //    d. $base_theme_hook
-    // 3. Less-specific suggestions from the #theme array that aren't for the
-    //    $base_theme_hook.
-    //
-    // Since 2a and 2c come from $suggestions, we need to figure out how to
-    // split that array into two parts.
-    if ($suggestions_include_specific_hook) {
-      $separator_hook = $hook;
-      // Ensure numeric keys are continuous to make slicing the array easier.
-      $reindexed_suggestions = array_values($suggestions);
-    }
-    else {
-      // Since the $hook is not included in $suggestions, the only guaranteed
-      // way to split the list is to re-run the alter hooks with a dummy
-      // separator inserted into the suggestions list.
-      $separator_hook = $base_theme_hook . '__do.not.remove__hook_separator';
-      $suggestions_copy[] = $separator_hook;
-      $this->moduleHandler->alter($hooks, $suggestions_copy, $variables, $base_theme_hook);
-      $this->alter($hooks, $suggestions_copy, $variables, $base_theme_hook);
-      $reindexed_suggestions = array_values($suggestions_copy);
-    }
-    // Find the separator in the suggestions list.
-    $split_position = array_search($separator_hook, $reindexed_suggestions);
-
-    // Split the suggestions into the two needed lists (see above).
-    $least_specific_suggestions = array_slice(
-      $reindexed_suggestions,
-      0,
-      ($split_position === FALSE) ? 0 : $split_position
-    );
-    $most_specific_suggestions = array_slice(
-      $reindexed_suggestions,
-      // If the separator was not found, then we assume any #theme array
-      // suggestions inserted into $suggestions would also be removed. So, all
-      // suggestions are more specific than the #theme array suggestions.
-      ($split_position === FALSE) ? 0 : $split_position + 1
-    );
-
-    // The $hook's theme registry may specify a "base hook" that differs from
-    // the base string of $hook. If so, we need to search $template_suggestions
-    // for both of these base hook strings.
-    $base_of_hook = explode('__', $hook)[0];
-
-    // Scan through the template suggestions from the end to the beginning to
-    // find the first and last occurrence of the base hook.
-    $first_base_hook_key = FALSE;
-    foreach (array_reverse($template_suggestions, TRUE) as $key => $hook_name) {
-      // Find the base hook for this hook suggestion.
-      $base_hook_name = explode('__', $hook_name)[0];
-      if ($base_hook_name === $base_theme_hook || $base_hook_name === $base_of_hook) {
-        if ($first_base_hook_key === FALSE) {
-          // Since we are searching from the end of $template_suggestions, we
-          // have just now found the last occurrence of the base hook. Insert
-          // the least specific suggestions just before this last occurrence of
-          // the base hook, assuming it is the base theme hook. However, under
-          // some edge cases, the last occurrence of the base hook will be a
-          // specific suggestion and won't be the actual base hook, so we need
-          // to insert the suggestions after this last occurrence.
-          $insertion_point = $hook_name === $base_theme_hook ? $key : $key + 1;
-          $prevent_duplicate = in_array($hook_name, $least_specific_suggestions) ? 1 : 0;
-          array_splice(
-            $template_suggestions,
-            $insertion_point,
-            $prevent_duplicate,
-            array_reverse($least_specific_suggestions)
-          );
-        }
-        // Keep searching for the first occurrence of the base hook.
-        $first_base_hook_key = $key;
-      }
-    }
-    // Insert the most specific suggestions just before the first occurrence of
-    // the base hook.
+    // Merge $suggestions back into $template_suggestions before the "base hook"
+    // entry.
+    $template_suggestions = array_values($template_suggestions);
     array_splice(
       $template_suggestions,
-      $first_base_hook_key,
-      0,
-      array_reverse($most_specific_suggestions)
+      array_search($contains_base_hook ? $base_theme_hook : $hook, $template_suggestions),
+      $contains_base_hook ? 0 : 1,
+      array_reverse($suggestions)
     );
 
     // Check if each suggestion exists in the theme registry, and if so,
