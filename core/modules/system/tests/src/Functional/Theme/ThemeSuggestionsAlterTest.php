@@ -569,7 +569,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
         ],
         'unexpected' => [],
       ],
-      'ordering is correct when no suggestions from hook_theme_suggestions_HOOK' => [
+      'theme suggestions alter hooks see suggestions from #theme' => [
         'modules' => ['theme_suggestions_base3_test'],
         'theme' => '',
         'expected' => [
@@ -578,7 +578,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
           . '   * theme-test-base5' . $extension . PHP_EOL
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-test-base3--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
-          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property--seen-by-alter' . $extension . PHP_EOL
           . '   x theme-test-base3' . $extension . PHP_EOL,
         ],
         'unexpected' => [],
