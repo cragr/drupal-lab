@@ -242,7 +242,7 @@ class ThemeManager implements ThemeManagerInterface {
     $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
     foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
       $suggestion_base = explode('__', $suggestion)[0];
-      if (($suggestion_base === $base_theme_hook || $suggestion_base === $base_of_hook)) {
+      if ($suggestion_base === $base_theme_hook || $suggestion_base === $base_of_hook) {
         if ($suggestion !== $base_theme_hook) {
           $suggestions[] = $suggestion;
         }
