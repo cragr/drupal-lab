@@ -190,11 +190,11 @@ class ImageWidget extends FileWidget {
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    // Since file upload widget now supports uploads of more than one file at a
-    // time it always returns an array of fids. We have to translate this to a
-    // single fid, as field expects single value. In this process, we have to
-    // unset any image dimension for files after the first, that would
-    // otherwise be copied from the ones of the first file.
+    // Since the file upload widget now supports uploads of more than one file
+    // at a time it always returns an array of fids. We have to translate this
+    // to a single fid, as the field expects a single value. In this process, we
+    // have to unset any image dimension for files other than the first, so that
+    // the dimensions are not copied from those of the first file.
     $new_values = [];
     foreach ($values as &$value) {
       $first = TRUE;
@@ -345,7 +345,7 @@ class ImageWidget extends FileWidget {
     // If there are more files uploaded via the same widget, we have to
     // separate them, as we display each file in its own widget. In this
     // process, we have to unset any image dimension for files after the first,
-    // that would otherwise be copied from the ones of the first file.
+    // that would otherwise be copied from those of the first file.
     $new_values = [];
     foreach ($submitted_values as $delta => $submitted_value) {
       if (is_array($submitted_value['fids'])) {
