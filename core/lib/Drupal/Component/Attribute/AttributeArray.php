@@ -20,7 +20,7 @@ use Drupal\Component\Utility\Html;
  *  $attributes['class'][] = 'cat';
  * @endcode
  *
- * @see \Drupal\Component\Attribute\Attribute
+ * @see \Drupal\Component\Attribute\AttributeCollection
  */
 class AttributeArray extends AttributeValueBase implements \ArrayAccess, \IteratorAggregate {
 

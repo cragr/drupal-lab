@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Component\Attribute;
 
-use Drupal\Component\Attribute\Attribute;
+use Drupal\Component\Attribute\AttributeCollection;
 use Drupal\Component\Attribute\AttributeArray;
 use Drupal\Component\Attribute\AttributeString;
 use Drupal\Component\Render\MarkupInterface;
@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 
 /**
- * @coversDefaultClass \Drupal\Component\Attribute\Attribute
+ * @coversDefaultClass \Drupal\Component\Attribute\AttributeCollection
  * @group Attribute
  */
 class AttributeTest extends TestCase {

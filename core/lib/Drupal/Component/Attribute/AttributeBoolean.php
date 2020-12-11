@@ -22,7 +22,7 @@ use Drupal\Component\Utility\Html;
  *  // produces <select>;
  * @endcode
  *
- * @see \Drupal\Component\Attribute\Attribute
+ * @see \Drupal\Component\Attribute\AttributeCollection
  */
 class AttributeBoolean extends AttributeValueBase {
 

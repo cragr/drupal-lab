@@ -63,7 +63,7 @@ use Drupal\Component\Utility\NestedArray;
  * @see \Drupal\Component\Render\PlainTextOutput::renderFromHtml()
  * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
  */
-class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
+class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
 
   /**
    * Stores the attribute data.
@@ -73,7 +73,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   protected $storage = [];
 
   /**
-   * Constructs a \Drupal\Component\Attribute\Attribute object.
+   * Constructs a \Drupal\Component\Attribute\AttributeCollection object.
    *
    * @param array $attributes
    *   An associative array of key-value pairs to be converted to attributes.

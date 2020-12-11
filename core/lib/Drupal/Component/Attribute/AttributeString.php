@@ -17,7 +17,7 @@ use Drupal\Component\Utility\Html;
  *  // Produces: <cat id="socks" style="background-color:white">.
  * @endcode
  *
- * @see \Drupal\Component\Attribute\Attribute
+ * @see \Drupal\Component\Attribute\AttributeCollection
  */
 class AttributeString extends AttributeValueBase {
 

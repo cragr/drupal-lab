@@ -7,7 +7,7 @@ use Drupal\Component\Utility\Html;
 /**
  * Defines the base class for an attribute type.
  *
- * @see \Drupal\Component\Attribute\Attribute
+ * @see \Drupal\Component\Attribute\AttributeCollection
  */
 abstract class AttributeValueBase {
 

@@ -4,4 +4,4 @@
  * The original class has been moved to an Attribute component added in Drupal
  * 8.9.0. See the respective component class for full documentation.
  */
-class_alias('Drupal\Component\Attribute\Attribute', 'Drupal\Core\Template\Attribute');
+class_alias('Drupal\Component\Attribute\AttributeCollection', 'Drupal\Core\Template\Attribute');
