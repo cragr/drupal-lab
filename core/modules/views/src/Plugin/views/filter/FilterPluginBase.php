@@ -1428,7 +1428,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
             break;
           }
         }
-      } else {
+      }
+      else {
         $session[$this->options['group_info']['identifier']][] = $input[$this->options['group_info']['identifier']];
       }
     }
