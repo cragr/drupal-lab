@@ -141,19 +141,19 @@ class ThemeManager implements ThemeManagerInterface {
 
     $theme_registry = $this->themeRegistry->getRuntime();
 
-    // While we search for templates, we create a list of template suggestions
-    // to use for Twig debug comments. Note: this list is entirely separate from
-    // the list of $suggestions created later that is passed to
-    // theme_suggestions alter hooks.
+    // $hook is normally a string, but it can be an array. We only log error
+    // messages below if it was a string.
     $is_hook_array = is_array($hook);
-    $hook = $is_hook_array ? array_values($hook) : [$hook];
-    $template_suggestions = $hook;
+
+    // While we search for templates, we create a full list of template
+    // suggestions that is later passed to theme_suggestions alter hooks.
+    $template_suggestions = $is_hook_array ? array_values($hook) : [$hook];
 
     // The last element element in our template suggestions gets special
     // treatment. While the other elements must match exactly, the final element
     // is expanded to create multiple possible matches by iteratively striping
     // everything after the last '__' delimiter.
-    $last_hook = $hook[array_key_last($hook)];
+    $last_hook = $is_hook_array ? $hook[array_key_last($hook)] : $hook;
     $suggestion = $last_hook;
     while ($pos = strrpos($suggestion, '__')) {
       $suggestion = substr($suggestion, 0, $pos);
@@ -165,7 +165,7 @@ class ThemeManager implements ThemeManagerInterface {
       if ($theme_registry->has($candidate)) {
         // Save the original theme hook, so it can be supplied to theme variable
         // preprocess callbacks.
-        $original_hook = in_array($candidate, $hook) ? $candidate : $last_hook;
+        $original_hook = $is_hook_array && in_array($candidate, $hook) ? $candidate : $last_hook;
         break;
       }
     }
@@ -173,8 +173,9 @@ class ThemeManager implements ThemeManagerInterface {
 
     // If there's no implementation, log an error and return an empty string.
     if (!isset($original_hook)) {
-      // Only log a message when not trying theme suggestions ($hook being an
-      // array).
+      // Only log a message if we #theme was a string. By default, all forms set
+      // #theme to an array containing the form ID and don't implement that as a
+      // theme hook, so we want to prevent errors for that common use case.
       if (!$is_hook_array) {
         \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
       }
