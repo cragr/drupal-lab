@@ -1020,6 +1020,7 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *     self-registers.
  *   - 'register_pending_approval': Welcome message, user pending admin
  *     approval.
+ *   - 'register_password_set_activation': Activation message, password set.
  *   - 'password_reset': Password recovery request.
  *   - 'status_activated': Account activated.
  *   - 'status_blocked': Account blocked.
