@@ -146,7 +146,8 @@ class UserLoginForm extends FormBase {
     if (!$this->getRequest()->request->has('destination')) {
       $form_state->setRedirect(
         'entity.user.canonical',
-        ['user' => $account->id()]
+        ['user' => $account->id()],
+        ['query' => ['state' => 'loggedin']]
       );
     }
     else {
