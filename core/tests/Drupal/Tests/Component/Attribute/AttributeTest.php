@@ -1,22 +1,22 @@
 <?php
 
-namespace Drupal\Tests\Core\Template;
+namespace Drupal\Tests\Component\Attribute;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Render\Markup;
-use Drupal\Core\Template\Attribute;
-use Drupal\Core\Template\AttributeArray;
-use Drupal\Core\Template\AttributeString;
-use Drupal\Core\Template\Loader\StringLoader;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Component\Attribute\Attribute;
+use Drupal\Component\Attribute\AttributeArray;
+use Drupal\Component\Attribute\AttributeString;
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Random;
+use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 
 /**
- * @coversDefaultClass \Drupal\Core\Template\Attribute
- * @group Template
+ * @coversDefaultClass \Drupal\Component\Attribute\Attribute
+ * @group Attribute
  */
-class AttributeTest extends UnitTestCase {
+class AttributeTest extends TestCase {
 
   /**
    * Tests the constructor of the attribute class.
@@ -76,6 +76,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests setting attributes.
+   *
    * @covers ::setAttribute
    */
   public function testSetAttribute() {
@@ -104,6 +105,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing attributes.
+   *
    * @covers ::removeAttribute
    */
   public function testRemoveAttribute() {
@@ -143,6 +145,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests adding class attributes with the AttributeArray helper method.
+   *
    * @covers ::addClass
    */
   public function testAddClasses() {
@@ -195,6 +198,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the AttributeArray helper method.
+   *
    * @covers ::removeClass
    */
   public function testRemoveClasses() {
@@ -226,6 +230,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests checking for class names with the Attribute method.
+   *
    * @covers ::hasClass
    */
   public function testHasClass() {
@@ -241,6 +246,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the Attribute helper methods.
+   *
    * @covers ::removeClass
    * @covers ::addClass
    */
@@ -348,28 +354,37 @@ class AttributeTest extends UnitTestCase {
     $this->assertClass('example-class', $html);
     $this->assertNoClass('example-class2', $html);
 
-    $this->assertID('example-id', $html);
-    $this->assertNoID('example-id2', $html);
+    $this->assertId('example-id', $html);
+    $this->assertNoId('example-id2', $html);
 
     $this->assertStringContainsString('enabled', $html);
   }
 
   /**
+   * Tests attribute values.
+   *
    * @covers ::createAttributeValue
+   *
    * @dataProvider providerTestAttributeValues
    */
   public function testAttributeValues(array $attributes, $expected) {
     $this->assertEquals($expected, (new Attribute($attributes))->__toString());
   }
 
+  /**
+   * Provides test data for testAttributeValues.
+   *
+   * @return array
+   *   An array of test data.
+   */
   public function providerTestAttributeValues() {
     $data = [];
 
     $string = '"> <script>alert(123)</script>"';
-    $data['safe-object-xss1'] = [['title' => Markup::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
+    $data['safe-object-xss1'] = [['title' => TestMarkup::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
     $data['non-safe-object-xss1'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
     $string = '&quot;><script>alert(123)</script>';
-    $data['safe-object-xss2'] = [['title' => Markup::create($string)], ' title="&quot;&gt;alert(123)"'];
+    $data['safe-object-xss2'] = [['title' => TestMarkup::create($string)], ' title="&quot;&gt;alert(123)"'];
     $data['non-safe-object-xss2'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
 
     return $data;
@@ -385,7 +400,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertClass($class, $html) {
     $xpath = "//*[@class='$class']";
-    self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertTrue((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -398,7 +413,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertNoClass($class, $html) {
     $xpath = "//*[@class='$class']";
-    self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertFalse((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -409,9 +424,9 @@ class AttributeTest extends UnitTestCase {
    * @param string $html
    *   The HTML snippet to check.
    */
-  protected function assertID($id, $html) {
+  protected function assertId($id, $html) {
     $xpath = "//*[@id='$id']";
-    self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertTrue((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -422,9 +437,9 @@ class AttributeTest extends UnitTestCase {
    * @param string $html
    *   The HTML snippet to check.
    */
-  protected function assertNoID($id, $html) {
+  protected function assertNoId($id, $html) {
     $xpath = "//*[@id='$id']";
-    self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertFalse((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -438,7 +453,7 @@ class AttributeTest extends UnitTestCase {
    * @return int
    *   The number of results that are found.
    */
-  protected function getXPathResultCount($query, $html) {
+  protected function getXpathResultCount($query, $html) {
     $document = new \DOMDocument();
     $document->loadHTML($html);
     $xpath = new \DOMXPath($document);

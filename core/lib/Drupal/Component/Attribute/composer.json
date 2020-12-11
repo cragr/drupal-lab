@@ -1,0 +1,17 @@
+{
+    "name": "drupal/core-attribute",
+    "description": "Collects, sanitizes, and renders HTML attributes.",
+    "keywords": ["drupal"],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.0.8",
+        "drupal/core-render": "^8.9",
+        "drupal/core-utility": "^8.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Attribute\\": ""
+        }
+    }
+}
