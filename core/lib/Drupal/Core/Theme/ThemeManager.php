@@ -147,14 +147,13 @@ class ThemeManager implements ThemeManagerInterface {
 
     // While we search for templates, we create a full list of template
     // suggestions that is later passed to theme_suggestions alter hooks.
-    $template_suggestions = $is_hook_array ? array_values($hook) : [$hook];
+    $template_suggestions = $is_hook_array ? $hook : [$hook];
 
     // The last element element in our template suggestions gets special
     // treatment. While the other elements must match exactly, the final element
     // is expanded to create multiple possible matches by iteratively striping
     // everything after the last '__' delimiter.
-    $last_hook = $is_hook_array ? $hook[array_key_last($hook)] : $hook;
-    $suggestion = $last_hook;
+    $last_hook = $suggestion = $is_hook_array ? $hook[array_key_last($hook)] : $hook;
     while ($pos = strrpos($suggestion, '__')) {
       $suggestion = substr($suggestion, 0, $pos);
       $template_suggestions[] = $suggestion;
@@ -166,18 +165,19 @@ class ThemeManager implements ThemeManagerInterface {
         // Save the original theme hook, so it can be supplied to theme variable
         // preprocess callbacks.
         $original_hook = $is_hook_array && in_array($candidate, $hook) ? $candidate : $last_hook;
+        $hook = $candidate;
+        $info = $theme_registry->get($hook);
         break;
       }
     }
-    $hook = $candidate;
 
     // If there's no implementation, log an error and return an empty string.
-    if (!isset($original_hook)) {
+    if (!isset($info)) {
       // Only log a message if we #theme was a string. By default, all forms set
       // #theme to an array containing the form ID and don't implement that as a
       // theme hook, so we want to prevent errors for that common use case.
       if (!$is_hook_array) {
-        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
+        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $candidate]);
       }
       // There is no theme implementation for the hook passed. Return FALSE so
       // the function calling
@@ -186,8 +186,6 @@ class ThemeManager implements ThemeManagerInterface {
       // that is not implemented.
       return FALSE;
     }
-
-    $info = $theme_registry->get($hook);
 
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
@@ -240,7 +238,7 @@ class ThemeManager implements ThemeManagerInterface {
 
     // Add all the template suggestions with the same base to the suggestions
     // array before invoking suggestion alter hooks.
-    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
+    foreach (array_reverse($template_suggestions) as $suggestion) {
       $suggestion_base = explode('__', $suggestion)[0];
       if ($suggestion !== $base_theme_hook && ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook)) {
         $suggestions[] = $suggestion;
