@@ -1415,8 +1415,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
       $session = &$_SESSION['views'][$this->view->storage->id()][$display_id];
 
-      $session[$this->options['group_info']['identifier']] = $input[$this->options['group_info']['identifier']];
-
       // Saves group filter values as an array instead of single value.
       if (!isset($session[$this->options['group_info']['identifier']]) || !is_array($session[$this->options['group_info']['identifier']])) {
         $session[$this->options['group_info']['identifier']] = [];
