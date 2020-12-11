@@ -462,6 +462,7 @@ Views
 Workflows
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
 
+Provisional membership: None at this time.
 
 Topic maintainers
 -----------------
@@ -486,8 +487,6 @@ Usability
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 - Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 
-Provisional membership: None at this time.
-
 
 Security team
 -------------
@@ -502,6 +501,7 @@ The security team lead is:
 
 - Michael Hess 'mlhess' https://www.drupal.org/u/mlhess
 
+Provisional membership: None at this time.
 
 Initiative coordinators
 -----------------------
@@ -529,8 +529,6 @@ PHPUnit Initiative
 
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
-
-Provisional membership: None at this time.
 
 
 Core mentoring coordinators
