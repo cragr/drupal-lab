@@ -10,13 +10,13 @@ use Drupal\Component\Utility\Html;
  * To use with Attribute, the array must be specified.
  * Correct:
  * @code
- *  $attributes = new Attribute();
+ *  $attributes = new AttributeCollection();
  *  $attributes['class'] = [];
  *  $attributes['class'][] = 'cat';
  * @endcode
  * Incorrect:
  * @code
- *  $attributes = new Attribute();
+ *  $attributes = new AttributeCollection();
  *  $attributes['class'][] = 'cat';
  * @endcode
  *

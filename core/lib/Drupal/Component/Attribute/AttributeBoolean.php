@@ -13,7 +13,7 @@ use Drupal\Component\Utility\Html;
  *
  * To set a boolean attribute on the Attribute class, set it to TRUE.
  * @code
- *  $attributes = new Attribute();
+ *  $attributes = new AttributeCollection();
  *  $attributes['disabled'] = TRUE;
  *  echo '<select' . $attributes . '/>';
  *  // produces <select disabled>;

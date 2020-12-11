@@ -12,7 +12,7 @@ use Drupal\Component\Utility\NestedArray;
  * To use, optionally pass in an associative array of defined attributes, or
  * add attributes using array syntax. For example:
  * @code
- *  $attributes = new Attribute(['id' => 'socks']);
+ *  $attributes = new AttributeCollection(['id' => 'socks']);
  *  $attributes['class'] = ['black-cat', 'white-cat'];
  *  $attributes['class'][] = 'black-white-cat';
  *  echo '<cat' . $attributes . '>';
@@ -21,7 +21,7 @@ use Drupal\Component\Utility\NestedArray;
  *
  * $attributes always prints out all the attributes. For example:
  * @code
- *  $attributes = new Attribute(['id' => 'socks']);
+ *  $attributes = new AttributeCollection(['id' => 'socks']);
  *  $attributes['class'] = ['black-cat', 'white-cat'];
  *  $attributes['class'][] = 'black-white-cat';
  *  echo '<cat class="cat ' . $attributes['class'] . '"' . $attributes . '>';
@@ -44,7 +44,7 @@ use Drupal\Component\Utility\NestedArray;
  * @code
  *  $path = 'javascript:alert("xss");';
  *  $path = UrlHelper::stripDangerousProtocols($path);
- *  $attributes = new Attribute(['href' => $path]);
+ *  $attributes = new AttributeCollection(['href' => $path]);
  *  echo '<a' . $attributes . '>';
  *  // Produces <a href="alert(&quot;xss&quot;);">
  * @endcode
@@ -54,7 +54,7 @@ use Drupal\Component\Utility\NestedArray;
  * PlainTextOutput::renderFromHtml() before being escaped. For example:
  * @code
  *   $value = t('Highlight the @tag tag', ['@tag' => '<em>']);
- *   $attributes = new Attribute(['value' => $value]);
+ *   $attributes = new AttributeCollection(['value' => $value]);
  *   echo '<input' . $attributes . '>';
  *   // Produces <input value="Highlight the &lt;em&gt; tag">
  * @endcode
