@@ -42,14 +42,16 @@ class TermRouteContext implements ContextProviderInterface {
     $result = [];
     $context_definition = EntityContextDefinition::create('taxonomy_term')->setRequired(FALSE);
     $value = NULL;
-    if (($route_object = $this->routeMatch->getRouteObject()) && ($route_contexts = $route_object->getOption('parameters')) && isset($route_contexts['taxonomy_term'])) {
-      if ($term = $this->routeMatch->getParameter('taxonomy_term')) {
+    if (($route_object = $this->routeMatch->getRouteObject())) {
+      $route_contexts = $route_object->getOption('parameters');
+
+      if (isset($route_contexts['taxonomy_term']) && $term = $this->routeMatch->getParameter('taxonomy_term')) {
         $value = $term;
       }
-    }
-    elseif ($this->routeMatch->getRouteName() == 'entity.taxonomy_term.add_form') {
-      $vocabulary = $this->routeMatch->getParameter('taxonomy_vocabulary');
-      $value = Term::create(['vid' => $vocabulary->id()]);
+      elseif ($this->routeMatch->getRouteName() == 'entity.taxonomy_term.add_form') {
+        $vocabulary = $this->routeMatch->getParameter('taxonomy_vocabulary');
+        $value = Term::create(['vid' => $vocabulary->id()]);
+      }
     }
 
     $cacheability = new CacheableMetadata();
