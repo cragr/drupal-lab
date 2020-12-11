@@ -19,12 +19,12 @@ class TermContextTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['filter', 'taxonomy', 'text', 'user'];
+  protected static $modules = ['filter', 'taxonomy', 'text', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['filter']);
     $this->installEntitySchema('user');
