@@ -69,7 +69,6 @@ class TermRouteContext implements ContextProviderInterface {
    */
   public function getAvailableContexts() {
     $context = EntityContext::fromEntityTypeId('taxonomy_term', $this->t('Term from URL'));
-
     return ['taxonomy_term' => $context];
   }
 
