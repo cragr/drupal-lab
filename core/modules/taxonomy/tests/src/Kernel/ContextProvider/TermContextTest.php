@@ -66,7 +66,6 @@ class TermContextTest extends KernelTestBase {
     $runtime_contexts = $provider->getRuntimeContexts([]);
     $this->assertArrayHasKey('taxonomy_term', $runtime_contexts);
     $this->assertTrue($runtime_contexts['taxonomy_term']->hasContextValue());
-
   }
 
 }
