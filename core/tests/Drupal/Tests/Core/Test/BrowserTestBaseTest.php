@@ -7,7 +7,6 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\BrowserTestBase;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Session;
-use Goutte\Client;
 
 /**
  * @coversDefaultClass \Drupal\Tests\BrowserTestBase
