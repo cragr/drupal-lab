@@ -46,7 +46,7 @@ class BatchStorageTest extends KernelTestBase {
       ->disableOriginalConstructor()
       ->getMock();
     $schema->method('tableExists')
-      ->willReturn(true);
+      ->willReturn(TRUE);
     $connection = $this->getMockBuilder(Connection::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -74,7 +74,7 @@ class BatchStorageTest extends KernelTestBase {
       ->disableOriginalConstructor()
       ->getMock();
     $schema->method('tableExists')
-      ->willReturn(false);
+      ->willReturn(FALSE);
     $schema->method('createTable')
       ->willThrowException(new SchemaObjectExistsException());
     $connection = $this->getMockBuilder(Connection::class)
@@ -150,7 +150,7 @@ class BatchStorageTest extends KernelTestBase {
       ->disableOriginalConstructor()
       ->getMock();
     $schema->method('tableExists')
-      ->willReturn(true);
+      ->willReturn(TRUE);
     $connection = $this->getMockBuilder(Connection::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -284,7 +284,7 @@ class BatchStorageTest extends KernelTestBase {
       ->getMock();
   }
 
-  protected function getMockCsrfTokenGenerator($getExpected, $token = null) {
+  protected function getMockCsrfTokenGenerator($getExpected, $token = NULL) {
     $token = is_null($token) ? $this->randomMachineName() : $token;
     $csrf_token = $this->getMockBuilder(CsrfTokenGenerator::class)
       ->disableOriginalConstructor()
