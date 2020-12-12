@@ -93,15 +93,15 @@ html.js span.js-only {
 
 /* Display preview on the side on large screens */
 
+.views-edit-wrapper {
+  display: -ms-grid;
+  display: grid;
+  grid-gap: 1rem;
+}
+
 @media screen and (min-width: 100em) { /* 1600px */
   .views-edit-wrapper {
-    display: -ms-grid;
-    display: grid;
-    grid-gap: 1rem;
     -ms-grid-columns: 50% 50%;
     grid-template-columns: 50% 50%;
-  }
-  .views-edit-wrapper .views-preview-wrapper {
-    margin-top: 42px; /* Equal to edit area title */
   }
 }

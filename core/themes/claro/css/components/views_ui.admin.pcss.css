@@ -79,13 +79,12 @@ html.js span.js-only {
 }
 
 /* Display preview on the side on large screens */
+.views-edit-wrapper {
+  display: grid;
+  grid-gap: 1rem;
+}
 @media screen and (min-width: 100em) { /* 1600px */
   .views-edit-wrapper {
-    display: grid;
-    grid-gap: 1rem;
     grid-template-columns: 50% 50%;
-  }
-  .views-edit-wrapper .views-preview-wrapper {
-    margin-top: 42px; /* Equal to edit area title */
   }
 }
