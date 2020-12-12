@@ -349,7 +349,7 @@ class AttributeTest extends TestCase {
   public function testPrint() {
     $attributes = new AttributeCollection(['class' => ['example-class'], 'id' => 'example-id', 'enabled' => TRUE]);
 
-    $content = $this->randomMachineName();
+    $content = (new Random())->name(8, TRUE);
     $html = '<div' . (string) $attributes . '>' . $content . '</div>';
     $this->assertClass('example-class', $html);
     $this->assertNoClass('example-class2', $html);

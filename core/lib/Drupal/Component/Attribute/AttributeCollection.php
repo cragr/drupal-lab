@@ -373,12 +373,12 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Merges an Attribute object into the current storage.
    *
-   * @param \Drupal\Core\Template\Attribute $collection
+   * @param \Drupal\Core\Template\AttributeCollection $collection
    *   The Attribute object to merge.
    *
    * @return $this
    */
-  public function merge(Attribute $collection) {
+  public function merge(AttributeCollection $collection) {
     $merged_attributes = NestedArray::mergeDeep($this->toArray(), $collection->toArray());
     foreach ($merged_attributes as $name => $value) {
       $this->storage[$name] = $this->createAttributeValue($name, $value);
