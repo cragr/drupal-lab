@@ -293,7 +293,7 @@ class ThemeManager implements ThemeManagerInterface {
       // Since the $hook is not included in $suggestions, the only guaranteed
       // way to split the list is to re-run the alter hooks with a dummy
       // separator inserted into the suggestions list.
-      $separator_hook = $base_theme_hook . '__do.not.remove__hook_separator';
+      $separator_hook = $base_theme_hook . '__do.not.remove__hook.separator';
       $suggestions_copy[] = $separator_hook;
       $this->moduleHandler->alter($hooks, $suggestions_copy, $variables, $base_theme_hook);
       $this->alter($hooks, $suggestions_copy, $variables, $base_theme_hook);
@@ -324,10 +324,10 @@ class ThemeManager implements ThemeManagerInterface {
     // Scan through the template suggestions from the end to the beginning to
     // find the first and last occurrence of the base hook.
     $first_base_hook_key = FALSE;
-    foreach (array_reverse($template_suggestions, TRUE) as $key => $hook_name) {
+    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
       // Find the base hook for this hook suggestion.
-      $base_hook_name = explode('__', $hook_name)[0];
-      if ($base_hook_name === $base_theme_hook || $base_hook_name === $base_of_hook) {
+      $suggestion_base = explode('__', $suggestion)[0];
+      if ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook) {
         if ($first_base_hook_key === FALSE) {
           // Since we are searching from the end of $template_suggestions, we
           // have just now found the last occurrence of the base hook. Insert
@@ -336,8 +336,8 @@ class ThemeManager implements ThemeManagerInterface {
           // some edge cases, the last occurrence of the base hook will be a
           // specific suggestion and won't be the actual base hook, so we need
           // to insert the suggestions after this last occurrence.
-          $insertion_point = $hook_name === $base_theme_hook ? $key : $key + 1;
-          $prevent_duplicate = in_array($hook_name, $least_specific_suggestions) ? 1 : 0;
+          $insertion_point = $suggestion === $base_theme_hook ? $key : $key + 1;
+          $prevent_duplicate = in_array($suggestion, $least_specific_suggestions) ? 1 : 0;
           array_splice(
             $template_suggestions,
             $insertion_point,
