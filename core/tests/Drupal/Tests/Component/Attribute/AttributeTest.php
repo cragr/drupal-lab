@@ -10,7 +10,6 @@ use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
 use PHPUnit\Framework\TestCase;
-use Twig\Environment;
 
 /**
  * @coversDefaultClass \Drupal\Component\Attribute\AttributeCollection
