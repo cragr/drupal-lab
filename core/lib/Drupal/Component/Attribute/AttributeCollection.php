@@ -373,7 +373,7 @@ class AttributeCollection implements \ArrayAccess, \IteratorAggregate, MarkupInt
   /**
    * Merges an Attribute object into the current storage.
    *
-   * @param \Drupal\Core\Template\AttributeCollection $collection
+   * @param \Drupal\Component\Attribute\AttributeCollection $collection
    *   The Attribute object to merge.
    *
    * @return $this

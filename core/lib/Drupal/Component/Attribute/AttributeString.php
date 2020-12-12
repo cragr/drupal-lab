@@ -7,8 +7,8 @@ use Drupal\Component\Utility\Html;
 /**
  * A class that represents most standard HTML attributes.
  *
- * To use with the Attribute class, set the key to be the attribute name
- * and the value the attribute value.
+ * To use with the AttributeCollection class, set the key to be the attribute
+ * name and the value the attribute value.
  * @code
  *  $attributes = new AttributeCollection([]);
  *  $attributes['id'] = 'socks';

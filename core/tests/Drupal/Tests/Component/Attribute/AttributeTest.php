@@ -264,66 +264,6 @@ class AttributeTest extends TestCase {
   }
 
   /**
-   * Tests the twig calls to the Attribute.
-   * @dataProvider providerTestAttributeClassHelpers
-   *
-   * @covers ::removeClass
-   * @covers ::addClass
-   */
-  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
-    $loader = new StringLoader();
-    $twig = new Environment($loader);
-    $data = ['attributes' => new AttributeCollection($seed_attributes)];
-    $result = $twig->createTemplate($template)->render($data);
-    $this->assertEquals($expected, $result);
-  }
-
-  /**
-   * Provides tests data for testEscaping.
-   *
-   * @return array
-   *   An array of test data each containing of a twig template string,
-   *   a resulting string of classes and an optional array of attributes.
-   */
-  public function providerTestAttributeClassHelpers() {
-    // cSpell:disable
-    return [
-      ["{{ attributes.class }}", ''],
-      ["{{ attributes.addClass('everest').class }}", 'everest'],
-      ["{{ attributes.addClass(['k2', 'kangchenjunga']).class }}", 'k2 kangchenjunga'],
-      ["{{ attributes.addClass('lhotse', 'makalu', 'cho-oyu').class }}", 'lhotse makalu cho-oyu'],
-      [
-        "{{ attributes.addClass('nanga-parbat').class }}",
-        'dhaulagiri manaslu nanga-parbat',
-        ['class' => ['dhaulagiri', 'manaslu']],
-      ],
-      [
-        "{{ attributes.removeClass('annapurna').class }}",
-        'gasherbrum-i',
-        ['class' => ['annapurna', 'gasherbrum-i']],
-      ],
-      [
-        "{{ attributes.removeClass(['broad peak']).class }}",
-        'gasherbrum-ii',
-        ['class' => ['broad peak', 'gasherbrum-ii']],
-      ],
-      [
-        "{{ attributes.removeClass('gyachung-kang', 'shishapangma').class }}",
-        '',
-        ['class' => ['shishapangma', 'gyachung-kang']],
-      ],
-      [
-        "{{ attributes.removeClass('nuptse').addClass('annapurna-ii').class }}",
-        'himalchuli annapurna-ii',
-        ['class' => ['himalchuli', 'nuptse']],
-      ],
-      // Test for the removal of an empty class name.
-      ["{{ attributes.addClass('rakaposhi', '').class }}", 'rakaposhi'],
-    ];
-    // cSpell:enable
-  }
-
-  /**
    * Tests iterating on the values of the attribute.
    */
   public function testIterate() {

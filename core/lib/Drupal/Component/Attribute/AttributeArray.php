@@ -7,7 +7,7 @@ use Drupal\Component\Utility\Html;
 /**
  * A class that defines a type of Attribute that can be added to as an array.
  *
- * To use with Attribute, the array must be specified.
+ * To use with AttributeCollection, the array must be specified.
  * Correct:
  * @code
  *  $attributes = new AttributeCollection();
