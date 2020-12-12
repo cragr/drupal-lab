@@ -469,3 +469,12 @@ class AttributeTest extends TestCase {
   }
 
 }
+
+/**
+ * Implementation of MarkupInterface to use in tests.
+ */
+class TestMarkup implements MarkupInterface, \Countable {
+
+  use MarkupTrait;
+
+}
