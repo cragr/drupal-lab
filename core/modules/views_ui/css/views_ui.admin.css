@@ -204,6 +204,6 @@ html.js span.js-only {
 }
 @media screen and (min-width: 100em) { /* 1600px */
   .views-edit-wrapper {
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 3fr;
   }
 }
