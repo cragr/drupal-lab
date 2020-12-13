@@ -174,7 +174,7 @@ class ViewEditForm extends ViewFormBase {
         '#weight' => -10,
       ];
       if (empty($view->changed)) {
-        $form['changed']['#attributes']['class'][] = 'js-hide';
+        $form['displays']['changed']['#attributes']['class'][] = 'js-hide';
       }
     }
 
