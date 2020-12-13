@@ -291,7 +291,6 @@ td.group-title {
   padding-left: 10px;
 }
 .views-displays {
-  padding-bottom: 36px;
   border: 1px solid #ccc;
 }
 .views-display-top {
@@ -444,9 +443,7 @@ td.group-title {
 }
 .views-display-column {
   border: 1px solid #f3f3f3;
-}
-.views-display-column + .views-display-column {
-  margin-top: 0;
+  margin: 0;
 }
 .view-preview-form .form-item-view-args,
 .view-preview-form .form-actions {
