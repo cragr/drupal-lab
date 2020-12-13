@@ -49,7 +49,7 @@ function drupal_rebuild($class_loader, Request $request) {
   // Invalidate the container.
   $kernel->invalidateContainer();
 
-  Rebuilder::binsDeleteAll();
+  Rebuilder::deleteAllCacheBins();
 
   // Disable recording of cached pages.
   \Drupal::service('page_cache_kill_switch')->trigger();
