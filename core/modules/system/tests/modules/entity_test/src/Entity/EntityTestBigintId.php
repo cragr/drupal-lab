@@ -32,9 +32,10 @@ class EntityTestBigintId extends EntityTest {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['id']->setSettings([
-        'size' => 'big',
-      ]);
+      'size' => 'big',
+    ]);
 
     return $fields;
   }
+
 }

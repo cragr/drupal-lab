@@ -226,7 +226,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       $message = 'The entity with bigint entity_reference field can\'t be saved to database.';
       $entity->save();
     }
-    catch(EntityStorageException $e) {
+    catch (EntityStorageException $e) {
       $this->fail($message);
     }
   }
