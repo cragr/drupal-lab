@@ -34,7 +34,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.7.7",
     "@popperjs/core": "^2.5.4",
-    "@rollup/plugin-node-resolve": "^10.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-virtual": "^2.0.3",
     "babel-plugin-add-header-comment": "^1.0.3",
     "backbone": "^1.4.0",
