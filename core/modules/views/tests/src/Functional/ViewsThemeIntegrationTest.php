@@ -105,12 +105,13 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     $renderer = $this->container->get('renderer');
 
     $output = $renderer->renderRoot($build);
-    $expected = '   * views-view--test-page-display--default.html.twig' . PHP_EOL
-      . '   * views-view--default.html.twig' . PHP_EOL
-      . '   * views-view--tag1.html.twig' . PHP_EOL
-      . '   * views-view--tag2.html.twig' . PHP_EOL
-      . '   * views-view--test-page-display.html.twig' . PHP_EOL
-      . '   x views-view.html.twig' . PHP_EOL;
+    $extension = '.html.twig';
+    $expected = '   * views-view--test-page-display--default' . $extension . PHP_EOL
+      . '   * views-view--default' . $extension . PHP_EOL
+      . '   * views-view--tag1' . $extension . PHP_EOL
+      . '   * views-view--tag2' . $extension . PHP_EOL
+      . '   * views-view--test-page-display' . $extension . PHP_EOL
+      . '   x views-view' . $extension . PHP_EOL;
     $this->assertTrue(strpos($output, $expected) !== FALSE);
   }
 
