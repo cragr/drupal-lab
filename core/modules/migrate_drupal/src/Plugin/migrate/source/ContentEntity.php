@@ -230,7 +230,8 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     }
     // @TODO: Determine a better way to retrieve a valid count for translations.
     // https://www.drupal.org/project/drupal/issues/2937166
-    return -1;
+    // We have to "consume" the generator, so need a separate, local instance.
+    return iterator_count($this->initializeIterator());
   }
 
   /**

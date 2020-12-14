@@ -305,9 +305,16 @@ class ContentEntityTest extends KernelTestBase {
    * Tests node source plugin.
    */
   public function testNodeSource() {
+    $configuration = [
+      'bundle' => $this->bundle,
+      'include_translations' => TRUE,
+    ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node'));
-    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', ['bundle' => $this->bundle], $migration);
+    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', $configuration, $migration);
     $this->assertSame('content items', $node_source->__toString());
+    // Ensure the `count()` returns an actual number of nodes
+    // when the `include_translations` is set to `TRUE`.
+    static::assertSame(2, $node_source->count());
     $ids = $node_source->getIds();
     $this->assertArrayHasKey('langcode', $ids);
     $this->assertArrayHasKey('nid', $ids);
