@@ -9,6 +9,11 @@ const def = {
   treeshake: false,
 }
 
+const defOutput = {
+  sourcemap: true,
+  sourcemapExcludeSources: true,
+};
+
 export default [
 
   /* ES Modules */
@@ -56,8 +61,8 @@ export default [
       input: 'assets/vendor/popperjs/popper.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/popperjs/popper.min.js',
-          sourcemap: true,
           format: 'iife',
           name: 'Popper',
         },
@@ -81,8 +86,8 @@ export default [
       input: 'assets/vendor/sortable/Sortable.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/sortable/Sortable.min.js',
-          sourcemap: true,
           format: 'iife',
           name: 'Sortable',
         },
@@ -106,8 +111,8 @@ export default [
       input: 'assets/vendor/js-cookie/js.cookie.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/js-cookie/js.cookie.min.js',
-          sourcemap: true,
           format: 'iife',
           name: 'Cookies',
         },
@@ -133,8 +138,8 @@ export default [
       input: 'assets/vendor/es6-promise/es6-promise.auto.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/es6-promise/es6-promise.auto.min.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser({ compress: { inline: false } })],
@@ -155,8 +160,8 @@ export default [
       input: 'assets/vendor/jquery-once/jquery.once.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/jquery-once/jquery.once.min.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser({ compress: { inline: false } })],
@@ -177,8 +182,8 @@ export default [
       input: 'assets/vendor/jquery-form/jquery.form.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/jquery-form/jquery.form.min.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser({ compress: { inline: false } })],
@@ -200,8 +205,8 @@ export default [
       input: 'assets/vendor/underscore/underscore.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/underscore/underscore-min.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser()],
@@ -223,8 +228,8 @@ export default [
       input: 'assets/vendor/backbone/backbone.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/backbone/backbone-min.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser()],
@@ -246,8 +251,8 @@ export default [
       input: 'assets/vendor/picturefill/picturefill.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/picturefill/picturefill.min.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser()],
@@ -269,8 +274,8 @@ export default [
       input: 'assets/vendor/jquery/jquery.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/jquery/jquery.min.js',
-          sourcemap: true,
         },
       ],
       plugins: [
@@ -333,8 +338,8 @@ export default [
       input: 'assets/vendor/farbtastic/farbtastic.raw.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/farbtastic/farbtastic.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser({ compress: { inline: false } })],
@@ -358,8 +363,8 @@ export default [
       input: 'assets/vendor/jquery-joyride/jquery.joyride-2.1.raw.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/jquery-joyride/jquery.joyride-2.1.js',
-          sourcemap: true,
         },
       ],
       plugins: [terser({
