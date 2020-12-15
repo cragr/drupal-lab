@@ -358,14 +358,14 @@ function _drupal_exception_handler_additional($exception, $exception2) {
  *   number of digits) or FALSE if the user agent does not contain a valid
  *   HMAC and timestamp.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Test\UserAgent::validate().
  *
  * @see https://www.drupal.org/node/3044173
  * @see \Drupal\Core\Test\UserAgent::validate()
  */
 function drupal_valid_test_ua($new_prefix = NULL) {
-  @trigger_error('drupal_valid_test_ua() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::validate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
+  @trigger_error('drupal_valid_test_ua() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::validate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
   return UserAgent::validate(Request::createFromGlobals(), $new_prefix);
 }
 
@@ -378,14 +378,14 @@ function drupal_valid_test_ua($new_prefix = NULL) {
  * @return string
  *   User agent string.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Test\UserAgent::generate().
  *
  * @see https://www.drupal.org/node/3044173
  * @see \Drupal\Core\Test\UserAgent::generate()
  */
 function drupal_generate_test_ua($prefix) {
-  @trigger_error('drupal_generate_test_ua() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::generate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
+  @trigger_error('drupal_generate_test_ua() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::generate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
   return UserAgent::generate($prefix);
 }
 
