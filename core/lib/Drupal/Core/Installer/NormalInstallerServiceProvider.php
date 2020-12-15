@@ -48,6 +48,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
 
     // Use performance-optimized extension lists.
     $container->getDefinition('extension.list.module')->setClass(InstallerModuleExtensionList::class);
+    $container->getDefinition('extension.list.profile')->setClass(InstallerProfileExtensionList::class);
     $container->getDefinition('extension.list.theme')->setClass(InstallerThemeExtensionList::class);
     $container->getDefinition('extension.list.theme_engine')->setClass(InstallerThemeEngineExtensionList::class);
 
