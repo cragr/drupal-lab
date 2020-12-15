@@ -154,20 +154,9 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * @see \Drupal\Core\Form\FormBuilder::renderPlaceholderFormAction()
    */
   public static function renderPlaceholderFormAction() {
-    // Set the form action so that the user will be redirected to the current
-    // destination after logging in. Also append a query parameter to the
-    // destination in so we can check later if the login was successful; see
-    // user_init().
-    $destination = \Drupal::destination()->getAsArray();
-    $options = UrlHelper::parse($destination['destination']);
-    $options['query']['state'] = 'loggedin';
-    $destination['destination'] = $options['path'] . '?' . UrlHelper::buildQuery($options['query']);
     return [
       '#type' => 'markup',
-      '#markup' => UrlHelper::filterBadProtocol(Url::fromRoute('<current>', [], [
-        'query' => $destination,
-        'external' => FALSE,
-      ])->toString()),
+      '#markup' => UrlHelper::filterBadProtocol(Url::fromRoute('<current>', [], ['query' => \Drupal::destination()->getAsArray(), 'external' => FALSE])->toString()),
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
     ];
   }

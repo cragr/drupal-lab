@@ -80,7 +80,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->assertNoText('User login', 'Logged in.');
 
     // Check that we are still on the same page.
-    $this->assertSession()->addressEquals(Url::fromRoute('user.admin_permissions', [], ['absolute' => TRUE, 'query' => ['state' => 'loggedin']]));
+    $this->assertSession()->addressEquals(Url::fromRoute('user.admin_permissions'));
 
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();

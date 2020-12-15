@@ -159,12 +159,7 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Follow the location header.
     $path = $this->getPathFromLocationHeader($response, FALSE);
-    $parsed_path = parse_url($path);
-    $query = [];
-    if (isset($parsed_path['query'])) {
-      parse_str($parsed_path['query'], $query);
-    }
-    $this->drupalGet($this->httpUrl($parsed_path['path']), ['query' => $query]);
+    $this->drupalGet($this->httpUrl($path));
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -210,12 +205,7 @@ class SessionHttpsTest extends BrowserTestBase {
 
     // Follow the location header.
     $path = $this->getPathFromLocationHeader($response, TRUE);
-    $parsed_path = parse_url($path);
-    $query = [];
-    if (isset($parsed_path['query'])) {
-      parse_str($parsed_path['query'], $query);
-    }
-    $this->drupalGet($this->httpsUrl($parsed_path['path']), ['query' => $query]);
+    $this->drupalGet($this->httpsUrl($path));
     $this->assertSession()->statusCodeEquals(200);
   }
 
