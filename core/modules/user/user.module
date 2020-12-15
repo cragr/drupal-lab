@@ -445,6 +445,7 @@ function template_preprocess_username(&$variables) {
  *   The account to log in.
  *
  * @see hook_user_login()
+ * @see \Drupal\user\Authentication\Provider\Cookie
  */
 function user_login_finalize(UserInterface $account) {
   \Drupal::currentUser()->setAccount($account);
@@ -462,6 +463,7 @@ function user_login_finalize(UserInterface $account) {
   // in place.
   \Drupal::service('session')->migrate();
   \Drupal::service('session')->set('uid', $account->id());
+  \Drupal::service('session')->set('check_logged_in', TRUE);
   \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
 }
 
