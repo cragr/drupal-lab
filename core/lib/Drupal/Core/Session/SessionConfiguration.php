@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Session;
 
-use Drupal\Core\Test\UserAgent;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -84,7 +83,7 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *   The session name without the prefix (SESS/SSESS).
    */
   protected function getUnprefixedName(Request $request) {
-    if ($test_prefix = UserAgent::validate($request)) {
+    if ($test_prefix = $this->drupalValidTestUa()) {
       $session_name = $test_prefix;
     }
     elseif (isset($this->options['cookie_domain'])) {
@@ -137,6 +136,18 @@ class SessionConfiguration implements SessionConfigurationInterface {
     if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
       return $cookie_domain;
     }
+  }
+
+  /**
+   * Wraps drupal_valid_test_ua().
+   *
+   * @return string|false
+   *   Either the simpletest prefix (the string "simpletest" followed by any
+   *   number of digits) or FALSE if the user agent does not contain a valid
+   *   HMAC and timestamp.
+   */
+  protected function drupalValidTestUa() {
+    return drupal_valid_test_ua();
   }
 
 }

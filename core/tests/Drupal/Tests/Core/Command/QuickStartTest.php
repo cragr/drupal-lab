@@ -3,8 +3,8 @@
 namespace Drupal\Tests\Core\Command;
 
 use Drupal\Core\Database\Driver\sqlite\Install\Tasks;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Core\Test\UserAgent;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
@@ -129,7 +129,7 @@ class QuickStartTest extends TestCase {
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
-      'SIMPLETEST_USER_AGENT' => UserAgent::generate($this->testDb->getDatabasePrefix()),
+      'SIMPLETEST_USER_AGENT' => TestHttpClientMiddleware::generate($this->testDb->getDatabasePrefix()),
     ], '127.0.0.1');
 
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
@@ -229,7 +229,7 @@ class QuickStartTest extends TestCase {
     define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
-      'SIMPLETEST_USER_AGENT' => UserAgent::generate($this->testDb->getDatabasePrefix()),
+      'SIMPLETEST_USER_AGENT' => TestHttpClientMiddleware::generate($this->testDb->getDatabasePrefix()),
     ], '127.0.0.1');
 
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);

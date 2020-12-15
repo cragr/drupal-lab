@@ -8,7 +8,6 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Test\UserAgent;
 use Drupal\Core\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -238,7 +237,7 @@ class UpdateManagerInstall extends FormBase {
 
     // This process is inherently difficult to test therefore use a state flag.
     $test_authorize = FALSE;
-    if (UserAgent::validate($this->getRequest())) {
+    if (drupal_valid_test_ua()) {
       $test_authorize = \Drupal::state()->get('test_uploaders_via_prompt', FALSE);
     }
     // If the owner of the directory we extracted is the same as the owner of

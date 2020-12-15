@@ -30,7 +30,6 @@ use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Test\UserAgent;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -318,11 +317,11 @@ function install_begin_request($class_loader, &$install_state) {
   // running tests. However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
   $user_agent = $request->cookies->get('SIMPLETEST_USER_AGENT') ?: $request->server->get('HTTP_USER_AGENT');
-  if ($install_state['interactive'] && strpos($user_agent, 'simpletest') !== FALSE && !UserAgent::validate($request)) {
+  if ($install_state['interactive'] && strpos($user_agent, 'simpletest') !== FALSE && !drupal_valid_test_ua()) {
     header($request->server->get('SERVER_PROTOCOL') . ' 403 Forbidden');
     exit;
   }
-  if ($install_state['interactive'] && UserAgent::validate($request)) {
+  if ($install_state['interactive'] && drupal_valid_test_ua()) {
     // Set the default timezone. While this doesn't cause any tests to fail, PHP
     // complains if 'date.timezone' is not set in php.ini. The Australia/Sydney
     // timezone is chosen so all tests are run using an edge case scenario

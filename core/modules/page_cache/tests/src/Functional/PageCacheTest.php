@@ -4,7 +4,7 @@ namespace Drupal\Tests\page_cache\Functional;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Test\UserAgent;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Core\Cache\Cache;
@@ -645,7 +645,7 @@ class PageCacheTest extends BrowserTestBase {
     curl_setopt($ch, CURLOPT_HEADER, TRUE);
     curl_setopt($ch, CURLOPT_NOBODY, TRUE);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_USERAGENT, UserAgent::generate($this->databasePrefix));
+    curl_setopt($ch, CURLOPT_USERAGENT, TestHttpClientMiddleware::generate($this->databasePrefix));
     $output = curl_exec($ch);
     curl_close($ch);
 

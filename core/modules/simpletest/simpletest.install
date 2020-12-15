@@ -9,9 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Test\EnvironmentCleaner;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Core\Test\UserAgent;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_requirements().
@@ -46,7 +44,7 @@ function simpletest_uninstall() {
   // Do not clean the environment in case the Simpletest module is uninstalled
   // in a (recursive) test for itself, since EnvironmentCleaner would also
   // delete the test site of the parent test process.
-  if (!UserAgent::validate(Request::createFromGlobals())) {
+  if (!drupal_valid_test_ua()) {
     // Clean up left-over tables and directories.
     $cleaner = new EnvironmentCleaner(
       DRUPAL_ROOT,

@@ -3,8 +3,6 @@
 namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Core\Test\UserAgent;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests \Drupal\Tests\UserAgent.
@@ -17,12 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 class UserAgentTest extends KernelTestBase {
 
   /**
-   * Test that ::validate return expected string.
+   * Test that drupal_valid_test_ua() return expected string.
    *
-   * @covers ::validate
+   * @covers \drupal_valid_test_ua()
    */
-  public function testValidate() {
-    $this->assertStringContainsString('test', UserAgent::validate(Request::createFromGlobals()));
+  public function testDrupalValidTestUa() {
+    $this->assertStringContainsString('test', drupal_valid_test_ua());
   }
 
 }

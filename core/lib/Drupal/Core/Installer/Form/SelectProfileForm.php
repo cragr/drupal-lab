@@ -6,7 +6,6 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Test\UserAgent;
 
 /**
  * Provides the profile selection form.
@@ -42,7 +41,7 @@ class SelectProfileForm extends FormBase {
       $details = install_profile_info($profile->getName());
       // Don't show hidden profiles. This is used by to hide the testing profile,
       // which only exists to speed up test runs.
-      if ($details['hidden'] === TRUE && !UserAgent::validate($this->getRequest())) {
+      if ($details['hidden'] === TRUE && !drupal_valid_test_ua()) {
         continue;
       }
       $profiles[$profile->getName()] = $details;

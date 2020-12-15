@@ -27,16 +27,13 @@ class UrlConversionTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->root = dirname(__FILE__, 7);
-    // Mock the container so we don't need to mock
-    // \Drupal\Core\Test\UserAgent::validate().
+    // Mock the container so we don't need to mock drupal_valid_test_ua().
     // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
     $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $container->expects($this->any())
       ->method('has')
-      ->willReturnMap([
-        ['kernel', TRUE],
-        ['request_stack', FALSE],
-      ]);
+      ->with('kernel')
+      ->willReturn(TRUE);
     $container->expects($this->any())
       ->method('getParameter')
       ->with('site.path')

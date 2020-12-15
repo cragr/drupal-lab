@@ -5,12 +5,13 @@
  * Functions that need to be loaded on every Drupal request.
  */
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Test\UserAgent;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
+use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Minimum allowed version of PHP for Drupal to be bootstrapped.
@@ -357,16 +358,61 @@ function _drupal_exception_handler_additional($exception, $exception2) {
  *   Either the simpletest prefix (the string "simpletest" followed by any
  *   number of digits) or FALSE if the user agent does not contain a valid
  *   HMAC and timestamp.
- *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\Core\Test\UserAgent::validate().
- *
- * @see https://www.drupal.org/node/3044173
- * @see \Drupal\Core\Test\UserAgent::validate()
  */
 function drupal_valid_test_ua($new_prefix = NULL) {
-  @trigger_error('drupal_valid_test_ua() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::validate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
-  return UserAgent::validate(Request::createFromGlobals(), $new_prefix);
+  static $test_prefix;
+
+  if (isset($new_prefix)) {
+    $test_prefix = $new_prefix;
+  }
+  if (isset($test_prefix)) {
+    return $test_prefix;
+  }
+  // Unless the below User-Agent and HMAC validation succeeds, we are not in
+  // a test environment.
+  $test_prefix = FALSE;
+
+  // A valid Simpletest request will contain a hashed and salted authentication
+  // code. Check if this code is present in a cookie or custom user agent
+  // string.
+  $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
+  $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
+  if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
+    [, $prefix, $time, $salt, $hmac] = $matches;
+    $check_string = $prefix . ':' . $time . ':' . $salt;
+    // Read the hash salt prepared by drupal_generate_test_ua().
+    // This function is called before settings.php is read and Drupal's error
+    // handlers are set up. While Drupal's error handling may be properly
+    // configured on production sites, the server's PHP error_reporting may not.
+    // Ensure that no information leaks on production sites.
+    $test_db = new TestDatabase($prefix);
+    $key_file = DRUPAL_ROOT . '/' . $test_db->getTestSitePath() . '/.htkey';
+    if (!is_readable($key_file) || is_dir($key_file)) {
+      header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+      exit;
+    }
+    $private_key = file_get_contents($key_file);
+    // The string from drupal_generate_test_ua() is 74 bytes long. If we don't
+    // have it, tests cannot be allowed.
+    if (empty($private_key) || strlen($private_key) < 74) {
+      header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+      exit;
+    }
+    // The file properties add more entropy not easily accessible to others.
+    $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
+    $time_diff = REQUEST_TIME - $time;
+    $test_hmac = Crypt::hmacBase64($check_string, $key);
+    // Since we are making a local request a 600 second time window is allowed,
+    // and the HMAC must match.
+    if ($time_diff >= 0 && $time_diff <= 600 && hash_equals($test_hmac, $hmac)) {
+      $test_prefix = $prefix;
+    }
+    else {
+      header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden (SIMPLETEST_USER_AGENT invalid)');
+      exit;
+    }
+  }
+  return $test_prefix;
 }
 
 /**
@@ -382,11 +428,11 @@ function drupal_valid_test_ua($new_prefix = NULL) {
  *   \Drupal\Core\Test\UserAgent::generate().
  *
  * @see https://www.drupal.org/node/3044173
- * @see \Drupal\Core\Test\UserAgent::generate()
+ * @see TestHttpClientMiddleware::generate()
  */
 function drupal_generate_test_ua($prefix) {
   @trigger_error('drupal_generate_test_ua() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Test\UserAgent::generate(). See https://www.drupal.org/node/3044173', E_USER_DEPRECATED);
-  return UserAgent::generate($prefix);
+  return TestHttpClientMiddleware::generate($prefix);
 }
 
 /**

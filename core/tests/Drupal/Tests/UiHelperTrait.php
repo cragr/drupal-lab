@@ -9,8 +9,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Test\RefreshVariablesTrait;
-use Drupal\Core\Test\UserAgent;
 use Drupal\Core\Url;
 
 /**
@@ -432,11 +432,13 @@ trait UiHelperTrait {
    * Prepare for a request to testing site.
    *
    * The testing site is protected via a SIMPLETEST_USER_AGENT cookie that is
-   * checked by \Drupal\Core\Test\UserAgent::validate().
+   * checked by drupal_valid_test_ua().
+   *
+   * @see drupal_valid_test_ua()
    */
   protected function prepareRequest() {
     $session = $this->getSession();
-    $session->setCookie('SIMPLETEST_USER_AGENT', UserAgent::generate($this->databasePrefix));
+    $session->setCookie('SIMPLETEST_USER_AGENT', TestHttpClientMiddleware::generate($this->databasePrefix));
   }
 
   /**

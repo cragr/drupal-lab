@@ -27,9 +27,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Test\UserAgent;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ServiceProvider class for mandatory core services.
@@ -130,7 +128,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
    */
   protected function registerTest(ContainerBuilder $container) {
     // Do nothing if we are not in a test environment.
-    if (!UserAgent::validate(Request::createFromGlobals())) {
+    if (!drupal_valid_test_ua()) {
       return;
     }
     // Add the HTTP request middleware to Guzzle.

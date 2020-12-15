@@ -44,9 +44,9 @@ class SessionTest extends WebDriverTestBase {
   /**
    * Tests that the session doesn't expire.
    *
-   * Makes sure that \Drupal\Core\Test\UserAgent::validate() works for multiple
-   * requests performed by the Mink browser. The SIMPLETEST_USER_AGENT cookie
-   * must always be valid.
+   * Makes sure that drupal_valid_test_ua() works for multiple requests
+   * performed by the Mink browser. The SIMPLETEST_USER_AGENT cookie must always
+   * be valid.
    */
   public function testSessionExpiration() {
     // Visit the front page and click the link back to the front page a large

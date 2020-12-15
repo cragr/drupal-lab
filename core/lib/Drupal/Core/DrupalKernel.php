@@ -25,7 +25,6 @@ use Drupal\Core\Security\PharExtensionInterceptor;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Core\Test\UserAgent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -377,7 +376,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // Check for a simpletest override.
-    if ($test_prefix = UserAgent::validate($request)) {
+    if ($test_prefix = drupal_valid_test_ua()) {
       $test_db = new TestDatabase($test_prefix);
       return $test_db->getTestSitePath();
     }
@@ -1015,7 +1014,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Indicate that code is operating in a test child site.
     if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
-      if ($test_prefix = UserAgent::validate(Request::createFromGlobals())) {
+      if ($test_prefix = drupal_valid_test_ua()) {
         $test_db = new TestDatabase($test_prefix);
         // Only code that interfaces directly with tests should rely on this
         // constant; e.g., the error/exception handler conditionally adds further

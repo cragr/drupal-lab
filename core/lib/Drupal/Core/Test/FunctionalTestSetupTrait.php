@@ -293,12 +293,12 @@ trait FunctionalTestSetupTrait {
     Settings::initialize(DRUPAL_ROOT, $this->siteDirectory, $this->classLoader);
 
     // After writing settings.php, the installer removes write permissions
-    // from the site directory. To allow
-    // \Drupal\Core\Test\UserAgent::generate() to write a file containing
-    // the private key for \Drupal\Core\Test\UserAgent::validate(), the site
-    // directory has to be writable.
+    // from the site directory. To allow TestHttpClientMiddleware::generate()
+    // to write a file containing the private key for drupal_valid_test_ua(),
+    // the site directory has to be writable.
     // TestBase::restoreEnvironment() will delete the entire site directory.
     // Not using File API; a potential error must trigger a PHP warning.
+    /* @see Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware::generate()  */
     chmod(DRUPAL_ROOT . '/' . $this->siteDirectory, 0777);
 
     // During tests, cacheable responses should get the debugging cacheability
@@ -661,7 +661,7 @@ trait FunctionalTestSetupTrait {
 
     // After preparing the environment and changing the database prefix, we are
     // in a valid test environment.
-    UserAgent::validate($request, $this->databasePrefix);
+    drupal_valid_test_ua($this->databasePrefix);
 
     // Reset settings.
     new Settings([
