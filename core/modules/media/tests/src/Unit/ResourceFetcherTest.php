@@ -4,12 +4,12 @@ namespace Drupal\Tests\media\Unit;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\media\OEmbed\ResourceFetcher;
 use Drupal\Tests\UnitTestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -39,11 +39,8 @@ class ResourceFetcherTest extends UnitTestCase {
       $response,
       $response,
     ]);
-    $handler_stack = HandlerStack::create($mock_handler);
-    $history = [];
-    $handler_stack->push(Middleware::history($history));
     $client = new Client([
-      'handler' => $handler_stack,
+      'handler' => HandlerStack::create($mock_handler),
     ]);
     $providers = $this->prophesize('\Drupal\media\OEmbed\ProviderRepositoryInterface')->reveal();
 
@@ -64,7 +61,22 @@ class ResourceFetcherTest extends UnitTestCase {
 
     // Use a fallback decoder that throws an exception, so we can ensure that
     // it gets wrapped and re-thrown as a ResourceException.
-    $fetcher = new ResourceFetcher($client, $providers, NULL, new class () extends Json {
+    $fetcher = new ResourceFetcher($client, $providers, NULL, new class () implements SerializationInterface {
+      /**
+       * {@inheritdoc}
+       */
+      public static function encode($data) {
+      }
+
+      /**
+       * {@inheritdoc}
+       */
+      public static function getFileExtension() {
+      }
+
+      /**
+       * {@inheritdoc}
+       */
       public static function decode($string) {
         throw new InvalidDataTypeException('I promise I will screw up your day.');
       }

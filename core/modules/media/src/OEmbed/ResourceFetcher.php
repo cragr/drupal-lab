@@ -92,6 +92,10 @@ class ResourceFetcher implements ResourceFetcherInterface {
       catch (InvalidDataTypeException $e) {
         throw new ResourceException($e->getMessage(), $url, [], $e);
       }
+
+      if (empty($data)) {
+        throw new ResourceException('The oEmbed resource could not be decoded.', $url);
+      }
     }
 
     $this->cacheSet($cache_id, $data);
