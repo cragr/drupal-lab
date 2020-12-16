@@ -85,7 +85,7 @@ class ProfileExtensionListTest extends KernelTestBase {
    */
   public function testSelectDistribution() {
     $profile_list = new TestProfileExtensionList(
-      $this->container->get('app.root'),
+      $this->container->getParameter('app.root'),
       'profile',
       $this->container->get('cache.default'),
       $this->container->get('info_parser'),
