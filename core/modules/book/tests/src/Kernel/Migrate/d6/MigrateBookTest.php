@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\book\Kernel\Migrate\d6;
 
+use Drupal\Tests\migrate\Traits\MigrateTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
 
@@ -11,6 +12,8 @@ use Drupal\node\Entity\Node;
  * @group migrate_drupal_6
  */
 class MigrateBookTest extends MigrateDrupal6TestBase {
+
+  use MigrateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -57,8 +60,7 @@ class MigrateBookTest extends MigrateDrupal6TestBase {
     $this->assertIdentical([], $tree['49990 Node 4 4']['below']['50000 Node 5 5']['below']['50000 Node 7 7']['below']);
 
     // Set the d6_book migration to update and re run the migration.
-    $id_map = $this->migration->getIdMap();
-    $id_map->prepareUpdate();
+    $this->prepareUpdate($this->migration->getIdMap()->mapTableName());
     $this->executeMigration('d6_book');
   }
 

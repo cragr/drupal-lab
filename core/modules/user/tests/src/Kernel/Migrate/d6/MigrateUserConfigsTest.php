@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
+use Drupal\Tests\migrate\Traits\MigrateTestTrait;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\user\AccountSettingsForm;
@@ -15,6 +16,7 @@ use Drupal\user\UserInterface;
  */
 class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
 
+  use MigrateTestTrait;
   use SchemaCheckTestTrait;
 
   /**
@@ -79,7 +81,7 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
       /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
       $migration = $this->getMigration('d6_user_settings');
       // Indicate we're rerunning a migration that's already run.
-      $migration->getIdMap()->prepareUpdate();
+      $this->prepareUpdate($migration->getIdMap()->mapTableName());
       $this->executeMigration($migration);
       $form = $this->container->get('form_builder')->getForm(AccountSettingsForm::create($this->container));
       $this->assertIdentical($map[1], $form['registration_cancellation']['user_register']['#value']);
