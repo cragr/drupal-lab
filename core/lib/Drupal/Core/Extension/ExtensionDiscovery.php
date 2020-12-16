@@ -119,7 +119,16 @@ class ExtensionDiscovery {
     $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
     $this->profileDirectories = $profile_directories;
     $this->sitePath = $site_path;
-    $this->profileList = \Drupal::service('extension.list.profile');
+
+    // ExtensionDiscovery can be used without a service container
+    // (@drupalKernel::moduleData), so only use the profile list service if it
+    // is available to us.
+    if ($profile_list) {
+      $this->profileList = $profile_list;
+    }
+    else {
+      $this->profileList = \Drupal::service('extension.list.profile');
+    }
   }
 
   /**

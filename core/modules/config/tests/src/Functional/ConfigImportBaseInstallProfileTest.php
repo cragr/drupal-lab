@@ -25,7 +25,7 @@ class ConfigImportBaseInstallProfileTest extends BrowserTestBase {
    */
   protected $webUser;
 
-  protected function setUp(): void  {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->webUser = $this->drupalCreateUser(['synchronize configuration']);
