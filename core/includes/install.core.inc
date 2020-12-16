@@ -461,7 +461,7 @@ function install_begin_request($class_loader, &$install_state) {
     }
     // Ensure all profile directories are registered.
     $profiles = \Drupal::service('extension.list.profile')->getAncestors($profile);
-    $profile_directories = array_map(function($extension) {
+    $profile_directories = array_map(function ($extension) {
       return $extension->getPath();
     }, $profiles);
     $listing->setProfileDirectories($profile_directories);

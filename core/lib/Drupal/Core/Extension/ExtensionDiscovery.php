@@ -259,7 +259,7 @@ class ExtensionDiscovery {
         ];
       }
 
-      $profile_directories = array_map(function(Extension $extension) {
+      $profile_directories = array_map(function (Extension $extension) {
         return $extension->getPath();
       }, $profiles);
       $this->profileDirectories = array_unique(array_merge($profile_directories, $this->profileDirectories));
