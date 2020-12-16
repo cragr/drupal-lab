@@ -114,7 +114,7 @@ class ExtensionDiscovery {
    * @param \Drupal\Core\Extension\ProfileExtensionList|null $profile_list
    *   (optional) The profile list.
    */
-  public function __construct($root, $use_file_cache = TRUE, $profile_directories = NULL, $site_path = NULL, ProfileExtensionList $profile_list = NULL) {
+  public function __construct(string $root, $use_file_cache = TRUE, array $profile_directories = NULL, string $site_path = NULL, ProfileExtensionList $profile_list = NULL) {
     $this->root = $root;
     $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
     $this->profileDirectories = $profile_directories;
