@@ -127,6 +127,11 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * unmigrated content (source records not in the map table) being imported,
    * previously-migrated content will also be updated in place by marking all
    * previously-imported content as ready to be re-imported.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   \Drupal\Tests\migrate\Traiths\MigrateTestTrait::prepareUpdate() in tests.
+   *
+   * @see https://www.drupal.org/node/3188673
    */
   public function prepareUpdate();
 
