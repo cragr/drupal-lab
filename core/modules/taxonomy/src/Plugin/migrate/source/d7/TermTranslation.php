@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
 use Drupal\migrate\Row;
 
 /**
@@ -14,8 +13,6 @@ use Drupal\migrate\Row;
  * )
  */
 class TermTranslation extends Term {
-
-  use I18nQueryTrait;
 
   /**
    * {@inheritdoc}
@@ -35,7 +32,9 @@ class TermTranslation extends Term {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    parent::prepareRow($row);
+    if (!parent::prepareRow($row)) {
+      return FALSE;
+    }
     $row->setSourceProperty('language', $row->getSourceProperty('td_language'));
   }
 
