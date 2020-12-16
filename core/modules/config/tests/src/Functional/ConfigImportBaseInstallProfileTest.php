@@ -48,7 +48,8 @@ class ConfigImportBaseInstallProfileTest extends BrowserTestBase {
     unset($core['module']['testing']);
     $sync->write('core.extension', $core);
 
-    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], t('Import all'));
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertText('Unable to uninstall the Testing profile since it is a parent of another installed profile.');
 
@@ -57,7 +58,8 @@ class ConfigImportBaseInstallProfileTest extends BrowserTestBase {
     unset($core['module']['dynamic_page_cache']);
     $sync->write('core.extension', $core);
     $sync->deleteAll('dynamic_page_cache.');
-    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], t('Import all'));
     $this->assertText('The configuration was imported successfully.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('dynamic_page_cache'), 'The dynamic_page_cache module has been uninstalled.');
@@ -78,7 +80,8 @@ class ConfigImportBaseInstallProfileTest extends BrowserTestBase {
     unset($core['module']['testing_inherited']);
     $sync->write('core.extension', $core);
 
-    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], t('Import all'));
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertText('Unable to uninstall the Testing Inherited profile since it is the main install profile.');
 
@@ -87,7 +90,8 @@ class ConfigImportBaseInstallProfileTest extends BrowserTestBase {
     unset($core['module']['syslog']);
     $sync->write('core.extension', $core);
     $sync->deleteAll('syslog.');
-    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], t('Import all'));
     $this->assertText('The configuration was imported successfully.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('syslog'), 'The syslog module has been uninstalled.');
