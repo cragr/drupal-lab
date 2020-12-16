@@ -27,7 +27,6 @@
         "laminas/laminas-stdlib": "3.2.1",
         "laminas/laminas-zendframework-bridge": "1.0.4",
         "masterminds/html5": "2.3.0",
-        "paragonie/random_compat": "v9.99.99",
         "pear/archive_tar": "1.4.11",
         "pear/console_getopt": "v1.4.3",
         "pear/pear-core-minimal": "v1.10.10",
