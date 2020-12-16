@@ -3,7 +3,6 @@
 namespace Drupal\Tests\search\Kernel\Migrate\d6;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\migrate\Traits\MigrateTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\search\Entity\SearchPage;
 
@@ -13,8 +12,6 @@ use Drupal\search\Entity\SearchPage;
  * @group migrate_drupal_6
  */
 class MigrateSearchPageTest extends MigrateDrupal6TestBase {
-
-  use MigrateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -58,7 +55,7 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('search_page');
     // Indicate we're rerunning a migration that's already run.
-    $this->prepareUpdate($migration->getIdMap()->mapTableName());
+    $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);
 
     $configuration = SearchPage::load($id)->getPlugin()->getConfiguration();

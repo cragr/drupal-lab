@@ -3,7 +3,6 @@
 namespace Drupal\Tests\search\Kernel\Migrate\d7;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\migrate\Traits\MigrateTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\search\Entity\SearchPage;
 
@@ -13,8 +12,6 @@ use Drupal\search\Entity\SearchPage;
  * @group migrate_drupal_7
  */
 class MigrateSearchPageTest extends MigrateDrupal7TestBase {
-
-  use MigrateTestTrait;
 
   /**
    * The modules to be enabled during the test.
@@ -76,7 +73,7 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d7_search_page');
     // Indicate we're rerunning a migration that's already run.
-    $this->prepareUpdate($migration->getIdMap()->mapTableName());
+    $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);
     $configuration['rankings']['comments'] = 4;
     $this->assertEntity('node_search', 'node', TRUE, $configuration);

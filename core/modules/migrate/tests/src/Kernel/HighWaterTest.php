@@ -2,16 +2,12 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
-use Drupal\Tests\migrate\Traits\MigrateTestTrait;
-
 /**
  * Tests migration high water property.
  *
  * @group migrate
  */
 class HighWaterTest extends MigrateTestBase {
-
-  use MigrateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -247,7 +243,7 @@ class HighWaterTest extends MigrateTestBase {
 
     // Set all rows as needing an update.
     $id_map = $this->getMigration('high_water_test')->getIdMap();
-    $this->prepareUpdate($id_map->mapTableName());
+    $id_map->prepareUpdate();
 
     $this->executeMigration('high_water_test');
 

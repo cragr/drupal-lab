@@ -5,7 +5,6 @@ namespace Drupal\Tests\language\Kernel\Migrate\d6;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Tests\migrate\Traits\MigrateTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
@@ -14,8 +13,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * @group migrate_drupal_6
  */
 class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
-
-  use MigrateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -57,7 +54,7 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->getMigration('d6_language_content_menu_settings');
     // Indicate we're rerunning a migration that's already run.
-    $this->prepareUpdate($migration->getIdMap()->mapTableName());
+    $migration->getIdMap()->prepareUpdate();
     $this->executeMigration($migration);
 
     $config = ContentLanguageSettings::load('menu_link_content.menu_link_content');

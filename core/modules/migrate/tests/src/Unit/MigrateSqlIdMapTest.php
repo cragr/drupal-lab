@@ -911,9 +911,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->queryResultTest($this->getIdMapContents(), $expected_results);
 
     // Mark all rows as STATUS_NEEDS_UPDATE.
-    $this->database->update($id_map->mapTableName())
-      ->fields(['source_row_status' => MigrateIdMapInterface::STATUS_NEEDS_UPDATE])
-      ->execute();
+    $id_map->prepareUpdate();
 
     // Update expected results.
     foreach ($expected_results as $key => $value) {

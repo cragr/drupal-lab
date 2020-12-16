@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\book\Kernel\Migrate\d7;
 
-use Drupal\Tests\migrate\Traits\MigrateTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\node\Entity\Node;
 
@@ -12,8 +11,6 @@ use Drupal\node\Entity\Node;
  * @group migrate_drupal_7
  */
 class MigrateBookTest extends MigrateDrupal7TestBase {
-
-  use MigrateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -64,7 +61,8 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
     $this->assertSame([], $tree['49990 is - The thing about Firefly 4']['below']['50000 Comments are closed :-( 6']['below']['50000 The thing about Deep Space 9 2']['below']);
 
     // Set the d7_book migration to update and re run the migration.
-    $this->prepareUpdate($this->migration->getIdMap()->mapTableName());
+    $id_map = $this->migration->getIdMap();
+    $id_map->prepareUpdate();
     $this->executeMigration('d7_book');
   }
 
