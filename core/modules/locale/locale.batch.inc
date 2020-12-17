@@ -276,7 +276,7 @@ function locale_translation_http_check($uri) {
   // We need to handle ConnectException separately because in Guzzle 7 it
   // doesn't have a getResponse() method, so the above will fatal.
   catch (ConnectException $e) {
-      $logger->notice('HTTP request to @url failed with error: @error.', ['@url' => $uri, '@error' => $e->getmessage()]);
+    $logger->notice('HTTP request to @url failed with error: @error.', ['@url' => $uri, '@error' => $e->getMessage()]);
   }
 
   return FALSE;
