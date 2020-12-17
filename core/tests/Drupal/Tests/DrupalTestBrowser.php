@@ -142,7 +142,7 @@ class DrupalTestBrowser extends AbstractBrowser {
     catch (RequestException $e) {
       $response = $e->getResponse();
       // @todo RequestException has a hasResponse() method which we could use
-      //   here instead.
+      //   here instead. https://www.drupal.org/project/drupal/issues/3188957
       if (NULL === $response) {
         throw $e;
       }
