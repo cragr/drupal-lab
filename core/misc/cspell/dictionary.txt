@@ -1520,6 +1520,7 @@ subparse
 subpath
 subpatterns
 subplugins
+subprofile
 subproject
 subprojects
 subproperties
@@ -1535,6 +1536,7 @@ subseven
 subshell
 substrategies
 subsub
+subsubprofile
 subsubtheme
 subtheme
 subtheme's
