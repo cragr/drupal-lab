@@ -136,8 +136,13 @@ class DrupalTestBrowser extends AbstractBrowser {
     try {
       $response = $this->getClient()->request($method, $uri, $request_options);
     }
+    // Catch RequestException rather than TransferException because we want
+    // to re-throw the exception whenever the response is NULL, and
+    // ConnectException always has a NULL response.
     catch (RequestException $e) {
       $response = $e->getResponse();
+      // @todo RequestException has a hasResponse() method which we could use
+      //   here instead.
       if (NULL === $response) {
         throw $e;
       }
