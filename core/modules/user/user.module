@@ -461,9 +461,11 @@ function user_login_finalize(UserInterface $account) {
   // This is called before hook_user_login() in case one of those functions
   // fails or incorrectly does a redirect which would leave the old session
   // in place.
-  \Drupal::service('session')->migrate();
-  \Drupal::service('session')->set('uid', $account->id());
-  \Drupal::service('session')->set('check_logged_in', TRUE);
+  /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+  $session = \Drupal::service('session');
+  $session->migrate();
+  $session->set('uid', $account->id());
+  $session->set('check_logged_in', TRUE);
   \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
 }
 
