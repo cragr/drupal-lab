@@ -83,7 +83,7 @@ class ContextualLinks extends RenderElement {
       $class = Html::getClass($class);
       $links[$class] = [
         'title' => $literal_link['title'],
-        'url' => Url::fromUserInput($literal_link['path'], $literal_link['options']),
+        'url' => Url::fromUserInput($literal_link['path'], $literal_link['options'] ?? []),
       ];
     }
     foreach ($items as $class => $item) {
