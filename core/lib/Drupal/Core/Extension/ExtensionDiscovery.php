@@ -126,7 +126,7 @@ class ExtensionDiscovery {
     if ($profile_list) {
       $this->profileList = $profile_list;
     }
-    else {
+    elseif (\Drupal::hasService('extension.list.profile')) {
       $this->profileList = \Drupal::service('extension.list.profile');
     }
   }
