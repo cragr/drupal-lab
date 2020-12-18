@@ -52,7 +52,7 @@
         $trigger.removeClass('visually-hidden');
       }
       // eslint-disable-next-line no-shadow
-      const dimensions = { width: $el.width(), height: $el.height()};
+      const dimensions = { width: $el.width(), height: $el.height() };
       if (triggerIsVisuallyHidden) {
         $trigger.addClass('visually-hidden');
       }
