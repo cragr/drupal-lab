@@ -215,6 +215,7 @@ class Tables implements TablesInterface {
         }
         $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
         $sql_column = $specifier;
+        $columns = $field_storage->getColumns();
 
         // If there are more specifiers, get the right sql column name if the
         // next one is a column of this field.
@@ -242,13 +243,17 @@ class Tables implements TablesInterface {
             $next = $specifiers[$key + 1];
           }
           // Is this a field column?
-          $columns = $field_storage->getColumns();
           if (isset($columns[$next]) || in_array($next, $table_mapping->getReservedColumns())) {
             // Use it.
             $sql_column = $table_mapping->getFieldColumnName($field_storage, $next);
             // Do not process it again.
             $key++;
           }
+        }
+        // If there are no additional specifiers but the field has a main
+        // property, use that to look up the column name.
+        elseif ($column && isset($columns[$column])) {
+          $sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
         }
 
         $table = $this->ensureEntityTable($index_prefix, $sql_column, $type, $langcode, $base_table, $entity_id_field, $entity_tables);

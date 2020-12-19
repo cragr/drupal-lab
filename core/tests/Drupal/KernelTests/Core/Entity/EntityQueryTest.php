@@ -1012,7 +1012,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
-      ->condition('description', 'description')
+      ->condition('description', 'description1')
       ->execute();
     $this->assertCount(1, $ids);
     $this->assertEquals($term1->id(), reset($ids));
