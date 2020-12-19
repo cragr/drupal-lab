@@ -114,7 +114,7 @@ class ActionConfigurationTest extends WebDriverTestBase {
     $page->selectFieldOption('workflow', 'editorial');
     $assert_session->assertWaitOnAjaxRequest();
     $page->selectFieldOption('state', 'draft');
-    $page->selectFieldOption('revision_log_message', 'Move to draft');
+    $page->fillField('revision_log_message', 'Move to draft');
     // Submit the form.
     $this->submitForm([], t('Save'));
     $assert_session->addressEquals('admin/config/system/actions');
