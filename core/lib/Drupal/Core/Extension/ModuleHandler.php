@@ -281,21 +281,27 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
       if (!$this->moduleExists($module)) {
-        $extention_type_order = [
+        // In case if there no enabled extension definition found, let's
+        // try to find the extension's install file to include.
+        $extensions_type_order = [
           'module',
           'theme',
           'profile',
           'theme_engine',
         ];
+        // Found extension definitions are empty by the default.
         $definitions = NULL;
-        foreach ($extention_type_order as $extension_type) {
+        foreach ($extensions_type_order as $extension_type) {
           try {
+            // Let's try to read extension.
             $definitions = \Drupal::service('extension.list.' . $extension_type)->get($module);
           }
           catch (UnknownExtensionException $e) {
             // Keep try to load other type of extensions.
           }
           if ($definitions !== NULL) {
+            // The extension definitions was found, let's keep it for the main
+            // handler below.
             $inactive_modules[$module] = $definitions;
             break;
           }
