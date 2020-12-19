@@ -16,13 +16,13 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  * @return
  *   The name of the module's install file, if successful; FALSE otherwise.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
  *   Use \Drupal::moduleHandler()->loadInstall($module);
  *
  * @see https://www.drupal.org/node/2948698
  */
 function module_load_install($module) {
-  @trigger_error("module_load_install() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInstall(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
+  @trigger_error("module_load_install() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInstall(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
   return \Drupal::moduleHandler()->loadInclude($module, 'install');
 }
 
@@ -53,13 +53,13 @@ function module_load_install($module) {
  * @return string|false
  *   The name of the included file, if successful; FALSE otherwise.
  *
- * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
  *   Use \Drupal::moduleHandler()->loadInclude($module, $type, $name = NULL);
  *
  * @see https://www.drupal.org/node/2948698
  */
 function module_load_include($type, $module, $name = NULL) {
-  @trigger_error("module_load_include() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
+  @trigger_error("module_load_include() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
   return \Drupal::moduleHandler()->loadInclude($module, $type, $name);
 }
 

@@ -265,7 +265,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @return string|false
    *   The name of the module's install file, if successful; FALSE otherwise.
    *
-   * @ToDo: before drupal:10.0.0
+   * @todo: before drupal:10.0.0
    *   Update ModuleHandlerInterface with definition of this method.
    */
   public function loadInstall($module) {

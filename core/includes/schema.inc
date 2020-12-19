@@ -156,7 +156,7 @@ function drupal_get_module_schema($module, $table = NULL) {
   $module_handler = \Drupal::moduleHandler();
   // Load the .install file to get hook_schema.
   $module_handler->loadInstall($module);
-  $schema = \Drupal::moduleHandler()->invoke($module, 'schema');
+  $schema = $module_handler->invoke($module, 'schema');
 
   if (isset($table)) {
     if (isset($schema[$table])) {
