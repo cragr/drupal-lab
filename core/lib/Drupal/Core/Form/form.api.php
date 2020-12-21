@@ -215,13 +215,13 @@ function hook_ajax_render_alter(array &$data) {
  *    for any significant form alterations. Any of the previous form alteration
  *    methods can alter this list of functions.
  *
- * @param $form
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form. The arguments that
  *   \Drupal::formBuilder()->getForm() was originally called with are available
  *   in the array $form_state->getBuildInfo()['args'].
- * @param $form_id
+ * @param string $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
  *
@@ -230,7 +230,7 @@ function hook_ajax_render_alter(array &$data) {
  *
  * @ingroup form_api
  */
-function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function hook_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, string $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
     $upload_enabled_types = \Drupal::config('mymodule.settings')->get('upload_enabled_types');
     $form['workflow']['upload_' . $form['type']['#value']] = [
