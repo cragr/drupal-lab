@@ -401,10 +401,20 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the dump() method provided by the Symfony component var-dump.
    */
   public function testVarDump() {
+    // Append the stream capturer to the STDOUT stream, so that we can test the
+    // dump() output and also prevent it from actually outputting in this
+    // particular test.
+    stream_filter_register("capture", StreamCapturer::class);
+    stream_filter_append(STDOUT, "capture");
+
+    // Dump some variables.
     $this->enableModules(['system', 'user']);
     $role = Role::create(['id' => 'test_role']);
     dump($role);
     dump($role->id());
+
+    $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
+    $this->assertStringContainsString('test_role', StreamCapturer::$cache);
   }
 
 }
