@@ -180,8 +180,7 @@ function hook_ajax_render_alter(array &$data) {
  * The call order is as follows: all existing form alter functions are called
  * for module A, then all for module B, etc., followed by all for any base
  * theme(s), and finally for the theme itself. The module order is determined
- * by hook_module_implements_alter(), then by system weight, and then by module
- * name.
+ * by system weight (which can be altered by hook_module_implements_alter()).
  *
  * Within each module, form alter hooks are called in the following order:
  * first, hook_form_alter(); second, hook_form_BASE_FORM_ID_alter(); third,
