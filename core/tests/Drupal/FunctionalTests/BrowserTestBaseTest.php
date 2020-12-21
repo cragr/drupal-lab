@@ -949,4 +949,23 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGetHeader('Content-Type');
   }
 
+  /**
+   * Tests the dump() method provided by the Symfony component var-dump.
+   */
+  public function testVarDump() {
+    // Visit a Drupal page with call to the dump() method.
+    $body = $this->drupalGet('test-page-var-dump');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // It is too strict to assert all properties of the Role and it is easy to
+    // break if one of these properties gets removed or gets a new default
+    // value. It should be sufficient to test just a couple of properties.
+    $this->assertStringContainsString('<span class=sf-dump-note>', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">id</span>: "<span class=sf-dump-str title="9 characters">test_role</span>"', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">label</span>: <span class=sf-dump-const>null</span>', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">permissions</span>: []', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">uuid</span>: "', $body);
+    $this->assertStringContainsString('</samp>}', $body);
+  }
+
 }
