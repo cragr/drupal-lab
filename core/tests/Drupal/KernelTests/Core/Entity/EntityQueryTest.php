@@ -991,7 +991,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     ]);
     $term2->save();
 
-    // Test that properties the properties can be queried directly.
+    // Test that the properties can be queried directly.
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
