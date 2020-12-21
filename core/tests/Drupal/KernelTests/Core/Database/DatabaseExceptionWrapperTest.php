@@ -66,7 +66,7 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * Tests Connection::prepareStatement exceptions.
    */
   public function testPrepareStatement() {
-    $this->expectException(\PDOException::class);
+    $this->expectException(DatabaseExceptionWrapper::class);
     $stmt = Database::getConnection()->prepareStatement('bananas', []);
     $stmt->execute();
   }
