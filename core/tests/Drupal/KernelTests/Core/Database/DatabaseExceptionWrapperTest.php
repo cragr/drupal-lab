@@ -82,12 +82,12 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * class, which defer the statement check to the moment of the execution. In
    * order to test a failure at preparation time, we have to force the
    * connection not to emulate statement preparation. Still, this is only valid
-   * for drivers that implement StatementWrapper.
+   * for the MySql driver.
    */
   public function testPrepareStatementFailOnPreparation() {
-    $stmt = Database::getConnection()->prepareStatement('bananas', []);
-    if (!$stmt instanceof StatementWrapper) {
-      $this->markTestSkipped('This test is only applicable for drivers that implement StatementWrapper');
+    $driver = Database::getConnection()->driver();
+    if ($driver !== 'mysql') {
+      $this->markTestSkipped("MySql tests can not run for driver '$driver'.");
     }
 
     $connection_info = Database::getConnectionInfo('default');
