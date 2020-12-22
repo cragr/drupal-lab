@@ -40,7 +40,7 @@ class ExceptionHandler {
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function handleStatementException(string $sql, array $options = []): void {
-    if (!($options['throw_exception'] ?? FALSE)) {
+    if (!($options['throw_exception'] ?? TRUE)) {
       return;
     }
 
@@ -70,7 +70,7 @@ class ExceptionHandler {
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
    */
   public function handleExecutionException(StatementInterface $statement, array $arguments = [], array $options = []): void {
-    if (!($options['throw_exception'] ?? FALSE)) {
+    if (!($options['throw_exception'] ?? TRUE)) {
       return;
     }
 
