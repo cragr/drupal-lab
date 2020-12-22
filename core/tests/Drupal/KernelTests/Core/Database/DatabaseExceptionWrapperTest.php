@@ -4,7 +4,6 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\StatementWrapper;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
