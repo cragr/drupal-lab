@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\KernelTests;
+namespace Drupal\Tests;
 
 /**
  * Captures output to a stream and stores it for retrieval.

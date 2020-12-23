@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -957,7 +958,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Append the stream capturer to the STDOUT stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
-    stream_filter_register("capture", \Drupal\KernelTests\StreamCapturer::class);
+    stream_filter_register("capture", StreamCapturer::class);
     stream_filter_append(STDOUT, "capture");
 
     // Dump some variables to check that dump() in test code produces output
@@ -966,8 +967,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
     dump($role);
     dump($role->id());
 
-    $this->assertStringContainsString('Drupal\user\Entity\Role', \Drupal\KernelTests\StreamCapturer::$cache);
-    $this->assertStringContainsString('authenticated', \Drupal\KernelTests\StreamCapturer::$cache);
+    $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
+    $this->assertStringContainsString('authenticated', StreamCapturer::$cache);
 
     // Visit a Drupal page with call to the dump() method to check that dump()
     // in site code produces output in the requested web page's HTML.
