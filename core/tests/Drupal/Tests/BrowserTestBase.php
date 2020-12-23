@@ -38,6 +38,11 @@ use Symfony\Component\VarDumper\VarDumper;
  * translation functionality. For example, avoid wrapping test text with t()
  * or TranslatableMarkup().
  *
+ * Using Symfony VarDumper's dump() in functional test test code will produce
+ * output on the command line; using dump() in site code will produce output in
+ * the requested web page, which can then be inspected in the HTML output from
+ * the test.
+ *
  * @ingroup testing
  */
 abstract class BrowserTestBase extends TestCase {
