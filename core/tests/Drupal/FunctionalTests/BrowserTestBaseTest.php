@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -953,7 +954,23 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests the dump() method provided by the Symfony component var-dump.
    */
   public function testVarDump() {
-    // Visit a Drupal page with call to the dump() method.
+    // Append the stream capturer to the STDOUT stream, so that we can test the
+    // dump() output and also prevent it from actually outputting in this
+    // particular test.
+    stream_filter_register("capture", \Drupal\KernelTests\StreamCapturer::class);
+    stream_filter_append(STDOUT, "capture");
+
+    // Dump some variables to check that dump() in test code produces output
+    // on the command line that is running the test.
+    $role = Role::load('authenticated');
+    dump($role);
+    dump($role->id());
+
+    $this->assertStringContainsString('Drupal\user\Entity\Role', \Drupal\KernelTests\StreamCapturer::$cache);
+    $this->assertStringContainsString('authenticated', \Drupal\KernelTests\StreamCapturer::$cache);
+
+    // Visit a Drupal page with call to the dump() method to check that dump()
+    // in site code produces output in the requested web page's HTML.
     $body = $this->drupalGet('test-page-var-dump');
     $this->assertSession()->statusCodeEquals(200);
 
