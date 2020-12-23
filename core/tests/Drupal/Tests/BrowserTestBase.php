@@ -221,7 +221,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   public static function setUpBeforeClass() {
     parent::setUpBeforeClass();
-    VarDumper::setHandler(TestVarDumper::class . '::htmlHandler');
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
 
   /**
