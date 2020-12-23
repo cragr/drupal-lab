@@ -17,7 +17,7 @@ class ExceptionHandler extends BaseExceptionHandler {
    * {@inheritdoc}
    */
   public function handleExecutionException(StatementInterface $statement, array $arguments = [], array $options = []): void {
-    if (!($options['throw_exception'] ?? FALSE)) {
+    if (!($options['throw_exception'] ?? TRUE)) {
       return;
     }
 
