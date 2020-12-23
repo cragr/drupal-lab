@@ -43,9 +43,9 @@ class TermRouteContext implements ContextProviderInterface {
     $context_definition = EntityContextDefinition::create('taxonomy_term')->setRequired(FALSE);
     $value = NULL;
     if (($route_object = $this->routeMatch->getRouteObject())) {
-      $route_contexts = $route_object->getOption('parameters');
+      $route_parameters = $route_object->getOption('parameters');
 
-      if (isset($route_contexts['taxonomy_term']) && $term = $this->routeMatch->getParameter('taxonomy_term')) {
+      if (isset($route_parameters['taxonomy_term']) && $term = $this->routeMatch->getParameter('taxonomy_term')) {
         $value = $term;
       }
       elseif ($this->routeMatch->getRouteName() == 'entity.taxonomy_term.add_form') {
