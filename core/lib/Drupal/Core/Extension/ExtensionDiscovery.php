@@ -187,7 +187,7 @@ class ExtensionDiscovery {
       $searchdirs[static::ORIGIN_SITE] = \Drupal::getContainer()->getParameter('site.path');
     }
     else {
-      $searchdirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals());
+      $searchdirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals(), TRUE, $this->root);
     }
 
     // Unless an explicit value has been passed, manually check whether we are

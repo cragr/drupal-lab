@@ -32,8 +32,9 @@ function drupal_rebuild($class_loader, Request $request) {
   PhpStorageFactory::get('twig')->deleteAll();
 
   // Bootstrap up to where caches exist and clear them.
-  $kernel = new DrupalKernel('prod', $class_loader);
-  $kernel->setSitePath(DrupalKernel::findSitePath($request));
+  $app_root = dirname(__DIR__, 2);
+  $kernel = new DrupalKernel('prod', $class_loader, TRUE, $app_root);
+  $kernel->setSitePath(DrupalKernel::findSitePath($request, TRUE, $app_root));
   $kernel->boot();
   $kernel->preHandle($request);
   // Ensure our request includes the session if appropriate.

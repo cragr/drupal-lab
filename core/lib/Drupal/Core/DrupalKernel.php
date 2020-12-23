@@ -303,6 +303,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The application root.
    */
   protected static function guessApplicationRoot() {
+    // Give precedence to DRUPAL_ROOT if it is already defined.
+    if (defined('DRUPAL_ROOT')) {
+      return DRUPAL_ROOT;
+    }
+
     // Determine the application root by:
     // - Removing the namespace directories from the path.
     // - Getting the path to the directory two levels up from the path
@@ -690,7 +695,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     // Ensure sane PHP environment variables.
-    static::bootEnvironment();
+    static::bootEnvironment($this->root);
 
     try {
       $this->initializeSettings($request);
@@ -1057,7 +1062,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   In case the host name in the request is not trusted.
    */
   protected function initializeSettings(Request $request) {
-    $site_path = static::findSitePath($request);
+    $site_path = static::findSitePath($request, TRUE, $this->root);
     $this->setSitePath($site_path);
     Settings::initialize($this->root, $site_path, $this->classLoader);
 

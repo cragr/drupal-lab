@@ -56,7 +56,7 @@ class UpdateKernel extends DrupalKernel {
    */
   public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
     try {
-      static::bootEnvironment();
+      static::bootEnvironment($this->root);
 
       // First boot up basic things, like loading the include files.
       $this->initializeSettings($request);

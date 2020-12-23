@@ -63,7 +63,7 @@ class UpdateRootFactory {
     if (DRUPAL_TEST_IN_CHILD_SITE) {
       $kernel = $this->drupalKernel;
       $request = $this->requestStack->getCurrentRequest();
-      $root_path .= '/' . $kernel::findSitePath($request);
+      $root_path .= '/' . $kernel::findSitePath($request, TRUE, $kernel->getAppRoot());
     }
 
     return $root_path;

@@ -12,7 +12,7 @@ chdir('../../..');
 
 $autoloader = require_once 'autoload.php';
 
-$kernel = DrupalKernel::createFromRequest(Request::createFromGlobals(), $autoloader, 'prod');
+$kernel = DrupalKernel::createFromRequest(Request::createFromGlobals(), $autoloader, 'prod', TRUE, realpath(''));
 $kernel->boot();
 $container = $kernel->getContainer();
 

@@ -21,7 +21,7 @@ if (drupal_valid_test_ua()) {
   gc_disable();
 }
 
-$kernel = new UpdateKernel('prod', $autoloader, FALSE);
+$kernel = new UpdateKernel('prod', $autoloader, FALSE, __DIR__);
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);

@@ -66,7 +66,7 @@ function authorize_access_allowed(Request $request) {
 
 try {
   $request = Request::createFromGlobals();
-  $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
+  $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod', TRUE, dirname(__DIR__));
   $kernel->boot();
   // A route is required for route matching.
   $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));

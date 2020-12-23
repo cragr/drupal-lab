@@ -25,10 +25,11 @@ require_once __DIR__ . '/includes/utility.inc';
 
 $request = Request::createFromGlobals();
 // Manually resemble early bootstrap of DrupalKernel::boot().
-DrupalKernel::bootEnvironment();
+$app_root = dirname(__DIR__);
+DrupalKernel::bootEnvironment($app_root);
 
 try {
-  Settings::initialize(dirname(__DIR__), DrupalKernel::findSitePath($request), $autoloader);
+  Settings::initialize($app_root, DrupalKernel::findSitePath($request, TRUE, $app_root), $autoloader);
 }
 catch (HttpExceptionInterface $e) {
   $response = new Response('', $e->getStatusCode());

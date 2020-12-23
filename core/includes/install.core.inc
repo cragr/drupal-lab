@@ -330,8 +330,9 @@ function install_begin_request($class_loader, &$install_state) {
     date_default_timezone_set('Australia/Sydney');
   }
 
-  $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE) : $install_state['site_path'];
-  Settings::initialize(dirname(__DIR__, 2), $site_path, $class_loader);
+  $app_root = dirname(__DIR__, 2);
+  $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE, $app_root) : $install_state['site_path'];
+  Settings::initialize($app_root, $site_path, $class_loader);
 
   // Ensure that procedural dependencies are loaded as early as possible,
   // since the error/exception handlers depend on them.
@@ -419,8 +420,8 @@ function install_begin_request($class_loader, &$install_state) {
 
   // Note, InstallerKernel::createFromRequest() is not used because Settings is
   // already initialized.
-  $kernel = new InstallerKernel($environment, $class_loader, FALSE);
-  $kernel::bootEnvironment();
+  $kernel = new InstallerKernel($environment, $class_loader, FALSE, $app_root);
+  $kernel::bootEnvironment($app_root);
   $kernel->setSitePath($site_path);
   $kernel->boot();
   $container = $kernel->getContainer();
@@ -2221,7 +2222,7 @@ function install_check_requirements($install_state) {
     // before running the Drupal installer.
     if ($database = Database::getConnectionInfo()) {
       $request = Request::createFromGlobals();
-      $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE) : $install_state['site_path'];
+      $site_path = empty($install_state['site_path']) ? DrupalKernel::findSitePath($request, FALSE, dirname(__DIR__, 2)) : $install_state['site_path'];
       $database = $database['default'];
       $settings_file = './' . $site_path . '/settings.php';
 
