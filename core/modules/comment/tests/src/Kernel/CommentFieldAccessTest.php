@@ -316,7 +316,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests the comment field item list 'view comments only' access.
+   * Tests the comment field item list 'view comment list' access.
    */
   public function testFieldViewOnlyOperationAccess(): void {
     // Enable comment statistics creation.
@@ -342,8 +342,8 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     /** @var \Drupal\comment\CommentFieldItemList $comment_field */
     $comment_field = $this->host->get('comment');
 
-    // Check that the 'view comments only' access to the field is permitted.
-    $this->assertTrue($comment_field->access('view comments only', $account));
+    // Check that the 'view comment list' access to the field is permitted.
+    $this->assertTrue($comment_field->access('view comment list', $account));
     // And the last comment is comment statistic is the enabled comment.
     $this->assertSame($enabled->id(), $comment_field->cid);
 
@@ -355,8 +355,8 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     $this->host = EntityTest::load($this->host->id());
     /** @var \Drupal\comment\CommentFieldItemList $comment_field */
     $comment_field = $this->host->get('comment');
-    // Check that the 'view comments only' access to the field is not permitted.
-    $this->assertFalse($comment_field->access('view comments only', $account));
+    // Check that the 'view comment list' access to the field is not permitted.
+    $this->assertFalse($comment_field->access('view comment list', $account));
   }
 
 }
