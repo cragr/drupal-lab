@@ -299,7 +299,8 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => 'test_theme',
         'expected' => [
           'Template overridden based on suggestion alter hook determined by a module\'s hook_theme_suggestions_HOOK_alter().',
-          '   x theme-test-specific-suggestions--variant--foo' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   x theme-test-specific-suggestions--variant--foo' . $extension . PHP_EOL
           . '   * theme-test-specific-suggestions--variant' . $extension . PHP_EOL
           . '   * theme-test-specific-suggestions' . $extension . PHP_EOL
           . '-->' . PHP_EOL,
@@ -310,7 +311,8 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => 'test_theme',
         'expected' => [
           'Template overridden based on suggestion alter hook determined by the base hook.',
-          '   x theme-test-specific-suggestions--variant' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   x theme-test-specific-suggestions--variant' . $extension . PHP_EOL
           . '   * theme-test-specific-suggestions' . $extension . PHP_EOL
           . '-->' . PHP_EOL,
         ],
@@ -333,7 +335,8 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
       '',
       [
         "THEME HOOK: 'theme_test_specific_suggestions__variant_not_found__too'",
-        '   * theme-test-specific-suggestions--variant-not-found--too' . $extension . PHP_EOL
+        '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+        . '   * theme-test-specific-suggestions--variant-not-found--too' . $extension . PHP_EOL
         . '   * theme-test-specific-suggestions--variant-not-found' . $extension . PHP_EOL
         . '   x theme-test-specific-suggestions' . $extension . PHP_EOL
         . '-->',
@@ -381,7 +384,8 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => '',
         'expected' => [
           'Template for testing suggestion hooks when #theme contains a list of theme suggestions.',
-          '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter--but-reordered' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
@@ -397,7 +401,8 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => 'test_theme',
         'expected' => [
           'This theme_test_base1__from_theme_property__too template is implemented.',
-          '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter--but-reordered' . $extension . PHP_EOL
           . '   x theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
@@ -453,12 +458,18 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
   public function providerArrayThemeSuggestions(): array {
     $extension = '.html.twig';
     return [
-      'The last #theme array entry is expanded into suggestions' => [
+      'Only the last #theme array entry is expanded into suggestions' => [
         'modules' => [],
         'theme' => '',
         'expected' => [
           'Template for testing suggestion hooks when #theme contains a list of theme suggestions.',
-          '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property' . $extension . PHP_EOL
           . '   x theme-test-base1' . $extension . PHP_EOL
           . '-->' . PHP_EOL,
@@ -474,7 +485,13 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => '',
         'expected' => [
           'This theme_test_base2 template is implemented, but never used.',
-          '   x theme-test-base2' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
+          . '   x theme-test-base2' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property' . $extension . PHP_EOL
           . '   * theme-test-base1' . $extension . PHP_EOL
@@ -489,7 +506,13 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => '',
         'expected' => [
           'Template for testing suggestion hooks when #theme contains a list of theme suggestions.',
-          '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter--but-reordered' . $extension . PHP_EOL
           . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
@@ -505,10 +528,24 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => '',
         'expected' => [
           'This theme_test_base2__from_theme_property__without_base template is implemented.',
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          . '   x theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base1' . $extension . PHP_EOL
+          . '-->' . PHP_EOL,
         ],
         'unexpected' => [
           'This theme_test_base2__from_hook_theme_suggestions_hook template is implemented, but never used.',
           'This theme_test_base2 template is implemented, but never used.',
+          'x theme-test-base2' . $extension . PHP_EOL,
+          '* theme-test-base2' . $extension . PHP_EOL,
         ],
       ],
       'adding a new template implementation does not change order of suggestions' => [
@@ -516,7 +553,13 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => 'test_theme',
         'expected' => [
           'This theme_test_base1__from_theme_property__too template is implemented.',
-          '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL
+          . '   * theme-test-base3' . $extension . PHP_EOL
+          . '   * theme-test-base2--from-theme-property--without-base' . $extension . PHP_EOL
+          . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-too' . $extension . PHP_EOL
           . '   * theme-test-base1--from-hook-theme-suggestions-hook-alter--but-reordered' . $extension . PHP_EOL
           . '   x theme-test-base1--from-theme-property--too' . $extension . PHP_EOL
@@ -532,7 +575,10 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => '',
         'expected' => [
           'This theme_test_base3 template is implemented.',
-          '   * theme-test-base3--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-test-base4' . $extension . PHP_EOL
+          . '   * theme-test-base3--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base3--from-theme-property--seen-by-alter' . $extension . PHP_EOL
           . '   x theme-test-base3' . $extension . PHP_EOL,
         ],
@@ -543,13 +589,16 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => '',
         'expected' => [
           'This theme_test_base4 template is implemented and has a different "base hook".',
-          '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   x theme-test-base4' . $extension . PHP_EOL
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
           // 'theme-suggestions-base4-test-alternate' is not listed here. While
           // it would seem to make sense to list the base hook here, when one
           // hook specifies a different base hook, Drupal will use that base
           // hook's suggestions, but not the base hook itself.
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL,
         ],
         'unexpected' => [],
       ],
@@ -558,13 +607,16 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => 'test_theme',
         'expected' => [
           'This theme_test_base4 template is implemented and has a different "base hook".',
-          '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   x theme-test-base4' . $extension . PHP_EOL
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
           // 'theme-suggestions-base4-test-alternate' is not listed here. While
           // it would seem to make sense to list the base hook here, when one
           // hook specifies a different base hook, Drupal will use that base
           // hook's suggestions, but not the base hook itself.
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL,
         ],
         'unexpected' => [
           'This theme_suggestions_base4_test_alternate template is implemented, but not used.',
@@ -578,13 +630,16 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
         'theme' => 'test_theme',
         'expected' => [
           'This theme_suggestions_base4_test_alternate__from_hook_theme_suggestions_hook_alter template is implemented.',
-          '   x theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
+          '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+          . '   * theme-test-base5' . $extension . PHP_EOL
+          . '   x theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook-alter' . $extension . PHP_EOL
           . '   * theme-test-base4' . $extension . PHP_EOL
           . '   * theme-suggestions-base4-test-alternate--from-hook-theme-suggestions-hook' . $extension . PHP_EOL
           // 'theme-suggestions-base4-test-alternate' is not listed here. While
           // it would seem to make sense to list the base hook here, when one
           // hook specifies a different base hook, Drupal will use that base
           // hook's suggestions, but not the base hook itself.
+          . '   * theme-test-base3--from-theme-property' . $extension . PHP_EOL,
         ],
         'unexpected' => [],
       ],
