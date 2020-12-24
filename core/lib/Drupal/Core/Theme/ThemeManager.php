@@ -238,10 +238,21 @@ class ThemeManager implements ThemeManagerInterface {
 
     // Add all the template suggestions with the same base to the suggestions
     // array before invoking suggestion alter hooks.
-    foreach (array_reverse($original_hooks) as $suggestion) {
+    $template_suggestions = array_values($original_hooks);
+    $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
+    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
       $suggestion_base = explode('__', $suggestion)[0];
-      if ($suggestion !== $base_theme_hook && ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook)) {
-        $suggestions[] = $suggestion;
+      if ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook) {
+        if ($suggestion !== $base_theme_hook) {
+          $suggestions[] = $suggestion;
+        }
+        // For suggestions we are adding to the alter hooks, remove them from
+        // $template_suggestions for now. But, ensure that we leave one entry
+        // for the base hook so we can splice in the suggestions later.
+        if ($contains_base_hook && $suggestion !== $base_theme_hook
+          || !$contains_base_hook && $suggestion !== $hook) {
+          unset($template_suggestions[$key]);
+        }
       }
     }
 
@@ -254,13 +265,25 @@ class ThemeManager implements ThemeManagerInterface {
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
+    // Merge $suggestions back into $template_suggestions before the "base hook"
+    // entry.
+    $template_suggestions = array_values($template_suggestions);
+    array_splice(
+      $template_suggestions,
+      array_search($contains_base_hook ? $base_theme_hook : $hook, $template_suggestions),
+      $contains_base_hook ? 0 : 1,
+      array_reverse($suggestions)
+    );
+
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
     // '#theme' => 'node', but a module can add 'node__article' as a suggestion
     // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
     // an alternate template file for article nodes.
+    $template_suggestion = $hook;
     foreach (array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
+        $template_suggestion = $suggestion;
         $info = $theme_registry->get($suggestion);
         break;
       }
@@ -395,6 +418,10 @@ class ThemeManager implements ThemeManagerInterface {
       if (isset($theme_hook_suggestion)) {
         $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
       }
+      // Add two read-only variables that help the template engine understand
+      // how the template was chosen from among all suggestions.
+      $variables['template_suggestions'] = $template_suggestions;
+      $variables['template_suggestion'] = $template_suggestion;
       $output = $render_function($template_file, $variables);
     }
 
