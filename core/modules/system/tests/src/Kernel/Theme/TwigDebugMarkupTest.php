@@ -32,23 +32,13 @@ class TwigDebugMarkupTest extends KernelTestBase {
   }
 
   /**
-   * Helper function to convert a render array to markup.
+   * {@inheritdoc}
    *
-   * We override KernalTestBase::render() so that it outputs Twig debug comments
+   * We override KernelTestBase::render() so that it outputs Twig debug comments
    * only for the render array given in a test and not for an entire page.
-   *
-   * @param array $elements
-   *   The structured array describing the data to be rendered.
-   *
-   * @return string
-   *   The rendered markup.
-   *
-   * @throws \Exception
    */
   public function render(array &$elements): string {
-    /** @var \Drupal\Core\Render\Renderer $renderer */
-    $renderer = $this->container->get('renderer');
-    return $renderer->renderRoot($elements);
+    return $this->container->get('renderer')->renderRoot($elements);
   }
 
   /**
