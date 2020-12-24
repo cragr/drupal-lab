@@ -12,27 +12,13 @@ use Drupal\KernelTests\KernelTestBase;
 class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
 
   /**
-   * The library discovery service.
-   *
-   * @var \Drupal\Core\Asset\LibraryDiscoveryInterface
-   */
-  protected $libraryDiscovery;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->libraryDiscovery = $this->container->get('library.discovery');
-  }
-
-  /**
    * Confirm deprecation status and contents of jQuery UI libraries.
    *
    * @group legacy
    */
   public function testDeprecatedJqueryUi() {
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = $this->container->get('library.discovery');
     $deprecated_jquery_ui_libraries = [
       'jquery.ui' => '1396fab9268ee2cce47df6ac3e4781c8',
       'jquery.ui.autocomplete' => '153f2836f8f2da39767208b6e09cb5b4',
@@ -45,9 +31,12 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
       'jquery.ui.resizable' => 'a2448fa87071a17a9756f39c9becb70d',
       'jquery.ui.widget' => 'eacd675de09572383b58e52309ba2245',
     ];
+    // DrupalCI uses a precision of 100 in certain environments which breaks
+    // this test.
+    ini_set('serialize_precision', -1);
     foreach ($deprecated_jquery_ui_libraries as $library => $expected_hashed_library_definition) {
       $this->expectDeprecation("The \"core/$library\" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3067969");
-      $library_definition = $this->libraryDiscovery->getLibraryByName('core', $library);
+      $library_definition = $library_discovery->getLibraryByName('core', $library);
       $this->assertEquals($expected_hashed_library_definition, md5(serialize($library_definition)));
     }
   }

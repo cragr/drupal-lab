@@ -515,17 +515,16 @@ Admin UI & JavaScript Modernisation Initiative
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
+Decoupled Menus Initiative
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
+
 Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
-
-PHPUnit Initiative
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-- (provisional) Michiel Nugter 'michielnugter' https://www.drupal.org/u/michielnugter
-- (provisional) Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
 
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
@@ -551,5 +550,7 @@ participate in mentoring.
 - Elli Ludwigson 'ekl1773' https://www.drupal.org/u/ekl1773
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
+- (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
+- (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
 
 Provisional membership: None at this time.

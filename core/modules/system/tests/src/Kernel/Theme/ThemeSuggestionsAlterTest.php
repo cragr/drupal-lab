@@ -1,40 +1,33 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests theme suggestions alter hooks.
  *
  * @group Theme
  */
-class ThemeSuggestionsAlterTest extends BrowserTestBase {
+class ThemeSuggestionsAlterTest extends KernelTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['theme_test'];
+  protected static $modules = ['theme_test', 'system'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp():void {
-    parent::setUp();
-
-    // Enable Twig debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    // Enable Twig debugging.
+    $parameters = $container->getParameter('twig.config');
     $parameters['debug'] = TRUE;
-    $this->setContainerParameter('twig.config', $parameters);
-    $this->rebuildContainer();
-    $this->resetAll();
+    $container->setParameter('twig.config', $parameters);
   }
 
   /**
@@ -50,11 +43,13 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected in the rendered output.
    * @param string[] $unexpected
    *   The string(s) expected to NOT occur in the rendered output.
+   *
+   * @throws \Exception
    */
   public function runTemplateSuggestionTest(array $build, array $modules, string $theme, array $expected, array $unexpected = []) {
     // Enable modules.
     if (!empty($modules)) {
-      $this->container->get('module_installer')->install($modules);
+      $this->enableModules($modules);
     }
     // Set the default theme.
     if ($theme) {
@@ -63,11 +58,9 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
         ->set('default', $theme)
         ->save();
     }
-    // Clear caches.
-    $this->resetAll();
 
     // Render a template.
-    $output = $this->container->get('renderer')->renderRoot($build);
+    $output = $this->render($build);
 
     // Check the output for expected results.
     foreach ($expected as $expected_string) {
@@ -93,6 +86,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected in the rendered output.
    *
    * @dataProvider providerHookThemeSuggestionsHook
+   * @throws \Exception
    */
   public function testHookThemeSuggestionsHook(array $modules, string $theme, array $expected) {
     $this->runTemplateSuggestionTest(
@@ -110,7 +104,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *
    * @see testHookThemeSuggestionsHook()
    */
-  public function providerHookThemeSuggestionsHook() {
+  public function providerHookThemeSuggestionsHook(): array {
     return [
       'Base template used when suggestion template not found' => [
         'modules' => [],
@@ -142,6 +136,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected in the rendered output.
    *
    * @dataProvider providerHookThemeSuggestionsAlter
+   * @throws \Exception
    */
   public function testHookThemeSuggestionsAlter(array $modules, string $theme, array $expected) {
     $this->runTemplateSuggestionTest(
@@ -159,7 +154,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *
    * @see testHookThemeSuggestionsAlter()
    */
-  public function providerHookThemeSuggestionsAlter() {
+  public function providerHookThemeSuggestionsAlter(): array {
     $extension = '.html.twig';
     return [
       'Base template used when suggestion template is not available' => [
@@ -213,6 +208,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected in the rendered output.
    *
    * @dataProvider providerHookThemeSuggestionsHookAlter
+   * @throws \Exception
    */
   public function testHookThemeSuggestionsHookAlter(array $modules, string $theme, array $expected) {
     $this->runTemplateSuggestionTest(
@@ -230,7 +226,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *
    * @see testHookThemeSuggestionsHookAlter()
    */
-  public function providerHookThemeSuggestionsHookAlter() {
+  public function providerHookThemeSuggestionsHookAlter(): array {
     return [
       'Base template used when suggestion template is not available' => [
         'modules' => [],
@@ -269,6 +265,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected in the rendered output.
    *
    * @dataProvider providerNonBaseHookThemeSuggestions
+   * @throws \Exception
    */
   public function testNonBaseHookThemeSuggestions(array $modules, string $theme, array $expected) {
     $this->runTemplateSuggestionTest(
@@ -286,7 +283,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *
    * @see testNonBaseHookThemeSuggestions()
    */
-  public function providerNonBaseHookThemeSuggestions() {
+  public function providerNonBaseHookThemeSuggestions(): array {
     $extension = '.html.twig';
     return [
       'Base template used when suggestion template is not available' => [
@@ -323,6 +320,8 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
 
   /**
    * Tests debug markup for non-"base hook" suggestions without implementation.
+   *
+   * @throws \Exception
    */
   public function testUnimplementedNonBaseHookThemeSuggestions() {
     $extension = '.html.twig';
@@ -355,6 +354,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected to NOT occur in the rendered output.
    *
    * @dataProvider providerThemeSuggestionsOrdering
+   * @throws \Exception
    */
   public function testThemeSuggestionsOrdering(array $modules, string $theme, array $expected, array $unexpected) {
     $this->runTemplateSuggestionTest(
@@ -373,7 +373,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *
    * @see testThemeSuggestionsOrdering()
    */
-  public function providerThemeSuggestionsOrdering() {
+  public function providerThemeSuggestionsOrdering(): array {
     $extension = '.html.twig';
     return [
       '#theme property suggestions always override ones from hook_theme_suggestions_hook' => [
@@ -424,6 +424,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *   The string(s) expected to NOT occur in the rendered output.
    *
    * @dataProvider providerArrayThemeSuggestions
+   * @throws \Exception
    */
   public function testArrayThemeSuggestions(array $modules, string $theme, array $expected, array $unexpected) {
     $this->runTemplateSuggestionTest(
@@ -449,7 +450,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    *
    * @see testArrayThemeSuggestions()
    */
-  public function providerArrayThemeSuggestions() {
+  public function providerArrayThemeSuggestions(): array {
     $extension = '.html.twig';
     return [
       'The last #theme array entry is expanded into suggestions' => [
@@ -592,21 +593,30 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
 
   /**
    * Tests execution order of theme suggestion hooks.
+   *
+   * @throws \Exception
    */
   public function testExecutionOrder() {
-    $this->runTemplateSuggestionTest(
-      [
-        '#theme' => 'theme_test_suggestions',
-      ],
-      ['theme_suggestions_test'],
-      'test_theme',
-      [
-        'Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_HOOK_alter().',
-      ]
-    );
+    // Normal module weight is not calculated in KernalTest, so we fake it by
+    // (re)installing the modules in order of their weight (alphabetical order).
+    $this->disableModules(['theme_test']);
+    $this->enableModules(['theme_suggestions_test', 'theme_test']);
+    $theme = 'test_theme';
+    $this->container->get('theme_installer')->install([$theme]);
+    $this->config('system.theme')->set('default', $theme)->save();
+
+    $build = [
+      '#theme' => 'theme_test_suggestions',
+    ];
+
+    // Render a template using the regular renderer (instead of
+    // $this->render()'s bare_html_page_renderer) so messages are not output.
+    $output = $this->container->get('renderer')->renderRoot($build);
+
+    $this->assertStringContainsString('Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_HOOK_alter().', $output, $this->getName());
 
     // Retrieve all messages we've set via \Drupal::messenger()->addStatus().
-    $messages = \Drupal::messenger()->messagesByType('status');
+    $messages = $this->container->get('messenger')->messagesByType('status');
 
     // Ensure that the order is:
     // 1. hook_theme_suggestions_HOOK()

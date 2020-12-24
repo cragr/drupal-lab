@@ -1,107 +1,95 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests for Twig debug markup.
  *
  * @group Theme
  */
-class TwigDebugMarkupTest extends BrowserTestBase {
+class TwigDebugMarkupTest extends KernelTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['theme_test'];
+  protected static $modules = ['system', 'theme_test'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp():void {
-    parent::setUp();
-
-    // Enable Twig debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    // Enable Twig debugging.
+    $parameters = $container->getParameter('twig.config');
     $parameters['debug'] = TRUE;
-    $this->setContainerParameter('twig.config', $parameters);
-    $this->rebuildContainer();
-    $this->resetAll();
+    $container->setParameter('twig.config', $parameters);
   }
 
   /**
    * Helper function to convert a render array to markup.
+   *
+   * We override KernalTestBase::render() so that it outputs Twig debug comments
+   * only for the render array given in a test and not for an entire page.
    *
    * @param array $elements
    *   The structured array describing the data to be rendered.
    *
    * @return string
    *   The rendered markup.
+   *
+   * @throws \Exception
    */
-  public function render(array $elements) {
-    /* @var \Drupal\Core\Render\Renderer $renderer */
+  public function render(array &$elements): string {
+    /** @var \Drupal\Core\Render\Renderer $renderer */
     $renderer = $this->container->get('renderer');
     return $renderer->renderRoot($elements);
   }
 
   /**
-   * Tests debug markup is on and off.
+   * Tests debug markup is on.
+   *
+   * @throws \Exception
    */
   public function testDebugMarkup() {
-    $extension = twig_extension();
+    $extension = '.html.twig';
+    $hook = 'theme_test_specific_suggestions';
+    $build = [
+      '#theme' => $hook,
+    ];
 
     // Find full path to template.
     $cache = $this->container->get('theme.registry')->get();
     $templates = drupal_find_theme_templates($cache, $extension, drupal_get_path('module', 'theme_test'));
-    $template_filename = $templates['theme_test_specific_suggestions']['path'] . '/' . $templates['theme_test_specific_suggestions']['template'] . $extension;
+    $template_filename = $templates[$hook]['path'] . '/' . $templates[$hook]['template'] . $extension;
 
     // Render a template.
-    $build = [
-      '#theme' => 'theme_test_specific_suggestions',
-    ];
     $output = $this->render($build);
 
     $expected = '<!-- THEME DEBUG -->';
     $this->assertStringContainsString($expected, $output, 'Twig debug markup found in theme output when debug is enabled.');
 
-    $expected = "\n<!-- THEME HOOK: 'theme_test_specific_suggestions' -->";
+    $expected = "\n<!-- THEME HOOK: '$hook' -->";
     $this->assertStringContainsString($expected, $output, 'Theme hook comment found.');
 
     $expected = "\n<!-- BEGIN OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
     $this->assertStringContainsString($expected, $output, 'Full path to current template file found in BEGIN OUTPUT comment.');
     $expected = "\n<!-- END OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
     $this->assertStringContainsString($expected, $output, 'Full path to current template file found in END OUTPUT comment.');
-
-    // Disable Twig debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
-    $parameters['debug'] = FALSE;
-    $this->setContainerParameter('twig.config', $parameters);
-    $this->rebuildContainer();
-    $this->resetAll();
-
-    // Re-render the template.
-    $output = $this->render($build);
-
-    $expected = 'Template for testing specific theme calls.';
-    $this->assertStringContainsString($expected, $output, 'Confirm template is still rendered.');
-    $unexpected = '<!-- THEME DEBUG -->';
-    $this->assertStringNotContainsString($unexpected, $output, 'Twig debug markup not found in theme output when debug is disabled.');
   }
 
   /**
    * Tests file name suggestions comment.
+   *
+   * @throws \Exception
    */
   public function testFileNameSuggestions() {
-    $extension = twig_extension();
+    $extension = '.html.twig';
 
     // Render a template using a single suggestion.
     $build = [
@@ -130,9 +118,11 @@ class TwigDebugMarkupTest extends BrowserTestBase {
 
   /**
    * Tests suggestions when file name does not match.
+   *
+   * @throws \Exception
    */
   public function testFileNameNotMatchingSuggestion() {
-    $extension = twig_extension();
+    $extension = '.html.twig';
 
     // Find full path to template.
     $cache = $this->container->get('theme.registry')->get();
@@ -158,9 +148,11 @@ class TwigDebugMarkupTest extends BrowserTestBase {
 
   /**
    * Tests XSS attempt in theme suggestions and Twig debug comments.
+   *
+   * @throws \Exception
    */
   public function testXssComments() {
-    $extension = twig_extension();
+    $extension = '.html.twig';
 
     // Render a template whose suggestions have been compromised.
     $build = [
