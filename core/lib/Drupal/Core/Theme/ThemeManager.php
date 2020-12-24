@@ -141,17 +141,16 @@ class ThemeManager implements ThemeManagerInterface {
 
     $theme_registry = $this->themeRegistry->getRuntime();
 
-    // While we search for templates, we create a list of template suggestions
-    // to use for Twig debug comments. Note: this list is entirely separate from
-    // the list of $suggestions created later that is passed to
+    // While we search for templates, we create a full list of template
+    // suggestions to use for Twig debug comments. Note: this list is entirely
+    // separate from the list of $suggestions that is later passed to
     // theme_suggestions alter hooks.
-    $template_suggestions = [$hook];
+    $original_hooks = [$hook];
 
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
     if (is_array($hook)) {
-      // Ensure $template_suggestions has continuous numeric keys.
-      $template_suggestions = array_values($hook);
+      $original_hooks = $hook;
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -194,12 +193,12 @@ class ThemeManager implements ThemeManagerInterface {
 
     // If $hook is an array of strings, the code above only expands the final
     // element in the array. We need to let the template engine know about all
-    // possible $template_suggestions (for discoverability), so we grab the last
+    // possible $original_hooks (for discoverability), so we grab the last
     // element and expand it.
-    $hook_name = $template_suggestions[array_key_last($template_suggestions)];
+    $hook_name = $original_hooks[array_key_last($original_hooks)];
     while ($pos = strrpos($hook_name, '__')) {
       $hook_name = substr($hook_name, 0, $pos);
-      $template_suggestions[] = $hook_name;
+      $original_hooks[] = $hook_name;
     }
 
     // If a renderable array is passed as $variables, then set $variables to
@@ -246,8 +245,6 @@ class ThemeManager implements ThemeManagerInterface {
 
     // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
-    // Make a copy of the initial suggestions for later.
-    $suggestions_copy = $suggestions;
     // If the theme implementation was invoked with a direct theme suggestion
     // like '#theme' => 'node__article', add it to the suggestions array before
     // invoking suggestion alter hooks.
@@ -258,6 +255,8 @@ class ThemeManager implements ThemeManagerInterface {
     else {
       $suggestions_include_specific_hook = FALSE;
     }
+    // Make a copy of the initial suggestions for later.
+    $suggestions_copy = $suggestions;
 
     // Invoke hook_theme_suggestions_alter() and
     // hook_theme_suggestions_HOOK_alter().
@@ -268,10 +267,9 @@ class ThemeManager implements ThemeManagerInterface {
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
-    // In order to properly merge these new suggestions into our previous list
-    // of all possible template suggestions, we need to determine where each
-    // suggestion comes from and order them like so:
-    //
+    // In order to properly merge these new suggestions into our original hook
+    // suggestions, we need to determine where each suggestion comes from and
+    // order them like so:
     // 1. More-specific suggestions from the #theme list that aren't for the
     //    $base_theme_hook.
     // 2. Suggestions for $base_theme_hook from:
@@ -317,13 +315,14 @@ class ThemeManager implements ThemeManagerInterface {
     );
 
     // The $hook's theme registry may specify a "base hook" that differs from
-    // the base string of $hook. If so, we need to search $template_suggestions
-    // for both of these base hook strings.
+    // the base string of $hook. If so, we need to search $original_hooks for
+    // both of these base hook strings.
     $base_of_hook = explode('__', $hook)[0];
 
     // Scan through the template suggestions from the end to the beginning to
     // find the first and last occurrence of the base hook.
     $first_base_hook_key = FALSE;
+    $template_suggestions = array_values($original_hooks);
     foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
       // Find the base hook for this hook suggestion.
       $suggestion_base = explode('__', $suggestion)[0];
