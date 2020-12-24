@@ -110,7 +110,8 @@ class TwigDebugMarkupTest extends KernelTestBase {
 
     $expected = "\n<!-- THEME HOOK: 'theme_test_specific_suggestions__variant' -->";
     $this->assertStringContainsString($expected, $output, 'Theme hook comment found.');
-    $expected = '   * theme-test-specific-suggestions--variant' . $extension . PHP_EOL
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * theme-test-specific-suggestions--variant' . $extension . PHP_EOL
       . '   x theme-test-specific-suggestions' . $extension . PHP_EOL
       . '-->';
     $this->assertStringContainsString($expected, $output, 'Multiple suggestions should have file name suggestions listed.');
@@ -138,9 +139,11 @@ class TwigDebugMarkupTest extends KernelTestBase {
     $expected = "\n<!-- THEME HOOK: 'theme_test_template_test__variant' -->";
     $this->assertStringContainsString($expected, $output, 'Theme hook comment found.');
 
-    // Note: this test is documenting the results of a bug.
-    $unexpected = '   x theme_test.template_test' . $extension . PHP_EOL;
-    $this->assertStringNotContainsString($unexpected, $output, 'The actual template file name is not used when it does not match the suggestion.');
+    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
+      . '   * theme-test-template-test--variant' . $extension . PHP_EOL
+      . '   x theme_test.template_test' . $extension . PHP_EOL
+      . '-->';
+    $this->assertStringContainsString($expected, $output, 'The actual template file name should be used when it does not match the suggestion.');
 
     $expected = "\n<!-- BEGIN OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
     $this->assertStringContainsString($expected, $output, 'Full path to current template file found in BEGIN OUTPUT comment.');
