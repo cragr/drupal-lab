@@ -593,9 +593,25 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar&foo2%5B0%5D=bar2&foo2%5B1%5D=bar3:foo=bar&foo2=["bar2","bar3"]:/path/add/one');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar:foo=bar:/path/add/one');
     $this->assertEqual('/path/add/one', $cache->data['path']);
     $this->assertEqual(['foo' => 'bar'], $cache->data['query']);
+    $this->assertCount(3, $cache->data['routes']);
+
+    // A path with multivalued query parameters.
+    $path = '/path/add/one?foo=bar&foo2[]=bar2&foo2[]=bar3';
+    $request = Request::create($path, 'GET');
+    $provider->getRouteCollectionForRequest($request);
+
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar&foo2%5B0%5D=bar2&foo2%5B1%5D=bar3:foo=bar&foo2=["bar2","bar3"]:/path/add/one');
+    $this->assertEquals('/path/add/one', $cache->data['path']);
+    $this->assertEquals(
+      [
+        'foo' => 'bar',
+        'foo2' => ['bar2', 'bar3'],
+      ],
+      $cache->data['query']
+    );
     $this->assertCount(3, $cache->data['routes']);
 
     // A path with placeholders.
@@ -605,13 +621,6 @@ class RouteProviderTest extends KernelTestBase {
 
     $cache = $this->cache->get('route:[language]=en:[query_parameters]=:/path/1/one');
     $this->assertEqual('/path/1/one', $cache->data['path']);
-    $this->assertEqual(
-      [
-        'foo' => 'bar',
-        'foo2' => ['bar2', 'bar3'],
-      ],
-      $cache->data['query']
-    );
     $this->assertCount(2, $cache->data['routes']);
 
     // A path with a path alias.
