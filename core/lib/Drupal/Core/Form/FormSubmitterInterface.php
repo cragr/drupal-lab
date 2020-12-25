@@ -19,7 +19,7 @@ interface FormSubmitterInterface {
    *   If a response was set by a submit handler, or if the form needs to
    *   redirect, a Response object will be returned.
    */
-  public function doSubmitForm(&$form, FormStateInterface &$form_state);
+  public function doSubmitForm(&$form, FormStateInterface $form_state);
 
   /**
    * Executes custom submission handlers for a given form.
@@ -34,7 +34,7 @@ interface FormSubmitterInterface {
    *   a button with custom handler functions defined, those handlers will be
    *   stored here.
    */
-  public function executeSubmitHandlers(&$form, FormStateInterface &$form_state);
+  public function executeSubmitHandlers(&$form, FormStateInterface $form_state);
 
   /**
    * Redirects the user to a URL after a form has been processed.

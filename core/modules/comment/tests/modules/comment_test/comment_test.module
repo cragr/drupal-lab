@@ -25,7 +25,7 @@ function comment_test_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_comment_links_alter().
  */
-function comment_test_comment_links_alter(array &$links, CommentInterface &$entity, array &$context) {
+function comment_test_comment_links_alter(array &$links, CommentInterface $entity, array &$context) {
   // Allow tests to enable or disable this alter hook.
   if (!\Drupal::state()->get('comment_test_links_alter_enabled', FALSE)) {
     return;

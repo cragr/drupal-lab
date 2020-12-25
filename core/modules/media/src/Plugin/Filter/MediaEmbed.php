@@ -375,7 +375,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *   The accumulated result of filter processing, updated with the metadata
    *   bubbled during rendering.
    */
-  protected function renderIntoDomNode(array $build, \DOMNode $node, FilterProcessResult &$result) {
+  protected function renderIntoDomNode(array $build, \DOMNode $node, FilterProcessResult $result) {
     // We need to render the embedded entity:
     // - without replacing placeholders, so that the placeholders are
     //   only replaced at the last possible moment. Hence we cannot use
@@ -400,7 +400,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @param string $content
    *   The text or HTML that will replace the contents of $node.
    */
-  protected static function replaceNodeContent(\DOMNode &$node, $content) {
+  protected static function replaceNodeContent(\DOMNode $node, $content) {
     if (strlen($content)) {
       // Load the content into a new DOMDocument and retrieve the DOM nodes.
       $replacement_nodes = Html::load($content)->getElementsByTagName('body')

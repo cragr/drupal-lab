@@ -175,7 +175,7 @@ class ManagedFile extends FormElement {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The ajax response of the ajax upload.
    */
-  public static function uploadAjaxCallback(&$form, FormStateInterface &$form_state, Request $request) {
+  public static function uploadAjaxCallback(&$form, FormStateInterface $form_state, Request $request) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 

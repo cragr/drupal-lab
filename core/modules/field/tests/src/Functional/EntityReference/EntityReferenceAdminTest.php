@@ -395,7 +395,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     if ($fields) {
       $field = $fields[0];
       $options = $field->findAll('xpath', 'option');
-      array_walk($options, function (NodeElement &$option) {
+      array_walk($options, function (NodeElement $option) {
         $option = $option->getValue();
       });
       sort($options);

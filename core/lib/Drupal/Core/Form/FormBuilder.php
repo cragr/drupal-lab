@@ -186,7 +186,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getFormId($form_arg, FormStateInterface &$form_state) {
+  public function getFormId($form_arg, FormStateInterface $form_state) {
     // If the $form_arg is the name of a class, instantiate it. Don't allow
     // arbitrary strings to be passed to the class resolver.
     if (is_string($form_arg) && class_exists($form_arg)) {
@@ -222,7 +222,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function buildForm($form_arg, FormStateInterface &$form_state) {
+  public function buildForm($form_arg, FormStateInterface $form_state) {
     // Ensure the form ID is prepared.
     $form_id = $this->getFormId($form_arg, $form_state);
 
@@ -367,7 +367,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function rebuildForm($form_id, FormStateInterface &$form_state, $old_form = NULL) {
+  public function rebuildForm($form_id, FormStateInterface $form_state, $old_form = NULL) {
     $form = $this->retrieveForm($form_id, $form_state);
 
     // Only GET and POST are valid form methods. If the form receives its input
@@ -469,7 +469,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function submitForm($form_arg, FormStateInterface &$form_state) {
+  public function submitForm($form_arg, FormStateInterface $form_state) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {
       $args = func_get_args();
@@ -502,7 +502,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function retrieveForm($form_id, FormStateInterface &$form_state) {
+  public function retrieveForm($form_id, FormStateInterface $form_state) {
     // Record the $form_id.
     $form_state->addBuildInfo('form_id', $form_id);
 
@@ -549,7 +549,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function processForm($form_id, &$form, FormStateInterface &$form_state) {
+  public function processForm($form_id, &$form, FormStateInterface $form_state) {
     $form_state->setValues([]);
 
     // With GET, these forms are always submitted if requested.
@@ -680,7 +680,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function prepareForm($form_id, &$form, FormStateInterface &$form_state) {
+  public function prepareForm($form_id, &$form, FormStateInterface $form_state) {
     $user = $this->currentUser();
 
     $form['#type'] = 'form';
@@ -873,7 +873,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function validateForm($form_id, &$form, FormStateInterface &$form_state) {
+  public function validateForm($form_id, &$form, FormStateInterface $form_state) {
     $this->formValidator->validateForm($form_id, $form, $form_state);
   }
 
@@ -887,28 +887,28 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function executeValidateHandlers(&$form, FormStateInterface &$form_state) {
+  public function executeValidateHandlers(&$form, FormStateInterface $form_state) {
     $this->formValidator->executeValidateHandlers($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function executeSubmitHandlers(&$form, FormStateInterface &$form_state) {
+  public function executeSubmitHandlers(&$form, FormStateInterface $form_state) {
     $this->formSubmitter->executeSubmitHandlers($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function doSubmitForm(&$form, FormStateInterface &$form_state) {
+  public function doSubmitForm(&$form, FormStateInterface $form_state) {
     throw new \LogicException('Use FormBuilderInterface::processForm() instead.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function doBuildForm($form_id, &$element, FormStateInterface &$form_state) {
+  public function doBuildForm($form_id, &$element, FormStateInterface $form_state) {
     // Initialize as unprocessed.
     $element['#processed'] = FALSE;
 
@@ -1167,7 +1167,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * Adds the #name and #value properties of an input element before rendering.
    */
-  protected function handleInputElement($form_id, &$element, FormStateInterface &$form_state) {
+  protected function handleInputElement($form_id, &$element, FormStateInterface $form_state) {
     if (!isset($element['#name'])) {
       $name = array_shift($element['#parents']);
       $element['#name'] = $name;
@@ -1332,7 +1332,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * element value. An example where this is needed is if there are several
    * // buttons all named 'op', and only differing in their value.
    */
-  protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
+  protected function elementTriggeredScriptedSubmission($element, FormStateInterface $form_state) {
     $input = $form_state->getUserInput();
     if (!empty($input['_triggering_element_name']) && $element['#name'] == $input['_triggering_element_name']) {
       if (empty($input['_triggering_element_value']) || $input['_triggering_element_value'] == $element['#value']) {
@@ -1362,7 +1362,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * to know which button was clicked should get that information from
    * $form_state->getTriggeringElement().
    */
-  protected function buttonWasClicked($element, FormStateInterface &$form_state) {
+  protected function buttonWasClicked($element, FormStateInterface $form_state) {
     // First detect normal 'vanilla' button clicks. Traditionally, all standard
     // buttons on a form share the same name (usually 'op'), and the specific
     // return value is used to determine which was clicked. This ONLY works as

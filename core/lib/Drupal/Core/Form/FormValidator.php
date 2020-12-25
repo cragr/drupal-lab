@@ -70,7 +70,7 @@ class FormValidator implements FormValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function executeValidateHandlers(&$form, FormStateInterface &$form_state) {
+  public function executeValidateHandlers(&$form, FormStateInterface $form_state) {
     // If there was a button pressed, use its handlers.
     $handlers = $form_state->getValidateHandlers();
     // Otherwise, check for a form-level handler.
@@ -86,7 +86,7 @@ class FormValidator implements FormValidatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm($form_id, &$form, FormStateInterface &$form_state) {
+  public function validateForm($form_id, &$form, FormStateInterface $form_state) {
     // If this form is flagged to always validate, ensure that previous runs of
     // validation are ignored.
     if ($form_state->isValidationEnforced()) {
@@ -141,7 +141,7 @@ class FormValidator implements FormValidatorInterface {
    * @param string $form_id
    *   The unique string identifying the form.
    */
-  protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface &$form_state, $form_id) {
+  protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface $form_state, $form_id) {
     // If validation errors are limited then remove any non validated form values,
     // so that only values that passed validation are left for submit callbacks.
     $triggering_element = $form_state->getTriggeringElement();
@@ -194,7 +194,7 @@ class FormValidator implements FormValidatorInterface {
    * @param string $form_id
    *   The unique string identifying the form.
    */
-  protected function finalizeValidation(&$form, FormStateInterface &$form_state, $form_id) {
+  protected function finalizeValidation(&$form, FormStateInterface $form_state, $form_id) {
     // Delegate handling of form errors to a service.
     $this->formErrorHandler->handleFormErrors($form, $form_state);
 
@@ -225,7 +225,7 @@ class FormValidator implements FormValidatorInterface {
    *   A unique string identifying the form for validation, submission,
    *   theming, and hook_form_alter functions.
    */
-  protected function doValidateForm(&$elements, FormStateInterface &$form_state, $form_id = NULL) {
+  protected function doValidateForm(&$elements, FormStateInterface $form_state, $form_id = NULL) {
     // Recurse through all children, sorting the elements so that the order of
     // error messages displayed to the user matches the order of elements in
     // the form. Use a copy of $elements so that it is not modified by the
@@ -326,7 +326,7 @@ class FormValidator implements FormValidatorInterface {
    *   web service requests, or other expensive requests that should
    *   not be repeated in the submission step.
    */
-  protected function performRequiredValidation(&$elements, FormStateInterface &$form_state) {
+  protected function performRequiredValidation(&$elements, FormStateInterface $form_state) {
     // Verify that the value is not longer than #maxlength.
     if (isset($elements['#maxlength']) && mb_strlen($elements['#value']) > $elements['#maxlength']) {
       $form_state->setError($elements, $this->t('@name cannot be longer than %max characters but is currently %length characters long.', ['@name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => mb_strlen($elements['#value'])]));
@@ -376,7 +376,7 @@ class FormValidator implements FormValidatorInterface {
    *
    * @return array|null
    */
-  protected function determineLimitValidationErrors(FormStateInterface &$form_state) {
+  protected function determineLimitValidationErrors(FormStateInterface $form_state) {
     // While this element is being validated, it may be desired that some
     // calls to \Drupal\Core\Form\FormStateInterface::setErrorByName() be
     // suppressed and not result in a form error, so that a button that

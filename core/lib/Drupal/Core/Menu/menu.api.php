@@ -313,7 +313,7 @@ function hook_menu_links_discovered_alter(&$links) {
  *
  * @ingroup menu
  */
-function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
+function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability) {
 
   // Add a tab linking to node/add to all pages.
   $data['tabs'][0]['node.add_page'] = [
@@ -439,7 +439,7 @@ function hook_contextual_links_plugins_alter(array &$contextual_links) {
  *
  * @ingroup menu
  */
-function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
+function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb $breadcrumb, \Drupal\Core\Routing\RouteMatchInterface $route_match, array $context) {
   // Add an item to the end of the breadcrumb.
   $breadcrumb->addLink(\Drupal\Core\Link::createFromRoute(t('Text'), 'example_route_name'));
 }

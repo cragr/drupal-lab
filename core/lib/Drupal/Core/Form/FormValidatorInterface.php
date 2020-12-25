@@ -20,7 +20,7 @@ interface FormValidatorInterface {
    *   a button with custom handler functions defined, those handlers will be
    *   stored here.
    */
-  public function executeValidateHandlers(&$form, FormStateInterface &$form_state);
+  public function executeValidateHandlers(&$form, FormStateInterface $form_state);
 
   /**
    * Validates user-submitted form data in the $form_state.
@@ -47,7 +47,7 @@ interface FormValidatorInterface {
    *   web service requests, or other expensive requests that should
    *   not be repeated in the submission step.
    */
-  public function validateForm($form_id, &$form, FormStateInterface &$form_state);
+  public function validateForm($form_id, &$form, FormStateInterface $form_state);
 
   /**
    * Sets a form_token error on the given form state.

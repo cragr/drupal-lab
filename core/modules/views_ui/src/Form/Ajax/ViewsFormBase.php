@@ -193,7 +193,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
    *   - A render array with the title in #title and the rendered form in the
    *   #markup array.
    */
-  protected function ajaxFormWrapper($form_class, FormStateInterface &$form_state) {
+  protected function ajaxFormWrapper($form_class, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 

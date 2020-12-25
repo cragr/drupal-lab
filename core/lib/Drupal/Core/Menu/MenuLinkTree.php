@@ -196,10 +196,10 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   A data structure representing the tree, as returned from
    *   MenuLinkTreeInterface::load().
-   * @param \Drupal\Core\Cache\CacheableMetadata &$tree_access_cacheability
+   * @param \Drupal\Core\Cache\CacheableMetadata $tree_access_cacheability
    *   Internal use only. The aggregated cacheability metadata for the access
    *   results across the entire tree. Used when rendering the root level.
-   * @param \Drupal\Core\Cache\CacheableMetadata &$tree_link_cacheability
+   * @param \Drupal\Core\Cache\CacheableMetadata $tree_link_cacheability
    *   Internal use only. The aggregated cacheability metadata for the menu
    *   links across the entire tree. Used when rendering the root level.
    *
@@ -208,7 +208,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    *
    * @throws \DomainException
    */
-  protected function buildItems(array $tree, CacheableMetadata &$tree_access_cacheability, CacheableMetadata &$tree_link_cacheability) {
+  protected function buildItems(array $tree, CacheableMetadata $tree_access_cacheability, CacheableMetadata $tree_link_cacheability) {
     $items = [];
 
     foreach ($tree as $data) {

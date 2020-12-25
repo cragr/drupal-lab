@@ -42,7 +42,7 @@ class FormSubmitter implements FormSubmitterInterface {
   /**
    * {@inheritdoc}
    */
-  public function doSubmitForm(&$form, FormStateInterface &$form_state) {
+  public function doSubmitForm(&$form, FormStateInterface $form_state) {
     if (!$form_state->isSubmitted()) {
       return;
     }
@@ -89,7 +89,7 @@ class FormSubmitter implements FormSubmitterInterface {
   /**
    * {@inheritdoc}
    */
-  public function executeSubmitHandlers(&$form, FormStateInterface &$form_state) {
+  public function executeSubmitHandlers(&$form, FormStateInterface $form_state) {
     // If there was a button pressed, use its handlers.
     $handlers = $form_state->getSubmitHandlers();
     // Otherwise, check for a form-level handler.

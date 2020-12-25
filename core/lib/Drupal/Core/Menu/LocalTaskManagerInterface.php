@@ -50,7 +50,7 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
    * @return array
    *   A render array as expected by menu-local-tasks.html.twig.
    */
-  public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface &$cacheability);
+  public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface $cacheability);
 
   /**
    * Renders the local tasks (tabs) for the given route.

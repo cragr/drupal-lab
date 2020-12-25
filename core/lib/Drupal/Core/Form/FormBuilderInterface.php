@@ -33,7 +33,7 @@ interface FormBuilderInterface {
    * @return string
    *   The unique string identifying the desired form.
    */
-  public function getFormId($form_arg, FormStateInterface &$form_state);
+  public function getFormId($form_arg, FormStateInterface $form_state);
 
   /**
    * Gets a renderable form array.
@@ -89,7 +89,7 @@ interface FormBuilderInterface {
    *
    * @see self::redirectForm()
    */
-  public function buildForm($form_arg, FormStateInterface &$form_state);
+  public function buildForm($form_arg, FormStateInterface $form_state);
 
   /**
    * Constructs a new $form from the information in $form_state.
@@ -124,7 +124,7 @@ interface FormBuilderInterface {
    *
    * @see self::processForm()
    */
-  public function rebuildForm($form_id, FormStateInterface &$form_state, $old_form = NULL);
+  public function rebuildForm($form_id, FormStateInterface $form_state, $old_form = NULL);
 
   /**
    * Retrieves, populates, and processes a form.
@@ -171,7 +171,7 @@ interface FormBuilderInterface {
    *   $form_state build info array so that the reference can be preserved. For
    *   example, a form builder function with the following signature:
    *   @code
-   *   function mymodule_form($form, FormStateInterface &$form_state, &$object) {
+   *   function mymodule_form($form, FormStateInterface $form_state, &$object) {
    *   }
    *   @endcode
    *   would be called via self::submitForm() as follows:
@@ -181,7 +181,7 @@ interface FormBuilderInterface {
    *   \Drupal::formBuilder()->submitForm('mymodule_form', $form_state);
    *   @endcode
    */
-  public function submitForm($form_arg, FormStateInterface &$form_state);
+  public function submitForm($form_arg, FormStateInterface $form_state);
 
   /**
    * Retrieves the structured array that defines a given form.
@@ -196,7 +196,7 @@ interface FormBuilderInterface {
    *
    * @return mixed|\Symfony\Component\HttpFoundation\Response
    */
-  public function retrieveForm($form_id, FormStateInterface &$form_state);
+  public function retrieveForm($form_id, FormStateInterface $form_state);
 
   /**
    * Processes a form submission.
@@ -216,7 +216,7 @@ interface FormBuilderInterface {
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
    */
-  public function processForm($form_id, &$form, FormStateInterface &$form_state);
+  public function processForm($form_id, &$form, FormStateInterface $form_state);
 
   /**
    * Prepares a structured form array.
@@ -233,7 +233,7 @@ interface FormBuilderInterface {
    *   The current state of the form. Passed in here so that hook_form_alter()
    *   calls can use it, as well.
    */
-  public function prepareForm($form_id, &$form, FormStateInterface &$form_state);
+  public function prepareForm($form_id, &$form, FormStateInterface $form_state);
 
   /**
    * Builds and processes all elements in the structured form array.
@@ -329,6 +329,6 @@ interface FormBuilderInterface {
    *
    * @return array
    */
-  public function doBuildForm($form_id, &$element, FormStateInterface &$form_state);
+  public function doBuildForm($form_id, &$element, FormStateInterface $form_state);
 
 }

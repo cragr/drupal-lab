@@ -286,7 +286,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   /**
    * {@inheritdoc}
    */
-  public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  public function getTasksBuild($current_route_name, RefinableCacheableDependencyInterface $cacheability) {
     $tree = $this->getLocalTasksForRoute($current_route_name);
     $build = [];
 

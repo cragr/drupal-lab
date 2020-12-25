@@ -359,7 +359,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       foreach ($optgroups as $optgroup) {
         $options = array_merge($options, $optgroup->findAll('xpath', 'option'));
       }
-      array_walk($options, function (NodeElement &$option) {
+      array_walk($options, function (NodeElement $option) {
         $option = $option->getAttribute('value');
       });
 

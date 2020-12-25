@@ -19,7 +19,7 @@ trait StorageCopyTrait {
    * @param \Drupal\Core\Config\StorageInterface $target
    *   The configuration storage to copy to.
    */
-  protected static function replaceStorageContents(StorageInterface $source, StorageInterface &$target) {
+  protected static function replaceStorageContents(StorageInterface $source, StorageInterface $target) {
     // Make sure there is no stale configuration in the target storage.
     foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $target->getAllCollectionNames()) as $collection) {
       $target->createCollection($collection)->deleteAll();

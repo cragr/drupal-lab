@@ -286,7 +286,7 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Entity builder that marks all supported entities as pending revisions.
    */
-  public static function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface &$form_state) {
+  public static function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface $form_state) {
     // Set the non-default revision flag so that validation constraints are also
     // aware that a pending revision is about to be created.
     $entity->isDefaultRevision(FALSE);

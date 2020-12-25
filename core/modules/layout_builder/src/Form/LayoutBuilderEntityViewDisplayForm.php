@@ -196,7 +196,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
   /**
    * Entity builder for layout options on the entity view display form.
    */
-  public function entityFormEntityBuild($entity_type_id, LayoutEntityDisplayInterface $display, &$form, FormStateInterface &$form_state) {
+  public function entityFormEntityBuild($entity_type_id, LayoutEntityDisplayInterface $display, &$form, FormStateInterface $form_state) {
     $set_enabled = (bool) $form_state->getValue(['layout', 'enabled'], FALSE);
     $already_enabled = $display->isLayoutBuilderEnabled();
 
