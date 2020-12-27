@@ -37,7 +37,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
    * We override KernelTestBase::render() so that it outputs Twig debug comments
    * only for the render array given in a test and not for an entire page.
    */
-  public function render(array &$elements): string {
+  protected function render(array &$elements): string {
     return $this->container->get('renderer')->renderRoot($elements);
   }
 

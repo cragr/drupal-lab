@@ -80,7 +80,7 @@ class LayoutTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function render(array &$elements) {
+  protected function render(array &$elements): string {
     $content = parent::render($elements);
     // Strip leading whitespace from every line.
     $this->content = preg_replace('/^\s+/m', '', $content);
