@@ -191,8 +191,8 @@ function hook_ajax_render_alter(array &$data) {
  * the form array. Forms are built in phases and the form alter hooks are some
  * of the earliest places to alter the form. Your desired change may require
  * later changes to already be in place for them to work properly. For example,
- * an element's #type default info is merged after the form alter hooks; see
- * hook_element_info().
+ * each element #type has default properties that are added during rendering;
+ * see \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * After all of form_alter hooks are run, here are the later-stage ways forms
  * can be altered during the form build process:

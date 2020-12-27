@@ -339,8 +339,9 @@
  * For some use cases, examining a render array before it is rendered may not
  * provide an adequate glimpse at its properties. Render arrays are rendered in
  * phases and your desired alteration may require properties that are not added
- * to render arrays until after rendering starts. For example, an element's
- * #type default info is added during rendering; see hook_element_info().
+ * to render arrays until after rendering starts. For example, each element
+ * #type has default properties that are added during rendering; see
+ * \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * Any element in a render array can have a #pre_render property that contains
  * an array of functions. During rendering, these functions are called
