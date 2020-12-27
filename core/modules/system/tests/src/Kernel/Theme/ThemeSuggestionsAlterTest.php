@@ -662,7 +662,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    * @throws \Exception
    */
   public function testExecutionOrder() {
-    // Normal module weight is not calculated in KernalTest, so we fake it by
+    // Normal module weight is not calculated in KernelTest, so we fake it by
     // (re)installing the modules in order of their weight (alphabetical order).
     $this->disableModules(['theme_test']);
     $this->enableModules(['theme_suggestions_test', 'theme_test']);
