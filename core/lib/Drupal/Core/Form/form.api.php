@@ -196,12 +196,12 @@ function hook_ajax_render_alter(array &$data) {
  *
  * After all of form_alter hooks are run, here are the later-stage ways forms
  * can be altered during the form build process:
- * 1. A form element's #process property contains an array of functions. These
- *    functions allow for elements to expand to multiple elements, for example,
- *    radios, checkboxes and files.
- * 2. The form's or form element's #after_build property contains an array of
- *    functions. These functions allow the form to be altered before the form
- *    finishes building and is cached.
+ * - A form element's #process property contains an array of functions. These
+ *   functions allow for elements to expand to multiple elements, for example,
+ *   radios, checkboxes and files.
+ * - The form's or form element's #after_build property contains an array of
+ *   functions. These functions allow the form to be altered before the form
+ *   finishes building and is cached.
  *
  * Lastly, any form element can be altered after the build process and during
  * the render process if it has a #pre_render property. See the documentation
