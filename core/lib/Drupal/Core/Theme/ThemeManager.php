@@ -147,7 +147,7 @@ class ThemeManager implements ThemeManagerInterface {
 
     // While we search for templates, we create a full list of template
     // suggestions that is later passed to theme_suggestions alter hooks.
-    $original_hooks = $is_hook_array ? $hook : [$hook];
+    $template_suggestions = $is_hook_array ? array_values($hook) : [$hook];
 
     // The last element element in our template suggestions gets special
     // treatment. While the other elements must match exactly, the final element
@@ -156,11 +156,11 @@ class ThemeManager implements ThemeManagerInterface {
     $last_hook = $suggestion = $is_hook_array ? $hook[array_key_last($hook)] : $hook;
     while ($pos = strrpos($suggestion, '__')) {
       $suggestion = substr($suggestion, 0, $pos);
-      $original_hooks[] = $suggestion;
+      $template_suggestions[] = $suggestion;
     }
 
     // Use the first hook candidate that has an implementation.
-    foreach ($original_hooks as $candidate) {
+    foreach ($template_suggestions as $candidate) {
       if ($theme_registry->has($candidate)) {
         // Save the original theme hook, so it can be supplied to theme variable
         // preprocess callbacks.
@@ -238,7 +238,6 @@ class ThemeManager implements ThemeManagerInterface {
 
     // Add all the template suggestions with the same base to the suggestions
     // array before invoking suggestion alter hooks.
-    $template_suggestions = array_values($original_hooks);
     $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
     foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
       $suggestion_base = explode('__', $suggestion)[0];
