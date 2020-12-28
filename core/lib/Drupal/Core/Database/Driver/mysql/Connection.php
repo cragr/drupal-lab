@@ -66,6 +66,15 @@ class Connection extends DatabaseConnection {
   protected $needsCleanup = FALSE;
 
   /**
+   * Stores the server version after it has been retrieved from the database.
+   *
+   * @var string
+   *
+   * @see \Drupal\Core\Database\Driver\mysql\Connection::version
+   */
+  private $serverVersion;
+
+  /**
    * The minimal possible value for the max_allowed_packet setting of MySQL.
    *
    * @link https://mariadb.com/kb/en/mariadb/server-system-variables/#max_allowed_packet
@@ -198,7 +207,7 @@ class Connection extends DatabaseConnection {
     ];
 
     $connection_options['init_commands'] += [
-      'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY'",
+      'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
 
     // Execute initial commands.
@@ -290,11 +299,10 @@ class Connection extends DatabaseConnection {
    *   The PDO server version.
    */
   protected function getServerVersion(): string {
-    static $server_version;
-    if (!$server_version) {
-      $server_version = $this->connection->query('SELECT VERSION()')->fetchColumn();
+    if (!$this->serverVersion) {
+      $this->serverVersion = $this->connection->query('SELECT VERSION()')->fetchColumn();
     }
-    return $server_version;
+    return $this->serverVersion;
   }
 
   public function databaseType() {
