@@ -1,7 +1,7 @@
 # PHPStan is not run on Drupal CI yet, so this file is just a helper for
 # manually running PHPStan.
 parameters:
-  level: 1
+  level: 0
   fileExtensions:
     - inc
     - install
@@ -42,22 +42,9 @@ parameters:
       count: 1
       path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
     -
-      message: "#^Variable \\$overrides in isset\\(\\) is never defined\\.$#"
-      count: 1
-      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-    -
       message: "#^Undefined variable\\: \\$base$#"
       count: 1
       path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-    -
-      message: "#^Variable \\$base in isset\\(\\) is never defined\\.$#"
-      count: 1
-      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-    # Drupal core bug, see https://www.drupal.org/project/drupal/issues/3186626
-    -
-      message: "#^Variable \\$proxy_class_shortname might not be defined\\.$#"
-      count: 1
-      path: lib/Drupal/Component/ProxyBuilder/ProxyBuilder.php
     # Usage of getFallbackPluginId() is ok here and guarded by an interface
     # check in the related method.
     -
@@ -69,12 +56,6 @@ parameters:
     -
       message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:#"
       path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-    -
-      message: "#^Variable .+ might not be defined\\.$#"
-      path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-    # ExecutableInterface is defined a bit sloppy, in core it is used with an
-    # optional parameter. I think we cannot fix that.
-    - "#^Method Drupal\\\\Core\\\\Executable\\\\ExecutableInterface\\:\\:execute\\(\\) invoked with 1 parameter, 0 required\\.$#"
     # The Broken Block plugin might call undefined methods, but we don't care
     # because the block is broken anyway.
     -
