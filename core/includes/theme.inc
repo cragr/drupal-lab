@@ -1168,7 +1168,7 @@ function template_preprocess_item_list(&$variables) {
             }
           }
           // Lastly, inherit the original theme variables of the current list.
-          $child['#theme'] = $variables['theme_hook_original'];
+          $child['#theme'] = $variables['context']['theme_hook_original'];
           $child['#list_type'] = $variables['list_type'];
         }
       }
@@ -2047,7 +2047,7 @@ function drupal_common_theme() {
       'variables' => ['status' => MARK_NEW],
     ],
     'item_list' => [
-      'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
+      'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL],
     ],
     'feed_icon' => [
       'variables' => ['url' => NULL, 'title' => NULL],

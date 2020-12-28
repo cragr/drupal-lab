@@ -120,16 +120,35 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
       $info[$element_type] = $element_info;
     }
 
-    foreach ($info as $element_type => $element) {
-      $info[$element_type]['#type'] = $element_type;
-    }
+    // Normalize existing element info so alters have fully filled definitions.
+    $this->normalizeElementInfo($info);
+
     // Allow modules to alter the element type defaults.
     $this->moduleHandler->alter('element_info', $info);
     $this->themeManager->alter('element_info', $info);
 
+    // Normalize the element info again after the alterations as they may have
+    // added additional elements that aren't fully defined.
+    $this->normalizeElementInfo($info);
+
     $this->cacheBackend->set($cid, $info, Cache::PERMANENT, ['element_info_build']);
 
     return $info;
+  }
+
+  /**
+   * Normalizes element info, ensuring it has the proper default properties.
+   *
+   * @param array $info
+   *   The element info array, passed by reference.
+   */
+  protected function normalizeElementInfo(array &$info) {
+    foreach ($info as $type => $element) {
+      $info[$type] += [
+        '#context' => [],
+        '#type' => $type,
+      ];
+    }
   }
 
   /**
