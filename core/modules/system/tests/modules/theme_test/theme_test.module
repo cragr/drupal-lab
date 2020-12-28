@@ -47,9 +47,9 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'render element' => 'element',
   ];
   $items['theme_test_render_element_context'] = [
-      'render element' => 'element',
-      'template' => 'theme-test-render-element',
-    ];
+    'render element' => 'element',
+    'template' => 'theme-test-render-element',
+  ];
   $items['theme_test_theme_hook_variable_context'] = [
     'template' => 'theme-test-render-element',
     'variables' => [],
@@ -124,6 +124,38 @@ function template_preprocess_theme_test_render_element(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_theme_test_render_element_context(&$variables) {
+  // Attempt to alter the context that was passed (shouldn't be allowed to).
+  $variables['context']['foo'] = 'Context was altered';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_theme_test_theme_hook_variable_context(&$variables) {
+  // Attempt to alter the context that was passed (shouldn't be allowed to).
+  $variables['context']['foo'] = 'Context was altered';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function theme_test_preprocess_theme_test_render_element_context(&$variables) {
+  $foo = isset($variables['context']['foo']) ? $variables['context']['foo'] : 'No context passed';
+  $variables['attributes']['data-render-element-context'] = $foo;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function theme_test_preprocess_theme_test_theme_hook_variable_context(&$variables) {
+  $foo = isset($variables['context']['foo']) ? $variables['context']['foo'] : 'No context passed';
+  $variables['attributes']['data-theme-hook-variable-context'] = $foo;
+}
+
+/**
  * Implements hook_theme_suggestions_HOOK().
  */
 function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
@@ -155,38 +187,6 @@ function theme_test_system_info_alter(array &$info, Extension $file, $type) {
     $info += ['libraries' => []];
     $info['libraries'][] = 'core/backbone';
   }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function template_preprocess_theme_test_render_element_context(&$variables) {
-  // Attempt to alter the context that was passed (shouldn't be allowed to).
-  $variables['context']['foo'] = 'Context was altered';
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function template_preprocess_theme_test_theme_hook_variable_context(&$variables) {
-  // Attempt to alter the context that was passed (shouldn't be allowed to).
-  $variables['context']['foo'] = 'Context was altered';
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function theme_test_preprocess_theme_test_render_element_context(&$variables) {
-  $foo = isset($variables['context']['foo']) ? $variables['context']['foo'] : 'No context passed';
-  $variables['attributes']['data-render-element-context'] = $foo;
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function theme_test_preprocess_theme_test_theme_hook_variable_context(&$variables) {
-  $foo = isset($variables['context']['foo']) ? $variables['context']['foo'] : 'No context passed';
-  $variables['attributes']['data-theme-hook-variable-context'] = $foo;
 }
 
 /**

@@ -149,10 +149,18 @@ class RegistryTest extends UnitTestCase {
     $this->assertArrayHasKey('theme_test_foo', $registry);
     $this->assertArrayHasKey('theme_test_render_element', $registry);
 
-    $this->assertNotContains('test_stable_preprocess_theme_test_render_element', $registry['theme_test_render_element']['preprocess functions']);
+    $info = $registry['theme_test_foo'];
+    $this->assertEquals('module', $info['type']);
+    $this->assertEquals('core/modules/system/tests/modules/theme_test', $info['theme path']);
+    $this->assertEquals('theme-test-foo', $info['template']);
+    $this->assertEquals([], $info['context']);
+    $this->assertEquals(['foo' => NULL], $info['variables']);
+
     // Ensure theme hooks can provide predefined context.
     $info = $registry['theme_test_context_provided'];
     $this->assertEquals(['foo' => 'bar'], $info['context']);
+
+    $this->assertNotContains('test_stable_preprocess_theme_test_render_element', $registry['theme_test_render_element']['preprocess functions']);
 
     // The second call will initialize with the second theme. Ensure that this
     // returns a different object and the discovery for the second theme's

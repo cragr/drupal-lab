@@ -48,7 +48,6 @@ function twig_init(Extension $theme) {
  *   The file name of the template to render.
  * @param array $variables
  *   A keyed array of variables that will appear in the output.
- *
  * @param array $context
  *   An associative array of contextual information pertaining to the template
  *   being invoked:
@@ -66,7 +65,7 @@ function twig_init(Extension $theme) {
  */
 function twig_render_template($template_file, array $variables, array $context = NULL) {
   if (!isset($context)) {
-   @trigger_error(sprintf('Omitting the $context parameter from %s is deprecated and will be required in Drupal 9.0.0. See https://www.drupal.org/node/3051613', __FUNCTION__), E_USER_DEPRECATED);
+    @trigger_error(sprintf('Omitting the $context parameter from %s is deprecated and will be required in Drupal 10.0.0. See https://www.drupal.org/node/3051613', __FUNCTION__), E_USER_DEPRECATED);
     $context = $variables;
   }
 
@@ -91,6 +90,7 @@ function twig_render_template($template_file, array $variables, array $context =
     }
     throw $e;
   }
+
   // Supply additional debugging information.
   if (isset($context['theme_hook_original']) && $twig_service->isDebug()) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
