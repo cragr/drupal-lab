@@ -5,6 +5,14 @@ build:
   assessment:
     validate_codebase:
       # Core's code quality is checked by container_command.commit_checks.
+
+      # Run PHPStan as custom command, has no dedicated step yet. This should
+      # probably be moved into commit-code-check.sh once we have established a
+      # PHPStan baseline.
+      container_command:
+        commands: "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze"
+        halt-on-fail: false
+
     testing:
       # Run code quality checks.
       container_command.commit-checks:
