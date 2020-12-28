@@ -25,7 +25,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $test_id = 23;
     $log_path = 'test_log_path';
 
-    // Create a mock test run storeage.
+    // Create a mock test run storage.
     $storage = $this->getMockBuilder(SimpletestTestRunResultsStorage::class)
       ->disableOriginalConstructor()
       ->setMethods(['createNew'])
