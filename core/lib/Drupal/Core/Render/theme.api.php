@@ -279,9 +279,18 @@
  *   surroundings with which the render array itself was created. Its primary
  *   purpose is to aid with rendering variations. This is most often used when
  *   there is a need to pass along information that would normally not be
- *   accessible after the render array has been initially created. If passing
- *   objects, be sure that the object can be properly serialized and
- *   unserialized from the database. See:
+ *   accessible after the render array has been initially created. While it is
+ *   possible to pass entire objects as context, it is highly recommended to
+ *   pass only scalar values (such as an entity type and an identifier to
+ *   reconstruct the entity on a per needed basis). This will maximize
+ *   compatibility, reduce database size and risk of any future complications
+ *   from potential API changes. If you plan on or need to pass an entire
+ *   object, ensure the object can be properly serialized in the database.
+ *   Render caching may store the entire render array, which will include
+ *   objects inside #context. The easiest way to ensure an object can be
+ *   properly serialized and unserialized from the database is to use the
+ *   DependencySerializationTrait, however doing this may not be enough and may
+ *   still lead to unforeseen complications. See:
  *   \Drupal\Core\DependencyInjection\DependencySerializationTrait
  * - #markup: Specifies that the array provides HTML markup directly. Unless
  *   the markup is very simple, such as an explanation in a paragraph tag, it
@@ -566,35 +575,28 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * @param array $variables
  *   An associative array of variables passed to the theme hook, passed by
  *   reference. The actual contents of this array varies by what was defined in
- *   hook_theme() and any preprocess hooks previously invoked. For backwards
- *   compatibility reasons, the context for the theme hook (and any context
- *   provided by the render array) is passed within this parameter:
+ *   hook_theme() and any preprocess hooks previously invoked. In addition to
+ *   normal variables, this parameter includes:
  *   - context: (array) The context pertaining to the theme hook being invoked.
- *     Note: this "variable" will ultimately be removed before being passed to
- *     the rendering process. Its only purpose is to provide contextual
- *     information that may be used prior to that. Any alterations made to this
- *     variable will be ignored. Also, while it is possible to pass entire
- *     objects as context, it is highly recommended to pass only scalar values
- *     (such as an entity type and an identifier to reconstruct the entity on a
- *     per needed basis). This will maximize compatibility, reduce database size
- *     and risk of any future complications from potential API changes. If you
- *     plan on or need to pass an entire object, ensure the object can be
- *     properly serialized in the database. Render caching may store the entire
- *     render array, which will include objects inside #context. The easiest way
- *     to ensure an object can be serialized is to use the
- *     DependencySerializationTrait, however doing this may not be enough and
- *     may still lead to unforeseen complications:
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. Also, any
+ *     alterations made to this variable will be ignored. Any context that is an
+ *     object, instead of a scalar, should use the DependencySerializationTrait;
+ *     see the @link theme_render Render API overview @endlink for more
+ *     information. Context includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
  *     - theme_hook_base: (string) The base name of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
- *     - (May contain additional context that was passed from the render array).
+ *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The name of the theme hook.
  * @param array $info
- *   The theme hook definition. */
+ *   The theme hook definition.
+ */
 function hook_preprocess(array &$variables, $hook, array $info) {
   // This example is from https://www.drupal.org/node/2971707.
   // Add an entity bundle specific class.
@@ -618,21 +620,23 @@ function hook_preprocess(array &$variables, $hook, array $info) {
  * @param array $variables
  *   An associative array of variables passed to the theme hook, passed by
  *   reference. The actual contents of this array varies by what was defined in
- *   hook_theme() and any preprocess hooks previously invoked. For backwards
- *   compatibility reasons, the context for the theme hook (and any context
- *   provided by the render array) is passed within this parameter:
+ *   hook_theme() and any preprocess hooks previously invoked. In addition to
+ *   normal variables, this parameter includes:
  *   - context: (array) The context pertaining to the theme hook being invoked.
- *     Note: this "variable" will ultimately be removed before being passed to
- *     the rendering process. Its only purpose is to provide contextual
- *     information that may be used prior to that. Any alterations made to this
- *     variable will be ignored:
+ *     Note: this context "variable" will ultimately be removed before variables
+ *     are passed to the template. Its only purpose is to provide contextual
+ *     information that may be used earlier in the rendering process. Also, any
+ *     alterations made to this variable will be ignored. Any context that is an
+ *     object, instead of a scalar, should use the DependencySerializationTrait;
+ *     see the @link theme_render Render API overview @endlink for more
+ *     information. Context includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
  *     - theme_hook_base: (string) The base name of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
- *     - (May contain additional context that was passed from the render array).
+ *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The name of the theme hook.
  * @param array $info
