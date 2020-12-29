@@ -35,7 +35,7 @@ class BatchStorageTest extends KernelTestBase {
     $databaseData = $connection->query("SELECT * FROM {batch}")->fetchAll();
 
     $this->assertCount(1, $databaseData);
-    $this->assertEquals($id, $databaseData[0]->{'bid'});
+    $this->assertEquals($id, $databaseData[0]->bid);
     $this->assertEquals($token, $databaseData[0]->{'token'});
     $this->assertEquals('a:1:{s:2:"id";i:' . $id . ';}', $databaseData[0]->{'batch'});
   }
@@ -188,8 +188,8 @@ class BatchStorageTest extends KernelTestBase {
 
     $databaseData = $connection->query("SELECT * FROM {batch}")->fetchAll();
     $this->assertCount(1, $databaseData);
-    $this->assertNotEquals($id, $databaseData[0]->{'bid'});
-    $this->assertEquals($id + 10, $databaseData[0]->{'bid'});
+    $this->assertNotEquals($id, $databaseData[0]->bid);
+    $this->assertEquals($id + 10, $databaseData[0]->bid);
   }
 
   public function testDeleteDatabaseException() {
