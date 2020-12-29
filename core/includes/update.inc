@@ -674,7 +674,7 @@ function update_retrieve_dependencies() {
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
   foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
     // Skip modules that are entirely missing from the filesystem here, since
-    // module_load_install() will call trigger_error() if invoked on a module
+    // \Drupal::moduleHandler()->loadInclude() will call trigger_error() if invoked on a module
     // that doesn't exist. There's no way to catch() that, so avoid it entirely.
     // This can happen when there are orphaned entries in the system.schema k/v
     // store for modules that have been removed from a site without first being
