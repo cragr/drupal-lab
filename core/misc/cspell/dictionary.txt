@@ -1165,8 +1165,8 @@ phpdocumentor
 phpfile
 phplint
 phpserialize
-phpstan
 phpspec
+phpstan
 phpunit
 phpunit's
 pianura
