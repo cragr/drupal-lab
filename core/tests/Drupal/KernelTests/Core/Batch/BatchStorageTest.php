@@ -27,8 +27,8 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
     $id = rand();
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
-    $batchStorage->create(['id' => $id]);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage->create(['id' => $id]);
 
     $this->assertTrue($connection->schema()->tableExists(BatchStorage::TABLE_NAME));
 
@@ -61,11 +61,11 @@ class BatchStorageTest extends KernelTestBase {
     $csrf_token = $this->getMockCsrfTokenGenerator($this->never());
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
     $this->expectException(\Exception::class);
 
-    $batchStorage->create(['id' => 123]);
+    $batch_storage->create(['id' => 123]);
   }
 
   public function testCreateTableAlreadyCreated() {
@@ -91,11 +91,11 @@ class BatchStorageTest extends KernelTestBase {
     $csrf_token = $this->getMockCsrfTokenGenerator($this->never());
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
     $this->expectException(\Exception::class);
 
-    $batchStorage->create(['id' => 123]);
+    $batch_storage->create(['id' => 123]);
   }
 
   public function testLoad() {
@@ -106,9 +106,9 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
     $id = rand();
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
-    $batchStorage->create(['id' => $id]);
-    $loadedBatch = $batchStorage->load($id);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage->create(['id' => $id]);
+    $loadedBatch = $batch_storage->load($id);
 
     $this->assertIsArray($loadedBatch, 'Loaded batch is an array');
     $this->assertArrayHasKey('id', $loadedBatch, 'Loaded batch has a key of "id"');
@@ -123,9 +123,9 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
     $id = rand();
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
-    $batchStorage->create(['id' => $id]);
-    $loadedBatch = $batchStorage->load($id + 10);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage->create(['id' => $id]);
+    $loadedBatch = $batch_storage->load($id + 10);
 
     $this->assertFalse($loadedBatch);
   }
@@ -138,8 +138,8 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
     $id = rand();
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
-    $loadedBatch = $batchStorage->load($id);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
+    $loadedBatch = $batch_storage->load($id);
 
     $this->assertFalse($loadedBatch);
   }
@@ -165,11 +165,11 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
     $id = rand();
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
     $this->expectException(Exception::class);
 
-    $batchStorage->load($id);
+    $batch_storage->load($id);
   }
 
   public function testDelete() {
@@ -180,11 +180,11 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
     $id = rand();
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
-    $batchStorage->create(['id' => $id]);
-    $batchStorage->create(['id' => $id + 10]);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage->create(['id' => $id]);
+    $batch_storage->create(['id' => $id + 10]);
 
-    $batchStorage->delete($id);
+    $batch_storage->delete($id);
 
     $databaseData = $connection->query("SELECT * FROM {batch}")->fetchAll();
     $this->assertCount(1, $databaseData);
@@ -200,9 +200,9 @@ class BatchStorageTest extends KernelTestBase {
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
     $id = rand();
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
-    $batchStorage->delete($id);
+    $batch_storage->delete($id);
   }
 
   public function testUpdate() {
@@ -216,17 +216,17 @@ class BatchStorageTest extends KernelTestBase {
     $temp1 = rand();
     $temp2 = $this->randomMachineName();
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
     $batch = ['id' => $id, 'temp' => $temp1];
 
-    $batchStorage->create($batch);
-    $this->assertEquals($temp1, $batchStorage->load($id)['temp']);
+    $batch_storage->create($batch);
+    $this->assertEquals($temp1, $batch_storage->load($id)['temp']);
 
     $batch['temp'] = $temp2;
-    $batchStorage->update($batch);
+    $batch_storage->update($batch);
 
-    $this->assertEquals($temp2, $batchStorage->load($id)['temp']);
+    $this->assertEquals($temp2, $batch_storage->load($id)['temp']);
   }
 
   public function testUpdateDatabaseException() {
@@ -238,9 +238,9 @@ class BatchStorageTest extends KernelTestBase {
 
     $id = rand();
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
-    $batchStorage->update(['id' => $id, 'temp' => rand()]);
+    $batch_storage->update(['id' => $id, 'temp' => rand()]);
   }
 
   public function testCleanup() {
@@ -250,17 +250,17 @@ class BatchStorageTest extends KernelTestBase {
     $csrf_token = $this->getMockCsrfTokenGenerator($this->atLeastOnce());
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
-    $batchStorage->create(['id' => 1]);
-    $batchStorage->create(['id' => 2]);
+    $batch_storage->create(['id' => 1]);
+    $batch_storage->create(['id' => 2]);
 
     $connection->update('batch')
       ->fields(['timestamp' => 0])
       ->condition('bid', 1)
       ->execute();
 
-    $batchStorage->cleanup();
+    $batch_storage->cleanup();
     $databaseData = $connection->query("SELECT * FROM {batch}")->fetchAll();
 
     $this->assertCount(1, $databaseData);
@@ -273,9 +273,9 @@ class BatchStorageTest extends KernelTestBase {
     $csrf_token = $this->getMockCsrfTokenGenerator($this->never());
     /** @var \Drupal\Core\Access\CsrfTokenGenerator $csrf_token */
 
-    $batchStorage = new BatchStorage($connection, $session, $csrf_token);
+    $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
-    $batchStorage->cleanup();
+    $batch_storage->cleanup();
   }
 
   protected function getMockSession() {
