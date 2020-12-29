@@ -9,7 +9,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\KernelTests\KernelTestBase;
-use Exception;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -54,7 +53,7 @@ class BatchStorageTest extends KernelTestBase {
       ->willReturn($schema);
     $connection->expects($this->once())
       ->method('insert')
-      ->willThrowException(new Exception('Fake database exception'));
+      ->willThrowException(new \Exception('Fake database exception'));
     /** @var \Drupal\Core\Database\Connection $connection */
 
     $session = $this->getMockSession();
@@ -64,7 +63,7 @@ class BatchStorageTest extends KernelTestBase {
 
     $batchStorage = new BatchStorage($connection, $session, $csrf_token);
 
-    $this->expectException(Exception::class);
+    $this->expectException(\Exception::class);
 
     $batchStorage->create(['id' => 123]);
   }
@@ -84,7 +83,7 @@ class BatchStorageTest extends KernelTestBase {
       ->willReturn($schema);
     $connection->expects($this->exactly(2))
       ->method('insert')
-      ->willThrowException(new Exception('Fake database exception'));
+      ->willThrowException(new \Exception('Fake database exception'));
     /** @var \Drupal\Core\Database\Connection $connection */
 
     $session = $this->getMockSession();
@@ -94,7 +93,7 @@ class BatchStorageTest extends KernelTestBase {
 
     $batchStorage = new BatchStorage($connection, $session, $csrf_token);
 
-    $this->expectException(Exception::class);
+    $this->expectException(\Exception::class);
 
     $batchStorage->create(['id' => 123]);
   }
@@ -157,7 +156,7 @@ class BatchStorageTest extends KernelTestBase {
     $connection->method('schema')
       ->willReturn($schema);
     $connection->method('query')
-      ->willThrowException(new Exception('Fake Exception'));
+      ->willThrowException(new \Exception('Fake Exception'));
     /** @var \Drupal\Core\Database\Connection $connection */
 
     $session = $this->getMockSession();
