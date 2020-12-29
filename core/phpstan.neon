@@ -1,5 +1,5 @@
-# PHPStan is not run on Drupal CI yet, so this file is just a helper for
-# manually running PHPStan.
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in drupalci.yml.
 parameters:
   level: 0
   fileExtensions:
@@ -31,8 +31,6 @@ parameters:
     # Scan function definitions in legacy include and module files.
     - includes
     - modules
-    # PHPStan cannot find files in this test directory automatically.
-    - tests/Drupal/Tests
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static\\(\\)\\.$#"
