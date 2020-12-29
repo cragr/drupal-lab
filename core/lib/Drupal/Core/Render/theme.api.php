@@ -571,17 +571,17 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  *   provided by the render array) is passed within this parameter:
  *   - context: (array) The context pertaining to the theme hook being invoked.
  *     Note: this "variable" will ultimately be removed before being passed to
- *     rendering process. Its only purpose is to provide contextual information
- *     that may be used prior to that. Any alterations made to this variable
- *     will be ignored. Also, while it is possible to pass entire objects as
- *     context, it is highly recommended to pass only scalar values (such as an
- *     entity type and an identifier to reconstruct the entity on a per needed
- *     basis). This will maximize compatibility, reduce database size and risk
- *     of any future complications from potential API changes. If you plan on
- *     or need to pass an entire object, ensure the object can be properly
- *     serialized in the database. Render caching may store the entire render
- *     array, which will include objects inside #context. The easiest way to
- *     ensure an object can be serialized is to use the
+ *     the rendering process. Its only purpose is to provide contextual
+ *     information that may be used prior to that. Any alterations made to this
+ *     variable will be ignored. Also, while it is possible to pass entire
+ *     objects as context, it is highly recommended to pass only scalar values
+ *     (such as an entity type and an identifier to reconstruct the entity on a
+ *     per needed basis). This will maximize compatibility, reduce database size
+ *     and risk of any future complications from potential API changes. If you
+ *     plan on or need to pass an entire object, ensure the object can be
+ *     properly serialized in the database. Render caching may store the entire
+ *     render array, which will include objects inside #context. The easiest way
+ *     to ensure an object can be serialized is to use the
  *     DependencySerializationTrait, however doing this may not be enough and
  *     may still lead to unforeseen complications:
  *     - theme_hook: (string) The name of the theme hook that is currently being
@@ -623,9 +623,9 @@ function hook_preprocess(array &$variables, $hook, array $info) {
  *   provided by the render array) is passed within this parameter:
  *   - context: (array) The context pertaining to the theme hook being invoked.
  *     Note: this "variable" will ultimately be removed before being passed to
- *     rendering process. Its only purpose is to provide contextual information
- *     that may be used prior to that. Any alterations made to this variable
- *     will be ignored:
+ *     the rendering process. Its only purpose is to provide contextual
+ *     information that may be used prior to that. Any alterations made to this
+ *     variable will be ignored:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
  *     - theme_hook_base: (string) The base name of the theme hook currently
@@ -668,10 +668,10 @@ function hook_preprocess_HOOK(array &$variables, $hook, array $info) {
  *   variables:
  *   - context: (array) The context pertaining to the theme hook being invoked.
  *     Note: this "variable" will ultimately be removed before being passed to
- *     rendering process. Its only purpose is to provide contextual information
- *     that may be used prior to that. It, unfortunately, must be placed here
- *     in order to preserve backwards compatibility. Any alterations made to
- *     this variable will be ignored:
+ *     the rendering process. Its only purpose is to provide contextual
+ *     information that may be used prior to that. It, unfortunately, must be
+ *     placed here in order to preserve backwards compatibility. Any alterations
+ *     made to this variable will be ignored:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
  *     - theme_hook_base: (string) The base name of the theme hook currently
@@ -729,10 +729,10 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   variables:
  *   - context: (array) The context pertaining to the theme hook being invoked.
  *     Note: this "variable" will ultimately be removed before being passed to
- *     rendering process. Its only purpose is to provide contextual information
- *     that may be used prior to that. It, unfortunately, must be placed here
- *     in order to preserve backwards compatibility. Any alterations made to
- *     this variable will be ignored:
+ *     the rendering process. Its only purpose is to provide contextual
+ *     information that may be used prior to that. It, unfortunately, must be
+ *     placed here in order to preserve backwards compatibility. Any alterations
+ *     made to this variable will be ignored:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
  *     - theme_hook_base: (string) The base name of the theme hook currently
@@ -783,10 +783,10 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  *   variables:
  *   - context: (array) The context pertaining to the theme hook being invoked.
  *     Note: this "variable" will ultimately be removed before being passed to
- *     rendering process. Its only purpose is to provide contextual information
- *     that may be used prior to that. It, unfortunately, must be placed here
- *     in order to preserve backwards compatibility. Any alterations made to
- *     this variable will be ignored:
+ *     the rendering process. Its only purpose is to provide contextual
+ *     information that may be used prior to that. It, unfortunately, must be
+ *     placed here in order to preserve backwards compatibility. Any alterations
+ *     made to this variable will be ignored:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
  *     - theme_hook_base: (string) The base name of the theme hook currently
