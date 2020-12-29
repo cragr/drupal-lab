@@ -51,11 +51,11 @@ function twig_init(Extension $theme) {
  * @param array $context
  *   An associative array of contextual information pertaining to the template
  *   being invoked:
- *   - suggestions: (array) An array of theme hook suggestions.
  *   - theme_hook: (string) The name of the theme hook that is currently being
  *     invoked.
  *   - theme_base_hook: (string) The base hook of the theme hook currently
  *     being invoked.
+ *   - theme_suggestions: (array) An array of theme hook suggestions.
  *   - Any additional context that was passed from the render array.
  *
  * @return string|\Drupal\Component\Render\MarkupInterface
@@ -94,11 +94,6 @@ function twig_render_template($template_file, array $variables, array $context =
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
     // @TODO: Change this to $context['theme_hook'] in 10.0.x.
     $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . Html::escape($variables['theme_hook_original']) . "' -->";
-    // If there are theme suggestions, reverse the array so more specific
-    // suggestions are shown first.
-    if (!empty($context['suggestions'])) {
-      $context['suggestions'] = array_reverse($context['suggestions']);
-    }
     // Add debug output for directly called suggestions like
     // '#theme' => 'comment__node__article'.
     if (strpos($variables['theme_hook_original'], '__') !== FALSE) {
@@ -110,13 +105,13 @@ function twig_render_template($template_file, array $variables, array $context =
       // Get the value of the base hook (last derived suggestion) and append it
       // to the end of all theme suggestions.
       $base_hook = array_pop($derived_suggestions);
-      $context['suggestions'] = array_merge($derived_suggestions, $context['suggestions']);
-      $context['suggestions'][] = $base_hook;
+      $context['theme_suggestions'] = array_merge($derived_suggestions, $context['theme_suggestions']);
+      $context['theme_suggestions'][] = $base_hook;
     }
-    if (!empty($context['suggestions'])) {
+    if (!empty($context['theme_suggestions'])) {
       $extension = twig_extension();
       $current_template = basename($template_file);
-      $suggestions = $context['suggestions'];
+      $suggestions = $context['theme_suggestions'];
       // Only add the original theme hook if it wasn't a directly called
       // suggestion.
       if (strpos($variables['theme_hook_original'], '__') === FALSE) {

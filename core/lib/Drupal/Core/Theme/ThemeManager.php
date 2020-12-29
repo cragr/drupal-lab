@@ -142,9 +142,14 @@ class ThemeManager implements ThemeManagerInterface {
 
     $theme_registry = $this->themeRegistry->getRuntime();
 
+    // While we search for templates, we begin to create a full list of theme
+    // suggestions for context.
+    $theme_suggestions = [$hook];
+
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
     if (is_array($hook)) {
+      $theme_suggestions = array_values($hook);
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -164,6 +169,7 @@ class ThemeManager implements ThemeManagerInterface {
       // implementation is found.
       while ($pos = strrpos($hook, '__')) {
         $hook = substr($hook, 0, $pos);
+        $theme_suggestions[] = $hook;
         if ($theme_registry->has($hook)) {
           break;
         }
@@ -184,6 +190,14 @@ class ThemeManager implements ThemeManagerInterface {
     }
 
     $info = $theme_registry->get($hook);
+
+    // For context, we need to know about all possible $theme_suggestions, so we
+    // grab the last element and expand it.
+    $hook_name = $theme_suggestions[array_key_last($theme_suggestions)];
+    while ($pos = strrpos($hook_name, '__')) {
+      $hook_name = substr($hook_name, 0, $pos);
+      $theme_suggestions[] = $hook_name;
+    }
 
     // Use any predefined context provided by the theme hook.
     // @todo Use a type based object for this.
@@ -250,6 +264,7 @@ class ThemeManager implements ThemeManagerInterface {
     // any render array context has been merged in.
     $context['theme_hook'] = $hook;
     $context['theme_base_hook'] = $base_theme_hook;
+    $context['theme_suggestions'] = $theme_suggestions;
 
     // Supply the context, for BC and alter parameter limitation reasons.
     // @todo Create an immutable array object.
@@ -293,8 +308,8 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // Add the suggestions to the context.
-    $context['suggestions'] = $suggestions;
+    // Add the new suggestions to the context.
+    $context['theme_suggestions'] = array_reverse($suggestions);
 
     // Include a file if the theme function or variable preprocessor is held
     // elsewhere.
