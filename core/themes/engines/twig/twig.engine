@@ -54,7 +54,7 @@ function twig_init(Extension $theme) {
  *   - suggestions: (array) An array of theme hook suggestions.
  *   - theme_hook: (string) The name of the theme hook that is currently being
  *     invoked.
- *   - theme_hook_base: (string) The base name of the theme hook currently
+ *   - theme_base_hook: (string) The base hook of the theme hook currently
  *     being invoked.
  *   - theme_hook_original: (string) The original theme hook that was supplied
  *     to the render array.

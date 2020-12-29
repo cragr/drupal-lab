@@ -587,7 +587,7 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  *     information. Context includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
- *     - theme_hook_base: (string) The base name of the theme hook currently
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
@@ -632,7 +632,7 @@ function hook_preprocess(array &$variables, $hook, array $info) {
  *     information. Context includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
- *     - theme_hook_base: (string) The base name of the theme hook currently
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
@@ -677,7 +677,7 @@ function hook_preprocess_HOOK(array &$variables, $hook, array $info) {
  *     includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
- *     - theme_hook_base: (string) The base name of the theme hook currently
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
@@ -737,7 +737,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *     includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
- *     - theme_hook_base: (string) The base name of the theme hook currently
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
@@ -787,7 +787,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  *     includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
  *       invoked.
- *     - theme_hook_base: (string) The base name of the theme hook currently
+ *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
  *     - theme_hook_original: (string) The original theme hook that was supplied
  *       to the render array.
@@ -872,7 +872,7 @@ function hook_extension() {
  *   being invoked:
  *   - theme_hook: (string) The name of the theme hook that is currently being
  *     invoked.
- *   - theme_hook_base: (string) The base name of the theme hook currently
+ *   - theme_base_hook: (string) The base hook of the theme hook currently
  *     being invoked.
  *   - theme_hook_original: (string) The original theme hook that was supplied
  *     to the render array.

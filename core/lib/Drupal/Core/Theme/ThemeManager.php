@@ -249,7 +249,7 @@ class ThemeManager implements ThemeManagerInterface {
     // Supply default context about the theme hook. Be sure to do this after
     // any render array context has been merged in.
     $context['theme_hook'] = $hook;
-    $context['theme_hook_base'] = $base_theme_hook;
+    $context['theme_base_hook'] = $base_theme_hook;
     $context['theme_hook_original'] = $original_hook;
 
     // Supply the context, for BC and alter parameter limitation reasons.
