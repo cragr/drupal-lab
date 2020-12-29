@@ -111,7 +111,6 @@ class BatchStorageTest extends KernelTestBase {
     $loadedBatch = $batch_storage->load($id);
 
     $this->assertIsArray($loadedBatch, 'Loaded batch is an array');
-    $this->assertArrayHasKey('id', $loadedBatch, 'Loaded batch has a key of "id"');
     $this->assertEquals($id, $loadedBatch['id'], 'Loaded batch id matches requested id');
   }
 
@@ -188,7 +187,6 @@ class BatchStorageTest extends KernelTestBase {
 
     $databaseData = $connection->query("SELECT * FROM {batch}")->fetchAll();
     $this->assertCount(1, $databaseData);
-    $this->assertNotEquals($id, $databaseData[0]->bid);
     $this->assertEquals($id + 10, $databaseData[0]->bid);
   }
 
