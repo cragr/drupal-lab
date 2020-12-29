@@ -49,7 +49,7 @@
     }
 
     function overlapsTooMuch($el1, $el2, width, height) {
-      return Math.abs($el1.offset().left - $el2.offset().left) < width || Math.abs($el1.offset().top - $el2.offset().top) < height;
+      return Math.abs($el1.offset().left - $el2.offset().left) < width && Math.abs($el1.offset().top - $el2.offset().top) < height;
     }
 
     var $contextuals = $contextual.parents('.contextual-region').eq(-1).find('.contextual');
