@@ -124,9 +124,7 @@ class BatchStorageTest extends KernelTestBase {
 
     $batch_storage = new BatchStorage($connection, $session, $csrf_token);
     $batch_storage->create(['id' => $id]);
-    $loadedBatch = $batch_storage->load($id + 10);
-
-    $this->assertFalse($loadedBatch);
+    $this->assertFalse($batch_storage->load($id + 10));
   }
 
   public function testLoadDatabaseException() {
@@ -138,9 +136,7 @@ class BatchStorageTest extends KernelTestBase {
 
     $id = rand();
     $batch_storage = new BatchStorage($connection, $session, $csrf_token);
-    $loadedBatch = $batch_storage->load($id);
-
-    $this->assertFalse($loadedBatch);
+    $this->assertFalse($batch_storage->load($id));
   }
 
   public function testLoadUnexpectedException() {
