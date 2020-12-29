@@ -380,7 +380,7 @@ class Registry implements DestructableInterface {
         unset($cache[$hook]['preprocess functions']);
       }
 
-      // Ensure every theme hook as a default context array.
+      // Ensure every theme hook has a default context array.
       $cache[$hook] += [
         'context' => [],
       ];
