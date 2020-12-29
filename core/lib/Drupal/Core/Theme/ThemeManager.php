@@ -223,13 +223,13 @@ class ThemeManager implements ThemeManagerInterface {
     elseif (!empty($info['render element'])) {
       $variables += [$info['render element'] => []];
     }
-    // Supply BC support for previous contextual data. As of 8.8.x, usage of
+    // Supply BC support for previous contextual data. As of 9.2.x, usage of
     // this variable is highly discouraged. Because this is a passive feature
     // and detecting when this key is being used is currently not an ability
     // core has, it cannot yet be properly deprecated.
     // @todo Officially deprecate this key in a future release.
     // @see https://www.drupal.org/project/drupal/issues/3051608
-    // @todo Remove the deprecated key in 9.0.x.
+    // @todo Remove the deprecated key in 10.0.x.
     // @see https://www.drupal.org/project/drupal/issues/3051609
     $variables += [
       'theme_hook_original' => $original_hook,
@@ -421,13 +421,13 @@ class ThemeManager implements ThemeManagerInterface {
         $template_file = $info['path'] . '/' . $template_file;
       }
 
-      // Supply BC support for previous contextual data. As of 8.8.x, usage of
+      // Supply BC support for previous contextual data. As of 9.2.x, usage of
       // this variable is highly discouraged. Because this is a passive feature
       // and detecting when this key is being used is currently not an ability
       // core has, it cannot yet be properly deprecated.
       // @todo Officially deprecate this key in a future release.
       // @see https://www.drupal.org/project/drupal/issues/3051608
-      // @todo Remove the deprecated key in 9.0.x.
+      // @todo Remove the deprecated key in 10.0.x.
       // @see https://www.drupal.org/project/drupal/issues/3051609
       //
       // Add the theme suggestions to the variables array just before rendering
