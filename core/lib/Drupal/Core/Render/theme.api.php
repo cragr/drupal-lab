@@ -589,8 +589,6 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  *       invoked.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
- *     - theme_hook_original: (string) The original theme hook that was supplied
- *       to the render array.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The name of the theme hook.
@@ -634,8 +632,6 @@ function hook_preprocess(array &$variables, $hook, array $info) {
  *       invoked.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
- *     - theme_hook_original: (string) The original theme hook that was supplied
- *       to the render array.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The name of the theme hook.
@@ -658,7 +654,7 @@ function hook_preprocess_HOOK(array &$variables, $hook, array $info) {
  * '#theme' => 'node__article' is called, then hook_theme_suggestions_node()
  * will be invoked, not hook_theme_suggestions_node__article(). The specific
  * hook called (in this case 'node__article') is available in
- * $variables['context']['theme_hook_original'].
+ * $variables['context']['theme_hook'].
  *
  * Implementations of this hook must be placed in *.module or *.theme files, or
  * must otherwise make sure that the hook implementation is available at
@@ -676,11 +672,10 @@ function hook_preprocess_HOOK(array &$variables, $hook, array $info) {
  *     information that may be used earlier in the rendering process. It
  *     includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
- *       invoked.
+ *       invoked. This value may change after we finish building the list of
+ *       theme suggestions.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
- *     - theme_hook_original: (string) The original theme hook that was supplied
- *       to the render array.
  *     - Any additional context that was passed from the render array.
  *
  * @return array
@@ -736,17 +731,16 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *     information that may be used earlier in the rendering process. It
  *     includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
- *       invoked.
+ *       invoked. This value may change after we finish building the list of
+ *       theme suggestions.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
- *     - theme_hook_original: (string) The original theme hook that was supplied
- *       to the render array.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
  *   then $hook will be 'node', not 'node__article'. The specific hook called
  *   (in this case 'node__article') is available in
- *   $variables['context']['theme_hook_original'].
+ *   $variables['context']['theme_hook'].
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
@@ -766,7 +760,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * '#theme' => 'node__article' is called, then node_theme_suggestions_node()
  * will be invoked, not node_theme_suggestions_node__article(). The specific
  * hook called (in this case 'node__article') is available in
- * $context['theme_hook_original'].
+ * $context['theme_hook'].
  *
  * Implementations of this hook must be placed in *.module or *.theme files, or
  * must otherwise make sure that the hook implementation is available at
@@ -786,17 +780,16 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  *     information that may be used earlier in the rendering process. It
  *     includes:
  *     - theme_hook: (string) The name of the theme hook that is currently being
- *       invoked.
+ *       invoked. This value may change after we finish building the list of
+ *       theme suggestions.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
- *     - theme_hook_original: (string) The original theme hook that was supplied
- *       to the render array.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
  *   then $hook will be 'node', not 'node__article'. The specific hook called
  *   (in this case 'node__article') is available in
- *   $variables['context']['theme_hook_original'].
+ *   $variables['context']['theme_hook'].
  *
  * @see hook_theme_suggestions_alter()
  * @see hook_theme_suggestions_HOOK()
@@ -874,10 +867,8 @@ function hook_extension() {
  *     invoked.
  *   - theme_base_hook: (string) The base hook of the theme hook currently
  *     being invoked.
- *   - theme_hook_original: (string) The original theme hook that was supplied
- *     to the render array.
  *   - suggestions: (array) An array of theme hook suggestions.
- *   - (May contain additional context that was passed from the render array).
+ *   - Any additional context that was passed from the render array.
  *
  * @return string
  *   The output generated from the template. In most cases this will be a string

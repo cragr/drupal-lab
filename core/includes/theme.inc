@@ -1168,7 +1168,7 @@ function template_preprocess_item_list(&$variables) {
             }
           }
           // Lastly, inherit the original theme variables of the current list.
-          $child['#theme'] = $variables['context']['theme_hook_original'];
+          $child['#theme'] = $variables['theme_hook_original'];
           $child['#list_type'] = $variables['list_type'];
         }
       }
