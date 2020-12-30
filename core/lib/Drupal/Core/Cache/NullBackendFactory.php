@@ -8,7 +8,7 @@ class NullBackendFactory implements CacheFactoryInterface {
    * {@inheritdoc}
    */
   public function get($bin) {
-    return new NullBackend();
+    return new NullBackend($bin);
   }
 
 }

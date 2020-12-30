@@ -25,7 +25,6 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
     // item, we can determine if it can be put into the current group, or if a
     // new group needs to be made for it.
     $current_group_keys = NULL;
-    $group_keys = NULL;
     $index = -1;
     foreach ($js_assets as $item) {
       // The browsers for which the JavaScript item needs to be loaded is part
