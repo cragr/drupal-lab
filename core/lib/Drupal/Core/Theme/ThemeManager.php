@@ -264,7 +264,7 @@ class ThemeManager implements ThemeManagerInterface {
     // any render array context has been merged in.
     $context['theme_hook'] = $hook;
     $context['theme_base_hook'] = $base_theme_hook;
-    $context['theme_suggestions'] = $theme_suggestions;
+    $context['theme_suggestions'] = array_reverse($theme_suggestions);
 
     // Supply the context, for BC and alter parameter limitation reasons.
     // @todo Create an immutable array object.
@@ -309,7 +309,7 @@ class ThemeManager implements ThemeManagerInterface {
     }
 
     // Add the new suggestions to the context.
-    $context['theme_suggestions'] = array_reverse($suggestions);
+    $context['theme_suggestions'] = $suggestions;
 
     // Include a file if the theme function or variable preprocessor is held
     // elsewhere.
