@@ -30,7 +30,7 @@ class Variable {
         // Don't export keys if the array is non associative.
         $export_keys = array_values($var) != $var;
         foreach ($var as $key => $value) {
-          $output .= '  ' . ($export_keys ? static::export($key) . ' => ' : '') . static::export($value, '  ') . ",\n";
+          $output .= '  ' . ($export_keys ? static::export($key) . ' => ' : '') . static::export($value, '  ', FALSE) . ",\n";
         }
         $output .= ')';
       }

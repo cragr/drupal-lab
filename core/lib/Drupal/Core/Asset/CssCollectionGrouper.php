@@ -26,7 +26,6 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
     // item, we can determine if it can be put into the current group, or if a
     // new group needs to be made for it.
     $current_group_keys = NULL;
-    $group_keys = NULL;
     // When creating a new group, we pre-increment $i, so by initializing it to
     // -1, the first group will have index 0.
     $i = -1;

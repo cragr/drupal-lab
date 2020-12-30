@@ -75,7 +75,7 @@ class Color {
       $rgb = array_values($input);
     }
     // Parse string input in CSS notation ('10, 20, 30').
-    else {
+    elseif (is_string($input)) {
       preg_match('/(\d+), ?(\d+), ?(\d+)/', $input, $rgb);
       array_shift($rgb);
     }
