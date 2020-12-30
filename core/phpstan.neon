@@ -11,22 +11,13 @@ parameters:
   paths:
     # Just this part is enabled for checking for now, expand later.
     - lib/Drupal/Component
-    - lib/Drupal/Core/Access
-    - lib/Drupal/Core/Action
-    - lib/Drupal/Core/Ajax
-    - lib/Drupal/Core/Annotation
-    - lib/Drupal/Core/Archiver
-    - lib/Drupal/Core/Asset
-    - lib/Drupal/Core/Authentication
-    - lib/Drupal/Core/Batch
-    - lib/Drupal/Core/Block
-    - lib/Drupal/Core/Breadcrumb
-    - lib/Drupal/Core/Cache
-    - lib/Drupal/Core/CacheDecorator
-    - lib/Drupal/Core/Command
+    - lib/Drupal/Core
   # Scan constants in legacy include files.
   bootstrapFiles:
     - includes/common.inc
+    # Not sure why PHPStan cannot autoload this file, include it manually for
+    # now.
+    - modules/system/src/ModuleDependencyMessageTrait.php
   scanDirectories:
     # Scan function definitions in legacy include and module files.
     - includes
@@ -64,3 +55,8 @@ parameters:
       message: "#^Call to an undefined method Drupal\\\\Core\\\\Block\\\\Plugin\\\\Block\\\\Broken\\:\\:addContextAssignmentElement\\(\\)\\.$#"
       count: 1
       path: lib/Drupal/Core/Block/Plugin/Block/Broken.php
+    # PHPStan bug: https://github.com/phpstan/phpstan/issues/4289
+    -
+      message: "#^Cannot unset offset 'href' on array\\('type' \\=\\> 'button'\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Core/Utility/LinkGenerator.php
