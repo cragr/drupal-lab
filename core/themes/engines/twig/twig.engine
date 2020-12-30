@@ -92,7 +92,6 @@ function twig_render_template($template_file, array $variables, array $context =
   // Supply additional debugging information.
   if ($twig_service->isDebug()) {
     $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
-    // @TODO: Change this to $context['theme_hook'] in 10.0.x.
     $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . Html::escape($variables['theme_hook_original']) . "' -->";
     // If there are theme suggestions, reverse the array so more specific
     // suggestions are shown first.
