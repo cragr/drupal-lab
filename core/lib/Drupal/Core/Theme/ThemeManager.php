@@ -370,6 +370,14 @@ class ThemeManager implements ThemeManagerInterface {
     // Remove the context from the variables to prevent any potentially
     // sensitive information from leaking into the templating engine.
     unset($variables['context']);
+    // For backwards compatibility with stable9, allow item_list's context
+    // variable. @see https://www.drupal.org/project/drupal/issues/3051609
+    if ($base_theme_hook === 'item_list') {
+      $variables['context'] = array_intersect_key(
+        $context,
+        ['list_style' => TRUE, 'plugin' => TRUE]
+      );
+    }
 
     // Generate the output using either a function or a template.
     $output = '';
