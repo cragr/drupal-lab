@@ -162,7 +162,7 @@ class BatchStorageTest extends KernelTestBase {
     $id = rand();
     $batch_storage = new BatchStorage($connection, $session, $csrf_token);
 
-    $this->expectException(Exception::class);
+    $this->expectException(\Exception::class);
 
     $batch_storage->load($id);
   }
