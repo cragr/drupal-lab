@@ -31,6 +31,10 @@ parameters:
     # Scan function definitions in legacy include and module files.
     - includes
     - modules
+  scanFiles:
+    # Contains an optional class dependency dummy that PHPStan cannot find
+    # otherwise.
+    - tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static\\(\\)\\.$#"

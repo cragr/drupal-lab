@@ -10,7 +10,9 @@ build:
       # PHPStan baseline.
       container_command:
         commands: "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze"
-        halt-on-fail: false
+        # We want the testbot to hard-fail on PHPStan errors and mark the test
+        # run red (failed).
+        halt-on-fail: true
     testing:
       # Run code quality checks.
       container_command.commit-checks:
