@@ -31,7 +31,7 @@ class CachedStorageTest extends UnitTestCase {
       ->with($prefix)
       ->will($this->returnValue($response));
 
-    $cache = new NullBackend();
+    $cache = new NullBackend(__FUNCTION__);
 
     $cachedStorage = new CachedStorage($storage, $cache);
     $this->assertEquals($response, $cachedStorage->listAll($prefix));
