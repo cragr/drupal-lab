@@ -1,0 +1,66 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in drupalci.yml.
+parameters:
+  level: 0
+  fileExtensions:
+    - inc
+    - install
+    - module
+    - php
+    - theme
+  paths:
+    # Just this part is enabled for checking for now, expand later.
+    - lib/Drupal/Component
+    - lib/Drupal/Core/Access
+    - lib/Drupal/Core/Action
+    - lib/Drupal/Core/Ajax
+    - lib/Drupal/Core/Annotation
+    - lib/Drupal/Core/Archiver
+    - lib/Drupal/Core/Asset
+    - lib/Drupal/Core/Authentication
+    - lib/Drupal/Core/Batch
+    - lib/Drupal/Core/Block
+    - lib/Drupal/Core/Breadcrumb
+    - lib/Drupal/Core/Cache
+    - lib/Drupal/Core/CacheDecorator
+    - lib/Drupal/Core/Command
+  # Scan constants in legacy include files.
+  bootstrapFiles:
+    - includes/common.inc
+  scanDirectories:
+    # Scan function definitions in legacy include and module files.
+    - includes
+    - modules
+  scanFiles:
+    # Contains an optional class dependency dummy that PHPStan cannot find
+    # otherwise.
+    - tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static\\(\\)\\.$#"
+    # Local variables created from including a PHP file, we cannot fix that.
+    -
+      message: "#^Undefined variable\\: \\$overrides$#"
+      count: 1
+      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    -
+      message: "#^Undefined variable\\: \\$base$#"
+      count: 1
+      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    # Usage of getFallbackPluginId() is ok here and guarded by an interface
+    # check in the related method.
+    -
+      message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerBase\\:\\:getFallbackPluginId\\(\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Component/Plugin/PluginManagerBase.php
+    # DiffEngine is third party legacy code where we want to ignore some
+    # undefined variable/property errors.
+    -
+      message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:#"
+      path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
+    # The Broken Block plugin might call undefined methods, but we don't care
+    # because the block is broken anyway.
+    -
+      message: "#^Call to an undefined method Drupal\\\\Core\\\\Block\\\\Plugin\\\\Block\\\\Broken\\:\\:addContextAssignmentElement\\(\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Core/Block/Plugin/Block/Broken.php
