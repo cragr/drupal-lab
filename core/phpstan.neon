@@ -22,10 +22,11 @@ parameters:
     # Scan function definitions in legacy include and module files.
     - includes
     - modules
-  scanFiles:
-    # Contains an optional class dependency dummy that PHPStan cannot find
-    # otherwise.
-    - tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
+    # Scan Twig functions.
+    - ../vendor/twig/twig/src/Extension
+    # Scan optional class dependencies and test classes that PHPStan cannot
+    # autoload automatically.
+    - tests/Drupal
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static\\(\\)\\.$#"
@@ -56,7 +57,20 @@ parameters:
       count: 1
       path: lib/Drupal/Core/Block/Plugin/Block/Broken.php
     # PHPStan bug: https://github.com/phpstan/phpstan/issues/4289
+    - "#^Cannot unset offset '.+' on array\\(#"
+    # We need to support simpletest in core's test runner.
     -
-      message: "#^Cannot unset offset 'href' on array\\('type' \\=\\> 'button'\\)\\.$#"
+      message: "#^Class Drupal\\\\simpletest\\\\TestBase not found\\.$#"
       count: 1
-      path: lib/Drupal/Core/Utility/LinkGenerator.php
+      path: lib/Drupal/Core/Test/RunTests/TestFileParser.php
+    # The abstract ReadOnlyStream class might call undefined methods in its
+    # default implementation, but we don't care about that.
+    -
+      message: "#^Call to an undefined method Drupal\\\\Core\\\\StreamWrapper\\\\ReadOnlyStream\\:\\:getLocalPath\\(\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Core/StreamWrapper/ReadOnlyStream.php
+    # Drupal core bug: https://www.drupal.org/project/drupal/issues/2787107
+    -
+      message: "#^Undefined variable\\: \\$definition$#"
+      count: 2
+      path: lib/Drupal/Core/Menu/MenuTreeStorage.php

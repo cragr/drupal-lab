@@ -559,38 +559,42 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  *   The variables array (modify in place).
  * @param $hook
  *   The name of the theme hook.
+ * @param array $info
+ *   Theme information as provided by hook_theme() for the element.
  */
-function hook_preprocess(&$variables, $hook) {
-  static $hooks;
-
+function hook_preprocess(&$variables, $hook, $info) {
   // Add contextual links to the variables, if the user has permission.
 
+  $variables['#cache']['contexts'][] = 'user.permissions';
   if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 
-  if (!isset($hooks)) {
-    $hooks = theme_get_registry();
-  }
-
   // Determine the primary theme function argument.
-  if (isset($hooks[$hook]['variables'])) {
-    $keys = array_keys($hooks[$hook]['variables']);
+  if (!empty($info['variables'])) {
+    $keys = array_keys($info['variables']);
     $key = $keys[0];
   }
-  else {
-    $key = $hooks[$hook]['render element'];
+  elseif (!empty($info['render element'])) {
+    $key = $info['render element'];
   }
-
-  if (isset($variables[$key])) {
+  if (!empty($key) && isset($variables[$key])) {
     $element = $variables[$key];
   }
 
   if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
-    $variables['title_suffix']['contextual_links'] = contextual_links_view($element);
-    if (!empty($variables['title_suffix']['contextual_links'])) {
-      $variables['attributes']['class'][] = 'contextual-links-region';
-    }
+    // Mark this element as potentially having contextual links attached to it.
+    $variables['attributes']['class'][] = 'contextual-region';
+
+    // Renders a contextual links placeholder unconditionally, thus not breaking
+    // the render cache. Although the empty placeholder is rendered for all
+    // users, contextual_page_attachments() only adds the asset library for
+    // users with the 'access contextual links' permission, thus preventing
+    // unnecessary HTTP requests for users without that permission.
+    $variables['title_suffix']['contextual_links'] = [
+      '#type' => 'contextual_links_placeholder',
+      '#id' => _contextual_links_to_id($element['#contextual_links']),
+    ];
   }
 }
 

@@ -27,6 +27,13 @@ class PerformanceTestRecorder implements EventSubscriberInterface {
   protected static $record = [];
 
   /**
+   * The state service for persistent storage.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * PerformanceTestRecorder constructor.
    *
    * @param bool $persistent

@@ -216,6 +216,19 @@ class Updater {
   }
 
   /**
+   * Dummy implementation because we forgot to make this class abstract.
+   *
+   * The real implementations are on the Module and Theme classes, this dummy
+   * makes PHPStan happy.
+   *
+   * @return string
+   *   The absolute path of the directory.
+   */
+  public function getInstallDirectory() {
+    return '';
+  }
+
+  /**
    * Updates a Drupal project and returns a list of next actions.
    *
    * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer

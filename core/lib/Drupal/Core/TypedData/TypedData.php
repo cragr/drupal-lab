@@ -41,6 +41,13 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   protected $parent;
 
   /**
+   * The data value that this typed data object wraps.
+   *
+   * @var mixed
+   */
+  protected $value;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL) {

@@ -21,6 +21,13 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 class TwigNodeVisitor extends AbstractNodeVisitor {
 
   /**
+   * Internal flag to skip the renderVar() function when escaping is active.
+   *
+   * @var bool
+   */
+  protected $skipRenderVarFunction;
+
+  /**
    * {@inheritdoc}
    */
   protected function doEnterNode(Node $node, Environment $env) {
