@@ -7,6 +7,11 @@ use Drupal\Core\FileTransfer\FileTransfer;
 
 /**
  * Defines the base class for Updaters used in Drupal.
+ *
+ * This class should have been abstract, but we don't want to change that now.
+ * Define missing methods that child classes have here to make PHPStan happy.
+ *
+ * @method string getInstallDirectory()
  */
 class Updater {
 
@@ -213,19 +218,6 @@ class Updater {
       'backup_dir'  => $this->getBackupDir(),
     ];
     return array_merge($args, $overrides);
-  }
-
-  /**
-   * Dummy implementation because we forgot to make this class abstract.
-   *
-   * The real implementations are on the Module and Theme classes, this dummy
-   * makes PHPStan happy.
-   *
-   * @return string
-   *   The absolute path of the directory.
-   */
-  public function getInstallDirectory() {
-    return '';
   }
 
   /**
