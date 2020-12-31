@@ -115,3 +115,9 @@ parameters:
       message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldConfigBase\\:\\:\\$definition\\.$#"
       count: 1
       path: lib/Drupal/Core/Field/FieldConfigBase.php
+    # The TypedData value property is used with magic methods in child classes.
+    # Ignore that it is undefined for base class default implementations.
+    -
+      message: "#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedData\\:\\:\\$value\\.$#"
+      count: 2
+      path: lib/Drupal/Core/TypedData/TypedData.php
