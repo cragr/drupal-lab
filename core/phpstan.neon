@@ -24,8 +24,8 @@ parameters:
     - lib/Drupal/Core/Cache
     - lib/Drupal/Core/CacheDecorator
     - lib/Drupal/Core/Command
-  # Scan constants in legacy include files.
   bootstrapFiles:
+    # Scan constants in legacy include files.
     - includes/common.inc
   scanDirectories:
     # Scan function definitions in legacy include and module files.
