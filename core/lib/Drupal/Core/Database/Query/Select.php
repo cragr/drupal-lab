@@ -119,6 +119,24 @@ class Select extends Query implements SelectInterface {
   protected $forUpdate = FALSE;
 
   /**
+   * Tags for altering the query with hook_query_TAG_alter().
+   *
+   * Keyed by tag name, values are 1.
+   *
+   * @var array|null
+   */
+  public $alterTags = NULL;
+
+  /**
+   * Metadata objects attached to the query for altering by modules.
+   *
+   * Keyed by metadata name.
+   *
+   * @var mixed[]|null
+   */
+  public $alterMetaData = NULL;
+
+  /**
    * Constructs a Select object.
    *
    * @param \Drupal\Core\Database\Connection $connection

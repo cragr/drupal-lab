@@ -34,20 +34,6 @@ class Truncate extends Query {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
-    return $this->condition->compile($connection, $queryPlaceholder);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function compiled() {
-    return $this->condition->compiled();
-  }
-
-  /**
    * Executes the TRUNCATE query.
    *
    * @return

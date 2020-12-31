@@ -11,6 +11,7 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\TransactionNoActiveException;
 
 /**

@@ -78,3 +78,25 @@ parameters:
     -
       message: "#^Function mymodule_.+ not found\\.$#"
       path: *.api.php
+    # Not all entity classes have an id property, but the default ::id()
+    # implementation is useful and we ignore the undefined property error on the
+    # base class.
+    -
+      message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityBase\\:\\:\\$id\\.$#"
+      count: 1
+      path: lib/Drupal/Core/Entity/EntityBase.php
+    # Drupal core bug: https://www.drupal.org/project/drupal/issues/3186009
+    -
+      message: "#^Undefined variable\\: \\$priority_pos$#"
+      count: 1
+      path: lib/Drupal/Core/DependencyInjection/Compiler/MimeTypePass.php
+    -
+      message: "#^Undefined variable\\: \\$id_pos$#"
+      count: 1
+      path: lib/Drupal/Core/DependencyInjection/Compiler/MimeTypePass.php
+    # The abstract Schema class might call undefined methods in its default
+    # implementation, but we don't care about that.
+    -
+      message: "#^Call to an undefined method Drupal\\\\Core\\\\Database\\\\Schema\\:\\:createTableSql\\(\\)\\.$#"
+      count: 1
+      path: lib/Drupal/Core/Database/Schema.php
