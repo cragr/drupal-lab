@@ -47,6 +47,13 @@ abstract class QueryBase implements QueryInterface {
   protected $condition;
 
   /**
+   * Conjunction for the condition. Allowed values: 'AND', 'OR'.
+   *
+   * @var string
+   */
+  protected $conjunction = 'AND';
+
+  /**
    * The list of aggregate expressions.
    *
    * @var array

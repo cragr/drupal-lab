@@ -26,6 +26,13 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   protected $unroutedUrlAssembler;
 
   /**
+   * The request context during the event.
+   *
+   * @var \Drupal\Core\Routing\RequestContext
+   */
+  protected $requestContext;
+
+  /**
    * Constructs a RedirectResponseSubscriber object.
    *
    * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler

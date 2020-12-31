@@ -11,6 +11,7 @@ use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Render\Element;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 
