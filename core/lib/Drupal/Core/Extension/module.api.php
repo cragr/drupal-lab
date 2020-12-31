@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
@@ -650,7 +651,7 @@ function hook_update_N(&$sandbox) {
   $schema->addField('my_table', 'newcol', $spec);
 
   // Example of what to do if there is an error during your update.
-  if ($some_error_condition_met) {
+  if (!$schema->tableExists('my_table')) {
     throw new UpdateException('Something went wrong; here is what you should do.');
   }
 

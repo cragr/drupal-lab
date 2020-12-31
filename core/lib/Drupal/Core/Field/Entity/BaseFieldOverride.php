@@ -155,6 +155,13 @@ class BaseFieldOverride extends FieldConfigBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function isInternal() {
+    return $this->getBaseFieldDefinition()->isInternal();
+  }
+
+  /**
    * Gets the base field definition.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition

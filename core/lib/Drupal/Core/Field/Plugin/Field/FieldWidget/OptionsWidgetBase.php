@@ -31,6 +31,34 @@ abstract class OptionsWidgetBase extends WidgetBase {
   protected $column;
 
   /**
+   * Indicates whether a value for the widget is required.
+   *
+   * @var bool
+   */
+  protected $required = FALSE;
+
+  /**
+   * Indicates if the field can contain multiple items.
+   *
+   * @var bool
+   */
+  protected $multiple = FALSE;
+
+  /**
+   * Indicates if there is a field value already.
+   *
+   * @var bool
+   */
+  protected $has_value = FALSE;
+
+  /**
+   * Selectable option values for this widget.
+   *
+   * @var array
+   */
+  protected $options;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings) {
