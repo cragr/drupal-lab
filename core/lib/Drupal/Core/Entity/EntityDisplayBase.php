@@ -115,7 +115,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $renderer;
 
   /**
-   * Internal temporay list of object properties to keep during serialization.
+   * Internal temporary list of object properties to keep during serialization.
    *
    * @var string[]
    */

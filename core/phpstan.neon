@@ -10,14 +10,22 @@ parameters:
     - theme
   paths:
     # Just this part is enabled for checking for now, expand later.
-    - lib/Drupal/Component
-    - lib/Drupal/Core
-  # Scan constants in legacy include files.
+    - lib
+  excludes_analyse:
+    # Do not analyse the huge test fixture files.
+    - */tests/fixtures/*
   bootstrapFiles:
+    # Scan constants in legacy include files.
     - includes/common.inc
-    # Not sure why PHPStan cannot autoload this file, include it manually for
-    # now.
+    # Not sure why PHPStan cannot autoload these files, include them manually
+    # for now.
     - modules/system/src/ModuleDependencyMessageTrait.php
+    - tests/Drupal/Tests/SessionTestTrait.php
+    - tests/Drupal/TestTools/PhpUnitCompatibility/RunnerVersion.php
+    - tests/Drupal/TestTools/PhpUnitCompatibility/PhpUnit8/TestCompatibilityTrait.php
+    - tests/Drupal/Tests/PhpUnitCompatibilityTrait.php
+    - tests/Drupal/Tests/Listeners/HtmlOutputPrinterTrait.php
+    - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
   scanDirectories:
     # Scan function definitions in legacy include and module files.
     - includes
