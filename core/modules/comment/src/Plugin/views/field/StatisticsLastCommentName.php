@@ -16,6 +16,13 @@ use Drupal\views\ResultRow;
 class StatisticsLastCommentName extends FieldPluginBase {
 
   /**
+   * Field alias of the user ID field in the query.
+   *
+   * @var string
+   */
+  protected $uid;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {
@@ -39,11 +46,11 @@ class StatisticsLastCommentName extends FieldPluginBase {
     $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
 
     // nes_user alias so this can work with the sort handler, below.
-    $this->user_table = $this->query->ensureTable('ces_users', $this->relationship, $join);
+    $user_table = $this->query->ensureTable('ces_users', $this->relationship, $join);
 
-    $this->field_alias = $this->query->addField(NULL, "COALESCE($this->user_table.name, $this->tableAlias.$this->field)", $this->tableAlias . '_' . $this->field);
+    $this->field_alias = $this->query->addField(NULL, "COALESCE($user_table.name, $this->tableAlias.$this->field)", $this->tableAlias . '_' . $this->field);
 
-    $this->user_field = $this->query->addField($this->user_table, 'name');
+    $this->query->addField($user_table, 'name');
     $this->uid = $this->query->addField($this->tableAlias, 'last_comment_uid');
   }
 

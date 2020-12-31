@@ -5,6 +5,8 @@
  * Hooks provided by the Configuration Translation module.
  */
 
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
 /**
  * @addtogroup hooks
  * @{

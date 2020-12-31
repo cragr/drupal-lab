@@ -10,11 +10,34 @@ parameters:
     - theme
   paths:
     # Just this part is enabled for checking for now, expand later.
+    - includes
     - lib
+    - modules/action
+    - modules/aggregator
+    - modules/automated_cron
+    - modules/ban
+    - modules/basic_auth
+    - modules/big_pipe
+    - modules/block
+    - modules/block_content
+    - modules/book
+    - modules/breakpoint
+    - modules/ckeditor
+    - modules/color
+    - modules/comment
+    - modules/config
+    - modules/config_translation
+    - modules/contact
+    - modules/content_moderation
+    - modules/content_translation
+    - modules/contextual
   excludes_analyse:
     # Do not analyse the huge test fixture files.
     - */tests/fixtures/*
   bootstrapFiles:
+    # In order to autoload Drupal's modified PHPUnit test class correctly we
+    # need to bootstrap the same way as PHPUnit tests do.
+    - tests/bootstrap.php
     # Scan constants in legacy include files.
     - includes/common.inc
     # Not sure why PHPStan cannot autoload these files, include them manually
@@ -51,6 +74,10 @@ parameters:
       message: "#^Undefined variable\\: \\$base$#"
       count: 1
       path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+    -
+      message: "#^Undefined variable\\: \\$info$#"
+      count: 1
+      path: modules/color/color.module
     # DiffEngine is third party legacy code where we want to ignore some
     # undefined variable/property errors.
     -
@@ -80,9 +107,13 @@ parameters:
       message: "#^Undefined variable\\: \\$definition$#"
       count: 2
       path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-    # Allow made up function names in *.api.php example doc files.
+    # Allow made up mymodule function names in *.api.php example doc files.
     -
       message: "#^Function mymodule_.+ not found\\.$#"
+      path: *.api.php
+    # Allow made up mymodule class names in *.api.php example doc files.
+    -
+      message: "#^Class Drupal\\\\(mymodule|foo)\\\\.+ not found\\.$#"
       path: *.api.php
     # Drupal core bug: https://www.drupal.org/project/drupal/issues/3186009
     -
