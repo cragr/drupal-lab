@@ -38,6 +38,10 @@ parameters:
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static\\(\\)\\.$#"
+    # The Entity API allows magic object property access with __get() to custom
+    # fields that are not statically defined. Disable checking on classes with
+    # "Entity" in the namespace.
+    - "#^Access to an undefined property Drupal\\\\.+\\\\Entity\\\\#"
     # Local variables created from including a PHP file, we cannot fix that.
     -
       message: "#^Undefined variable\\: \\$overrides$#"

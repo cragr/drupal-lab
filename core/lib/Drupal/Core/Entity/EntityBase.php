@@ -48,16 +48,6 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
-   * Populated when an entity is updated.
-   *
-   * Contains the original unmodified object useful for comparisons to detect
-   * changes on the entity.
-   *
-   * @var \Drupal\Core\Entity\EntityInterface
-   */
-  public $original;
-
-  /**
    * Constructs an Entity object.
    *
    * @param array $values
