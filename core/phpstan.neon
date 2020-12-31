@@ -108,3 +108,10 @@ parameters:
       message: "#^Call to an undefined method Drupal\\\\Core\\\\Database\\\\Schema\\:\\:createTableSql\\(\\)\\.$#"
       count: 1
       path: lib/Drupal/Core/Database/Schema.php
+    # Not all field config classes have a definition property, but the default
+    # ::isInternal() implementation is useful and we ignore the undefined
+    # property error on the base class.
+    -
+      message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldConfigBase\\:\\:\\$definition\\.$#"
+      count: 1
+      path: lib/Drupal/Core/Field/FieldConfigBase.php
