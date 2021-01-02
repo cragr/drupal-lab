@@ -55,6 +55,7 @@ function twig_init(Extension $theme) {
  *     invoked.
  *   - theme_base_hook: (string) The base hook of the theme hook currently
  *     being invoked.
+ *   - theme_hook_info: (array) The implementation info for the theme hook.
  *   - theme_suggestions: (array) An array of theme hook suggestions.
  *   - Any additional context that was passed from the render array.
  *

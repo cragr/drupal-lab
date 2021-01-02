@@ -265,7 +265,7 @@ class ThemeManager implements ThemeManagerInterface {
     $context['theme_hook'] = $hook;
     $context['theme_base_hook'] = $base_theme_hook;
     $context['theme_suggestions'] = array_reverse($theme_suggestions);
-    $context['theme_info'] = $info;
+    $context['theme_hook_info'] = $info;
 
     // Supply the context, for BC and alter parameter limitation reasons.
     // @todo Create an immutable array object.
@@ -305,7 +305,7 @@ class ThemeManager implements ThemeManagerInterface {
       if ($theme_registry->has($suggestion)) {
         $info = $theme_registry->get($suggestion);
         $context['theme_hook'] = $suggestion;
-        $context['theme_info'] = $info;
+        $context['theme_hook_info'] = $info;
         break;
       }
     }
