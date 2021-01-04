@@ -67,7 +67,7 @@ class EntityDuplicateTest extends EntityKernelTestBase {
     $duplicate_entity->save();
 
     $this->assertNotEmpty($duplicate_entity->duplicateSource);
-    $this->assertIdenticalObject($duplicate_entity->duplicateSource, $entity);
+    $this->assertEqual($duplicate_entity->duplicateSource, $entity);
   }
 
 }
