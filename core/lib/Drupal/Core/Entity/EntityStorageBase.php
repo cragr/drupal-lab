@@ -197,8 +197,23 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function invokeHook($hook, EntityInterface $entity) {
     // Invoke the hook.
     $this->moduleHandler()->invokeAll($this->entityTypeId . '_' . $hook, [$entity]);
-    // Invoke the respective entity-level hook.
-    $this->moduleHandler()->invokeAll('entity_' . $hook, [$entity]);
+
+    // Dispatch events for the invoked hook.
+    /** @var \Drupal\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event = new EntityEvent($entity);
+
+    // Dispatch an event for the entity type-specific hook (i.e.,
+    // hook_ENTITY_TYPE_$hook).
+    if (method_exists(EntityEvents::class, $hook)) {
+      $event_name = call_user_func([EntityEvents::class, $hook], $this->entityTypeId);
+      $event_dispatcher->dispatch($event, $event_name);
+    }
+
+    // Dispatch an event for the entity-level hook (i.e., hook_entity_$hook).
+    if (isset(EntityEvents::$hookToEventMap[$hook])) {
+      $event_dispatcher->dispatch($event, EntityEvents::$hookToEventMap[$hook]);
+    }
   }
 
   /**
