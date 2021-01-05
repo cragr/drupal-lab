@@ -596,6 +596,11 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }
+  entity_events_subscriber:
+    class: Drupal\Core\EventSubscriber\EntityEventsSubscriber
+    arguments: ['@module_handler']
+    tags:
+      - { name: event_subscriber }
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
     arguments: ['@entity_type.manager', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
