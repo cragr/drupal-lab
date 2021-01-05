@@ -116,7 +116,7 @@ final class EntityEvents {
   }
 
   /**
-   * Returns the event name when presaving an entity of a specific type.
+   * Returns the event name when pre-saving an entity of a specific type.
    *
    * @param string $entity_type_id
    *   The entity type ID.
