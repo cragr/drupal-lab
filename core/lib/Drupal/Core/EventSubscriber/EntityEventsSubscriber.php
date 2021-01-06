@@ -2,8 +2,12 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Entity\EntityEvent;
-use Drupal\Core\Entity\EntityEvents;
+use Drupal\Core\Entity\Event\EntityCreateEvent;
+use Drupal\Core\Entity\Event\EntityPreSaveEvent;
+use Drupal\Core\Entity\Event\EntityInsertEvent;
+use Drupal\Core\Entity\Event\EntityUpdateEvent;
+use Drupal\Core\Entity\Event\EntityPreDeleteEvent;
+use Drupal\Core\Entity\Event\EntityDeleteEvent;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -32,18 +36,83 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Provides hooks for entity specific events.
+   * Invoke entity create hooks.
    *
-   * @param \Drupal\Core\Entity\EntityEvent $event
+   * @param \Drupal\Core\Entity\Event\EntityCreateEvent $event
    *   The entity event.
-   * @param string $event_name
-   *   The related entity event name.
    */
-  public function onEntityEvent(EntityEvent $event, $event_name) {
-    $hook = array_search($event_name, EntityEvents::$hookToEventMap);
-    if ($hook) {
-      $this->moduleHandler->invokeAll('entity_' . $hook, [$event->getEntity()]);
-    }
+  public function onEntityCreate(EntityCreateEvent $event) {
+    $this->moduleHandler->invokeAll('entity_create', [$event->getEntity()]);
+  }
+
+  /**
+   * Invoke entity presave hooks.
+   *
+   * @param \Drupal\Core\Entity\Event\EntityPreSaveEvent $event
+   *   The entity event.
+   */
+  public function onEntityPreSave(EntityPreSaveEvent $event) {
+    $this->moduleHandler->invokeAll('entity_presave', [$event->getEntity()]);
+    $this->moduleHandler->invokeAll(
+      $event->getEntity()->getEntityTypeId() . '_presave',
+      [$event->getEntity()]
+    );
+  }
+
+  /**
+   * Invoke entity insert hooks.
+   *
+   * @param \Drupal\Core\Entity\Event\EntityInsertEvent $event
+   *   The entity event.
+   */
+  public function onEntityInsert(EntityInsertEvent $event) {
+    $this->moduleHandler->invokeAll('entity_insert', [$event->getEntity()]);
+    $this->moduleHandler->invokeAll(
+      $event->getEntity()->getEntityTypeId() . '_insert',
+      [$event->getEntity()]
+    );
+  }
+
+  /**
+   * Invoke entity update hooks.
+   *
+   * @param \Drupal\Core\Entity\Event\EntityUpdateEvent $event
+   *   The entity event.
+   */
+  public function onEntityUpdate(EntityUpdateEvent $event) {
+    $this->moduleHandler->invokeAll('entity_update', [$event->getEntity()]);
+    $this->moduleHandler->invokeAll(
+      $event->getEntity()->getEntityTypeId() . '_update',
+      [$event->getEntity()]
+    );
+  }
+
+  /**
+   * Invoke entity predelete hooks.
+   *
+   * @param \Drupal\Core\Entity\Event\EntityPreDeleteEvent $event
+   *   The entity event.
+   */
+  public function onEntityPreDelete(EntityPreDeleteEvent $event) {
+    $this->moduleHandler->invokeAll('entity_predelete', [$event->getEntity()]);
+    $this->moduleHandler->invokeAll(
+      $event->getEntity()->getEntityTypeId() . '_predelete',
+      [$event->getEntity()]
+    );
+  }
+
+  /**
+   * Invoke entity delete hooks.
+   *
+   * @param \Drupal\Core\Entity\Event\EntityDeleteEvent $event
+   *   The entity event.
+   */
+  public function onEntityDelete(EntityDeleteEvent $event) {
+    $this->moduleHandler->invokeAll('entity_delete', [$event->getEntity()]);
+    $this->moduleHandler->invokeAll(
+      $event->getEntity()->getEntityTypeId() . '_delete',
+      [$event->getEntity()]
+    );
   }
 
   /**
@@ -52,12 +121,12 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     // Hooks should be executed before other subscribers for BC.
     $priority = -1000;
-    $events[EntityEvents::CREATE][] = ['onEntityEvent', $priority];
-    $events[EntityEvents::PRESAVE][] = ['onEntityEvent', $priority];
-    $events[EntityEvents::INSERT][] = ['onEntityEvent', $priority];
-    $events[EntityEvents::UPDATE][] = ['onEntityEvent', $priority];
-    $events[EntityEvents::PREDELETE][] = ['onEntityEvent', $priority];
-    $events[EntityEvents::DELETE][] = ['onEntityEvent', $priority];
+    $events[EntityCreateEvent::class][] = ['onEntityCreate', $priority];
+    $events[EntityPreSaveEvent::class][] = ['onEntityPreSave', $priority];
+    $events[EntityInsertEvent::class][] = ['onEntityInsert', $priority];
+    $events[EntityUpdateEvent::class][] = ['onEntityUpdate', $priority];
+    $events[EntityPreDeleteEvent::class][] = ['onEntityPreDelete', $priority];
+    $events[EntityDeleteEvent::class][] = ['onEntityDelete', $priority];
     return $events;
   }
 

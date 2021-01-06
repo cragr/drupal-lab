@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Core\Entity;
+namespace Drupal\Core\Entity\Event;
 
 use Drupal\Component\EventDispatcher\Event;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Represents various entity events.
+ * Entity event base class.
  *
- * @see \Drupal\Core\Entity\EntityEvents
  * @see \Drupal\Core\Entity\EntityStorageBase::invokeHook()
  */
-class EntityEvent extends Event {
+class EventBase extends Event {
 
   /**
    * The entity object.
@@ -20,7 +20,7 @@ class EntityEvent extends Event {
   protected $entity;
 
   /**
-   * EntityEvent constructor.
+   * EventBase constructor.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.

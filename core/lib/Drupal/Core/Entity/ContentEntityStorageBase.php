@@ -778,7 +778,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   }
 
   /**
-   * {@inheritdoc}
+   * Invokes a hook on behalf of the entity.
+   *
+   * @param string $hook
+   *   One of 'create', 'presave', 'insert', 'update', 'predelete', 'delete', or
+   *   'revision_delete'.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    */
   protected function invokeHook($hook, EntityInterface $entity) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -796,8 +802,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         $this->invokeFieldPostSave($entity, TRUE);
         break;
     }
-
-    parent::invokeHook($hook, $entity);
   }
 
   /**

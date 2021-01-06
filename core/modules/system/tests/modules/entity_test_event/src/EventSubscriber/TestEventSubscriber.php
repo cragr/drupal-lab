@@ -2,10 +2,12 @@
 
 namespace Drupal\entity_test_event\EventSubscriber;
 
+use Drupal\Core\Entity\Event\EntityDeleteEvent;
+use Drupal\Core\Entity\Event\EntityInsertEvent;
+use Drupal\Core\Entity\Event\EntityUpdateEvent;
+use Drupal\Core\Entity\Event\EventBase;
 use Drupal\entity_test\Entity\EntityTest;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\Core\Entity\EntityEvents;
-use Drupal\Core\Entity\EntityEvent;
 
 /**
  * Defines the test event subscriber class.
@@ -13,36 +15,36 @@ use Drupal\Core\Entity\EntityEvent;
 class TestEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * Test EntityEvents::INSERT event callback.
+   * Test EntityInsertEvent.
    *
-   * @param \Drupal\Core\Entity\EntityEvent $event
+   * @param \Drupal\Core\Entity\EntityInsertEvent $event
    *   Insert event.
    */
-  public function onInsert(EntityEvent $event) {
+  public function onInsert(EventBase $event) {
     if ($event->getEntity()->name->value === 'hei') {
       $event->getEntity()->name->value .= ' ho';
     }
   }
 
   /**
-   * Test EntityEvents::UPDATE event callback.
+   * Test EntityUpdateEvent.
    *
    * @param \Drupal\Core\Entity\EntityEvent $event
-   *   Insert event.
+   *   Update event.
    */
-  public function onUpdate(EntityEvent $event) {
+  public function onUpdate(EventBase $event) {
     if ($event->getEntity()->name->value === 'hei') {
       $event->getEntity()->name->value .= ' ho';
     }
   }
 
   /**
-   * Test EntityEvents::DELETE event callback.
+   * Test EntityDeleteEvent.
    *
-   * @param \Drupal\Core\Entity\EntityEvent $event
-   *   Insert event.
+   * @param \Drupal\Core\Entity\EntityDeleteEvent $event
+   *   Delete event.
    */
-  public function onDelete(EntityEvent $event) {
+  public function onDelete(EventBase $event) {
     if ($event->getEntity()->name->value === 'hei ho') {
       EntityTest::create([
         'name' => 'hei_ho',
@@ -55,9 +57,9 @@ class TestEventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[EntityEvents::INSERT] = 'onInsert';
-    $events[EntityEvents::UPDATE] = 'onUpdate';
-    $events[EntityEvents::DELETE] = 'onDelete';
+    $events[EntityInsertEvent::class] = 'onInsert';
+    $events[EntityUpdateEvent::class] = 'onUpdate';
+    $events[EntityDeleteEvent::class] = 'onDelete';
     return $events;
   }
 

@@ -13,23 +13,23 @@ class EntityEventsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'entity_test_event', 'user'];
+  protected static $modules = ['entity_test', 'entity_test_event', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp() : void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test');
   }
 
   /**
-   * Test insert event.
+   * Test entity insert event.
    *
    * @see \Drupal\entity_test_event\EventSubscriber\TestEventSubscriber
    */
-  public function testEventsInsert() {
+  public function testInsertEvent() {
     $entity = EntityTest::create([
       'name' => 'hei',
     ]);
@@ -38,11 +38,11 @@ class EntityEventsTest extends KernelTestBase {
   }
 
   /**
-   * Test update event.
+   * Test entity update event.
    *
    * @see \Drupal\entity_test_event\EventSubscriber\TestEventSubscriber
    */
-  public function testEventsUpdate() {
+  public function testUpdateEvent() {
     $entity = EntityTest::create([
       'name' => 'meh',
     ]);
@@ -55,11 +55,11 @@ class EntityEventsTest extends KernelTestBase {
   }
 
   /**
-   * Test delete event.
+   * Test entity delete event.
    *
    * @see \Drupal\entity_test_event\EventSubscriber\TestEventSubscriber
    */
-  public function testEventsDelete() {
+  public function testDeleteEvent() {
     $entities = \Drupal::entityTypeManager()->getStorage('entity_test')
       ->loadByProperties(['name' => 'hei_ho']);
     $this->assertCount(0, $entities);
