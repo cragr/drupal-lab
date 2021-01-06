@@ -86,7 +86,7 @@ class AccessTest extends KernelTestBase {
     $this->assertFalse($file1->access('create'));
 
     // Authenticated users can create a file by default.
-    $this->assertFalse($file1->access('create'), $user1);
+    $this->assertFalse($file1->access('create', $user1));
 
     // User with "* any files" permissions should access all files.
     $this->assertTrue($file1->access('delete', $user1));
