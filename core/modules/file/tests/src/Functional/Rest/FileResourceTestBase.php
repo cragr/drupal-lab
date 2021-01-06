@@ -211,8 +211,10 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'access content' permission is required.";
+
       case 'PATCH':
         return "The 'edit any files' permission is required.";
+
       case 'DELETE':
         return "The 'delete any files' permission is required.";
 

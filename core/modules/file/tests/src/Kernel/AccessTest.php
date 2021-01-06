@@ -101,7 +101,7 @@ class AccessTest extends KernelTestBase {
     $this->assertTrue($file2->access('update', $user2));
 
     // User without permissions should not be able to delete/edit files even if
-    // he is an owner of the file.
+    // the user is an owner of the file.
     $user3 = $this->createUser();
 
     $file3 = File::create([
