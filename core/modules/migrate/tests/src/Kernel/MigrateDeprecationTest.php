@@ -3,7 +3,6 @@
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\migrate\Plugin\migrate\id_map\NullIdMap;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 
 /**
