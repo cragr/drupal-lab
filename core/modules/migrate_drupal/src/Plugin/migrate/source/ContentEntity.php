@@ -30,6 +30,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   of this bundle.
  * - include_translations: (optional) Indicates if the entity translations
  *   should be included, defaults to TRUE.
+ * - batch_size: (optional) Number of entities to fetch from the database during
+ *   each batch. If omitted, all records are fetched in a single query. It is
+ *   highly recommended to set this for large sources.
  *
  * Examples:
  *
@@ -84,6 +87,15 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
+
+  /**
+   * Number of records to fetch from the database during each batch.
+   *
+   * A value of zero indicates no batching is to be done.
+   *
+   * @var int
+   */
+  protected $batchSize = 0;
 
   /**
    * The plugin's default configuration.
@@ -150,31 +162,63 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    *   A data generator for this source.
    */
   protected function initializeIterator() {
-    $ids = $this->query()->execute();
-    return $this->yieldEntities($ids);
+    // Initialize the batch size if given in configuration.
+    if ($this->batchSize == 0 && isset($this->configuration['batch_size'])) {
+      // Valid batch sizes are integers >= 0.
+      if (is_int($this->configuration['batch_size']) && ($this->configuration['batch_size']) >= 0) {
+        $this->batchSize = $this->configuration['batch_size'];
+      }
+      else {
+        throw new MigrateException("batch_size must be greater than or equal to zero");
+      }
+    }
+
+    return $this->yieldEntities();
   }
 
   /**
    * Loads and yields entities, one at a time.
    *
-   * @param array $ids
-   *   The entity IDs.
-   *
    * @return \Generator
    *   An iterable of the loaded entities.
    */
-  protected function yieldEntities(array $ids) {
+  protected function yieldEntities() {
+    $current_batch = 0;
+
     $storage = $this->entityTypeManager
       ->getStorage($this->entityType->id());
-    foreach ($ids as $id) {
-      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      $entity = $storage->load($id);
-      yield $this->toArray($entity);
-      if ($this->configuration['include_translations']) {
-        foreach ($entity->getTranslationLanguages(FALSE) as $language) {
-          yield $this->toArray($entity->getTranslation($language->getId()));
+
+    while (TRUE) {
+      $query = $this->query();
+      if ($this->batchSize > 0) {
+        // Run the query in batches, to prevent large source sizes exhausting
+        // memory.
+        $query->range($current_batch * $this->batchSize, $this->batchSize);
+      }
+      $ids = $query->execute();
+
+      // End the loop when we run out of source entities.
+      if (empty($ids)) {
+        break;
+      }
+
+      foreach ($ids as $id) {
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+        $entity = $storage->load($id);
+        yield $this->toArray($entity);
+        if ($this->configuration['include_translations']) {
+          foreach ($entity->getTranslationLanguages(FALSE) as $language) {
+            yield $this->toArray($entity->getTranslation($language->getId()));
+          }
         }
       }
+
+      // Forcibly clear the entity memory cache, otherwise it'll keep increasing
+      // in size with the entities already loaded, and eventually exhaust memory
+      // for sources with a large count of entities.
+      \Drupal::service('entity.memory_cache')->deleteAll();
+
+      $current_batch++;
     }
   }
 
