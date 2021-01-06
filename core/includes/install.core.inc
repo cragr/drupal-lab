@@ -5,6 +5,7 @@
  * API functions for installing Drupal.
  */
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigImporter;
@@ -2227,10 +2228,15 @@ function install_check_requirements($install_state) {
 
       $errors = install_database_errors($database, $settings_file);
       if (count($errors)) {
-        $error_message = SiteSettingsForm::getDatabaseErrorsTemplate($errors);
+        // We must avoid early rendering here so we cannot use the renderer
+        // service here.
+        $description = t('Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider. @errors', [
+          '@errors' => new FormattableMarkup('<ul><li>' . implode('</li><li>', $errors) . '</li></ul>', []),
+        ]);
         $requirements['database_install_errors'] = [
           'title' => t('Database settings'),
-          'description' => $error_message,
+          'value' => t('Could not connect to database.'),
+          'description' => $description,
           'severity' => REQUIREMENT_ERROR,
         ];
       }
