@@ -117,11 +117,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    $configuration += $this->defaultConfiguration;
-    if ($configuration['include_revisions'] === 'd9bc') {
-      @trigger_error('Calling ContentEntity migration with unset include_revisions configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344', E_USER_DEPRECATED);
-    }
-    elseif (!is_bool($configuration['include_revisions'])) {
+    if (isset($configuration['include_revisions']) && !is_bool($configuration['include_revisions'])) {
       throw new \UnexpectedValueException('The include_revisions parameter mus be a boolean.');
     }
     if (empty($plugin_definition['entity_type'])) {
@@ -143,7 +139,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
         throw new \InvalidArgumentException(sprintf('The provided bundle (%s) is not valid for the (%s) entity type.', $configuration['bundle'], $plugin_definition['entity_type']));
       }
     }
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+    parent::__construct($configuration + $this->defaultConfiguration, $plugin_id, $plugin_definition, $migration);
   }
 
   /**
@@ -175,6 +171,11 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    *   A data generator for this source.
    */
   protected function initializeIterator() {
+    // We handle deprecation here rather than in the constructor, as migrate
+    // instantiates this all over the place without actually using it.
+    if ($this->configuration['include_revisions'] === 'd9bc') {
+      @trigger_error('Calling ContentEntity migration with unset include_revisions configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344', E_USER_DEPRECATED);
+    }
     $ids = $this->query()->execute();
     return $this->yieldEntities($ids);
   }
