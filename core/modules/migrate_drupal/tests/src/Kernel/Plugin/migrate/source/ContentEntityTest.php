@@ -278,6 +278,17 @@ class ContentEntityTest extends KernelTestBase {
   }
 
   /**
+   * Expect the revisions_bc_mode deprecation, if applicable.
+   *
+   * @ingroup legacy
+   */
+  protected function maybeExpectRevisionsBcModeDeprecation($configuration) {
+    if ($configuration['revisions_bc_mode'] ?? TRUE) {
+      $this->expectDeprecation('Calling ContentEntity migration with non-false revisions_bc_mode configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344');
+    }
+  }
+
+  /**
    * Reusable helper to assert IDs structure.
    *
    * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
@@ -318,6 +329,7 @@ class ContentEntityTest extends KernelTestBase {
    * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testUserSource(array $configuration) {
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:user', $configuration));
     $user_source = $migration->getSourcePlugin();
     $this->assertSame('users', $user_source->__toString());
@@ -356,6 +368,7 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $file->save();
 
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:file', $configuration));
     $file_source = $migration->getSourcePlugin();
     $this->assertSame('files', $file_source->__toString());
@@ -388,6 +401,7 @@ class ContentEntityTest extends KernelTestBase {
    */
   public function testNodeSource(array $configuration) {
     $configuration += ['bundle' => $this->bundle];
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node', $configuration));
     $node_source = $migration->getSourcePlugin();
     $this->assertSame('content items', $node_source->__toString());
@@ -461,6 +475,7 @@ class ContentEntityTest extends KernelTestBase {
     $configuration += [
       'bundle' => 'image',
     ];
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:media', $configuration));
     $media_source = $migration->getSourcePlugin();
     $this->assertSame('media items', $media_source->__toString());
@@ -513,6 +528,7 @@ class ContentEntityTest extends KernelTestBase {
     $configuration += [
       'bundle' => $this->vocabulary,
     ];
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:taxonomy_term', $configuration));
     $term_source = $migration->getSourcePlugin();
     $this->assertSame('taxonomy terms', $term_source->__toString());
