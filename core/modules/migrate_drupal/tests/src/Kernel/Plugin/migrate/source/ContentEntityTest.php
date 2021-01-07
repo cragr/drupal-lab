@@ -266,7 +266,8 @@ class ContentEntityTest extends KernelTestBase {
    */
   public function migrationConfigurationLegacyProvider() {
     $data = [];
-    foreach ($this->migrationConfigurationProvider() as $configuration) {
+    foreach ($this->migrationConfigurationProvider() as $configurations) {
+      $configuration = $configurations[0];
       foreach ([FALSE, TRUE] as $revisions_bc_mode) {
         $configuration['revisions_bc_mode'] = $revisions_bc_mode;
         // That array key gives us nice test failure messages.
