@@ -417,7 +417,9 @@ class ContentEntityTest extends KernelTestBase {
     $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
     $this->assertEquals(1, $values['nid']);
     // IDs have no deltas.
-    if ($configuration['include_revisions']) {
+    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode']
+      || $configuration['include_revisions'];
+    if ($expectRevisionWithNoDelta) {
       $this->assertEquals(1, $values['vid']);
     }
     else {
@@ -433,8 +435,7 @@ class ContentEntityTest extends KernelTestBase {
       $values = $node_source->current()->getSource();
       $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
       $this->assertEquals(1, $values['nid']);
-      // IDs have no deltas.
-      if ($configuration['include_revisions']) {
+      if ($expectRevisionWithNoDelta) {
         $this->assertEquals(1, $values['vid']);
       }
       else {
@@ -493,7 +494,9 @@ class ContentEntityTest extends KernelTestBase {
     $values = $media_source->current()->getSource();
     $this->assertEquals(1, $values['mid']);
     // IDs have no deltas.
-    if ($configuration['include_revisions']) {
+    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode']
+      || $configuration['include_revisions'];
+    if ($expectRevisionWithNoDelta) {
       $this->assertEquals(1, $values['vid']);
     }
     else {
