@@ -181,16 +181,17 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
       // $          = end of string
       preg_match('/^"?([^<]*?)"? *(?:<(.*)>)?$/', $from, $matches);
       if ($matches) {
-        $from_reformatted = t('"!name via !site_name" <!site_mail>', array(
+        $from_reformatted = t('"!name via !site_name" <!site_mail>', [
           '!name' => empty($matches[1]) ? $matches[2] : $matches[1],
           '!site_name' => variable_get('site_name', 'Drupal'),
           '!site_mail' => $default_from,
-        ));
+        ]);
         $message['from'] = $from_reformatted;
         $headers['From'] = mime_header_encode($from_reformatted);
       }
     }
-    $message['headers'] = $headers;
+  }
+  $message['headers'] = $headers;
 
     // Build the e-mail (get subject and body, allow additional headers) by
   // invoking hook_mail() on this module. We cannot use module_invoke() as
