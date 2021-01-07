@@ -252,6 +252,7 @@ class ContentEntityTest extends KernelTestBase {
           'include_translations' => $include_translations,
           'include_revisions' => $include_revisions,
         ];
+        // That array key gives us nice test failure messages.
         $data[http_build_query($configuration)] = [$configuration];
       }
     }
@@ -259,7 +260,36 @@ class ContentEntityTest extends KernelTestBase {
   }
 
   /**
+   * Provide migration configuration, iterating all options, including legacy.
+   *
+   * @ingroup legacy
+   */
+  public function migrationConfigurationLegacyProvider() {
+    $data = [];
+    foreach ($this->migrationConfigurationProvider() as $configuration) {
+      foreach ([FALSE, TRUE] as $revisions_bc_mode) {
+        $configuration['revisions_bc_mode'] = $revisions_bc_mode;
+        // That array key gives us nice test failure messages.
+        $data[http_build_query($configuration)] = [$configuration];
+      }
+    }
+    return $data;
+  }
+
+  /**
+   * Expect the revisions_bc_mode deprecation, if applicable.
+   *
+   * @ingroup legacy
+   */
+  protected function maybeExpectRevisionsBcModeDeprecation($configuration) {
+    if ($configuration['revisions_bc_mode'] ?? TRUE) {
+      $this->expectDeprecation('Calling ContentEntity migration with non-false revisions_bc_mode configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344');
+    }
+  }
+
+  /**
    * Reusable helper to assert IDs structure.
+   *
    * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
    *   The source plugin.
    * @param array $configuration
@@ -279,7 +309,9 @@ class ContentEntityTest extends KernelTestBase {
       $this->assertArrayHasKey($entity_type->getKey('langcode'), $ids);
     }
 
-    if ($entity_type->isRevisionable() && !empty($configuration['include_revisions'])) {
+    $include_revision_key = ($configuration['include_revisions'] ?? FALSE)
+      || ($configuration['revisions_bc_mode'] ?? TRUE);
+    if ($entity_type->isRevisionable() && $include_revision_key) {
       $ids_count_expected++;
       $this->assertArrayHasKey($entity_type->getKey('revision'), $ids);
     }
@@ -290,10 +322,11 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests user source plugin.
    *
-   * @dataProvider migrationConfigurationProvider
+   * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testUserSource(array $configuration) {
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:user'));
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $user_source = $this->sourcePluginManager->createInstance('content_entity:user', $configuration, $migration);
     $this->assertSame('users', $user_source->__toString());
     // ::count is not yet functional for include_translations.
@@ -318,7 +351,7 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests file source plugin.
    *
-   * @dataProvider migrationConfigurationProvider
+   * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testFileSource(array $configuration) {
     $file = File::create([
@@ -329,6 +362,7 @@ class ContentEntityTest extends KernelTestBase {
     $file->save();
 
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:file'));
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $file_source = $this->sourcePluginManager->createInstance('content_entity:file', $configuration, $migration);
     $this->assertSame('files', $file_source->__toString());
     // ::count is not yet functional for include_translations.
@@ -353,11 +387,12 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests node source plugin.
    *
-   * @dataProvider migrationConfigurationProvider
+   * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testNodeSource(array $configuration) {
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node'));
     $configuration += ['bundle' => $this->bundle];
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $node_source = $this->sourcePluginManager->createInstance('content_entity:node', $configuration, $migration);
     $this->assertSame('content items', $node_source->__toString());
     $this->assertCorrectIds($node_source, $configuration);
@@ -406,7 +441,7 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests media source plugin.
    *
-   * @dataProvider migrationConfigurationProvider
+   * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testMediaSource(array $configuration) {
     $values = [
@@ -427,6 +462,7 @@ class ContentEntityTest extends KernelTestBase {
       'bundle' => 'image',
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:media'));
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $media_source = $this->sourcePluginManager->createInstance('content_entity:media', $configuration, $migration);
     $this->assertSame('media items', $media_source->__toString());
     // ::count is not yet functional for include_translations.
@@ -459,7 +495,7 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests term source plugin.
    *
-   * @dataProvider migrationConfigurationProvider
+   * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testTermSource(array $configuration) {
     $term2 = Term::create([
@@ -474,6 +510,7 @@ class ContentEntityTest extends KernelTestBase {
       'bundle' => $this->vocabulary,
     ];
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:taxonomy_term'));
+    $this->maybeExpectRevisionsBcModeDeprecation($configuration);
     $term_source = $this->sourcePluginManager->createInstance('content_entity:taxonomy_term', $configuration, $migration);
     $this->assertSame('taxonomy terms', $term_source->__toString());
     // ::count is not yet functional for include_translations.
