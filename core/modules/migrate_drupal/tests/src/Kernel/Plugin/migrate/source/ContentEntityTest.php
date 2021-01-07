@@ -323,6 +323,9 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests user source plugin.
    *
+   * Legacy group is needed to expect deprecation.
+   * @group legacy
+   *
    * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testUserSource(array $configuration) {
@@ -351,6 +354,9 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests file source plugin.
+   *
+   * Legacy group is needed to expect deprecation.
+   * @group legacy
    *
    * @dataProvider migrationConfigurationLegacyProvider
    */
@@ -387,6 +393,9 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests node source plugin.
+   *
+   * Legacy group is needed to expect deprecation.
+   * @group legacy
    *
    * @dataProvider migrationConfigurationLegacyProvider
    */
@@ -442,6 +451,9 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests media source plugin.
    *
+   * Legacy group is needed to expect deprecation.
+   * @group legacy
+   *
    * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testMediaSource(array $configuration) {
@@ -495,6 +507,9 @@ class ContentEntityTest extends KernelTestBase {
 
   /**
    * Tests term source plugin.
+   *
+   * Legacy group is needed to expect deprecation.
+   * @group legacy
    *
    * @dataProvider migrationConfigurationLegacyProvider
    */
