@@ -115,7 +115,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    if ($configuration['revisions_bc_mode']) {
+    if (!empty($configuration['revisions_bc_mode'])) {
       @trigger_error('Calling ContentEntity migration with non-false revisions_bc_mode configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344', E_USER_DEPRECATED);
     }
     if (empty($plugin_definition['entity_type'])) {
