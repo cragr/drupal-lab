@@ -247,11 +247,14 @@ class ContentEntityTest extends KernelTestBase {
   public function migrationConfigurationProvider() {
     $data = [];
     foreach ([FALSE, TRUE] as $include_translations) {
-      $configuration = [
-        'include_translations' => $include_translations,
-      ];
-      // That array key gives us nice test failure messages.
-      $data[http_build_query($configuration)] = [$configuration];
+      foreach ([FALSE, TRUE] as $include_revisions) {
+        $configuration = [
+          'include_translations' => $include_translations,
+          'include_revisions' => $include_revisions,
+        ];
+        // That array key gives us nice test failure messages.
+        $data[http_build_query($configuration)] = [$configuration];
+      }
     }
     return $data;
   }
@@ -307,7 +310,8 @@ class ContentEntityTest extends KernelTestBase {
       $this->assertArrayHasKey($entity_type->getKey('langcode'), $ids);
     }
 
-    $include_revision_key = ($configuration['revisions_bc_mode'] ?? TRUE);
+    $include_revision_key = ($configuration['revisions_bc_mode'] ?? TRUE)
+      || ($configuration['include_revisions'] ?? FALSE);
     if ($entity_type->isRevisionable() && $include_revision_key) {
       $ids_count_expected++;
       $this->assertArrayHasKey($entity_type->getKey('revision'), $ids);
@@ -413,7 +417,8 @@ class ContentEntityTest extends KernelTestBase {
     $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
     $this->assertEquals(1, $values['nid']);
     // IDs have no deltas.
-    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode'];
+    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode']
+      || $configuration['include_revisions'];
     if ($expectRevisionWithNoDelta) {
       $this->assertEquals(1, $values['vid']);
     }
@@ -489,7 +494,8 @@ class ContentEntityTest extends KernelTestBase {
     $values = $media_source->current()->getSource();
     $this->assertEquals(1, $values['mid']);
     // IDs have no deltas.
-    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode'];
+    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode']
+      || $configuration['include_revisions'];
     if ($expectRevisionWithNoDelta) {
       $this->assertEquals(1, $values['vid']);
     }
