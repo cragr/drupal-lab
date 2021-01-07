@@ -299,8 +299,8 @@ class ContentEntityTest extends KernelTestBase {
       $this->assertArrayHasKey($entity_type->getKey('langcode'), $ids);
     }
 
-    $include_revision_key = ($configuration['include_revisions'] ?? FALSE)
-      || ($configuration['revisions_bc_mode'] ?? TRUE);
+    $include_revision_key = ($configuration['revisions_bc_mode'] ?? TRUE)
+      || ($configuration['include_revisions'] ?? FALSE);
     if ($entity_type->isRevisionable() && $include_revision_key) {
       $ids_count_expected++;
       $this->assertArrayHasKey($entity_type->getKey('revision'), $ids);
