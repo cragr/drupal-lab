@@ -136,7 +136,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     'module'   => $module,
     'key'      => $key,
     'to'       => $to,
-    'from'     => $default_from,
+    'from'     => isset($from) ? $from : $default_from,
     'language' => $language,
     'params'   => $params,
     'send'     => TRUE,
@@ -185,8 +185,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
           '!name' => empty($matches[1]) ? $matches[2] : $matches[1],
           '!site_name' => variable_get('site_name', 'Drupal'),
         ));
-        $message['from'] = $display_name;
-        $headers['From'] = drupal_mail_format_display_name($display_name) . ' <' . $default_from. '>';
+        $message['from'] = $headers['From'] = drupal_mail_format_display_name($display_name) . ' <' . $default_from. '>';
       }
     }
   }
