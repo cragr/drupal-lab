@@ -30,12 +30,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   of this bundle.
  * - include_translations: (optional) Indicates if the entity translations
  *   should be included, defaults to TRUE.
- * - include_revisions: (optional) Indicates if the entity revisions
- *   should be included, defaults to FALSE. Will be silently ignored if entity
- *   type is not revisionable.
- * - revisions_bc_mode: Set this to FALSE.
- *   Not setting this to FALSE is deprecated in drupal:9.2.0 and that code path
- *   will be removed from drupal:10.0.0.
+ * - include_revisions: (mandatory) Indicates if the entity revisions should be
+ *   included. Will be silently ignored if entity type is not revisionable.
+ *   Not setting this will trigger a BC mode with inconsistent IdMap, which is
+ *   deprecated in drupal:9.2.0 and will be removed from drupal:10.0.0.
  *   @see https://www.drupal.org/node/3191344
  *
  * Examples:
@@ -45,12 +43,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @code
  * source:
  *   plugin: content_entity:node
+ *   # Setting this is mandatory to not get inconsistent migrations.
+ *   include_revisions: false
  * @endcode
  *
  * This will return all node revisions, from every bundle and every translation.
  * @code
  * source:
  *   plugin: content_entity:node
+ *   # Setting this is mandatory to not get inconsistent migrations.
  *   include_revisions: true
  * @endcode
  *
@@ -60,6 +61,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   plugin: content_entity:node
  *   bundle: article
  *   include_translations: false
+ *   # Setting this is mandatory to not get inconsistent migrations.
+ *   include_revisions: false
  * @endcode
  *
  * @MigrateSource(
@@ -107,8 +110,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   protected $defaultConfiguration = [
     'bundle' => NULL,
     'include_translations' => TRUE,
-    'include_revisions' => FALSE,
-    'revisions_bc_mode' => TRUE,
+    'include_revisions' => 'd9bc',
   ];
 
   /**
@@ -116,8 +118,11 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     $configuration += $this->defaultConfiguration;
-    if ($configuration['revisions_bc_mode']) {
-      @trigger_error('Calling ContentEntity migration with non-false revisions_bc_mode configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344', E_USER_DEPRECATED);
+    if ($configuration['include_revisions'] === 'd9bc') {
+      @trigger_error('Calling ContentEntity migration with unset include_revisions configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344', E_USER_DEPRECATED);
+    }
+    elseif (!is_bool($configuration['include_revisions'])) {
+      throw new \UnexpectedValueException('The include_revisions parameter mus be a boolean.');
     }
     if (empty($plugin_definition['entity_type'])) {
       throw new InvalidPluginDefinitionException($plugin_id, 'Missing required "entity_type" definition.');
@@ -234,7 +239,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
       ->getStorage($this->entityType->id())
       ->getQuery()
       ->accessCheck(FALSE);
-    if ($this->configuration['include_revisions'] && $this->entityType->isRevisionable()) {
+    if ($this->configuration['include_revisions'] === TRUE && $this->entityType->isRevisionable()) {
       $query->allRevisions();
     }
     if (!empty($this->configuration['bundle'])) {
@@ -288,8 +293,8 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
-    $include_revision_key = $this->configuration['revisions_bc_mode']
-      || $this->configuration['include_revisions'];
+    $include_revision_key = $this->configuration['include_revisions'] === 'd9bc'
+      || $this->configuration['include_revisions'] === TRUE;
     if ($include_revision_key && $this->entityType->isRevisionable()) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);

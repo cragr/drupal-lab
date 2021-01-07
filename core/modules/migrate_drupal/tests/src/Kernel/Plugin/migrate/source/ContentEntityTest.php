@@ -247,29 +247,12 @@ class ContentEntityTest extends KernelTestBase {
   public function migrationConfigurationProvider() {
     $data = [];
     foreach ([FALSE, TRUE] as $include_translations) {
-      foreach ([FALSE, TRUE] as $include_revisions) {
+      // @todo Remove the 'd9bc' option before drupal:10.0.0
+      foreach (['d9bc', FALSE, TRUE] as $include_revisions) {
         $configuration = [
           'include_translations' => $include_translations,
           'include_revisions' => $include_revisions,
         ];
-        // That array key gives us nice test failure messages.
-        $data[http_build_query($configuration)] = [$configuration];
-      }
-    }
-    return $data;
-  }
-
-  /**
-   * Provide migration configuration, iterating all options, including legacy.
-   *
-   * @ingroup legacy
-   */
-  public function migrationConfigurationLegacyProvider() {
-    $data = [];
-    foreach ($this->migrationConfigurationProvider() as $configurations) {
-      $configuration = $configurations[0];
-      foreach ([FALSE, TRUE] as $revisions_bc_mode) {
-        $configuration['revisions_bc_mode'] = $revisions_bc_mode;
         // That array key gives us nice test failure messages.
         $data[http_build_query($configuration)] = [$configuration];
       }
@@ -283,8 +266,8 @@ class ContentEntityTest extends KernelTestBase {
    * @ingroup legacy
    */
   protected function maybeExpectRevisionsBcModeDeprecation($configuration) {
-    if ($configuration['revisions_bc_mode'] ?? TRUE) {
-      $this->expectDeprecation('Calling ContentEntity migration with non-false revisions_bc_mode configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344');
+    if ($configuration['include_revisions'] === 'd9bc') {
+      $this->expectDeprecation('Calling ContentEntity migration with unset include_revisions configuration parameter is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Instead, you should set this parameter to false. See https://www.drupal.org/node/3191344');
     }
   }
 
@@ -310,8 +293,8 @@ class ContentEntityTest extends KernelTestBase {
       $this->assertArrayHasKey($entity_type->getKey('langcode'), $ids);
     }
 
-    $include_revision_key = ($configuration['revisions_bc_mode'] ?? TRUE)
-      || ($configuration['include_revisions'] ?? FALSE);
+    $include_revision_key = $configuration['include_revisions'] === 'd9bc'
+      || ($configuration['include_revisions']) === TRUE;
     if ($entity_type->isRevisionable() && $include_revision_key) {
       $ids_count_expected++;
       $this->assertArrayHasKey($entity_type->getKey('revision'), $ids);
@@ -326,7 +309,7 @@ class ContentEntityTest extends KernelTestBase {
    * Legacy group is needed to expect deprecation.
    * @group legacy
    *
-   * @dataProvider migrationConfigurationLegacyProvider
+   * @dataProvider migrationConfigurationProvider
    */
   public function testUserSource(array $configuration) {
     $this->maybeExpectRevisionsBcModeDeprecation($configuration);
@@ -358,7 +341,7 @@ class ContentEntityTest extends KernelTestBase {
    * Legacy group is needed to expect deprecation.
    * @group legacy
    *
-   * @dataProvider migrationConfigurationLegacyProvider
+   * @dataProvider migrationConfigurationProvider
    */
   public function testFileSource(array $configuration) {
     $file = File::create([
@@ -397,7 +380,7 @@ class ContentEntityTest extends KernelTestBase {
    * Legacy group is needed to expect deprecation.
    * @group legacy
    *
-   * @dataProvider migrationConfigurationLegacyProvider
+   * @dataProvider migrationConfigurationProvider
    */
   public function testNodeSource(array $configuration) {
     $configuration += ['bundle' => $this->bundle];
@@ -416,10 +399,9 @@ class ContentEntityTest extends KernelTestBase {
     $values = $node_source->current()->getSource();
     $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
     $this->assertEquals(1, $values['nid']);
-    // IDs have no deltas.
-    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode']
-      || $configuration['include_revisions'];
-    if ($expectRevisionWithNoDelta) {
+    $expectRevisionAsIdWithNoDelta = $configuration['include_revisions'] === 'd9bc'
+      || $configuration['include_revisions'] === TRUE;
+    if ($expectRevisionAsIdWithNoDelta) {
       $this->assertEquals(1, $values['vid']);
     }
     else {
@@ -455,7 +437,7 @@ class ContentEntityTest extends KernelTestBase {
    * Legacy group is needed to expect deprecation.
    * @group legacy
    *
-   * @dataProvider migrationConfigurationLegacyProvider
+   * @dataProvider migrationConfigurationProvider
    */
   public function testMediaSource(array $configuration) {
     $values = [
@@ -493,10 +475,9 @@ class ContentEntityTest extends KernelTestBase {
     $media_source->rewind();
     $values = $media_source->current()->getSource();
     $this->assertEquals(1, $values['mid']);
-    // IDs have no deltas.
-    $expectRevisionWithNoDelta = $configuration['revisions_bc_mode']
-      || $configuration['include_revisions'];
-    if ($expectRevisionWithNoDelta) {
+    $expectRevisionAsIdWithNoDelta = $configuration['include_revisions'] === 'd9bc'
+      || $configuration['include_revisions'] === TRUE;
+    if ($expectRevisionAsIdWithNoDelta) {
       $this->assertEquals(1, $values['vid']);
     }
     else {
@@ -514,7 +495,7 @@ class ContentEntityTest extends KernelTestBase {
    * Legacy group is needed to expect deprecation.
    * @group legacy
    *
-   * @dataProvider migrationConfigurationLegacyProvider
+   * @dataProvider migrationConfigurationProvider
    */
   public function testTermSource(array $configuration) {
     $term2 = Term::create([
