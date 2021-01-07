@@ -43,6 +43,10 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    */
   public function onEntityCreate(EntityCreateEvent $event) {
     $this->moduleHandler->invokeAll('entity_create', [$event->getEntity()]);
+    $this->moduleHandler->invokeAll(
+      $event->getEntity()->getEntityTypeId() . '_create',
+      [$event->getEntity()]
+    );
   }
 
   /**
