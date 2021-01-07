@@ -534,7 +534,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     }
     else {
       $event = new EntityInsertEvent($entity);
-
     }
     $event_dispatcher->dispatch($event);
 

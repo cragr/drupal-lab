@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Event\EntityCreateEvent;
 use Drupal\Core\Entity\Event\EntityPreSaveEvent;
 use Drupal\Core\Entity\Event\EntityInsertEvent;
@@ -42,11 +43,7 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    *   The entity event.
    */
   public function onEntityCreate(EntityCreateEvent $event) {
-    $this->moduleHandler->invokeAll('entity_create', [$event->getEntity()]);
-    $this->moduleHandler->invokeAll(
-      $event->getEntity()->getEntityTypeId() . '_create',
-      [$event->getEntity()]
-    );
+    $this->invokeHooks('create', $event->getEntity());
   }
 
   /**
@@ -56,11 +53,7 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    *   The entity event.
    */
   public function onEntityPreSave(EntityPreSaveEvent $event) {
-    $this->moduleHandler->invokeAll('entity_presave', [$event->getEntity()]);
-    $this->moduleHandler->invokeAll(
-      $event->getEntity()->getEntityTypeId() . '_presave',
-      [$event->getEntity()]
-    );
+    $this->invokeHooks('presave', $event->getEntity());
   }
 
   /**
@@ -70,11 +63,7 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    *   The entity event.
    */
   public function onEntityInsert(EntityInsertEvent $event) {
-    $this->moduleHandler->invokeAll('entity_insert', [$event->getEntity()]);
-    $this->moduleHandler->invokeAll(
-      $event->getEntity()->getEntityTypeId() . '_insert',
-      [$event->getEntity()]
-    );
+    $this->invokeHooks('insert', $event->getEntity());
   }
 
   /**
@@ -84,11 +73,7 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    *   The entity event.
    */
   public function onEntityUpdate(EntityUpdateEvent $event) {
-    $this->moduleHandler->invokeAll('entity_update', [$event->getEntity()]);
-    $this->moduleHandler->invokeAll(
-      $event->getEntity()->getEntityTypeId() . '_update',
-      [$event->getEntity()]
-    );
+    $this->invokeHooks('update', $event->getEntity());
   }
 
   /**
@@ -98,11 +83,7 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    *   The entity event.
    */
   public function onEntityPreDelete(EntityPreDeleteEvent $event) {
-    $this->moduleHandler->invokeAll('entity_predelete', [$event->getEntity()]);
-    $this->moduleHandler->invokeAll(
-      $event->getEntity()->getEntityTypeId() . '_predelete',
-      [$event->getEntity()]
-    );
+    $this->invokeHooks('predelete', $event->getEntity());
   }
 
   /**
@@ -112,11 +93,7 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
    *   The entity event.
    */
   public function onEntityDelete(EntityDeleteEvent $event) {
-    $this->moduleHandler->invokeAll('entity_delete', [$event->getEntity()]);
-    $this->moduleHandler->invokeAll(
-      $event->getEntity()->getEntityTypeId() . '_delete',
-      [$event->getEntity()]
-    );
+    $this->invokeHooks('delete', $event->getEntity());
   }
 
   /**
@@ -134,4 +111,14 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
     return $events;
   }
 
+  /**
+   * Invoke hook_entity_{$hook} and hook_ENTITY_TYPE_{$hook}.
+   *
+   * @param string $hook
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   */
+  private function invokeHooks(string $hook, EntityInterface $entity) {
+    $this->moduleHandler->invokeAll('entity_' . $hook, [$entity]);
+    $this->moduleHandler->invokeAll($entity->getEntityTypeId() . '_' . $hook, [$entity]);
+  }
 }
