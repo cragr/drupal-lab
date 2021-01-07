@@ -12,7 +12,6 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\user\Entity\User;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\Normalizer\LinkCollectionNormalizer
