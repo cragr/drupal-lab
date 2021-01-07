@@ -520,9 +520,6 @@ Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
 
-Media Initiative
-- Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
-
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
 
