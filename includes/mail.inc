@@ -181,13 +181,12 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
       // $          = end of string
       preg_match('/^"?([^<]*?)"? *(?:<(.*)>)?$/', $from, $matches);
       if ($matches) {
-        $from_reformatted = t('"!name via !site_name" <!site_mail>', [
+        $display_name = t('"!name via !site_name"', array(
           '!name' => empty($matches[1]) ? $matches[2] : $matches[1],
           '!site_name' => variable_get('site_name', 'Drupal'),
-          '!site_mail' => $default_from,
-        ]);
-        $message['from'] = $from_reformatted;
-        $headers['From'] = mime_header_encode($from_reformatted);
+        ));
+        $message['from'] = $display_name;
+        $headers['From'] = drupal_mail_format_display_name($display_name) . ' <' . $default_from. '>';
       }
     }
   }
