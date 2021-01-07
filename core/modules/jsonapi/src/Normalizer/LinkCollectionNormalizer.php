@@ -4,6 +4,7 @@ namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
@@ -66,6 +67,23 @@ class LinkCollectionNormalizer extends NormalizerBase {
   protected $hashSalt;
 
   /**
+   * The current user making the request.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * LinkCollectionNormalizer constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   */
+  public function __construct(AccountInterface $current_user) {
+    $this->currentUser = $current_user;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
@@ -85,11 +103,9 @@ class LinkCollectionNormalizer extends NormalizerBase {
         // they're accessible or not. Some other links might target routes to
         // which the current user will clearly not have access, in that case
         // this code proactively removes those links from the response.
-        $access = $link->getUri()->access(NULL, TRUE);
+        $access = $link->getUri()->access($this->currentUser, TRUE);
         $cacheability = CacheableMetadata::createFromObject($link)->addCacheableDependency($access);
-        // Neutral links are included in the response since access will be
-        // definitively checked when the link is followed.
-        $normalized[$link_key] = !$access->isForbidden()
+        $normalized[$link_key] = $access->isAllowed()
           ? new CacheableNormalization($cacheability, $normalization)
           : new CacheableOmission($cacheability);
       }
