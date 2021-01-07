@@ -288,7 +288,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
     $include_revision_key = $this->configuration['include_revisions']
-      || $this->configuration['revisions_bc_mode'] ;
+      || $this->configuration['revisions_bc_mode'];
     if ($include_revision_key && $this->entityType->isRevisionable()) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
