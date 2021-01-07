@@ -30,9 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   of this bundle.
  * - include_translations: (optional) Indicates if the entity translations
  *   should be included, defaults to TRUE.
- * - include_revisions: (optional) Indicates if the entity revisions
- *   should be included, defaults to FALSE. Will be silently ignored if entity
- *   type is not revisionable.
  * - revisions_bc_mode: Set this to FALSE.
  *   Not setting this to FALSE is deprecated in drupal:9.2.0 and that code path
  *   will be removed from drupal:10.0.0.
@@ -45,13 +42,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @code
  * source:
  *   plugin: content_entity:node
- * @endcode
- *
- * This will return all node revisions, from every bundle and every translation.
- * @code
- * source:
- *   plugin: content_entity:node
- *   include_revisions: true
  * @endcode
  *
  * This will only return nodes of type 'article' in their default language.
@@ -107,7 +97,6 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   protected $defaultConfiguration = [
     'bundle' => NULL,
     'include_translations' => TRUE,
-    'include_revisions' => FALSE,
     'revisions_bc_mode' => TRUE,
   ];
 
@@ -234,9 +223,6 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
       ->getStorage($this->entityType->id())
       ->getQuery()
       ->accessCheck(FALSE);
-    if ($this->configuration['include_revisions'] && $this->entityType->isRevisionable()) {
-      $query->allRevisions();
-    }
     if (!empty($this->configuration['bundle'])) {
       $query->condition($this->entityType->getKey('bundle'), $this->configuration['bundle']);
     }
@@ -288,8 +274,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
-    $include_revision_key = $this->configuration['revisions_bc_mode']
-      || $this->configuration['include_revisions'];
+    $include_revision_key = $this->configuration['revisions_bc_mode'];
     if ($include_revision_key && $this->entityType->isRevisionable()) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
