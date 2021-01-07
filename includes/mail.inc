@@ -111,7 +111,9 @@ define('MAIL_RFC_2822_SPECIALS', '()<>[]:;@\,."');
  * @param $params
  *   Optional parameters to build the e-mail.
  * @param $from
- *   Sets From to this value, if given.
+ *   Sets the From header to this value, if the domain of the email provided
+ *   matches the approved sending email address (site_mail). Sets the Reply-To
+ *   header to this value if the domains do not match.
  * @param $send
  *   If TRUE, drupal_mail() will call drupal_mail_system()->mail() to deliver
  *   the message, and store the result in $message['result']. Modules
@@ -134,7 +136,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     'module'   => $module,
     'key'      => $key,
     'to'       => $to,
-    'from'     => isset($from) ? $from : $default_from,
+    'from'     => $default_from,
     'language' => $language,
     'params'   => $params,
     'send'     => TRUE,
@@ -162,10 +164,35 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   }
   if ($from && $from != $default_from) {
     $headers['From'] = $from;
-  }
-  $message['headers'] = $headers;
+    // Check to see if the domain matches the specified sending email address.
+    $default_from_parts = explode('@', $default_from);
+    if (count($default_from_parts) == 2 && isset($default_from_parts[1]) &&
+      stripos($from, '@' . $default_from_parts[1]) === FALSE) {
 
-  // Build the e-mail (get subject and body, allow additional headers) by
+      // If domain does not match set Reply-To to From, and reformat From.
+      $headers['Reply-To'] = $from;
+      // Match e-mails of the form 'My Name <email@domain.com>' as follows:
+      // ^          = beginning of string
+      // "?         = optional quote
+      // ([^<]*?)   = match optional characters that aren't a < (non-greedy)
+      // "?         = optional quote
+      // SPACE*     = optional spaces
+      // (?:<(.*)>) = < matching stuff > (without the angle brakets)
+      // $          = end of string
+      preg_match('/^"?([^<]*?)"? *(?:<(.*)>)?$/', $from, $matches);
+      if ($matches) {
+        $from_reformatted = t('"!name via !site_name" <!site_mail>', array(
+          '!name' => empty($matches[1]) ? $matches[2] : $matches[1],
+          '!site_name' => variable_get('site_name', 'Drupal'),
+          '!site_mail' => $default_from,
+        ));
+        $message['from'] = $from_reformatted;
+        $headers['From'] = mime_header_encode($from_reformatted);
+      }
+    }
+    $message['headers'] = $headers;
+
+    // Build the e-mail (get subject and body, allow additional headers) by
   // invoking hook_mail() on this module. We cannot use module_invoke() as
   // we need to have $message by reference in hook_mail().
   if (function_exists($function = $module . '_mail')) {
