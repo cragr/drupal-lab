@@ -329,9 +329,9 @@ class ContentEntityTest extends KernelTestBase {
    * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testUserSource(array $configuration) {
-    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:user'));
     $this->maybeExpectRevisionsBcModeDeprecation($configuration);
-    $user_source = $this->sourcePluginManager->createInstance('content_entity:user', $configuration, $migration);
+    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:user', $configuration));
+    $user_source = $migration->getSourcePlugin();
     $this->assertSame('users', $user_source->__toString());
     // ::count is not yet functional for include_translations.
     if (!$configuration['include_translations']) {
@@ -368,9 +368,9 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $file->save();
 
-    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:file'));
     $this->maybeExpectRevisionsBcModeDeprecation($configuration);
-    $file_source = $this->sourcePluginManager->createInstance('content_entity:file', $configuration, $migration);
+    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:file', $configuration));
+    $file_source = $migration->getSourcePlugin();
     $this->assertSame('files', $file_source->__toString());
     // ::count is not yet functional for include_translations.
     if (!$configuration['include_translations']) {
@@ -400,10 +400,10 @@ class ContentEntityTest extends KernelTestBase {
    * @dataProvider migrationConfigurationLegacyProvider
    */
   public function testNodeSource(array $configuration) {
-    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node'));
     $configuration += ['bundle' => $this->bundle];
     $this->maybeExpectRevisionsBcModeDeprecation($configuration);
-    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', $configuration, $migration);
+    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node', $configuration));
+    $node_source = $migration->getSourcePlugin();
     $this->assertSame('content items', $node_source->__toString());
     $this->assertCorrectIds($node_source, $configuration);
     $fields = $node_source->fields();
@@ -475,9 +475,9 @@ class ContentEntityTest extends KernelTestBase {
     $configuration += [
       'bundle' => 'image',
     ];
-    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:media'));
     $this->maybeExpectRevisionsBcModeDeprecation($configuration);
-    $media_source = $this->sourcePluginManager->createInstance('content_entity:media', $configuration, $migration);
+    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:media', $configuration));
+    $media_source = $migration->getSourcePlugin();
     $this->assertSame('media items', $media_source->__toString());
     // ::count is not yet functional for include_translations.
     if (!$configuration['include_translations']) {
@@ -528,9 +528,9 @@ class ContentEntityTest extends KernelTestBase {
     $configuration += [
       'bundle' => $this->vocabulary,
     ];
-    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:taxonomy_term'));
     $this->maybeExpectRevisionsBcModeDeprecation($configuration);
-    $term_source = $this->sourcePluginManager->createInstance('content_entity:taxonomy_term', $configuration, $migration);
+    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:taxonomy_term', $configuration));
+    $term_source = $migration->getSourcePlugin();
     $this->assertSame('taxonomy terms', $term_source->__toString());
     // ::count is not yet functional for include_translations.
     if (!$configuration['include_translations']) {
@@ -563,15 +563,17 @@ class ContentEntityTest extends KernelTestBase {
    *
    * @param string $plugin_id
    *   The plugin id.
+   * @param array $configuration
+   *   The plugin configuration.
    *
    * @return array
    *   The definition.
    */
-  protected function migrationDefinition($plugin_id) {
+  protected function migrationDefinition($plugin_id, $configuration = []) {
     return [
       'source' => [
         'plugin' => $plugin_id,
-      ],
+      ] + $configuration,
       'process' => [],
       'destination' => [
         'plugin' => 'null',
