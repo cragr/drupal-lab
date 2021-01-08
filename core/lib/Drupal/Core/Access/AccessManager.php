@@ -137,7 +137,8 @@ class AccessManager implements AccessManagerInterface {
       foreach ($checks as $service_id) {
         $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
       }
-    } else {
+    }
+    else {
       $result = AccessResult::allowedIf(!empty($request_checks) && !isset($request));
     }
 
