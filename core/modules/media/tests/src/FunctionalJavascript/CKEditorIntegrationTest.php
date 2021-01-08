@@ -1533,7 +1533,7 @@ JS;
    */
   protected function clickPathLinkByTitleAttribute($text) {
     $this->getSession()->switchToIFrame();
-    $selector = '//span[@id="cke_1_path"]//a[@title="' . $text . '"]';
+    $selector = '//span[@id="cke_2_path"]//a[@title="' . $text . '"]';
     $this->assertSession()->elementExists('xpath', $selector)->click();
   }
 

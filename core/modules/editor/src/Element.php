@@ -67,8 +67,13 @@ class Element implements TrustedCallbackInterface {
       return $element;
     }
 
+    $field_ids = [$element['value']['#id']];
+
+    if (isset($element['summary'])) {
+      $field_ids[] = $element['summary']['#id'];
+    }
+
     // Use a hidden element for a single text format.
-    $field_id = $element['value']['#id'];
     if (!$element['format']['format']['#access']) {
       // Use the first (and only) available text format.
       $format_id = $format_ids[0];
@@ -77,14 +82,14 @@ class Element implements TrustedCallbackInterface {
         '#name' => $element['format']['format']['#name'],
         '#value' => $format_id,
         '#attributes' => [
-          'data-editor-for' => $field_id,
+          'data-editor-for' => implode(',', $field_ids),
         ],
       ];
     }
     // Otherwise, attach to text format selector.
     else {
       $element['format']['format']['#attributes']['class'][] = 'editor';
-      $element['format']['format']['#attributes']['data-editor-for'] = $field_id;
+      $element['format']['format']['#attributes']['data-editor-for'] = implode(',', $field_ids);
     }
 
     // Hide the text format's filters' guidelines of those text formats that have

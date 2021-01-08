@@ -148,7 +148,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $web_assert->elementExists('css', '#cke_edit-body-0-value .cke_button__drupalimage');
 
     // Asserts the image dialog opens when clicking the Image button.
-    $this->click('.cke_button__drupalimage');
+    $this->waitForEditor();
+    $this->pressEditorButton('drupalimage');
     $this->assertNotEmpty($web_assert->waitForElement('css', '.ui-dialog'));
 
     $web_assert->elementContains('css', '.ui-dialog .ui-dialog-titlebar', 'Insert Image');
