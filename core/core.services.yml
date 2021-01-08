@@ -596,8 +596,8 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }
-  entity_events_subscriber:
-    class: Drupal\Core\EventSubscriber\EntityEventsSubscriber
+  entity_event_subscriber:
+    class: Drupal\Core\EventSubscriber\EntityEventSubscriber
     arguments: ['@module_handler']
     tags:
       - { name: event_subscriber }

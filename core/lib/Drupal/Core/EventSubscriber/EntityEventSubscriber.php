@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Executes entity hooks.
  */
-class EntityEventsSubscriber implements EventSubscriberInterface {
+class EntityEventSubscriber implements EventSubscriberInterface {
 
   /**
    * The module handler.
@@ -121,4 +121,5 @@ class EntityEventsSubscriber implements EventSubscriberInterface {
     $this->moduleHandler->invokeAll('entity_' . $hook, [$entity]);
     $this->moduleHandler->invokeAll($entity->getEntityTypeId() . '_' . $hook, [$entity]);
   }
+
 }
