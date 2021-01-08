@@ -660,6 +660,16 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getBundleOfEntityTypeIds(): array {
+    if ($this->bundle_of && !is_array($this->bundle_of)) {
+      @trigger_error("Declaring 'bundle_of' annotation as string is deprecated in drupal:9.2.0 and it must be declared as an array in drupal:10.0.0. See https://www.drupal.org/node/TBD", E_USER_DEPRECATED);
+    }
+    return $this->bundle_of;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getBundleOf() {
     return $this->bundle_of;
   }
