@@ -105,6 +105,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   protected $languageManager;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $eventDispatcher;
+
+  /**
    * The database connection to use.
    *
    * @var \Drupal\Core\Database\Connection|\PHPUnit\Framework\MockObject\MockObject
@@ -129,6 +136,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->languageManager->expects($this->any())
       ->method('getDefaultLanguage')
       ->will($this->returnValue(new Language(['langcode' => 'en'])));
@@ -138,6 +146,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->container->set('entity_type.manager', $this->entityTypeManager);
     $this->container->set('entity_field.manager', $this->entityFieldManager);
+    $this->container->set('event_dispatcher', $this->eventDispatcher);
   }
 
   /**

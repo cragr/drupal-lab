@@ -64,6 +64,13 @@ class ConfigEntityStorageTest extends UnitTestCase {
   protected $languageManager;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $eventDispatcher;
+
+  /**
    * The config storage.
    *
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorage
@@ -133,6 +140,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory = $this->prophesize(ConfigFactoryInterface::class);
 
+    $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
     $this->entityQuery = $this->prophesize(QueryInterface::class);
     $entity_query_factory = $this->prophesize(QueryFactoryInterface::class);
     $entity_query_factory->get($entity_type, 'AND')->willReturn($this->entityQuery->reveal());
@@ -159,6 +167,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator->reveal());
     $container->set('config.manager', $this->configManager->reveal());
     $container->set('language_manager', $this->languageManager->reveal());
+    $container->set('event_dispatcher', $this->eventDispatcher);
     \Drupal::setContainer($container);
 
   }
