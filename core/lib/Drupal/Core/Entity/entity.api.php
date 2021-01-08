@@ -446,7 +446,7 @@ use Drupal\node\Entity\NodeType;
  *   the annotation property 'bundle_entity_type' on the
  *   \Drupal\node\Entity\Node class. Also, the
  *   bundle config entity type annotation must have a 'bundle_of' property,
- *   giving the machine name of the entity type it is acting as a bundle for.
+ *   giving the machine name of the entity types it is acting as a bundle for.
  *   These machine names are considered permanent, they may not be renamed.
  * - Additional annotation properties can be seen on entity class examples such
  *   as \Drupal\node\Entity\Node (content) and \Drupal\user\Entity\Role
