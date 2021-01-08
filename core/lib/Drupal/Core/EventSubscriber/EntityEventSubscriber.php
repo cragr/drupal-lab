@@ -118,8 +118,8 @@ class EntityEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    */
   private function invokeHooks(string $hook, EntityInterface $entity) {
-    $this->moduleHandler->invokeAll('entity_' . $hook, [$entity]);
     $this->moduleHandler->invokeAll($entity->getEntityTypeId() . '_' . $hook, [$entity]);
+    $this->moduleHandler->invokeAll('entity_' . $hook, [$entity]);
   }
 
 }
