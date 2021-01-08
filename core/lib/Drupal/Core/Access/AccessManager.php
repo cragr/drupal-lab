@@ -140,6 +140,7 @@ class AccessManager implements AccessManagerInterface {
     } else {
       $result = AccessResult::allowedIf(!empty($request_checks) && !isset($request));
     }
+
     return $return_as_object ? $result : $result->isAllowed();
   }
 
