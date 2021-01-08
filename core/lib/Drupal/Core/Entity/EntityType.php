@@ -671,6 +671,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getBundleOf() {
+    @trigger_error("EntityType::getBundleOf() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, use \Drupal\Core\Entity\EntityTypeInterface::getBundleOfEntityTypeIds(). See https://www.drupal.org/node/TBD", E_USER_DEPRECATED);
     return $this->bundle_of;
   }
 
