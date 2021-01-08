@@ -656,8 +656,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
     $id = parent::doPreSave($entity);
 
-    $this->invokeFieldMethod('preSave', $entity);
-
     if (!$entity->isNew()) {
       // If the ID changed then original can't be loaded, throw an exception
       // in that case.
@@ -685,8 +683,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
 
     parent::doPostSave($entity, $update);
-
-    $this->invokeFieldPostSave($entity, FALSE);
 
     // The revision is stored, it should no longer be marked as new now.
     if ($this->entityType->isRevisionable()) {
@@ -820,7 +816,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   A multidimensional associative array of results, keyed by entity
    *   translation language code and field name.
    */
-  protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
+  public function invokeFieldMethod($method, ContentEntityInterface $entity) {
     $result = [];
     $args = array_slice(func_get_args(), 2);
     $langcodes = array_keys($entity->getTranslationLanguages());
@@ -869,7 +865,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @param bool $update
    *   Specifies whether the entity is being updated or created.
    */
-  protected function invokeFieldPostSave(ContentEntityInterface $entity, $update) {
+  public function invokeFieldPostSave(ContentEntityInterface $entity, $update) {
     // For each entity translation this returns an array of resave flags keyed
     // by field name, thus we merge them to obtain a list of fields to resave.
     $resave = [];
