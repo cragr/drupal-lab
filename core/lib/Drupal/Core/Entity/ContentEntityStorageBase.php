@@ -656,6 +656,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
     $id = parent::doPreSave($entity);
 
+    $this->invokeFieldMethod('preSave', $entity);
+
     if (!$entity->isNew()) {
       // If the ID changed then original can't be loaded, throw an exception
       // in that case.
@@ -683,6 +685,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
 
     parent::doPostSave($entity, $update);
+
+    $this->invokeFieldPostSave($entity, FALSE);
 
     // The revision is stored, it should no longer be marked as new now.
     if ($this->entityType->isRevisionable()) {
@@ -781,26 +785,24 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * Invokes a hook on behalf of the entity.
    *
    * @param string $hook
-   *   One of 'create', 'presave', 'insert', 'update', 'predelete', 'delete', or
-   *   'revision_delete'.
+   *   A content entity hook name.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    */
   protected function invokeHook($hook, EntityInterface $entity) {
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-
-    switch ($hook) {
-      case 'presave':
-        $this->invokeFieldMethod('preSave', $entity);
-        break;
-
-      case 'insert':
-        $this->invokeFieldPostSave($entity, FALSE);
-        break;
-
-      case 'update':
-        $this->invokeFieldPostSave($entity, TRUE);
-        break;
+    $deprecated_hooks = [
+      'create',
+      'delete',
+      'insert',
+      'predelete',
+      'presave',
+      'update',
+    ];
+    if (!in_array($hook, $deprecated_hooks)) {
+      // Invoke the hook.
+      $this->moduleHandler->invokeAll($this->entityTypeId . '_' . $hook, [$entity]);
+      // Invoke the respective entity-level hook.
+      $this->moduleHandler->invokeAll('entity_' . $hook, [$entity, $this->entityTypeId]);
     }
   }
 

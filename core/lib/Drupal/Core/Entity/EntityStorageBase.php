@@ -528,13 +528,13 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // Allow code to run after saving.
     $entity->postSave($this, $update);
 
-    $event_dispatcher = \Drupal::service('event_dispatcher');
     if ($update) {
       $event = new EntityUpdateEvent($entity);
     }
     else {
       $event = new EntityInsertEvent($entity);
     }
+    $event_dispatcher = \Drupal::service('event_dispatcher');
     $event_dispatcher->dispatch($event);
 
     // After saving, this is now the "original entity", and subsequent saves
