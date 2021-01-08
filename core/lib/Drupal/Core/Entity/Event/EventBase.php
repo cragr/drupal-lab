@@ -7,8 +7,6 @@ use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Entity event base class.
- *
- * @see \Drupal\Core\Entity\EntityStorageBase::invokeHook()
  */
 class EventBase extends Event {
 
