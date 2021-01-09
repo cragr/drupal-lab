@@ -314,7 +314,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->with('test_entity_type_load')
       ->will($this->returnValue([]));
 
-
     $event = new EntityPreSaveEvent($entity);
     $this->eventDispatcher->dispatch($event)->shouldBeCalled();
     $event = new EntityUpdateEvent($entity);
