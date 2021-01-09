@@ -3,6 +3,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Event\EntityInsertEvent;
 use Drupal\Core\Entity\Event\EntityPreSaveEvent;
 use Drupal\Core\Entity\Event\EntityUpdateEvent;
@@ -15,6 +16,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ContentEntityEventSubscriber implements EventSubscriberInterface {
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -24,12 +32,14 @@ class ContentEntityEventSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new EntityRouteProviderSubscriber instance.
    *
-   * @todo Inject entity type handler to subscribe to entity type level hooks.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
   }
 
@@ -41,8 +51,9 @@ class ContentEntityEventSubscriber implements EventSubscriberInterface {
    */
   public function onEntityInsert(EntityInsertEvent $event) {
     $entity = $event->getEntity();
-    if ($entity instanceof ContentEntityBase) {
-      \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->invokeFieldPostSave($entity, FALSE);
+    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+    if ($entity instanceof ContentEntityBase && method_exists($storage, 'invokeFieldPostSave')) {
+      $storage->invokeFieldPostSave($entity, FALSE);
     }
   }
 
@@ -54,8 +65,9 @@ class ContentEntityEventSubscriber implements EventSubscriberInterface {
    */
   public function onEntityPreSave(EntityPreSaveEvent $event) {
     $entity = $event->getEntity();
-    if ($entity instanceof ContentEntityBase) {
-      \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->invokeFieldMethod('preSave', $entity);
+    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+    if ($entity instanceof ContentEntityBase && method_exists($storage, 'invokeFieldMethod')) {
+      $storage->invokeFieldMethod('preSave', $entity);
     }
   }
 
@@ -67,8 +79,9 @@ class ContentEntityEventSubscriber implements EventSubscriberInterface {
    */
   public function onEntityUpdate(EntityUpdateEvent $event) {
     $entity = $event->getEntity();
-    if ($entity instanceof ContentEntityBase) {
-      \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->invokeFieldPostSave($entity, TRUE);
+    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
+    if ($entity instanceof ContentEntityBase && method_exists($storage, 'invokeFieldPostSave')) {
+      $storage->invokeFieldPostSave($entity, TRUE);
     }
   }
 

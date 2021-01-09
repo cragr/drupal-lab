@@ -603,7 +603,7 @@ services:
       - { name: event_subscriber }
   content_entity_event_subscriber:
     class: Drupal\Core\EventSubscriber\ContentEntityEventSubscriber
-    arguments: ['@module_handler']
+    arguments: ['@entity_type.manager', '@module_handler']
     tags:
       - { name: event_subscriber }
   entity.definition_update_manager:
