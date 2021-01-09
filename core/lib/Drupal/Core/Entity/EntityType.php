@@ -662,7 +662,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    */
   public function getBundleOfEntityTypeIds(): array {
     if ($this->bundle_of && !is_array($this->bundle_of)) {
-      @trigger_error("Declaring 'bundle_of' annotation as string is deprecated in drupal:9.2.0 and it must be declared as an array in drupal:10.0.0. See https://www.drupal.org/node/TBD", E_USER_DEPRECATED);
+      @trigger_error("Declaring 'bundle_of' annotation as string is deprecated in drupal:9.2.0 and it must be declared as an array in drupal:10.0.0. See https://www.drupal.org/node/3191815", E_USER_DEPRECATED);
       return [$this->bundle_of];
     }
     return $this->bundle_of;
@@ -672,7 +672,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function getBundleOf() {
-    @trigger_error("EntityType::getBundleOf() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, use \Drupal\Core\Entity\EntityTypeInterface::getBundleOfEntityTypeIds(). See https://www.drupal.org/node/TBD", E_USER_DEPRECATED);
+    @trigger_error("EntityType::getBundleOf() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead, use \Drupal\Core\Entity\EntityTypeInterface::getBundleOfEntityTypeIds(). See https://www.drupal.org/node/3191815", E_USER_DEPRECATED);
     return $this->bundle_of;
   }
 
