@@ -10,6 +10,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Event\EntityCreateEvent;
+use Drupal\Core\Entity\Event\EntityDeleteEvent;
+use Drupal\Core\Entity\Event\EntityInsertEvent;
+use Drupal\Core\Entity\Event\EntityPreDeleteEvent;
+use Drupal\Core\Entity\Event\EntityPreSaveEvent;
+use Drupal\Core\Entity\Event\EntityUpdateEvent;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
@@ -83,6 +89,13 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   protected $cacheTagsInvalidator;
 
   /**
+   * The event dispatcher.
+   *
+   * @var Symfony\Component\EventDispatcher\EventDispatcherInterface|\Prophecy\Prophecy\ProphecyInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -135,6 +148,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->will($this->returnValue($language));
     $event_dispatcher = $this->prophesize(EventDispatcherInterface::class);
+    $this->eventDispatcher = $event_dispatcher;
 
     $this->entityStorage = new KeyValueEntityStorage($this->entityType, $this->keyValueStore, $this->uuidService, $this->languageManager, new MemoryCache());
     $this->entityStorage->setModuleHandler($this->moduleHandler);
@@ -158,12 +172,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('test_entity_type_create');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_create');
     $this->uuidService->expects($this->never())
       ->method('generate');
 
@@ -171,6 +179,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Entity\EntityInterface', $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertSame('baz', $entity->uuid());
+
+    $event = new EntityCreateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
   }
 
   /**
@@ -184,12 +195,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage(NULL);
 
-    $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('test_entity_type_create');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_create');
     $this->uuidService->expects($this->never())
       ->method('generate');
 
@@ -197,6 +202,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Entity\EntityInterface', $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertSame('baz', $entity->uuid());
+
+    $event = new EntityCreateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
   }
 
   /**
@@ -212,12 +220,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('test_entity_type_create');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_create');
     $this->uuidService->expects($this->once())
       ->method('generate')
       ->will($this->returnValue('bar'));
@@ -226,6 +228,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->assertInstanceOf('Drupal\Core\Entity\EntityInterface', $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertSame('bar', $entity->uuid());
+
+    $event = new EntityCreateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+
     return $entity;
   }
 
@@ -259,18 +265,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('toArray')
       ->will($this->returnValue($expected));
 
-    $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('test_entity_type_presave');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_presave');
-    $this->moduleHandler->expects($this->at(2))
-      ->method('invokeAll')
-      ->with('test_entity_type_insert');
-    $this->moduleHandler->expects($this->at(3))
-      ->method('invokeAll')
-      ->with('entity_insert');
+    $event = new EntityPreSaveEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityInsertEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
     $this->keyValueStore->expects($this->once())
       ->method('set')
       ->with('foo', $expected);
@@ -315,18 +313,13 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('getImplementations')
       ->with('test_entity_type_load')
       ->will($this->returnValue([]));
-    $this->moduleHandler->expects($this->at(2))
-      ->method('invokeAll')
-      ->with('test_entity_type_presave');
-    $this->moduleHandler->expects($this->at(3))
-      ->method('invokeAll')
-      ->with('entity_presave');
-    $this->moduleHandler->expects($this->at(4))
-      ->method('invokeAll')
-      ->with('test_entity_type_update');
-    $this->moduleHandler->expects($this->at(5))
-      ->method('invokeAll')
-      ->with('entity_update');
+
+
+    $event = new EntityPreSaveEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityUpdateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+
     $this->keyValueStore->expects($this->once())
       ->method('set')
       ->with('foo', $expected);
@@ -636,30 +629,14 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue(get_class(reset($entities))));
     $this->setUpKeyValueEntityStorage();
 
-    $this->moduleHandler->expects($this->at(0))
-      ->method('invokeAll')
-      ->with('test_entity_type_predelete');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('invokeAll')
-      ->with('entity_predelete');
-    $this->moduleHandler->expects($this->at(2))
-      ->method('invokeAll')
-      ->with('test_entity_type_predelete');
-    $this->moduleHandler->expects($this->at(3))
-      ->method('invokeAll')
-      ->with('entity_predelete');
-    $this->moduleHandler->expects($this->at(4))
-      ->method('invokeAll')
-      ->with('test_entity_type_delete');
-    $this->moduleHandler->expects($this->at(5))
-      ->method('invokeAll')
-      ->with('entity_delete');
-    $this->moduleHandler->expects($this->at(6))
-      ->method('invokeAll')
-      ->with('test_entity_type_delete');
-    $this->moduleHandler->expects($this->at(7))
-      ->method('invokeAll')
-      ->with('entity_delete');
+    $event = new EntityPreDeleteEvent($entities['foo']);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityPreDeleteEvent($entities['bar']);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityDeleteEvent($entities['foo']);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityDeleteEvent($entities['bar']);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
 
     $this->keyValueStore->expects($this->once())
       ->method('deleteMultiple')
