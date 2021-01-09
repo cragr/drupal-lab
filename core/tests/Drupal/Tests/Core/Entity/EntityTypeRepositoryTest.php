@@ -88,11 +88,9 @@ class EntityTypeRepositoryTest extends UnitTestCase {
   public function testGetEntityTypeLabels() {
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getLabel()->willReturn('Apple');
-    $apple->getBundleOf()->willReturn(NULL);
 
     $banana = $this->prophesize(EntityTypeInterface::class);
     $banana->getLabel()->willReturn('Banana');
-    $banana->getBundleOf()->willReturn(NULL);
 
     $this->setUpEntityTypeDefinitions([
       'apple' => $apple,
