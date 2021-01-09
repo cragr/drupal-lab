@@ -20,6 +20,12 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Event\EntityCreateEvent;
+use Drupal\Core\Entity\Event\EntityDeleteEvent;
+use Drupal\Core\Entity\Event\EntityInsertEvent;
+use Drupal\Core\Entity\Event\EntityPreDeleteEvent;
+use Drupal\Core\Entity\Event\EntityPreSaveEvent;
+use Drupal\Core\Entity\Event\EntityUpdateEvent;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -28,6 +34,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityStorage
@@ -66,7 +73,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $eventDispatcher;
 
@@ -140,7 +147,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory = $this->prophesize(ConfigFactoryInterface::class);
 
-    $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
     $this->entityQuery = $this->prophesize(QueryInterface::class);
     $entity_query_factory = $this->prophesize(QueryFactoryInterface::class);
     $entity_query_factory->get($entity_type, 'AND')->willReturn($this->entityQuery->reveal());
@@ -167,7 +174,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator->reveal());
     $container->set('config.manager', $this->configManager->reveal());
     $container->set('language_manager', $this->languageManager->reveal());
-    $container->set('event_dispatcher', $this->eventDispatcher);
+    $container->set('event_dispatcher', $this->eventDispatcher->reveal());
     \Drupal::setContainer($container);
 
   }
@@ -186,10 +193,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $entity->setOriginalId('foo');
     $entity->enforceIsNew();
 
-    $this->moduleHandler->invokeAll('test_entity_type_create', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_create', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
+    $event = new EntityCreateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
 
     $this->uuidService->generate()->shouldNotBeCalled();
 
@@ -215,10 +220,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $entity->setOriginalId('foo');
     $entity->enforceIsNew();
 
-    $this->moduleHandler->invokeAll('test_entity_type_create', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_create', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
+    $event = new EntityCreateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
 
     $this->uuidService->generate()->willReturn('bar');
 
@@ -286,14 +289,10 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configFactory->getEditable('the_provider.the_config_prefix.foo')
       ->willReturn($config_object->reveal());
 
-    $this->moduleHandler->invokeAll('test_entity_type_presave', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_presave', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('test_entity_type_insert', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_insert', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
+    $event = new EntityPreSaveEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityInsertEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
 
     $this->entityQuery->condition('uuid', 'bar')->willReturn($this->entityQuery);
     $this->entityQuery->execute()->willReturn([]);
@@ -345,14 +344,10 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->willReturn($config_object->reveal())
       ->shouldBeCalledTimes(1);
 
-    $this->moduleHandler->invokeAll('test_entity_type_presave', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_presave', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('test_entity_type_update', [$entity])
-      ->shouldBeCalled();
-    $this->moduleHandler->invokeAll('entity_update', [$entity, 'test_entity_type'])
-      ->shouldBeCalled();
+    $event = new EntityPreSaveEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
+    $event = new EntityUpdateEvent($entity);
+    $this->eventDispatcher->dispatch($event)->shouldBeCalled();
 
     $this->entityQuery->condition('uuid', 'bar')->willReturn($this->entityQuery);
     $this->entityQuery->execute()->willReturn([$entity->id()]);
@@ -688,15 +683,11 @@ class ConfigEntityStorageTest extends UnitTestCase {
       $this->configFactory->getEditable("the_provider.the_config_prefix.$id")
         ->willReturn($config_object->reveal());
 
-      $this->moduleHandler->invokeAll('test_entity_type_predelete', [$entity])
-        ->shouldBeCalled();
-      $this->moduleHandler->invokeAll('entity_predelete', [$entity, 'test_entity_type'])
-        ->shouldBeCalled();
+      $event = new EntityPreDeleteEvent($entity);
+      $this->eventDispatcher->dispatch($event)->shouldBeCalled();
 
-      $this->moduleHandler->invokeAll('test_entity_type_delete', [$entity])
-        ->shouldBeCalled();
-      $this->moduleHandler->invokeAll('entity_delete', [$entity, 'test_entity_type'])
-        ->shouldBeCalled();
+      $event = new EntityDeleteEvent($entity);
+      $this->eventDispatcher->dispatch($event)->shouldBeCalled();
     }
 
     $this->cacheTagsInvalidator->invalidateTags([$this->entityTypeId . '_list'])
