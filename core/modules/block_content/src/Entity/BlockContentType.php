@@ -32,7 +32,9 @@ use Drupal\block_content\BlockContentTypeInterface;
  *   },
  *   admin_permission = "administer blocks",
  *   config_prefix = "type",
- *   bundle_of = "block_content",
+ *   bundle_of = {
+ *     "block_content",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

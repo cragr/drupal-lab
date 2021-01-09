@@ -30,7 +30,9 @@ use Drupal\node\NodeTypeInterface;
  *   },
  *   admin_permission = "administer content types",
  *   config_prefix = "type",
- *   bundle_of = "node",
+ *   bundle_of = {
+ *     "node",
+ *   },
  *   entity_keys = {
  *     "id" = "type",
  *     "label" = "name"

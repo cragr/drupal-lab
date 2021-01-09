@@ -30,7 +30,9 @@ use Drupal\Core\Url;
  *   },
  *   config_prefix = "form",
  *   admin_permission = "administer contact forms",
- *   bundle_of = "contact_message",
+ *   bundle_of = {
+ *     "contact_message",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

@@ -28,7 +28,9 @@ use Drupal\comment\CommentTypeInterface;
  *   },
  *   admin_permission = "administer comment types",
  *   config_prefix = "type",
- *   bundle_of = "comment",
+ *   bundle_of = {
+ *     "comment",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

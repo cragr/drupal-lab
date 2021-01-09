@@ -22,7 +22,9 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
  *   },
  *   admin_permission = "administer entity_test_bundle content",
  *   config_prefix = "entity_test_bundle",
- *   bundle_of = "entity_test_with_bundle",
+ *   bundle_of = {
+ *     "entity_test_with_bundle",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"

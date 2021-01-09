@@ -34,7 +34,9 @@ use Drupal\media\MediaTypeInterface;
  *   },
  *   admin_permission = "administer media types",
  *   config_prefix = "type",
- *   bundle_of = "media",
+ *   bundle_of = {
+ *     "media",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

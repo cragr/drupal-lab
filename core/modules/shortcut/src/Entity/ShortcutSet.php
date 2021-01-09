@@ -32,7 +32,9 @@ use Drupal\shortcut\ShortcutSetInterface;
  *     }
  *   },
  *   config_prefix = "set",
- *   bundle_of = "shortcut",
+ *   bundle_of = {
+ *     "shortcut",
+ *   },
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label"
