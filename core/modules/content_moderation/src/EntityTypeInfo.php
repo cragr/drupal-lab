@@ -322,11 +322,12 @@ class EntityTypeInfo implements ContainerInjectionInterface {
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof BundleEntityFormBase) {
       $config_entity = $form_object->getEntity();
-      $bundle_of = $config_entity->getEntityType()->getBundleOf();
-      if ($bundle_of
-          && ($bundle_of_entity_type = $this->entityTypeManager->getDefinition($bundle_of))
-          && $this->moderationInfo->shouldModerateEntitiesOfBundle($bundle_of_entity_type, $config_entity->id())) {
-        $this->entityTypeManager->getHandler($bundle_of, 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
+      if ($bundle_of = $config_entity->getEntityType()->getBundleOfEntityTypeIds()) {
+        foreach ($bundle_of as $entity_type_id) {
+          if (($bundle_of_entity_type = $this->entityTypeManager->getDefinition($entity_type_id)) && $this->moderationInfo->shouldModerateEntitiesOfBundle($bundle_of_entity_type, $config_entity->id())) {
+            $this->entityTypeManager->getHandler($entity_type_id, 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
+          }
+        }
       }
     }
     elseif ($this->isModeratedEntityEditForm($form_object)) {

@@ -138,11 +138,19 @@ function field_ui_form_node_type_form_alter(&$form, FormStateInterface $form_sta
  * Implements hook_entity_operation().
  */
 function field_ui_entity_operation(EntityInterface $entity) {
-  $operations = [];
-  $info = $entity->getEntityType();
   // Add manage fields and display links if this entity type is the bundle
-  // of another and that type has field UI enabled.
-  if (($bundle_of = $info->getBundleOf()) && \Drupal::entityTypeManager()->getDefinition($bundle_of)->get('field_ui_base_route')) {
+  // of other content entity types which have the field UI enabled.
+  if (!$bundle_of = $entity->getEntityType()->getBundleOfEntityTypeIds()) {
+    return [];
+  }
+
+  // @todo Find a way to pass the content entity type context to this
+  //   hook_entity_operation() implementation, so that we pick up the correct
+  //   bundle_of entity type ID.
+  $bundle_of = reset($bundle_of);
+
+  $operations = [];
+  if (\Drupal::entityTypeManager()->getDefinition($bundle_of)->get('field_ui_base_route')) {
     $account = \Drupal::currentUser();
     if ($account->hasPermission('administer ' . $bundle_of . ' fields')) {
       $operations['manage-fields'] = [

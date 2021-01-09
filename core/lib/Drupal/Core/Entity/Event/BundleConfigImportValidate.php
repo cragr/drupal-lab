@@ -53,18 +53,20 @@ class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase
       if ($entity_type_id = $this->configManager->getEntityTypeIdByName($config_name)) {
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         // Does this entity type define a bundle of another entity type.
-        if ($bundle_of = $entity_type->getBundleOf()) {
-          // Work out if there are entities with this bundle.
-          $bundle_of_entity_type = $this->entityTypeManager->getDefinition($bundle_of);
-          $bundle_id = ConfigEntityStorage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix());
-          $entity_query = $this->entityTypeManager->getStorage($bundle_of)->getQuery();
-          $entity_ids = $entity_query->condition($bundle_of_entity_type->getKey('bundle'), $bundle_id)
-            ->accessCheck(FALSE)
-            ->range(0, 1)
-            ->execute();
-          if (!empty($entity_ids)) {
-            $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($bundle_id);
-            $event->getConfigImporter()->logError($this->t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $bundle_of_entity_type->getLabel(), '%bundle_label' => $bundle_of_entity_type->getBundleLabel(), '%bundle' => $entity->label()]));
+        if ($bundle_of = $entity_type->getBundleOfEntityTypeIds()) {
+          foreach ($bundle_of as $bundle_of_entity_type_id) {
+            // Work out if there are entities with this bundle.
+            $bundle_of_entity_type = $this->entityTypeManager->getDefinition($bundle_of_entity_type_id);
+            $bundle_id = ConfigEntityStorage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix());
+            $entity_query = $this->entityTypeManager->getStorage($bundle_of_entity_type_id)->getQuery();
+            $entity_ids = $entity_query->condition($bundle_of_entity_type->getKey('bundle'), $bundle_id)
+              ->accessCheck(FALSE)
+              ->range(0, 1)
+              ->execute();
+            if (!empty($entity_ids)) {
+              $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($bundle_id);
+              $event->getConfigImporter()->logError($this->t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $bundle_of_entity_type->getLabel(), '%bundle_label' => $bundle_of_entity_type->getBundleLabel(), '%bundle' => $entity->label()]));
+            }
           }
         }
       }

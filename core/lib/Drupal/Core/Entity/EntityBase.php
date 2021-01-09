@@ -377,7 +377,7 @@ abstract class EntityBase implements EntityInterface {
    */
   public function preSave(EntityStorageInterface $storage) {
     // Check if this is an entity bundle.
-    if ($this->getEntityType()->getBundleOf()) {
+    if ($this->getEntityType()->getBundleOfEntityTypeIds()) {
       // Throw an exception if the bundle ID is longer than 32 characters.
       if (mb_strlen($this->id()) > EntityTypeInterface::BUNDLE_MAX_LENGTH) {
         throw new ConfigEntityIdLengthException("Attempt to create a bundle with an ID longer than " . EntityTypeInterface::BUNDLE_MAX_LENGTH . " characters: $this->id().");

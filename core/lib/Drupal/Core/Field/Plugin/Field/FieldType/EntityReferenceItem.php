@@ -132,7 +132,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
           'type' => 'varchar_ascii',
           // If the target entities act as bundles for another entity type,
           // their IDs should not exceed the maximum length for bundles.
-          'length' => $target_type_info->getBundleOf() ? EntityTypeInterface::BUNDLE_MAX_LENGTH : 255,
+          'length' => $target_type_info->getBundleOfEntityTypeIds() ? EntityTypeInterface::BUNDLE_MAX_LENGTH : 255,
         ],
       ];
     }
