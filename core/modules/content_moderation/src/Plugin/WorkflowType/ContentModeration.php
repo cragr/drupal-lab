@@ -252,7 +252,7 @@ class ContentModeration extends WorkflowTypeBase implements ContentModerationInt
     // When bundle config entities are removed, ensure they are cleaned up from
     // the workflow.
     foreach ($dependencies['config'] as $removed_config) {
-      if ($entity_type_id = $removed_config->getEntityType()->getBundleOf()) {
+      foreach ((array) $removed_config->getEntityType()->getBundleOfEntityTypeIds() as $entity_type_id) {
         $bundle_id = $removed_config->id();
         $this->removeEntityTypeAndBundle($entity_type_id, $bundle_id);
         $changed = TRUE;
