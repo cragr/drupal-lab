@@ -1936,7 +1936,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   /**
    * Parse content returned from curlExec using DOM and SimpleXML.
    *
-   * @return
+   * @return SimpleXMLElement|false
    *   A SimpleXMLElement or FALSE on failure.
    */
   protected function parse() {
