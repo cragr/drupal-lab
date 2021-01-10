@@ -156,6 +156,16 @@ class RouteSubscriber extends RouteSubscriberBase {
         $collection->add("entity.entity_view_display.{$entity_type_id}.view_mode", $route);
       }
     }
+
+    foreach ($collection->all() as $route_name => $route) {
+      if (preg_match('/^entity\.([^.].*)\.collection$/', $route_name, $found)) {
+        $entity_type = $this->entityTypeManager->getDefinition($found[1]);
+        if ($entity_type->getBundleOfEntityTypeIds() && !$route->getOption('bundle_of')) {
+          @trigger_error("Missing the 'bundle_of' option for entity collection routes of config entities acting as bundles is deprecated in drupal:9.2.0 and the route 'bundle_of' option is required in drupal:10.0.0. See https://www.drupal.org/node/3191815", E_USER_DEPRECATED);
+          print_r($route_name."\n");
+        }
+      }
+    }
   }
 
   /**
