@@ -110,6 +110,8 @@ entity.node_type.collection:
     _title: 'Content types'
   requirements:
     _permission: 'administer content types'
+  options:
+    bundle_of: node
 
 node.type_add:
   path: '/admin/structure/types/add'

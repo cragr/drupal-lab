@@ -13,6 +13,8 @@ entity.shortcut_set.collection:
     _title: 'Shortcuts'
   requirements:
     _permission: 'administer shortcuts'
+  options:
+    bundle_of: node
 
 shortcut.set_add:
   path: '/admin/config/user-interface/shortcut/add-set'

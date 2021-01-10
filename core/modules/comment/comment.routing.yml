@@ -110,6 +110,7 @@ entity.comment_type.collection:
     _permission: 'administer comment types'
   options:
     _admin_route: TRUE
+    bundle_of: node
 
 entity.comment_type.delete_form:
   path: '/admin/structure/comment/manage/{comment_type}/delete'

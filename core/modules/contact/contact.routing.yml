@@ -13,6 +13,8 @@ entity.contact_form.collection:
     _title: 'Contact forms'
   requirements:
     _permission: 'administer contact forms'
+  options:
+    bundle_of: node
 
 contact.form_add:
   path: '/admin/structure/contact/add'
