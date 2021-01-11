@@ -4,6 +4,7 @@
 @import "import2.css";
 @import url("http://example.com/style.css");
 @import url("//example.com/style.css");
+@import url("https://fonts.fontprovider.com/css2?family=Roboto+Mono:wght@300;400&family=Roboto:ital,wght@0,300;0,400;1,300;1,400&display=swap");
 
 body {
   margin: 0;
@@ -29,4 +30,3 @@ textarea, select {
   font: 1em/160% Verdana, sans-serif;
   color: #494949;
 }
-
