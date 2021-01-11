@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -56,7 +55,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       }
       $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, 'Save');
       $this->drupalGet('node/' . $node->id());
-      $this->assertNoText($field_name, new FormattableMarkup('Field label is hidden when no file attached for formatter %formatter', ['%formatter' => $formatter]));
+      // Verify that the field label is hidden when no file is attached.
+      $this->assertNoText($field_name);
     }
 
     $this->generateFile('escaped-&-text', 64, 10, 'text');
@@ -94,7 +94,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[0][display]' => TRUE,
     ];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
-    $this->assertText($description);
+    $this->assertSession()->pageTextContains($description);
 
     // Ensure the filename in the link's title attribute is escaped.
     $this->assertRaw('title="escaped-&amp;-text.txt"');
@@ -183,7 +183,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertText('The description may be used as the label of the link to the file.');
+    $this->assertSession()->pageTextContains('The description may be used as the label of the link to the file.');
   }
 
   /**

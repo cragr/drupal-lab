@@ -35,7 +35,7 @@ class BulkFormTest extends BrowserTestBase {
     // First, test an empty bulk form with the default style plugin to make sure
     // the empty region is rendered correctly.
     $this->drupalGet('test_bulk_form_empty');
-    $this->assertText('This view is empty.', 'Empty text found on empty bulk form.');
+    $this->assertSession()->pageTextContains('This view is empty.');
 
     $nodes = [];
     for ($i = 0; $i < 10; $i++) {
@@ -86,7 +86,7 @@ class BulkFormTest extends BrowserTestBase {
       $this->assertTrue($changed_node->isSticky(), new FormattableMarkup('Node @nid got marked as sticky.', ['@nid' => $node->id()]));
     }
 
-    $this->assertText('Make content sticky was applied to 10 items.');
+    $this->assertSession()->pageTextContains('Make content sticky was applied to 10 items.');
 
     // Unpublish just one node.
     $node = $node_storage->load($nodes[0]->id());
@@ -95,7 +95,7 @@ class BulkFormTest extends BrowserTestBase {
     $edit = ['node_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action'];
     $this->submitForm($edit, 'Apply to selected items');
 
-    $this->assertText('Unpublish content was applied to 1 item.');
+    $this->assertSession()->pageTextContains('Unpublish content was applied to 1 item.');
 
     // Load the node again.
     $node_storage->resetCache([$node->id()]);
@@ -159,7 +159,7 @@ class BulkFormTest extends BrowserTestBase {
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertEmpty($errors, 'No action message shown.');
     $this->submitForm([], 'Delete');
-    $this->assertText('Deleted 5 content items.');
+    $this->assertSession()->pageTextContains('Deleted 5 content items.');
     // Check if we got redirected to the original page.
     $this->assertSession()->addressEquals('test_bulk_form');
 
@@ -197,7 +197,7 @@ class BulkFormTest extends BrowserTestBase {
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertEmpty($errors, 'No action message shown.');
     $this->submitForm([], 'Delete');
-    $this->assertText('Deleted 1 content item.');
+    $this->assertSession()->pageTextContains('Deleted 1 content item.');
 
     // Test that the bulk form works when multiple nodes are selected
     // but all of the selected nodes are already deleted
@@ -212,7 +212,7 @@ class BulkFormTest extends BrowserTestBase {
       'action' => 'node_delete_action',
     ];
     $this->submitForm($edit, 'Apply to selected items');
-    $this->assertText('No content selected.');
+    $this->assertSession()->pageTextContains('No content selected.');
   }
 
 }

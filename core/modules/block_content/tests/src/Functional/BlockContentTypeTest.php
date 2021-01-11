@@ -60,7 +60,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Test the page with no block-types.
     $this->drupalGet('block/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('You have not created any block types yet');
+    $this->assertSession()->pageTextContains('You have not created any block types yet');
     $this->clickLink('block type creation page');
 
     // Create a block type via the user interface.
@@ -165,7 +165,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', ['%label' => $type->label()])
     );
-    $this->assertNoText('This action cannot be undone.', 'The block type deletion confirmation form is not available.');
+    $this->assertNoText('This action cannot be undone.');
 
     // Delete the block.
     $block->delete();
@@ -174,7 +174,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the custom block type %type?', ['%type' => $type->id()])
     );
-    $this->assertText('This action cannot be undone.', 'The custom block type deletion confirmation form is available.');
+    $this->assertSession()->pageTextContains('This action cannot be undone.');
   }
 
   /**

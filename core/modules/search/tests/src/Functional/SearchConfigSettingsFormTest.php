@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\search\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\search\Entity\SearchPage;
@@ -88,26 +87,26 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Test that the settings form displays the correct count of items left to index.
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText('There are 0 items left to index.');
+    $this->assertSession()->pageTextContains('There are 0 items left to index.');
 
     // Test the re-index button.
     $this->drupalPostForm('admin/config/search/pages', [], 'Re-index site');
-    $this->assertText('Are you sure you want to re-index the site');
+    $this->assertSession()->pageTextContains('Are you sure you want to re-index the site');
     $this->drupalPostForm('admin/config/search/pages/reindex', [], 'Re-index site');
-    $this->assertText('All search indexes will be rebuilt');
+    $this->assertSession()->pageTextContains('All search indexes will be rebuilt');
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText('There is 1 item left to index.');
+    $this->assertSession()->pageTextContains('There is 1 item left to index.');
 
     // Test that the form saves with the default values.
     $this->drupalPostForm('admin/config/search/pages', [], 'Save configuration');
-    $this->assertText('The configuration options have been saved.', 'Form saves with the default values.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     // Test that the form does not save with an invalid word length.
     $edit = [
       'minimum_word_size' => $this->randomMachineName(3),
     ];
     $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
-    $this->assertNoText('The configuration options have been saved.', 'Form does not save with an invalid word length.');
+    $this->assertNoText('The configuration options have been saved.');
 
     // Test logging setting. It should be off by default.
     $text = $this->randomMachineName(5);
@@ -183,14 +182,14 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $info = $plugin_info[$entity_id];
       $this->drupalGet('search/' . $entity->getPath(), ['query' => ['keys' => $info['keys']]]);
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertNoText('no results', $entity->label() . ' search found results');
-      $this->assertText($info['text'], 'Correct search text found');
+      $this->assertNoText('no results');
+      $this->assertSession()->pageTextContains($info['text']);
 
       // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
         if ($other != $entity_id) {
           $label = $entities[$other]->label();
-          $this->assertNoText($label, $label . ' search tab is not shown');
+          $this->assertNoText($label);
         }
       }
 
@@ -229,7 +228,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalGet($item['path'], $item['options']);
       foreach ($plugins as $entity_id) {
         $label = $entities[$entity_id]->label();
-        $this->assertText($label, new FormattableMarkup('%label search tab is shown', ['%label' => $label]));
+        $this->assertSession()->pageTextContains($label);
       }
     }
   }
@@ -257,7 +256,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Ensure that no search pages are configured.
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText('No search pages have been configured.');
+    $this->assertSession()->pageTextContains('No search pages have been configured.');
 
     // Add a search page.
     $edit = [];
@@ -282,7 +281,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $edit['id'] = strtolower($this->randomMachineName(8));
     $edit['path'] = $first['path'];
     $this->submitForm($edit, 'Save');
-    $this->assertText('The search page path must be unique.');
+    $this->assertSession()->pageTextContains('The search page path must be unique.');
 
     // Add a second search page.
     $second = [];

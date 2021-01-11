@@ -205,8 +205,8 @@ class PagePreviewTest extends NodeTestBase {
     $expected_title = $edit[$title_key] . ' | Drupal';
     $this->assertSession()->titleEquals($expected_title);
     $this->assertSession()->assertEscaped($edit[$title_key]);
-    $this->assertText($edit[$body_key], 'Body displayed.');
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertSession()->pageTextContains($edit[$body_key]);
+    $this->assertSession()->pageTextContains($edit[$term_key]);
     $this->assertSession()->linkExists('Back to content editing');
 
     // Check that we see the class of the node type on the body element.
@@ -228,7 +228,7 @@ class PagePreviewTest extends NodeTestBase {
     $view_mode_edit = ['view_mode' => 'teaser'];
     $this->drupalPostForm('node/preview/' . $uuid . '/full', $view_mode_edit, 'Switch');
     $this->assertRaw('view-mode-teaser');
-    $this->assertNoText($edit[$body_key], 'Body not displayed.');
+    $this->assertNoText($edit[$body_key]);
 
     // Check that the title, body and term fields are displayed with the
     // values after going back to the content edit page.
@@ -245,8 +245,8 @@ class PagePreviewTest extends NodeTestBase {
     $this->submitForm([], 'Preview');
     $this->assertSession()->titleEquals($expected_title);
     $this->assertSession()->assertEscaped($edit[$title_key]);
-    $this->assertText($edit[$body_key], 'Body displayed.');
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertSession()->pageTextContains($edit[$body_key]);
+    $this->assertSession()->pageTextContains($edit[$term_key]);
     $this->assertSession()->linkExists('Back to content editing');
 
     // Assert the content is kept when reloading the page.
@@ -262,7 +262,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check the term was displayed on the saved node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertSession()->pageTextContains($edit[$term_key]);
 
     // Check the term appears again on the edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -304,7 +304,7 @@ class PagePreviewTest extends NodeTestBase {
       $title_key => $this->randomMachineName(8),
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
-    $this->assertText($edit[$title_key], 'New title displayed.');
+    $this->assertSession()->pageTextContains($edit[$title_key]);
     $this->clickLink(t('Back to content editing'));
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
     // Navigate away from the node without saving.
@@ -377,7 +377,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertRaw('Storage is set');
     $this->assertSession()->fieldExists('field_test_multi[0][value]');
     $this->submitForm([], 'Save');
-    $this->assertText('Basic page ' . $title . ' has been created.');
+    $this->assertSession()->pageTextContains('Basic page ' . $title . ' has been created.');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->getSession()->getPage()->pressButton('Add another item');
@@ -396,9 +396,9 @@ class PagePreviewTest extends NodeTestBase {
 
     // Now save the node and make sure all values got saved.
     $this->submitForm([], 'Save');
-    $this->assertText($example_text_1);
-    $this->assertText($example_text_2);
-    $this->assertText($example_text_3);
+    $this->assertSession()->pageTextContains($example_text_1);
+    $this->assertSession()->pageTextContains($example_text_2);
+    $this->assertSession()->pageTextContains($example_text_3);
 
     // Edit again, change the menu_ui settings and click on preview.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -445,9 +445,9 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check that the preview is displaying the title, body and term.
     $this->assertSession()->titleEquals($edit[$title_key] . ' | Drupal');
-    $this->assertText($edit[$title_key], 'Title displayed.');
-    $this->assertText($edit[$body_key], 'Body displayed.');
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertSession()->pageTextContains($edit[$title_key]);
+    $this->assertSession()->pageTextContains($edit[$body_key]);
+    $this->assertSession()->pageTextContains($edit[$term_key]);
 
     // Check that the title and body fields are displayed with the correct
     // values after going back to the content edit page.
@@ -487,7 +487,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $edit = [$title_key => 'New page title'];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
-    $this->assertText($edit[$title_key]);
+    $this->assertSession()->pageTextContains($edit[$title_key]);
 
     $user2 = $this->drupalCreateUser(['edit any page content']);
     $this->drupalLogin($user2);
@@ -497,7 +497,7 @@ class PagePreviewTest extends NodeTestBase {
     $edit2 = [$title_key => 'Another page title'];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, 'Preview');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full']));
-    $this->assertText($edit2[$title_key]);
+    $this->assertSession()->pageTextContains($edit2[$title_key]);
   }
 
 }

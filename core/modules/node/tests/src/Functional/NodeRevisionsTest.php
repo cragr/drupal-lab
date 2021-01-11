@@ -154,18 +154,18 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
-    $this->assertText($node->body->value, 'Correct text displays for version.');
+    $this->assertSession()->pageTextContains($node->body->value);
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
     foreach ($logs as $revision_log) {
-      $this->assertText($revision_log, 'Revision log message found.');
+      $this->assertSession()->pageTextContains($revision_log);
     }
     // Original author, and editor names should appear on revisions overview.
     $web_user = $nodes[0]->revision_uid->entity;
-    $this->assertText('by ' . $web_user->getAccountName());
+    $this->assertSession()->pageTextContains('by ' . $web_user->getAccountName());
     $editor = $nodes[2]->revision_uid->entity;
-    $this->assertText('by ' . $editor->getAccountName());
+    $this->assertSession()->pageTextContains('by ' . $editor->getAccountName());
 
     // Confirm that this is the default revision.
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
@@ -231,12 +231,13 @@ class NodeRevisionsTest extends NodeTestBase {
     $new_node_revision->isDefaultRevision = FALSE;
     $new_node_revision->save();
 
+    // Verify that revision body text is not present on default version of node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($new_body, 'Revision body text is not present on default version of node.');
+    $this->assertNoText($new_body);
 
     // Verify that the new body text is present on the revision.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $new_node_revision->getRevisionId() . "/view");
-    $this->assertText($new_body, 'Revision body text is present when loading specific revision.');
+    $this->assertSession()->pageTextContains($new_body);
 
     // Verify that the non-default revision vid is greater than the default
     // revision vid.
@@ -258,7 +259,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Verify revisions is accessible since the type has revisions enabled.
     $this->assertSession()->statusCodeEquals(200);
     // Check initial revision is shown on the node revisions overview page.
-    $this->assertText('Simple revision message (EN)');
+    $this->assertSession()->pageTextContains('Simple revision message (EN)');
 
     // Verify that delete operation is inaccessible for the default revision.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/delete");
@@ -277,8 +278,8 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Check both revisions are shown on the node revisions overview page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
-    $this->assertText('Simple revision message (EN)');
-    $this->assertText('New revision message (EN)');
+    $this->assertSession()->pageTextContains('Simple revision message (EN)');
+    $this->assertSession()->pageTextContains('New revision message (EN)');
 
     // Create an 'EN' node with a revision log message.
     $node = $this->drupalCreateNode();
@@ -291,7 +292,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // Verify revisions is accessible since the type has revisions enabled.
     $this->assertSession()->statusCodeEquals(200);
     // Check initial revision is shown on the node revisions overview page.
-    $this->assertText('Simple revision message (EN)');
+    $this->assertSession()->pageTextContains('Simple revision message (EN)');
 
     // Add a translation in 'DE' and create a new revision and new log message.
     $translation = $node->addTranslation('de');
@@ -303,17 +304,17 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // View the revision UI in 'IT', only the original node revision is shown.
     $this->drupalGet("it/node/" . $node->id() . "/revisions");
-    $this->assertText('Simple revision message (EN)');
+    $this->assertSession()->pageTextContains('Simple revision message (EN)');
     $this->assertNoText('New revision message (DE)');
 
     // View the revision UI in 'DE', only the translated node revision is shown.
     $this->drupalGet("de/node/" . $node->id() . "/revisions");
     $this->assertNoText('Simple revision message (EN)');
-    $this->assertText('New revision message (DE)');
+    $this->assertSession()->pageTextContains('New revision message (DE)');
 
     // View the revision UI in 'EN', only the original node revision is shown.
     $this->drupalGet("node/" . $node->id() . "/revisions");
-    $this->assertText('Simple revision message (EN)');
+    $this->assertSession()->pageTextContains('Simple revision message (EN)');
     $this->assertNoText('New revision message (DE)');
   }
 
@@ -339,7 +340,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $node->save();
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($new_title, 'New node title appears on the page.');
+    $this->assertSession()->pageTextContains($new_title);
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertEqual($node_revision->revision_log->value, $revision_log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
@@ -358,7 +359,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $node->save();
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($new_title, 'New node title appears on the page.');
+    $this->assertSession()->pageTextContains($new_title);
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');

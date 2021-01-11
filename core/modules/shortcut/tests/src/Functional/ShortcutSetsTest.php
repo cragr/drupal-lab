@@ -46,7 +46,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $new_set = $this->container->get('entity_type.manager')->getStorage('shortcut_set')->load($edit['id']);
     $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
-    $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');
+    // Verify that generated shortcut set was listed as a choice on the user
+    // account page.
+    $this->assertSession()->pageTextContains($new_set->label());
   }
 
   /**
@@ -148,7 +150,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   public function testShortcutSetSwitchNoSetName() {
     $edit = ['set' => 'new'];
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
-    $this->assertText('The new set label is required.');
+    $this->assertSession()->pageTextContains('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
     $field = $this->assertSession()->fieldExists('label');
@@ -211,7 +213,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $sets = ShortcutSet::loadMultiple();
     $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
-    $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');
+    // Verify that generated shortcut set was listed as a choice on the user
+    // account page.
+    $this->assertSession()->pageTextContains($new_set->label());
   }
 
 }

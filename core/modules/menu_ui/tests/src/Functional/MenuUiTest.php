@@ -160,7 +160,7 @@ class MenuUiTest extends BrowserTestBase {
     $id = $instance->getPluginId();
     $this->drupalPostForm("admin/structure/menu/link/$id/edit", $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
     $menu_link_manager->resetDefinitions();
 
     $instance = $menu_link_manager->createInstance($instance->getPluginId());
@@ -235,12 +235,12 @@ class MenuUiTest extends BrowserTestBase {
     // Verify that the confirmation message is displayed.
     $this->assertRaw(t('Menu %label has been added.', ['%label' => $label]));
     $this->drupalGet('admin/structure/menu');
-    $this->assertText($label, 'Menu created');
+    $this->assertSession()->pageTextContains($label);
 
     // Confirm that the custom menu block is available.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertText($label);
+    $this->assertSession()->pageTextContains($label);
 
     // Enable the block.
     $block = $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
@@ -274,7 +274,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Try to delete the main menu.
     $this->drupalGet('admin/structure/menu/manage/main/delete');
-    $this->assertText('You are not authorized to access this page.');
+    $this->assertSession()->pageTextContains('You are not authorized to access this page.');
   }
 
   /**
@@ -556,7 +556,7 @@ class MenuUiTest extends BrowserTestBase {
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalget('admin/structure/block/list/' . $default_theme);
     $this->clickLink('Place block');
-    $this->assertText($edit['label']);
+    $this->assertSession()->pageTextContains($edit['label']);
   }
 
   /**
@@ -584,7 +584,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertNoText($item->getTitle(), "Menu link pointing to unpublished node is only visible to users with 'bypass node access' permission");
+    $this->assertNoText($item->getTitle());
     // The cache contexts associated with the (in)accessible menu links are
     // bubbled. See DefaultMenuLinkTreeManipulators::menuLinkCheckAccess().
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.permissions');
@@ -628,7 +628,7 @@ class MenuUiTest extends BrowserTestBase {
     // Add menu link.
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
 
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $title]);
 
@@ -771,10 +771,10 @@ class MenuUiTest extends BrowserTestBase {
     $edit['title[0][value]'] = $title;
     $this->drupalPostForm("admin/structure/menu/item/$mlid/edit", $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
     // Verify menu link.
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertText($title, 'Menu link was edited');
+    $this->assertSession()->pageTextContains($title);
   }
 
   /**
@@ -813,7 +813,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify deletion.
     $this->drupalGet('');
-    $this->assertNoText($title, 'Menu link was deleted');
+    $this->assertNoText($title);
   }
 
   /**
@@ -827,12 +827,12 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link is absent.
     $this->drupalGet('');
-    $this->assertNoText($item->getTitle(), 'Menu link was not displayed');
+    $this->assertNoText($item->getTitle());
     $this->enableMenuLink($item);
 
     // Verify menu link is displayed.
     $this->drupalGet('');
-    $this->assertText($item->getTitle(), 'Menu link was displayed');
+    $this->assertSession()->pageTextContains($item->getTitle());
   }
 
   /**
@@ -951,21 +951,21 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/help/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Menu', 'Menu help was displayed');
+      $this->assertSession()->pageTextContains('Menu', 'Menu help was displayed');
     }
 
     // View menu build overview page.
     $this->drupalGet('admin/structure/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Menus', 'Menu build overview page was displayed');
+      $this->assertSession()->pageTextContains('Menus', 'Menu build overview page was displayed');
     }
 
     // View tools menu customization page.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Tools', 'Tools menu page was displayed');
+      $this->assertSession()->pageTextContains('Tools', 'Tools menu page was displayed');
     }
 
     // View menu edit page for a static link.
@@ -973,14 +973,14 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/menu/link/' . $item->getPluginId() . '/edit');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Edit menu item', 'Menu edit page was displayed');
+      $this->assertSession()->pageTextContains('Edit menu item', 'Menu edit page was displayed');
     }
 
     // View add menu page.
     $this->drupalGet('admin/structure/menu/add');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Menus', 'Add menu page was displayed');
+      $this->assertSession()->pageTextContains('Menus', 'Add menu page was displayed');
     }
   }
 

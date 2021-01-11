@@ -149,7 +149,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit['enabled'] = FALSE;
     $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
     // structure changed.
@@ -199,7 +199,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
     // structure changed.
@@ -240,7 +240,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Log in adminUser and assert that the subtrees hash has changed.
     $this->drupalLogin($this->adminUser);
@@ -287,7 +287,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
-    $this->assertText($name, 'Test language added.');
+    // Verify that the test language was added.
+    $this->assertSession()->pageTextContains($name);
 
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
@@ -311,7 +312,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertNoText('No strings available');
-    $this->assertText($name, 'Search found the string as untranslated.');
+    // Verify that search found the string as untranslated.
+    $this->assertSession()->pageTextContains($name);
 
     // Assume this is the only result.
     // Translate the string to a random string.
@@ -321,7 +323,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       $lid => $translation,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
-    $this->assertText('The strings have been saved.', 'The strings have been saved.');
+    $this->assertSession()->pageTextContains('The strings have been saved.');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));
     $this->drupalLogout();
@@ -404,11 +406,11 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assert that the new menu link is shown on the menu link listing.
     $this->drupalGet('admin/structure/menu/manage/admin');
-    $this->assertText('External URL');
+    $this->assertSession()->pageTextContains('External URL');
 
     // Assert that the new menu link is shown in the toolbar on a regular page.
     $this->drupalGet(Url::fromRoute('<front>'));
-    $this->assertText('External URL');
+    $this->assertSession()->pageTextContains('External URL');
     // Ensure the description is escaped as expected.
     $this->assertRaw('title="External URL &amp; escaped"');
   }

@@ -88,15 +88,17 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['alias[0][value]']);
-    $this->assertText($node1->label(), 'Alias works.');
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that the alias works in a case-insensitive way.
     $this->assertTrue(ctype_lower(ltrim($edit['alias[0][value]'], '/')));
     $this->drupalGet($edit['alias[0][value]']);
-    $this->assertText($node1->label(), 'Alias works lower case.');
+    // Lower case.
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet(mb_strtoupper($edit['alias[0][value]']));
-    $this->assertText($node1->label(), 'Alias works upper case.');
+    // Upper case.
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
     // Change alias to one containing "exotic" characters.
@@ -124,13 +126,13 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet(mb_strtoupper($edit['alias[0][value]']));
-    $this->assertText($node1->label(), 'Changed alias works.');
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
     $this->container->get('path_alias.manager')->cacheClear();
     // Confirm that previous alias no longer works.
     $this->drupalGet($previous);
-    $this->assertNoText($node1->label(), 'Previous alias no longer works.');
+    $this->assertNoText($node1->label());
     $this->assertSession()->statusCodeEquals(404);
 
     // Create second test node.
@@ -160,7 +162,7 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['alias[0][value]']);
-    $this->assertNoText($node1->label(), 'Alias was successfully deleted.');
+    $this->assertNoText($node1->label());
     $this->assertSession()->statusCodeEquals(404);
 
     // Create a really long alias.
@@ -171,9 +173,10 @@ class PathAliasTest extends PathTestBase {
     // The alias is shortened to 50 characters counting the ellipsis.
     $truncated_alias = substr($alias, 0, 47);
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
-    $this->assertNoText($alias, 'The untruncated alias was not found.');
+    // The untruncated alias should not be found.
+    $this->assertNoText($alias);
     // The 'truncated' alias will always be found.
-    $this->assertText($truncated_alias, 'The truncated alias was found.');
+    $this->assertSession()->pageTextContains($truncated_alias);
 
     // Create third test node.
     $node3 = $this->drupalCreateNode();
@@ -196,9 +199,9 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     // Confirm that the alias with trailing slash is not found.
-    $this->assertNoText($edit['alias[0][value]'], 'The absolute alias was not found.');
+    $this->assertNoText($edit['alias[0][value]']);
     // The alias without trailing flash is found.
-    $this->assertText(trim($edit['alias[0][value]'], '/'), 'The alias without trailing slash was found.');
+    $this->assertSession()->pageTextContains(trim($edit['alias[0][value]'], '/'));
 
     // Update an existing alias to point to a different source.
     $pid = $this->getPID($node4_alias);
@@ -206,10 +209,12 @@ class PathAliasTest extends PathTestBase {
     $edit['alias[0][value]'] = $node4_alias;
     $edit['path[0][value]'] = '/node/' . $node2->id();
     $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, 'Save');
-    $this->assertText('The alias has been saved.');
+    $this->assertSession()->pageTextContains('The alias has been saved.');
     $this->drupalGet($edit['alias[0][value]']);
-    $this->assertNoText($node4->label(), 'Previous alias no longer works.');
-    $this->assertText($node2->label(), 'Alias works.');
+    // Previous alias should no longer work.
+    $this->assertNoText($node4->label());
+    // Alias should work.
+    $this->assertSession()->pageTextContains($node2->label());
     $this->assertSession()->statusCodeEquals(200);
 
     // Update an existing alias to use a duplicate alias.
@@ -230,8 +235,8 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     $this->assertSession()->addressEquals('admin/config/search/path/add');
-    $this->assertText('The source path has to start with a slash.');
-    $this->assertText('The alias path has to start with a slash.');
+    $this->assertSession()->pageTextContains('The source path has to start with a slash.');
+    $this->assertSession()->pageTextContains('The alias path has to start with a slash.');
   }
 
   /**
@@ -248,7 +253,7 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[0][alias]']);
-    $this->assertText($node1->label(), 'Alias works.');
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
     // Confirm the 'canonical' and 'shortlink' URLs.
@@ -280,12 +285,12 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet(mb_strtoupper($edit['path[0][alias]']));
-    $this->assertText($node1->label(), 'Changed alias works.');
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that previous alias no longer works.
     $this->drupalGet($previous);
-    $this->assertNoText($node1->label(), 'Previous alias no longer works.');
+    $this->assertNoText($node1->label());
     $this->assertSession()->statusCodeEquals(404);
 
     // Create second test node.
@@ -303,7 +308,7 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['path[0][alias]']);
-    $this->assertNoText($node1->label(), 'Alias was successfully deleted.');
+    $this->assertNoText($node1->label());
     $this->assertSession()->statusCodeEquals(404);
 
     // Create third test node.
@@ -315,7 +320,7 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias was converted to a relative path.
     $this->drupalGet(trim($edit['path[0][alias]'], '/'));
-    $this->assertText($node3->label(), 'Alias became relative.');
+    $this->assertSession()->pageTextContains($node3->label());
     $this->assertSession()->statusCodeEquals(200);
 
     // Create fourth test node.
@@ -327,7 +332,7 @@ class PathAliasTest extends PathTestBase {
 
     // Confirm that the alias was converted to a relative path.
     $this->drupalGet(trim($edit['path[0][alias]'], '/'));
-    $this->assertText($node4->label(), 'Alias trimmed trailing slash.');
+    $this->assertSession()->pageTextContains($node4->label());
     $this->assertSession()->statusCodeEquals(200);
 
     // Create fifth test node.
