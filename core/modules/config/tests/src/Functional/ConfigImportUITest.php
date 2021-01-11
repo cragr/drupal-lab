@@ -307,14 +307,14 @@ class ConfigImportUITest extends BrowserTestBase {
     // changed.
 
     // Changed values are escaped.
-    $this->pageTextContains("foo: '<p><em>foobar</em></p>'");
-    $this->pageTextContains("foo: '<p>foobar</p>'");
+    $this->assertSession()->pageTextContains("foo: '<p><em>foobar</em></p>'");
+    $this->assertSession()->pageTextContains("foo: '<p>foobar</p>'");
     // The no change values are escaped.
-    $this->pageTextContains("baz: '<strong>no change</strong>'");
+    $this->assertSession()->pageTextContains("baz: '<strong>no change</strong>'");
     // Added value is escaped.
-    $this->pageTextContains("biff: '<em>bangpow</em>'");
+    $this->assertSession()->pageTextContains("biff: '<em>bangpow</em>'");
     // Deleted value is escaped.
-    $this->pageTextContains("404: '<em>herp</em>'");
+    $this->assertSession()->pageTextContains("404: '<em>herp</em>'");
 
     // Verify diff colors are displayed.
     $result = $this->xpath('//table[contains(@class, :class)]', [':class' => 'diff']);
@@ -328,10 +328,10 @@ class ConfigImportUITest extends BrowserTestBase {
     // Load the diff UI and verify that the diff reflects a removed key.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
     // The no change values are escaped.
-    $this->pageTextContains("foo: '<p>foobar</p>'");
-    $this->pageTextContains("baz: '<strong>no change</strong>'");
+    $this->assertSession()->pageTextContains("foo: '<p>foobar</p>'");
+    $this->assertSession()->pageTextContains("baz: '<strong>no change</strong>'");
     // Removed key is escaped.
-    $this->pageTextContains("404: '<em>herp</em>'");
+    $this->assertSession()->pageTextContains("404: '<em>herp</em>'");
 
     // Reset data back to original and add a key
     $sync_data = $original_data;
@@ -341,10 +341,10 @@ class ConfigImportUITest extends BrowserTestBase {
     // Load the diff UI and verify that the diff reflects an added key.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
     // The no change values are escaped.
-    $this->pageTextContains("baz: '<strong>no change</strong>'");
-    $this->pageTextContains("404: '<em>herp</em>'");
+    $this->assertSession()->pageTextContains("baz: '<strong>no change</strong>'");
+    $this->assertSession()->pageTextContains("404: '<em>herp</em>'");
     // Added key is escaped.
-    $this->pageTextContains("biff: '<em>bangpow</em>'");
+    $this->assertSession()->pageTextContains("biff: '<em>bangpow</em>'");
   }
 
   /**
