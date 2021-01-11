@@ -64,6 +64,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  */
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
+  use MapJoinTrait;
 
   /**
    * The query string.
@@ -278,27 +279,9 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       //    like (original conditions) AND (map IS NULL OR map needs update
       //      OR above high water).
       $conditions = $this->query->orConditionGroup();
-      $condition_added = FALSE;
       $added_fields = [];
       if ($this->mapJoinable()) {
-        // Build the join to the map table. Because the source key could have
-        // multiple fields, we need to build things up.
-        $count = 1;
-        $map_join = '';
-        $delimiter = '';
-        foreach ($this->getIds() as $field_name => $field_schema) {
-          if (isset($field_schema['alias'])) {
-            $field_name = $field_schema['alias'] . '.' . $this->query->escapeField($field_name);
-          }
-          $map_join .= "$delimiter$field_name = map.sourceid" . $count++;
-          $delimiter = ' AND ';
-        }
-
-        $alias = $this->query->leftJoin($this->migration->getIdMap()
-          ->getQualifiedMapTableName(), 'map', $map_join);
-        $conditions->isNull($alias . '.sourceid1');
-        $conditions->condition($alias . '.source_row_status', MigrateIdMapInterface::STATUS_NEEDS_UPDATE);
-        $condition_added = TRUE;
+        $alias = $this->addMapJoin($this->query, $conditions);
 
         // And as long as we have the map table, add its data to the row.
         $n = count($this->getIds());
@@ -326,14 +309,15 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         // water mark.
         if ($high_water !== NULL) {
           $conditions->condition($high_water_field, $high_water, '>');
-          $condition_added = TRUE;
         }
         // Always sort by the high water field, to ensure that the first run
         // (before we have a high water value) also has the results in a
         // consistent order.
         $this->query->orderBy($high_water_field);
       }
-      if ($condition_added) {
+      // If a condition group has no conditions, then conditions() return an
+      // array consisting only of the '#conjunction' key.
+      if (count($conditions->conditions()) > 1) {
         $this->query->condition($conditions);
       }
       // If the query has a group by, our added fields need it too, to keep the
