@@ -10,7 +10,9 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
@@ -43,6 +45,9 @@ abstract class UnitTestCase extends TestCase {
    */
   protected function setUp() {
     parent::setUp();
+
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
+
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
     \Drupal::unsetContainer();
