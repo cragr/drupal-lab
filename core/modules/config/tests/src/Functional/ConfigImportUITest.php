@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Tests\BrowserTestBase;
 
