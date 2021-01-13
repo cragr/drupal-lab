@@ -50,6 +50,7 @@ class ContactSitewideTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('page_title_block');
   }
@@ -130,7 +131,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Delete old forms to ensure that new forms are used.
     $this->deleteContactForms();
     $this->drupalGet('admin/structure/contact');
-    $this->assertText('Personal', 'Personal form was not deleted');
+    $this->assertText('Personal');
     $this->assertSession()->linkByHrefNotExists('admin/structure/contact/manage/feedback');
 
     // Ensure that the contact form won't be shown without forms.
@@ -291,6 +292,9 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldValueEquals('label', $label);
 
+    // Verify contact "View" tab exists.
+    $this->assertSession()->linkExists('View');
+
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');
 
@@ -408,6 +412,18 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertEquals(1, substr_count($page_text, t('Message')));
     $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-hidden field__item">');
     $this->assertSession()->pageTextContains($edit['message[0][value]']);
+
+    // Set the preview field to 'hidden' in the view mode and check that the
+    // field is hidden.
+    $edit = [
+      'fields[preview][region]' => 'hidden',
+    ];
+    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/form-display', $edit, 'Save');
+    $this->assertSession()->fieldExists('fields[preview][region]');
+
+    // Check that the field preview is not displayed in the form.
+    $this->drupalGet('contact/' . $contact_form);
+    $this->assertSession()->responseNotContains('Preview');
   }
 
   /**
