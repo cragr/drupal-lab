@@ -136,7 +136,6 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $this->assertNotEmpty($definition['label'], 'Topic ' . $id . ' has a non-empty label');
 
     // Test the syntax and contents of the Twig file.
-
     // Reset the max translated chunk count. It will be recalculated the first
     // time we render this topic below.
     help_topics_twig_tester_set_value('max_chunk', -1);
@@ -152,6 +151,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $chunk_num = 0;
     $processing = help_topics_twig_tester_get_values();
     $max_chunk_num = $processing['max_chunk'];
+    $this->assertTrue($max_chunk_num > 0, 'Topic ' . $id . ' has at least one translated chunk');
     help_topics_twig_tester_set_value('return_chunk', 0);
     help_topics_twig_tester_set_value('chunk_count', -1);
     while ($chunk_num <= $max_chunk_num) {
@@ -172,7 +172,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
 
     // Verify that if we remove all the translated text, whitespace, and
     // HTML tags, there is nothing left (that is, all text is translated).
-    $text = $this->renderHelpTopic($id, 'remove_translated');
+    $text = preg_replace('|\s+|', '', $this->renderHelpTopic($id, 'remove_translated'));
     $this->assertEmpty($text, 'Topic ' . $id . ' Twig file has all of its text translated');
   }
 
@@ -316,8 +316,10 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    */
   protected function renderHelpTopic(string $id, string $manner) {
     help_topics_twig_tester_set_value('type', $manner);
-    \Drupal::service('twig')->invalidate();
-    \Drupal::cache('render')->deleteAll();
+    // Reset all caches. Just clearing Twig and Render caches does not seem
+    // to allow the NodeVisitor to be invoked again after the first load/render
+    // of a given template.
+    $this->resetAll();
     $template = \Drupal::service('twig')->load('@help_topics/' . $id . '.html.twig');
     return \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), [$template, 'render']);
   }
