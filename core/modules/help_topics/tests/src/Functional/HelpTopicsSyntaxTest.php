@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\help_topics\Functional;
 
+use Drupal\Component\FrontMatter\FrontMatter;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
@@ -142,8 +143,8 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     help_topics_twig_tester_set_value('chunk_count', -1);
 
     // Verify that the body is not empty and is valid HTML.
-    $text = $this->renderHelpTopic($id, 'bare_body');
-    $this->assertNotEmpty($text, 'Topic ' . $id . ' has a non-empty Twig file');
+    $text = $this->renderHelpTopic($id, 'bare_body', $definitions);
+    $this->assertNotEmpty($text, 'Topic ' . $id . ' contains some text outside of front matter');
     $this->validateHtml($text, $id);
 
     // Verify that each chunk of the translated text is locale-safe and
@@ -151,11 +152,11 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $chunk_num = 0;
     $processing = help_topics_twig_tester_get_values();
     $max_chunk_num = $processing['max_chunk'];
-    $this->assertTrue($max_chunk_num > 0, 'Topic ' . $id . ' has at least one translated chunk');
+    $this->assertTrue($max_chunk_num >= 0, 'Topic ' . $id . ' has at least one translated chunk');
     help_topics_twig_tester_set_value('return_chunk', 0);
     help_topics_twig_tester_set_value('chunk_count', -1);
     while ($chunk_num <= $max_chunk_num) {
-      $text = $this->renderHelpTopic($id, 'translated_chunk');
+      $text = $this->renderHelpTopic($id, 'translated_chunk', $definitions);
       if ($text) {
         $this->assertTrue(locale_string_is_safe($text), 'Topic ' . $id . ' Twig file translatable strings are all exportable');
         $this->validateHtml($text, $id . ' chunk ' . $chunk_num);
@@ -167,12 +168,12 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Validate the HTML in the body with the translated text replaced by a
     // dummy string, to verify that HTML syntax is not partly in and partly out
     // of the translated text.
-    $text = $this->renderHelpTopic($id, 'replace_translated');
+    $text = $this->renderHelpTopic($id, 'replace_translated', $definitions);
     $this->validateHtml($text, $id);
 
     // Verify that if we remove all the translated text, whitespace, and
     // HTML tags, there is nothing left (that is, all text is translated).
-    $text = preg_replace('|\s+|', '', $this->renderHelpTopic($id, 'remove_translated'));
+    $text = preg_replace('|\s+|', '', $this->renderHelpTopic($id, 'remove_translated', $definitions));
     $this->assertEmpty($text, 'Topic ' . $id . ' Twig file has all of its text translated');
   }
 
@@ -258,6 +259,10 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
           $this->assertStringContainsString('Twig file has all of its text translated', $message);
           break;
 
+        case 'locale':
+          $this->assertStringContainsString('Twig file translatable strings are all exportable', $message);
+          break;
+
         case 'h1':
           $this->assertStringContainsString('has no H1 tag', $message);
           break;
@@ -313,15 +318,23 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    *   Help topic ID.
    * @param string $manner
    *   Special manner to render the topic.
+   * @param array $definitions
+   *   Array of help topic plugin definitions.
    */
-  protected function renderHelpTopic(string $id, string $manner) {
+  protected function renderHelpTopic(string $id, string $manner, array $definitions) {
     help_topics_twig_tester_set_value('type', $manner);
-    // Reset all caches. Just clearing Twig and Render caches does not seem
-    // to allow the NodeVisitor to be invoked again after the first load/render
-    // of a given template.
-    $this->resetAll();
-    $template = \Drupal::service('twig')->load('@help_topics/' . $id . '.html.twig');
-    return \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), [$template, 'render']);
+    // Read in file and add something random to the end of the template, to
+    // avoid template caching.
+    $template = file_get_contents($definitions[$id][HelpTopicDiscovery::FILE_KEY]) . "\n" . '{# ' . rand() . ' #}';
+    // Remove the front matter data from the beginning.
+    $matter = FrontMatter::create($template);
+    //    \Drupal::service('twig')->invalidate();
+    //    \Drupal::cache('render')->deleteAll();
+    $build = [
+      '#type' => 'inline_template',
+      '#template' => $matter->getContent(),
+    ];
+    return (string) \Drupal::service('renderer')->renderPlain($build);
   }
 
 }

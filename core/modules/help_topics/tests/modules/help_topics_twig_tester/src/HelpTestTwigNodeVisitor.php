@@ -40,22 +40,23 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
     }
 
     if ($node instanceof TwigNodeTrans) {
+      // Count the number of translated chunks.
+      $this_chunk = $processing['chunk_count'] + 1;
+      help_topics_twig_tester_set_value('chunk_count', $this_chunk);
+      if ($this_chunk > $processing['max_chunk']) {
+        help_topics_twig_tester_set_value('max_chunk', $this_chunk);
+      }
+
       if ($processing['type'] == 'remove_translated') {
         // Remove all translated text.
         return NULL;
       }
       else if ($processing['type'] == 'replace_translated') {
         // Replace with a dummy string.
-        $node = new TextNode(['data' => 'dummy']);
+        $node = new TextNode('dummy', 0);
       }
       else if ($processing['type'] == 'translated_chunk') {
         // Return the text only if it's the next chunk we're supposed to return.
-        $this_chunk = $processing['chunk_count'] + 1;
-        help_topics_twig_tester_set_value('chunk_count', $this_chunk);
-        if ($this_chunk > $processing['max_chunk']) {
-          help_topics_twig_tester_set_value('max_chunk', $this_chunk);
-        }
-
         if ($this_chunk == $processing['return_chunk']) {
           return $node->getNode('body');
         }
@@ -70,7 +71,7 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
       $text = $node->getAttribute('data');
       $text = strip_tags($text);
       $text = preg_replace('|\s+|', '', $text);
-      return new TextNode(['data' => $text]);
+      return new TextNode($text, 0);
     }
 
     return $node;
