@@ -2,5 +2,4 @@
 label: 'Help topic with locale-unsafe tag'
 top_level: true
 ---
-<script>alert('hello');</script>
-<p>{% trans %}some translated text too{% endtrans %}</p>
+<p>{% trans %}some translated text and a <script>alert('hello')</script>{% endtrans %}</p>

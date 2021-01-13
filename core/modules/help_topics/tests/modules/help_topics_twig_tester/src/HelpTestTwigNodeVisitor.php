@@ -57,11 +57,13 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
       }
       else if ($processing['type'] == 'translated_chunk') {
         // Return the text only if it's the next chunk we're supposed to return.
+        // Add a wrapper, because non-translated nodes will still be returned.
         if ($this_chunk == $processing['return_chunk']) {
-          return $node->getNode('body');
+          return new TextNode('XTRANSX' . $this->extractText($node) . 'XENDTRANSX', 0);
         }
-
-        return NULL;
+        else {
+          return NULL;
+        }
       }
     }
 
@@ -82,6 +84,31 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
    */
   public function getPriority() {
     return -100;
+  }
+
+  /**
+   * Extracts the text from a translated text object.
+   *
+   * @param \Drupal\Core\Template\TwigNodeTrans $node
+   *   Translated text node.
+   *
+   * @return string
+   *   Text in the node.
+   */
+  protected function extractText(TwigNodeTrans $node) {
+    // Extract the singular/body text from the TwigNodeTrans object.
+    // Do not worry about plural forms (unusual in help topics).
+    $bodies = $node->getNode('body');
+    if (!count($bodies)) {
+      $bodies = [$bodies];
+    }
+    $text = '';
+    foreach ($bodies as $body) {
+      if ($body->hasAttribute('data')) {
+        $text .= $body->getAttribute('data');
+      }
+    }
+    return trim($text);
   }
 
 }

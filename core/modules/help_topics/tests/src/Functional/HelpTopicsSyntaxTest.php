@@ -153,16 +153,23 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $processing = help_topics_twig_tester_get_values();
     $max_chunk_num = $processing['max_chunk'];
     $this->assertTrue($max_chunk_num >= 0, 'Topic ' . $id . ' has at least one translated chunk');
-    help_topics_twig_tester_set_value('return_chunk', 0);
-    help_topics_twig_tester_set_value('chunk_count', -1);
     while ($chunk_num <= $max_chunk_num) {
-      $text = $this->renderHelpTopic($id, 'translated_chunk', $definitions);
-      if ($text) {
-        $this->assertTrue(locale_string_is_safe($text), 'Topic ' . $id . ' Twig file translatable strings are all exportable');
-        $this->validateHtml($text, $id . ' chunk ' . $chunk_num);
-      }
-      $chunk_num++;
+      // Reset counting and render the topic, asking for just one chunk.
+      $chunk_str = $id . ' section ' . $chunk_num;
       help_topics_twig_tester_set_value('return_chunk', $chunk_num);
+      help_topics_twig_tester_set_value('chunk_count', -1);
+      $text = $this->renderHelpTopic($id, 'translated_chunk', $definitions);
+
+      // Extract the one translated chunk from the returned text.
+      $matches = [];
+      preg_match('|XTRANSX(.*)XENDTRANSX|', $text, $matches);
+      $text = $matches[1];
+      $this->assertNotEmpty($text, 'Topic ' . $chunk_str . ' contains text');
+
+      // Verify the chunk is OK.
+      $this->assertTrue(locale_string_is_safe($text), 'Topic ' . $chunk_str . ' translatable string is locale-safe');
+      $this->validateHtml($text, $chunk_str);
+      $chunk_num++;
     }
 
     // Validate the HTML in the body with the translated text replaced by a
@@ -260,7 +267,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
           break;
 
         case 'locale':
-          $this->assertStringContainsString('Twig file translatable strings are all exportable', $message);
+          $this->assertStringContainsString('translatable string is locale-safe', $message);
           break;
 
         case 'h1':
