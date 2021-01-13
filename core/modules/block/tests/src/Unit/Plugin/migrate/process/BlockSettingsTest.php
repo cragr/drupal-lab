@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class BlockSettingsTest extends UnitTestCase {
 
   /**
-   * Tests the blocks settings process plugin..
+   * Tests the blocks settings process plugin.
    *
    * @param array $value
    *   The source value for the plugin.
