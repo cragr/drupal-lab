@@ -46,10 +46,16 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
+  public static function setUpBeforeClass() {
+    parent::setUpBeforeClass();
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
-
-    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
 
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
