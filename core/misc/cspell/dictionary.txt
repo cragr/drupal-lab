@@ -1257,7 +1257,7 @@ protossl
 proxied
 proxying
 pseudotag
-PSFS_FEED_ME
+psfs_feed_me
 ptablenode
 pterm
 pulks
@@ -1849,7 +1849,7 @@ vals
 vampirize
 vancode
 varchar
-VarDumper's
+vardumper's
 veeeery
 vendored
 veniam
