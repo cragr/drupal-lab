@@ -162,7 +162,8 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
 
       // Extract the one translated chunk from the returned text.
       $matches = [];
-      preg_match('|XTRANSX(.*)XENDTRANSX|', $text, $matches);
+      $delimiter = 'Not Likely To Be Inside A Template';
+      preg_match('|' . $delimiter . '(.*)' . $delimiter . '|', $text, $matches);
       $text = $matches[1];
       $this->assertNotEmpty($text, 'Topic ' . $chunk_str . ' contains text');
 

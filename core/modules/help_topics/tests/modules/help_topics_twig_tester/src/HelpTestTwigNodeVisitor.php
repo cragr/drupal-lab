@@ -59,7 +59,8 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
         // Return the text only if it's the next chunk we're supposed to return.
         // Add a wrapper, because non-translated nodes will still be returned.
         if ($this_chunk == $processing['return_chunk']) {
-          return new TextNode('XTRANSX' . $this->extractText($node) . 'XENDTRANSX', 0);
+          $delimiter = 'Not Likely To Be Inside A Template';
+          return new TextNode($delimiter . $this->extractText($node) . $delimiter, 0);
         }
         else {
           return NULL;
