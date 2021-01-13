@@ -51,11 +51,11 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
         // Remove all translated text.
         return NULL;
       }
-      else if ($processing['type'] == 'replace_translated') {
+      elseif ($processing['type'] == 'replace_translated') {
         // Replace with a dummy string.
         $node = new TextNode('dummy', 0);
       }
-      else if ($processing['type'] == 'translated_chunk') {
+      elseif ($processing['type'] == 'translated_chunk') {
         // Return the text only if it's the next chunk we're supposed to return.
         // Add a wrapper, because non-translated nodes will still be returned.
         if ($this_chunk == $processing['return_chunk']) {
@@ -78,7 +78,7 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
     }
 
     return $node;
- }
+  }
 
   /**
    * {@inheritdoc}

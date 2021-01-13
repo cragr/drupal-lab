@@ -3,7 +3,6 @@
 namespace Drupal\Tests\help_topics\Functional;
 
 use Drupal\Component\FrontMatter\FrontMatter;
-use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -125,7 +124,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $has_top_level_related = FALSE;
     if (isset($definition['related'])) {
       foreach ($definition['related'] as $related_id) {
-        $this->assertArrayHasKey($related_id, $definitions, 'Topic ' . $id . ' is only related to topics that exist: ' . $related_id );
+        $this->assertArrayHasKey($related_id, $definitions, 'Topic ' . $id . ' is only related to topics that exist: ' . $related_id);
         $has_top_level_related = $has_top_level_related || !empty($definitions[$related_id]['top_level']);
       }
     }

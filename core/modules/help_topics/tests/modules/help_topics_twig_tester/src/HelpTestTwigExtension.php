@@ -2,8 +2,6 @@
 
 namespace Drupal\help_topics_twig_tester;
 
-use Drupal\help_topics_twig_tester\HelpTestTwigNodeVisitor;
-use Twig\TwigFilter;
 use Twig\Extension\AbstractExtension;
 
 /**
