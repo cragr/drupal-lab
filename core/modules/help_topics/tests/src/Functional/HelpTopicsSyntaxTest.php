@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\help_topics\Functional;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -26,6 +27,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
   protected static $modules = [
     'help',
     'help_topics',
+    'help_topics_twig_tester',
     'locale',
   ];
 
@@ -38,6 +40,14 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * Tests that all Core help topics can be rendered and have good syntax.
    */
   public function testHelpTopics() {
+    // Disable Twig caching, because we need to render topic templates
+    // various times with different things happening.
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['cache'] = FALSE;
+    $parameters['auto_reload'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->rebuildContainer();
+
     $this->drupalLogin($this->rootUser);
 
     // Enable all modules and themes, so that all routes mentioned in topics
@@ -97,6 +107,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    */
   protected function verifyTopic($id, $definitions, $response = 200) {
     $definition = $definitions[$id];
+    help_topics_twig_tester_set_value('type', 0);
 
     // Visit the URL for the topic.
     $this->drupalGet('admin/help/topic/' . $id);
@@ -113,7 +124,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $has_top_level_related = FALSE;
     if (isset($definition['related'])) {
       foreach ($definition['related'] as $related_id) {
-        $this->assertArrayHasKey($related_id, $definitions, 'Topic ' . $id . ' is only related to topics that exist (' . $related_id . ')');
+        $this->assertArrayHasKey($related_id, $definitions, 'Topic ' . $id . ' is only related to topics that exist: ' . $related_id );
         $has_top_level_related = $has_top_level_related || !empty($definitions[$related_id]['top_level']);
       }
     }
@@ -124,41 +135,45 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Verify that the label is not empty.
     $this->assertNotEmpty($definition['label'], 'Topic ' . $id . ' has a non-empty label');
 
-    // Read in the file so we can run some tests on that.
-    $body = file_get_contents($definition[HelpTopicDiscovery::FILE_KEY]);
-    $this->assertNotEmpty($body, 'Topic ' . $id . ' has a non-empty Twig file');
+    // Test the syntax and contents of the Twig file.
 
-    // Remove the front matter data (already tested above), and Twig set and
-    // variable printouts from the file.
-    $body = preg_replace('|---.*---|sU', '', $body);
-    $body = preg_replace('|\{\{.*\}\}|sU', '', $body);
-    $body = preg_replace('|\{\% set.*\%\}|sU', '', $body);
-    $body = trim($body);
-    $this->assertNotEmpty($body, 'Topic ' . $id . ' Twig file contains some text outside of front matter');
+    // Reset the max translated chunk count. It will be recalculated the first
+    // time we render this topic below.
+    help_topics_twig_tester_set_value('max_chunk', -1);
+    help_topics_twig_tester_set_value('chunk_count', -1);
 
-    // Verify that if we remove all the translated text, whitespace, and
-    // HTML tags, there is nothing left (that is, all text is translated).
-    $text = preg_replace('|\{\% trans \%\}.*\{\% endtrans \%\}|sU', '', $body);
-    $text = strip_tags($text);
-    $text = preg_replace('|\s+|', '', $text);
-    $this->assertEmpty($text, 'Topic ' . $id . ' Twig file has all of its text translated');
+    // Verify that the body is not empty and is valid HTML.
+    $text = $this->renderHelpTopic($id, 'bare_body');
+    $this->assertNotEmpty($text, 'Topic ' . $id . ' has a non-empty Twig file');
+    $this->validateHtml($text, $id);
 
-    // Verify that all of the translated text is locale-safe and valid HTML.
-    $matches = [];
-    preg_match_all('|\{\% trans \%\}(.*)\{\% endtrans \%\}|sU', $body, $matches, PREG_PATTERN_ORDER);
-    foreach ($matches[1] as $string) {
-      $this->assertTrue(locale_string_is_safe($string), 'Topic ' . $id . ' Twig file translatable strings are all exportable');
-      $this->validateHtml($string, $id);
+    // Verify that each chunk of the translated text is locale-safe and
+    // valid HTML.
+    $chunk_num = 0;
+    $processing = help_topics_twig_tester_get_values();
+    $max_chunk_num = $processing['max_chunk'];
+    help_topics_twig_tester_set_value('return_chunk', 0);
+    help_topics_twig_tester_set_value('chunk_count', -1);
+    while ($chunk_num <= $max_chunk_num) {
+      $text = $this->renderHelpTopic($id, 'translated_chunk');
+      if ($text) {
+        $this->assertTrue(locale_string_is_safe($text), 'Topic ' . $id . ' Twig file translatable strings are all exportable');
+        $this->validateHtml($text, $id . ' chunk ' . $chunk_num);
+      }
+      $chunk_num++;
+      help_topics_twig_tester_set_value('return_chunk', $chunk_num);
     }
-
-    // Validate the HTML in the body as a whole.
-    $this->validateHtml($body, $id);
 
     // Validate the HTML in the body with the translated text replaced by a
     // dummy string, to verify that HTML syntax is not partly in and partly out
     // of the translated text.
-    $text = preg_replace('|\{\% trans \%\}.*\{\% endtrans \%\}|sU', 'dummy', $body);
+    $text = $this->renderHelpTopic($id, 'replace_translated');
     $this->validateHtml($text, $id);
+
+    // Verify that if we remove all the translated text, whitespace, and
+    // HTML tags, there is nothing left (that is, all text is translated).
+    $text = $this->renderHelpTopic($id, 'remove_translated');
+    $this->assertEmpty($text, 'Topic ' . $id . ' Twig file has all of its text translated');
   }
 
   /**
@@ -289,6 +304,22 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       }
     }
     return $directories;
+  }
+
+  /**
+   * Renders a help topic in a special manner.
+   *
+   * @param string $id
+   *   Help topic ID.
+   * @param string $manner
+   *   Special manner to render the topic.
+   */
+  protected function renderHelpTopic(string $id, string $manner) {
+    help_topics_twig_tester_set_value('type', $manner);
+    \Drupal::service('twig')->invalidate();
+    \Drupal::cache('render')->deleteAll();
+    $template = \Drupal::service('twig')->load('@help_topics/' . $id . '.html.twig');
+    return \Drupal::service('renderer')->executeInRenderContext(new RenderContext(), [$template, 'render']);
   }
 
 }
