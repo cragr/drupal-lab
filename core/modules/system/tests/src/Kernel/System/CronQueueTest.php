@@ -121,6 +121,29 @@ class CronQueueTest extends KernelTestBase {
   }
 
   /**
+   * Tests that leases are expiring correctly, also within the same request.
+   */
+  public function testLeaseTime() {
+    $queue = $this->container->get('queue')->get('cron_queue_test_lease_time');
+    $queue->createItem([$this->randomMachineName() => $this->randomMachineName()]);
+    $this->cron->run();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_lease_time'), 1);
+    $this->cron->run();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_lease_time'), 1);
+
+    // Set the expiration time to 3 seconds ago, so the lease should automaticall y expire.
+    \Drupal::database()
+      ->update(DatabaseQueue::TABLE_NAME)
+      ->fields(['expire' => time() - 3])
+      ->execute();
+
+    $this->cron->run();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_lease_time'), 2);
+    $this->cron->run();
+    $this->assertEqual(\Drupal::state()->get('cron_queue_test_lease_time'), 2);
+  }
+
+  /**
    * Tests that exceptions thrown by workers are handled properly.
    */
   public function testExceptions() {

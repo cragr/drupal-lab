@@ -100,6 +100,48 @@ class QueueTest extends KernelTestBase {
     // Check that both queues are empty.
     $this->assertSame(0, $queue1->numberOfItems(), 'Queue 1 is empty');
     $this->assertSame(0, $queue2->numberOfItems(), 'Queue 2 is empty');
+
+    // Test that we can claim an item that is expired and we cannot claim an
+    // item that has not expired yet.
+    $queue1->createItem($data[0]);
+    $item = $queue1->claimItem();
+    $this->assertNotFalse($item, 'The item can be claimed.');
+    $item = $queue1->claimItem();
+    $this->assertFalse($item, 'The item cannot be claimed again.');
+    // Set the expiration date to the current time minus the lease time plus 1
+    // second. It should be possible to reclaim the item.
+    $this->setExpiration($queue1, time() - 31);
+    $item = $queue1->claimItem();
+    $this->assertNotFalse($item, 'Item can be claimed after expiration.');
+  }
+
+  /**
+   * Set the expiration for different queues.
+   *
+   * @param $queue
+   *   The queue for which to alter the expiration.
+   * @param $expire
+   *   The new expiration time.
+   *
+   * @throws \ReflectionException
+   */
+  protected function setExpiration($queue, $expire) {
+    $class = get_class($queue);
+    switch ($class) {
+      case Memory::class:
+        $reflection = new \ReflectionClass($queue);
+        $property = $reflection->getProperty('queue');
+        $property->setAccessible(TRUE);
+        $items = $property->getValue($queue);
+        end($items)->expire = $expire;
+        break;
+      case DatabaseQueue::class:
+        \Drupal::database()
+          ->update(DatabaseQueue::TABLE_NAME)
+          ->fields(['expire' => $expire])
+          ->execute();
+        break;
+    }
   }
 
   /**

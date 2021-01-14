@@ -62,8 +62,11 @@ class Memory implements QueueInterface {
    * {@inheritdoc}
    */
   public function claimItem($lease_time = 30) {
+    if ($lease_time <= 0) {
+      throw new \InvalidArgumentException('The lease time should be a positive integer.');
+    }
     foreach ($this->queue as $key => $item) {
-      if ($item->expire == 0) {
+      if ($item->expire == 0 || \Drupal::time()->getCurrentTime() > $item->expire) {
         $item->expire = \Drupal::time()->getCurrentTime() + $lease_time;
         $this->queue[$key] = $item;
         return $item;
