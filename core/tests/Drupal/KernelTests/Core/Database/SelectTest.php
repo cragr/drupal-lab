@@ -126,7 +126,7 @@ class SelectTest extends DatabaseTestBase {
   public function testSimpleSelectExpression() {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
-    $age_field = $query->addExpression("age*2", 'double_age');
+    $age_field = $query->addExpression("[age]*2", 'double_age');
     $query->condition('age', 27);
     $result = $query->execute();
 
@@ -146,8 +146,8 @@ class SelectTest extends DatabaseTestBase {
   public function testSimpleSelectExpressionMultiple() {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
-    $age_double_field = $query->addExpression("age*2");
-    $age_triple_field = $query->addExpression("age*3");
+    $age_double_field = $query->addExpression("[age]*2");
+    $age_triple_field = $query->addExpression("[age]*3");
     $query->condition('age', 27);
     $result = $query->execute();
 
@@ -546,7 +546,7 @@ class SelectTest extends DatabaseTestBase {
     $query = $this->connection->select('test', 't');
     $alias1 = $query->addField('t', 'name', 'the_alias');
     $alias2 = $query->addField('t', 'age', 'the_alias');
-    $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
+    $this->assertNotSame($alias1, $alias2, 'Duplicate aliases are renamed.');
   }
 
   /**
