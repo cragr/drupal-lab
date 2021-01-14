@@ -26,7 +26,7 @@ For brief introduction, see [USAGE.txt](/core/USAGE.txt). You can also find guid
 API references, and more by visiting Drupal's [documentation
 page][documentation].
 
-You can quickly extend Drupal's core featureset by installing any of its
+You can quickly extend Drupal's core feature set by installing any of its
 [thousands of free and open source modules][modules]. With Drupal and its
 module ecosystem, you can often build most or all of what your project needs
 before writing a single line of code.
