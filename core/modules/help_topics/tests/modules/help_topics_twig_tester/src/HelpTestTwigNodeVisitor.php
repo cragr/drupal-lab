@@ -13,8 +13,21 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
  * Defines a Twig node visitor for testing help topics.
+ *
+ * See static::setStateValue() for information on the types of processing
+ * this class can do.
  */
 class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
+
+  /**
+   * Delimeter placed around single translated chunks.
+   */
+  public const DELIMITER = 'Not Likely To Be Inside A Template';
+
+  /**
+   * Name used in \Drupal::state() for saving state information.
+   */
+  protected const STATE_NAME = 'help_test_twig_node_visitor';
 
   /**
    * {@inheritdoc}
@@ -27,7 +40,7 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
    * {@inheritdoc}
    */
   protected function doLeaveNode(Node $node, Environment $env) {
-    $processing = help_topics_twig_tester_get_values();
+    $processing = static::getState();
     if (!$processing['type']) {
       return $node;
     }
@@ -42,9 +55,9 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
     if ($node instanceof TwigNodeTrans) {
       // Count the number of translated chunks.
       $this_chunk = $processing['chunk_count'] + 1;
-      help_topics_twig_tester_set_value('chunk_count', $this_chunk);
+      static::setStateValue('chunk_count', $this_chunk);
       if ($this_chunk > $processing['max_chunk']) {
-        help_topics_twig_tester_set_value('max_chunk', $this_chunk);
+        static::setStateValue('max_chunk', $this_chunk);
       }
 
       if ($processing['type'] == 'remove_translated') {
@@ -59,8 +72,7 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
         // Return the text only if it's the next chunk we're supposed to return.
         // Add a wrapper, because non-translated nodes will still be returned.
         if ($this_chunk == $processing['return_chunk']) {
-          $delimiter = 'Not Likely To Be Inside A Template';
-          return new TextNode($delimiter . $this->extractText($node) . $delimiter, 0);
+          return new TextNode(static::DELIMITER . $this->extractText($node) . static::DELIMITER, 0);
         }
         else {
           return NULL;
@@ -97,12 +109,25 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
    *   Text in the node.
    */
   protected function extractText(TwigNodeTrans $node) {
-    // Extract the singular/body text from the TwigNodeTrans object.
-    // Do not worry about plural forms (unusual in help topics).
+    // Extract the singular/body and optional plural text from the
+    // TwigNodeTrans object.
     $bodies = $node->getNode('body');
     if (!count($bodies)) {
       $bodies = [$bodies];
     }
+    if ($node->hasNode('plural')) {
+      $plural = $node->getNode('plural');
+      if (!count($plural)) {
+        $bodies[] = $plural;
+      }
+      else {
+        foreach ($plural as $item) {
+          $bodies[] = $item;
+        }
+      }
+    }
+
+    // Extract the text from each component of the singular/plural strings.
     $text = '';
     foreach ($bodies as $body) {
       if ($body->hasAttribute('data')) {
@@ -110,6 +135,46 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
       }
     }
     return trim($text);
+  }
+
+  /**
+   * Returns the state information.
+   *
+   * @return array
+   *   The state information.
+   */
+  public static function getState() {
+    return \Drupal::state()->get(static::STATE_NAME, ['type' => 0]);
+  }
+
+  /**
+   * Sets state information.
+   *
+   * @param string $key
+   *   Key to set. Possible keys:
+   *   - type: Type of processing to do. Values:
+   *     - 0: No processing.
+   *     - remove_translated: Remove all translated text, HTML tags, and
+   *       whitespace.
+   *     - replace_translated: Replace all translated text with dummy text.
+   *     - translated_chunk: Remove all translated text except one designated
+   *       chunk (see return_chunk below).
+   *     - bare_body (or any other non-zero value): Remove variables, set
+   *       statements, and Twig programming, but leave everything else intact.
+   *   - chunk_count: Current index of translated chunks. Reset to -1 before
+   *     each rendering run. (Used internally by this class.)
+   *   - max_chunk: Maximum index of translated chunks. Reset to -1 before
+   *     each rendering run.
+   *   - return_chunk: Chunk index to keep intact for translated_chunk
+   *     processing. All others are removed.
+   * @param $value
+   *   Value to set for $key.
+   */
+  public static function setStateValue(string $key, $value) {
+    $state = \Drupal::state();
+    $values = $state->get(static::STATE_NAME, ['type' => 0]);
+    $values[$key] = $value;
+    $state->set(static::STATE_NAME, $values);
   }
 
 }
