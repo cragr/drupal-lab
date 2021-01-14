@@ -22,8 +22,8 @@ the [Issue forks & merge requests page][issue forks].
 
 ## Usage
 
-For brief introduction, see [USAGE.txt](/core/USAGE.txt). You can also find guides,
-API references, and more by visiting Drupal's [documentation
+For a brief introduction, see [USAGE.txt](/core/USAGE.txt). You can also find
+guides, API references, and more by visiting Drupal's [documentation
 page][documentation].
 
 You can quickly extend Drupal's core feature set by installing any of its
