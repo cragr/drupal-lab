@@ -142,7 +142,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       ['example.gitignore', 'assets/scaffold/files/example.gitignore'],
       ['index.php', 'assets/scaffold/files/index.php'],
       ['INSTALL.txt', 'assets/scaffold/files/drupal.INSTALL.txt'],
-      ['README.txt', 'assets/scaffold/files/drupal.README.txt'],
+      ['README.md', 'assets/scaffold/files/drupal.README.md'],
       ['robots.txt', 'assets/scaffold/files/robots.txt'],
       ['update.php', 'assets/scaffold/files/update.php'],
       ['web.config', 'assets/scaffold/files/web.config'],
