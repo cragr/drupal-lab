@@ -233,7 +233,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'settings[test_field_setting]' => $string,
     ];
-    $this->assertText('Default value', 'Default value heading is shown');
+    $this->assertText('Default value');
     $this->submitForm($edit, 'Save settings');
 
     // Assert the field settings are correct.
@@ -396,11 +396,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Assert field storage settings.
     $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
-    $this->assertTrue($field_storage->getSetting('test_field_storage_setting') == $string, 'Field storage settings were found.');
+    $this->assertSame($string, $field_storage->getSetting('test_field_storage_setting'), 'Field storage settings were found.');
 
     // Assert field settings.
     $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
-    $this->assertTrue($field->getSetting('test_field_setting') == $string, 'Field settings were found.');
+    $this->assertSame($string, $field->getSetting('test_field_setting'), 'Field settings were found.');
   }
 
   /**
@@ -463,12 +463,12 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that invalid default values are rejected.
     $edit = [$element_name => '-1'];
     $this->drupalPostForm($admin_path, $edit, 'Save settings');
-    $this->assertText("$field_name does not accept the value -1", 'Form validation failed.');
+    $this->assertText("$field_name does not accept the value -1");
 
     // Check that the default value is saved.
     $edit = [$element_name => '1'];
     $this->drupalPostForm($admin_path, $edit, 'Save settings');
-    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEqual($field->getDefaultValueLiteral(), [['value' => 1]], 'The default value was correctly saved.');
 
@@ -479,7 +479,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that the default value can be emptied.
     $edit = [$element_name => ''];
     $this->submitForm($edit, 'Save settings');
-    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEqual($field->getDefaultValueLiteral(), [], 'The default value was correctly saved.');
 
@@ -497,7 +497,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     $this->drupalGet($admin_path);
     $this->submitForm([], 'Save settings');
-    $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
+    $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEqual($field->getDefaultValueLiteral(), [], 'The default value was correctly saved.');
 
@@ -737,7 +737,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that hook_field_widget_form_alter() does believe this is the
     // default value form.
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
-    $this->assertText('From hook_field_widget_form_alter(): Default form is true.', 'Default value form in hook_field_widget_form_alter().');
+    $this->assertText('From hook_field_widget_form_alter(): Default form is true.');
 
     $edit = [
       'description' => '<em>Test with a non upload field.',
@@ -754,7 +754,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function fieldListAdminPage() {
     $this->drupalGet('admin/reports/fields');
-    $this->assertText($this->fieldName, 'Field name is displayed in field list.');
+    $this->assertText($this->fieldName);
     $this->assertSession()->linkByHrefExists('admin/structure/types/manage/' . $this->contentType . '/fields');
   }
 
