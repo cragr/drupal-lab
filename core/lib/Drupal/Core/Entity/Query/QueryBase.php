@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Entity\Query;
 
-use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Utility\TableSort;
 
