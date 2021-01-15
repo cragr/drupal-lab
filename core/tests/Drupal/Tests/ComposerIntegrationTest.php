@@ -19,6 +19,11 @@ class ComposerIntegrationTest extends UnitTestCase {
 
   /**
    * Tests composer.lock content-hash.
+   *
+   * If you have made a change to composer.json, you may need to reconstruct
+   * composer.lock. Follow the link below for further instructions.
+   *
+   * @see https://www.drupal.org/about/core/policies/core-dependencies-policies/managing-composer-updates-for-drupal-core
    */
   public function testComposerLockHash() {
     $content_hash = self::getContentHash(file_get_contents($this->root . '/composer.json'));
