@@ -20,7 +20,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
 
   /**
-   * Delimeter placed around single translated chunks.
+   * Delimiter placed around single translated chunks.
    */
   public const DELIMITER = 'Not Likely To Be Inside A Template';
 
