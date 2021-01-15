@@ -791,9 +791,10 @@ class WebAssert extends MinkWebAssert {
    * Asserts that the querystring parameters equal an expected set.
    *
    * @param Drupal\Core\Url|string $url
-   *   The expectation URL object or string.
+   *   The expectation URL object or string. Non-empty string querystring
+   *   must start with a question mark.
    */
-  public function urlQuerystringEquals($url): void {
+  public function urlQueryStringEquals($url): void {
     if (func_num_args() > 1) {
       throw new \ArgumentCountError('Called ' . __METHOD__ . ' with more than one argument');
     }

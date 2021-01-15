@@ -63,7 +63,7 @@ class RedirectTest extends BrowserTestBase {
     // When redirect is set to FALSE, there should be no redirection, and the
     // query parameters should be passed along.
     $this->assertSession()->addressEquals($path);
-    $this->assertSession()->urlQuerystringEquals('?foo=bar');
+    $this->assertSession()->urlQueryStringEquals('?foo=bar');
 
     // Test redirection back to the original path.
     $edit = [
@@ -82,7 +82,7 @@ class RedirectTest extends BrowserTestBase {
     // When using an empty redirection string, there should be no redirection,
     // and the query parameters should be passed along.
     $this->assertSession()->addressEquals($path);
-    $this->assertSession()->urlQuerystringEquals('?foo=bar');
+    $this->assertSession()->urlQueryStringEquals('?foo=bar');
   }
 
   /**

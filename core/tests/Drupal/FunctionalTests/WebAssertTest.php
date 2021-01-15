@@ -57,9 +57,9 @@ class WebAssertTest extends BrowserTestBase {
   }
 
   /**
-   * @covers ::urlQuerystringEquals
+   * @covers ::urlQueryStringEquals
    */
-  public function testUrlQuerystringEquals() {
+  public function testUrlQueryStringEquals() {
     // Insert 300 log messages.
     $logger = $this->container->get('logger.factory')->get('pager_test');
     for ($i = 0; $i < 300; $i++) {
@@ -71,20 +71,20 @@ class WebAssertTest extends BrowserTestBase {
       'access site reports',
     ]));
     $this->drupalGet('admin/reports/dblog');
-    $this->assertSession()->urlQuerystringEquals('admin/reports/dblog');
-    $this->assertSession()->urlQuerystringEquals('?');
-    $this->assertSession()->urlQuerystringEquals('');
-    $this->assertSession()->urlQuerystringEquals(Url::fromRoute('dblog.overview'));
+    $this->assertSession()->urlQueryStringEquals('admin/reports/dblog');
+    $this->assertSession()->urlQueryStringEquals('?');
+    $this->assertSession()->urlQueryStringEquals('');
+    $this->assertSession()->urlQueryStringEquals(Url::fromRoute('dblog.overview'));
 
     // Go to the second page, we expect the querystring to change to '?page=1'.
     $this->drupalGet('admin/reports/dblog', ['query' => ['page' => 1]]);
-    $this->assertSession()->urlQuerystringEquals('admin/reports/dblog?page=1');
-    $this->assertSession()->urlQuerystringEquals('?page=1');
-    $this->assertSession()->urlQuerystringEquals(Url::fromRoute('dblog.overview', [], ['query' => ['page' => 1]]));
+    $this->assertSession()->urlQueryStringEquals('admin/reports/dblog?page=1');
+    $this->assertSession()->urlQueryStringEquals('?page=1');
+    $this->assertSession()->urlQueryStringEquals(Url::fromRoute('dblog.overview', [], ['query' => ['page' => 1]]));
 
     $this->expectException(AssertionFailedError::class);
     $this->expectExceptionMessage('Querystring should be equal to \'\', found \'page=1\'.');
-    $this->assertSession()->urlQuerystringEquals('admin/reports/dblog');
+    $this->assertSession()->urlQueryStringEquals('admin/reports/dblog');
   }
 
   /**
