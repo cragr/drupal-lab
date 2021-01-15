@@ -165,9 +165,19 @@ class ConnectionTest extends UnitTestCase {
         'Merge',
       ],
       [
+        'PagerSelectExtender',
+        'Drupal\corefake\Driver\Database\corefake',
+        'PagerSelectExtender',
+      ],
+      [
         'Drupal\Core\Database\Schema',
         'Drupal\corefake\Driver\Database\corefake',
         'Schema',
+      ],
+      [
+        'SearchQuery',
+        'Drupal\corefake\Driver\Database\corefake',
+        'SearchQuery',
       ],
       [
         'Drupal\Core\Database\Query\Select',
@@ -178,6 +188,11 @@ class ConnectionTest extends UnitTestCase {
         'Drupal\Core\Database\Transaction',
         'Drupal\corefake\Driver\Database\corefake',
         'Transaction',
+      ],
+      [
+        'TableSortExtender',
+        'Drupal\corefake\Driver\Database\corefake',
+        'TableSortExtender',
       ],
       [
         'Drupal\Core\Database\Query\Truncate',
@@ -222,14 +237,29 @@ class ConnectionTest extends UnitTestCase {
         'Merge',
       ],
       [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\PagerSelectExtender',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'PagerSelectExtender',
+      ],
+      [
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Schema',
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
         'Schema',
       ],
       [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\SearchQuery',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'SearchQuery',
+      ],
+      [
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Select',
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
         'Select',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\TableSortExtender',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'TableSortExtender',
       ],
       [
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Transaction',
