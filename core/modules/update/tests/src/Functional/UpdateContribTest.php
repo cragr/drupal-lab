@@ -146,7 +146,7 @@ class UpdateContribTest extends UpdateTestBase {
         'project' => 'ddd_update_test',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
-        'package' => 'ddd_update_test'
+        'package' => 'ddd_update_test',
       ],
     ];
 
