@@ -83,7 +83,7 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->urlQueryStringEquals(Url::fromRoute('dblog.overview', [], ['query' => ['page' => 1]]));
 
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessage('Querystring should be equal to \'\', found \'page=1\'.');
+    $this->expectExceptionMessage("Querystring should be equal to '', found 'page=1'.");
     $this->assertSession()->urlQueryStringEquals('admin/reports/dblog');
   }
 

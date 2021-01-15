@@ -801,7 +801,7 @@ class WebAssert extends MinkWebAssert {
     $expected_parameters = $this->getUrlQueryStringParameters($url);
     $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
     $message = sprintf(
-      'Querystring should be equal to \'%s\', found \'%s\'.',
+      "Querystring should be equal to '%s', found '%s'.",
       UrlHelper::buildQuery($expected_parameters),
       UrlHelper::buildQuery($actual_parameters)
     );
