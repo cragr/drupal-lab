@@ -47,7 +47,7 @@ class InstallerTranslationDirectoryTest extends InstallerTestBase {
     $this->assertSession()->pageTextContains('The installer requires that you create a translations directory as part of the installation process. Create the directory /this/directory/does/not/exist . More details about installing Drupal are available in INSTALL.txt.');
 
     // Prepare the custom translations directory outside of the files directory.
-    $translation_directory = $this->root . '/' . $this->siteDirectory . '/translations';
+    $translation_directory = $this->root . '/' . $this->siteDirectory . '/custom_translations';
     mkdir($translation_directory, 0777, TRUE);
     // Place a custom local translation in the translations directory.
     file_put_contents($translation_directory . '/drupal-8.0.0.de.po', $this->getPo('de'));
