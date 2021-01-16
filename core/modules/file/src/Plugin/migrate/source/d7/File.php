@@ -8,14 +8,13 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 file source from database.
  *
- * Available configuration keys:
- * - scheme: (optional) The file scheme like 'public', 'private' or any other -
- *   can be a string or an array. The 'temporary' scheme is not supported.
- *   If omitted, all files are retrieved.
  * Available constants:
- *  - source_base_path: (required) It represents the fully qualified path
- *   relative to which URIs in the files table are specified, and must end with
- *   a /.
+ * - source_base_path: (required) The fully qualified path relative to which
+ *   URIs in the files table are specified, and must end with a /.
+ * Available configuration keys:
+ * - scheme: (optional) The file scheme, like 'public' or 'private' to get from
+ *   the source. Can be a string or an array of schemes. The 'temporary' scheme
+ *   is not supported. If omitted, all files are retrieved.
  *
  * Example:
  *
