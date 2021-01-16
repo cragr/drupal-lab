@@ -48,7 +48,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
     // There should be no confirmation form and no experimental theme warning.
     $this->drupalGet('admin/appearance');
     $this->cssSelect('a[title="Install <strong>Test theme</strong> theme"]')[0]->click();
-    $this->assertSession()->pageTextContains('The Test theme theme has been installed.');
+    $this->assertSession()->pageTextContains('The <strong>Test theme</strong> theme has been installed.');
     $this->assertNoText('Experimental modules are provided for testing purposes only.');
 
     // Next, test installing an experimental theme with no dependencies.
