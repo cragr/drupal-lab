@@ -8,7 +8,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 6 file source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * Available configuration keys:
+ * - site_path: (optional) The path to the site directory relative to Drupal
+ *   root. Defaults to 'sites/default'.
+ *
+ * For additional configuration keys, refer to the parent classes:
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
