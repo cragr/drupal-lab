@@ -91,8 +91,34 @@ class GenerateTheme extends Command {
       }
     }
     else {
-      $io->getErrorStyle()->error("The destination directory $destination cannot be opened");
+      $io->getErrorStyle()->error("The destination directory $destination cannot be opened.");
       return 1;
+    }
+
+    // Info file.
+    $info_file = "$destination/$destination_theme.info.yml";
+    if (file_exists($info_file)) {
+      $info_file_contents = file_get_contents($info_file);
+      $info_file_contents = preg_replace("/(name:).*/", "$1 $destination_theme", $info_file_contents);
+      $info_file_contents = preg_replace("/$source_theme(\/[^\/]+(\n|$))/", "$destination_theme$1", $info_file_contents);
+
+      if (!@file_put_contents($info_file, $info_file_contents)) {
+        $io->getErrorStyle()->error("The theme info file $info_file could not be written.");
+        return 1;
+      }
+    }
+    else {
+      $io->getErrorStyle()->error("The theme info file $info_file could not be read.");
+      return 1;
+    }
+
+    // Rename hooks.
+    $theme_file = "$destination/$destination_theme.theme";
+    if (file_exists($theme_file)) {
+      if (!@file_put_contents($theme_file, preg_replace("/(function )($source_theme)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
+        $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
+        return 1;
+      }
     }
 
     return 0;
