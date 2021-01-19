@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Twig\Util\TemplateDirIterator;
 
 /**
  * Generates a new theme based on latest default markup.
@@ -129,6 +130,21 @@ class GenerateTheme extends Command {
     if (file_exists($theme_file)) {
       if (!@file_put_contents($theme_file, preg_replace("/(function )($source_theme)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
         $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
+        return 1;
+      }
+    }
+
+    // Rename references to libraries in templates.
+    $iterator = new TemplateDirIterator(new \RegexIterator(
+      new \RecursiveIteratorIterator(
+        new \RecursiveDirectoryIterator($destination), \RecursiveIteratorIterator::LEAVES_ONLY
+      ), '/' . preg_quote('.html.twig') . '$/'
+    ));
+
+    foreach ($iterator as $template_file => $contents) {
+      $new_template_content = preg_replace("/(attach_library\(['\")])classy(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
+      if (!@file_put_contents($template_file, $new_template_content)) {
+        $io->getErrorStyle()->error("The template file $template_file could not be written.");
         return 1;
       }
     }
