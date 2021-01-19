@@ -5,6 +5,7 @@ namespace Drupal\Core\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -33,7 +34,10 @@ class GenerateTheme extends Command {
   protected function configure() {
     $this->setName('generate-theme')
       ->setDescription('Generates a new theme based on latest default markup.')
-      ->addArgument('machine-name', InputArgument::REQUIRED, 'The machine name of the generated theme');
+      ->addArgument('machine-name', InputArgument::REQUIRED, 'The machine name of the generated theme')
+      ->addOption('name', NULL, InputOption::VALUE_OPTIONAL, 'A name for the theme.')
+      ->addOption('description', NULL, InputOption::VALUE_OPTIONAL, 'A description of your theme.')
+      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, 'The path where your theme will be created. Defaults to: themes');
   }
 
   /**
@@ -48,7 +52,8 @@ class GenerateTheme extends Command {
     // Path where the generated theme should be placed.
     // @todo allow configuring this.
     $destination_theme = $input->getArgument('machine-name');
-    $destination = "themes/$destination_theme";
+    $default_destination = 'themes';
+    $destination = trim($input->getOption('path') ?: $default_destination, '/') . '/' . $destination_theme;
 
     if (is_dir($destination)) {
       $io->getErrorStyle()->error('Theme could not be generated because the destination directory exists already.');
@@ -69,6 +74,7 @@ class GenerateTheme extends Command {
 
     if (!$this->copyRecursive($source, $destination)) {
       // @todo better error message
+      // @todo should we reverse changes in a case where something fails?
       $io->getErrorStyle()->error('The theme could not be generated');
       return 1;
     }
@@ -99,7 +105,13 @@ class GenerateTheme extends Command {
     $info_file = "$destination/$destination_theme.info.yml";
     if (file_exists($info_file)) {
       $info_file_contents = file_get_contents($info_file);
-      $info_file_contents = preg_replace("/(name:).*/", "$1 $destination_theme", $info_file_contents);
+      $name = $input->getOption('description') ?: $destination_theme;
+      $info_file_contents = preg_replace("/(name:).*/", "$1 $name", $info_file_contents);
+      if ($description = $input->getOption('description')) {
+        // @todo should we ensure that description exists since it's not required?
+        $info_file_contents = preg_replace("/(description:).*/", "$1 '$description'", $info_file_contents);
+      }
+      // Replace references to libraries.
       $info_file_contents = preg_replace("/$source_theme(\/[^\/]+(\n|$))/", "$destination_theme$1", $info_file_contents);
 
       if (!@file_put_contents($info_file, $info_file_contents)) {
