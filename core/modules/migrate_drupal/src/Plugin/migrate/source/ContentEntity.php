@@ -238,7 +238,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   protected function doCount() {
-    return $this->query()->count()->execute();
+    return (int) $this->query()->count()->execute();
   }
 
   /**
