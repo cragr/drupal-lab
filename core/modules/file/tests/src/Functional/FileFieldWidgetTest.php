@@ -174,7 +174,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
             $check_field_name = $field_name;
           }
 
-          $this->assertIdentical($button->getAttribute('name'), $check_field_name . '_' . $key . '_remove_button');
+          $this->assertSame($check_field_name . '_' . $key . '_remove_button', $button->getAttribute('name'));
         }
 
         // "Click" the remove button (emulating either a nojs or js submission).
@@ -333,7 +333,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertFileExists($comment_file->getFileUri());
     // Test authenticated file download.
     $url = $comment_file->createFileUrl();
-    $this->assertNotEqual($url, NULL, 'Confirmed that the URL is valid');
+    $this->assertNotNull($url, 'Confirmed that the URL is valid');
     $this->drupalGet($comment_file->createFileUrl());
     $this->assertSession()->statusCodeEquals(200);
 
@@ -468,6 +468,39 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Perform tests using the newly set up anonymous users.
     $this->doTestTemporaryFileRemovalExploit($victim_user, $attacker_user);
+  }
+
+  /**
+   * Tests configuring file field's allowed file extensions setting.
+   */
+  public function testFileExtensionsSetting() {
+    // Grant the admin user required permissions.
+    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+
+    $type_name = 'article';
+    $field_name = strtolower($this->randomMachineName());
+    $this->createFileField($field_name, 'node', $type_name);
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $field_id = $field->id();
+
+    // By default allowing .php files without .txt is not permitted.
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $edit = ['settings[file_extensions]' => 'jpg php'];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Add txt to the list of allowed extensions to securely upload files with a php extension. The txt extension will then be added automatically.');
+
+    // Test allowing .php and .txt.
+    $edit = ['settings[file_extensions]' => 'jpg php txt'];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+
+    // If the system is configured to allow insecure uploads, .txt is not
+    // required when allowing .php.
+    $this->config('system.file')->set('allow_insecure_uploads', TRUE)->save();
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $edit = ['settings[file_extensions]' => 'jpg php'];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
   }
 
   /**

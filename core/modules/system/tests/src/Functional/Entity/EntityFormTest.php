@@ -3,6 +3,9 @@
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -58,6 +61,39 @@ class EntityFormTest extends BrowserTestBase {
   }
 
   /**
+   * Tests hook_entity_form_mode_alter().
+   *
+   * @see entity_test_entity_form_mode_alter()
+   */
+  public function testEntityFormModeAlter() {
+    // Create compact entity display.
+    EntityFormMode::create(['id' => 'entity_test.compact', 'targetEntityType' => 'entity_test'])->save();
+    EntityFormDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'compact',
+      'status' => TRUE,
+    ])->removeComponent('field_test_text')->save();
+
+    // The field should be available on default form mode.
+    $entity1 = EntityTest::create([
+      'name' => $this->randomString(),
+    ]);
+    $entity1->save();
+    $this->drupalGet($entity1->toUrl('edit-form'));
+    $this->assertSession()->elementExists('css', 'input[name="field_test_text[0][value]"]');
+
+    // The field should be hidden on compact form mode.
+    // See: entity_test_entity_form_mode_alter().
+    $entity2 = EntityTest::create([
+      'name' => 'compact_form_mode',
+    ]);
+    $entity2->save();
+    $this->drupalGet($entity2->toUrl('edit-form'));
+    $this->assertSession()->elementNotExists('css', 'input[name="field_test_text[0][value]"]');
+  }
+
+  /**
    * Tests hook_entity_form_display_alter().
    *
    * @see entity_test_entity_form_display_alter()
@@ -93,7 +129,7 @@ class EntityFormTest extends BrowserTestBase {
     $this->assertNull($entity, new FormattableMarkup('%entity_type: The entity has been modified.', ['%entity_type' => $entity_type]));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertNotNull($entity, new FormattableMarkup('%entity_type: Modified entity found in the database.', ['%entity_type' => $entity_type]));
-    $this->assertNotEqual($entity->name->value, $name1, new FormattableMarkup('%entity_type: The entity name has been modified.', ['%entity_type' => $entity_type]));
+    $this->assertNotEquals($name1, $entity->name->value, new FormattableMarkup('%entity_type: The entity name has been modified.', ['%entity_type' => $entity_type]));
 
     $this->drupalGet($entity_type . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));
