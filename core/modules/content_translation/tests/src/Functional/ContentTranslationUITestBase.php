@@ -90,7 +90,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->assertCacheContexts($this->defaultCacheContexts);
 
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertNoText('Source language', 'Source language column correctly hidden.');
+    $this->assertNoText('Source language');
 
     $translation = $this->getTranslation($entity, $default_langcode);
     foreach ($values[$default_langcode] as $property => $value) {
@@ -138,7 +138,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $this->assertEqual($metadata_target_translation->getAuthor()->id(), $this->translator->id(),
         new FormattableMarkup('Author of the target translation @langcode correctly stored for translatable owner field.', ['@langcode' => $langcode]));
 
-      $this->assertNotEqual($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
+      $this->assertNotEquals($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
         new FormattableMarkup('Author of the target translation @target different from the author of the source translation @source for translatable owner field.',
           ['@target' => $langcode, '@source' => $default_langcode]));
     }
@@ -164,7 +164,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertNoText('Source language', 'Source language column correctly hidden.');
+    $this->assertNoText('Source language');
 
     // Switch the source language.
     $langcode = 'fr';
@@ -195,7 +195,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertText('Source language', 'Source language column correctly shown.');
+    $this->assertText('Source language');
 
     // Check that the entered values have been correctly stored.
     foreach ($values as $langcode => $property_values) {
@@ -624,7 +624,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);
-      $this->assertNotEqual($changed_timestamp, $entity->getChangedTime(), 'The entity\'s changed time was updated after form save without changes.');
+      $this->assertNotEquals($changed_timestamp, $entity->getChangedTime(), 'The entity\'s changed time was updated after form save without changes.');
     }
   }
 

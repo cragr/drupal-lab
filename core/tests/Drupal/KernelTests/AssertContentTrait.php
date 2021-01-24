@@ -849,7 +849,7 @@ trait AssertContentTrait {
         '@unexpected' => var_export($title, TRUE),
       ]);
     }
-    return $this->assertNotEqual($actual, $title, $message, $group);
+    return $this->assertNotEquals($title, $actual, $message, $group);
   }
 
   /**
@@ -894,7 +894,7 @@ trait AssertContentTrait {
       $message = '%callback rendered correctly.';
     }
     $message = new FormattableMarkup($message, ['%callback' => 'theme_' . $callback . '()']);
-    return $this->assertIdentical($output, $expected, $message, $group);
+    return $this->assertSame($expected, $output, $message, $group);
   }
 
   /**

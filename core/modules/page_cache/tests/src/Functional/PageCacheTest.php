@@ -76,7 +76,7 @@ class PageCacheTest extends BrowserTestBase {
       'rendered',
       'system_test_cache_tags_page',
     ];
-    $this->assertIdentical($cache_entry->tags, $expected_tags);
+    $this->assertSame($expected_tags, $cache_entry->tags);
 
     Cache::invalidateTags($tags);
     $this->drupalGet($path);
@@ -111,7 +111,7 @@ class PageCacheTest extends BrowserTestBase {
       'rendered',
       'system_test_cache_tags_page',
     ];
-    $this->assertIdentical($cache_entry->tags, $expected_tags);
+    $this->assertSame($expected_tags, $cache_entry->tags);
 
     Cache::invalidateTags($tags);
     $this->drupalGet($path);
@@ -480,7 +480,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: TRUE", "Form is immutable.");
+    $this->assertText("Immutable: TRUE");
 
     // The immutable flag is set unconditionally by system_form_alter(), set
     // a flag to tell page_cache_form_test_module_implements_alter() to disable
@@ -491,7 +491,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: FALSE", "Form is not immutable,");
+    $this->assertText("Immutable: FALSE");
   }
 
   /**

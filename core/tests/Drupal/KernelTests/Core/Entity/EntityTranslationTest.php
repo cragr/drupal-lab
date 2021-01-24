@@ -364,7 +364,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $name_translated = $langcode . '_' . $this->randomMachineName();
     $translation = $entity->addTranslation($langcode);
     $this->assertTrue($translation->isNewTranslation(), 'Newly added translations are marked as new.');
-    $this->assertNotIdentical($entity, $translation, 'The entity and the translation object differ from one another.');
+    $this->assertNotSame($entity, $translation, 'The entity and the translation object differ from one another.');
     $this->assertTrue($entity->hasTranslation($langcode), 'The new translation exists.');
     $this->assertEqual($translation->language()->getId(), $langcode, 'The translation language matches the specified one.');
     $this->assertEqual($translation->{$langcode_key}->value, $langcode, 'The translation field language value matches the specified one.');
@@ -522,7 +522,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertEqual($entity->name->value, $name, 'No stale reference for the translation object corresponding to the original language.');
     $translation2 = $entity->getTranslation($langcode);
     $translation2->name->value .= $this->randomMachineName();
-    $this->assertNotEqual($translation->name->value, $translation2->name->value, 'No stale reference for the actual translation object.');
+    $this->assertNotEquals($translation->name->value, $translation2->name->value, 'No stale reference for the actual translation object.');
     $this->assertEqual($entity, $translation2->getUntranslated(), 'No stale reference in the actual translation object.');
 
     // Verify that deep-cloning is still available when we are not instantiating
@@ -531,7 +531,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->getTranslation($langcode);
     $cloned = clone $entity;
     $translation = $cloned->getTranslation($langcode);
-    $this->assertNotIdentical($entity, $translation->getUntranslated(), 'A cloned entity object has no reference to the original one.');
+    $this->assertNotSame($entity, $translation->getUntranslated(), 'A cloned entity object has no reference to the original one.');
     $entity->removeTranslation($langcode);
     $this->assertFalse($entity->hasTranslation($langcode));
     $this->assertTrue($cloned->hasTranslation($langcode));

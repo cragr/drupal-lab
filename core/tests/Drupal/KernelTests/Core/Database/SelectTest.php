@@ -468,7 +468,7 @@ class SelectTest extends DatabaseTestBase {
       ->orderRandom()
       ->execute()
       ->fetchCol();
-    $this->assertNotEqual($randomized_ids, $ordered_ids, 'A query with random ordering returns an unordered set of IDs.');
+    $this->assertNotEquals($ordered_ids, $randomized_ids, 'A query with random ordering returns an unordered set of IDs.');
     $sorted_ids = $randomized_ids;
     sort($sorted_ids);
     $this->assertEqual($sorted_ids, $ordered_ids, 'After sorting the random list, the result matches the original query.');
@@ -481,7 +481,7 @@ class SelectTest extends DatabaseTestBase {
       ->orderRandom()
       ->execute()
       ->fetchCol();
-    $this->assertNotEqual($randomized_ids_second_set, $randomized_ids, 'Performing the query with random ordering a second time returns IDs in a different order.');
+    $this->assertNotEquals($randomized_ids, $randomized_ids_second_set, 'Performing the query with random ordering a second time returns IDs in a different order.');
     $sorted_ids_second_set = $randomized_ids_second_set;
     sort($sorted_ids_second_set);
     $this->assertEqual($sorted_ids_second_set, $sorted_ids, 'After sorting the second random list, the result matches the sorted version of the first random list.');
@@ -546,7 +546,7 @@ class SelectTest extends DatabaseTestBase {
     $query = $this->connection->select('test', 't');
     $alias1 = $query->addField('t', 'name', 'the_alias');
     $alias2 = $query->addField('t', 'age', 'the_alias');
-    $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
+    $this->assertNotSame($alias1, $alias2, 'Duplicate aliases are renamed.');
   }
 
   /**

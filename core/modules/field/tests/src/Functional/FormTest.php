@@ -121,17 +121,17 @@ class FormTest extends FieldTestBase {
 
     // Create token value expected for description.
     $token_description = Html::escape($this->config('system.site')->get('name')) . '_description';
-    $this->assertText($token_description, 'Token replacement for description is displayed');
+    $this->assertText($token_description);
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     // Verify that no extraneous widget is displayed.
     $this->assertSession()->fieldNotExists("{$field_name}[1][value]");
 
-    // Check that hook_field_widget_form_alter() does not believe this is the
-    // default value form.
-    $this->assertNoText('From hook_field_widget_form_alter(): Default form is true.', 'Not default value form in hook_field_widget_form_alter().');
-    // Check that hook_field_widget_form_alter() does not believe this is the
-    // default value form.
-    $this->assertNoText('From hook_field_widget_multivalue_form_alter(): Default form is true.', 'Not default value form in hook_field_widget_form_alter().');
+    // Check that hook_field_widget_single_element_form_alter() does not believe
+    // this is the default value form.
+    $this->assertNoText('From hook_field_widget_single_element_form_alter(): Default form is true.');
+    // Check that hook_field_widget_single_element_form_alter() does not believe
+    // this is the default value form.
+    $this->assertNoText('From hook_field_widget_complete_form_alter(): Default form is true.');
 
     // Submit with invalid value (field-level validation).
     $edit = [
@@ -149,7 +149,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
@@ -166,7 +166,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
+    $this->assertText('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
@@ -177,7 +177,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, 'Save');
-    $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
+    $this->assertText('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
@@ -211,7 +211,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created.');
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
@@ -241,7 +241,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
@@ -327,11 +327,11 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
-    $this->assertIdentical($entity->{$field_name}->getValue(), $field_values, 'Field values were saved in the correct order');
+    $this->assertSame($field_values, $entity->{$field_name}->getValue(), 'Field values were saved in the correct order');
 
     // Display edit form: check that the expected number of widgets is
     // displayed, with correct values change values, reorder, leave an empty
@@ -601,7 +601,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm([], 'Save');
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test_rev ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test_rev ' . $id . ' has been created.');
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
 
@@ -627,7 +627,7 @@ class FormTest extends FieldTestBase {
     $value = mt_rand(1, 127);
     $edit = ["{$field_name}[0][value]" => $value];
     $this->submitForm($edit, 'Save');
-    $this->assertText('entity_test_rev ' . $id . ' has been updated.', 'Entity was updated');
+    $this->assertText('entity_test_rev ' . $id . ' has been updated.');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
@@ -685,31 +685,31 @@ class FormTest extends FieldTestBase {
   }
 
   /**
-   * Tests hook_field_widget_multivalue_form_alter().
+   * Tests hook_field_widget_complete_form_alter().
    */
   public function testFieldFormMultipleWidgetAlter() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter', 'test_field_widget_multiple');
+    $this->widgetAlterTest('hook_field_widget_complete_form_alter', 'test_field_widget_multiple');
   }
 
   /**
-   * Tests hook_field_widget_multivalue_form_alter() with single value elements.
+   * Tests hook_field_widget_complete_form_alter() with single value elements.
    */
   public function testFieldFormMultipleWidgetAlterSingleValues() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter', 'test_field_widget_multiple_single_value');
+    $this->widgetAlterTest('hook_field_widget_complete_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
-   * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+   * Tests hook_field_widget_complete_WIDGET_TYPE_form_alter().
    */
   public function testFieldFormMultipleWidgetTypeAlter() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter', 'test_field_widget_multiple');
+    $this->widgetAlterTest('hook_field_widget_complete_WIDGET_TYPE_form_alter', 'test_field_widget_multiple');
   }
 
   /**
-   * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter() with single value elements.
+   * Tests hook_field_widget_complete_WIDGET_TYPE_form_alter() with single value elements.
    */
   public function testFieldFormMultipleWidgetTypeAlterSingleValues() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter', 'test_field_widget_multiple_single_value');
+    $this->widgetAlterTest('hook_field_widget_complete_WIDGET_TYPE_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
