@@ -9,16 +9,16 @@ namespace Drupal\Component\Utility;
  * implementations, the calculation of the expected dimensions resulting from
  * an image rotate operation.
  *
- * Different versions of PHP for the GD toolkit, and alternative toolkits, use
- * different algorithms to perform the rotation of an image and result in
- * different dimensions of the output image. This prevents predictability of
- * the final image size for instance by the image rotate effect, or by image
- * toolkit rotate operations.
+ * Different versions of the libgd library embedded in PHP, and alternative
+ * toolkits, use different algorithms to perform the rotation of an image and
+ * result in different dimensions of the output image. This prevents
+ * predictability of the final image size for instance by the image rotate
+ * effect, or by image toolkit rotate operations.
  *
  * This class implements a calculation algorithm that returns, given input
  * width, height and rotation angle, dimensions of the expected image after
  * rotation that are consistent with those produced by the GD rotate image
- * toolkit operation using PHP 5.5 and above.
+ * toolkit operation using libgd 2.2.2 and above.
  *
  * @see \Drupal\system\Plugin\ImageToolkit\Operation\gd\Rotate
  */
@@ -81,46 +81,110 @@ class Rectangle {
    * @return $this
    */
   public function rotate($angle) {
-    // PHP 5.5 GD bug: https://bugs.php.net/bug.php?id=65148: To prevent buggy
-    // behavior on negative multiples of 30 degrees we convert any negative
-    // angle to a positive one between 0 and 360 degrees.
-    $angle -= floor($angle / 360) * 360;
-
-    // For some rotations that are multiple of 30 degrees, we need to correct
-    // an imprecision between GD that uses C floats internally, and PHP that
-    // uses C doubles. Also, for rotations that are not multiple of 90 degrees,
-    // we need to introduce a correction factor of 0.5 to match the GD
-    // algorithm used in PHP 5.5 (and above) to calculate the width and height
-    // of the rotated image.
     if ((int) $angle == $angle && $angle % 90 == 0) {
-      $imprecision = 0;
-      $correction = 0;
+      // For rotations that are multiple of 90 degrees, no trigonometry is
+      // needed.
+      if (abs($angle) % 180 == 0) {
+        $this->boundingWidth = $this->width;
+        $this->boundingHeight = $this->height;
+      }
+      else {
+        $this->boundingWidth = $this->height;
+        $this->boundingHeight = $this->width;
+      }
     }
     else {
-      $imprecision = -0.00001;
-      $correction = 0.5;
+      $rotate_affine_transform = $this->gdAffineRotate($angle);
+      $bounding_box = $this->gdTransformAffineBoundingBox($this->width, $this->height, $rotate_affine_transform);
+      $this->boundingWidth = $bounding_box['width'];
+      $this->boundingHeight = $bounding_box['height'];
     }
-
-    // Do the trigonometry, applying imprecision fixes where needed.
-    $rad = deg2rad($angle);
-    $cos = cos($rad);
-    $sin = sin($rad);
-    $a = $this->width * $cos;
-    $b = $this->height * $sin + $correction;
-    $c = $this->width * $sin;
-    $d = $this->height * $cos + $correction;
-    if ((int) $angle == $angle && in_array($angle, [60, 150, 300])) {
-      $a = $this->fixImprecision($a, $imprecision);
-      $b = $this->fixImprecision($b, $imprecision);
-      $c = $this->fixImprecision($c, $imprecision);
-      $d = $this->fixImprecision($d, $imprecision);
-    }
-
-    // This is how GD on PHP5.5 calculates the new dimensions.
-    $this->boundingWidth = abs((int) $a) + abs((int) $b);
-    $this->boundingHeight = abs((int) $c) + abs((int) $d);
-
     return $this;
+  }
+
+  /**
+   * Set up a rotation affine transform.
+   *
+   * @param float $angle
+   *   Rotation angle.
+   *
+   * @return array
+   *   The resulting affine transform.
+   *
+   * @see https://libgd.github.io/manuals/2.2.2/files/gd_matrix-c.html#gdAffineRotate
+   */
+  private function gdAffineRotate(float $angle): array {
+    $rad = deg2rad($angle);
+    $sin_t = sin($rad);
+    $cos_t = cos($rad);
+    return [$cos_t, $sin_t, -$sin_t, $cos_t, 0, 0];
+  }
+
+  /**
+   * Applies an affine transformation to a point.
+   *
+   * @param array $src
+   *   The source point.
+   * @param array $affine
+   *   The affine transform to apply.
+   *
+   * @return array
+   *   The resulting point.
+   *
+   * @see https://libgd.github.io/manuals/2.2.2/files/gd_matrix-c.html#gdAffineApplyToPointF
+   */
+  private function gdAffineApplyToPointF(array $src, array $affine): array {
+    return [
+      'x' => $src['x'] * $affine[0] + $src['y'] * $affine[2] + $affine[4],
+      'y' => $src['x'] * $affine[1] + $src['y'] * $affine[3] + $affine[5],
+    ];
+  }
+
+  /**
+   * Returns the bounding box of an affine transform applied to a rectangle.
+   *
+   * @param int $width
+   *   The width of the rectangle.
+   * @param int $height
+   *   The height of the rectangle.
+   * @param array $affine
+   *   The affine transform to apply.
+   *
+   * @return array
+   *   The resulting bounding box.
+   *
+   * @see https://libgd.github.io/manuals/2.1.1/files/gd_interpolation-c.html#gdTransformAffineBoundingBox
+   */
+  private function gdTransformAffineBoundingBox(int $width, int $height, array $affine): array {
+    $extent = [];
+    $extent[0]['x'] = 0.0;
+    $extent[0]['y'] = 0.0;
+    $extent[1]['x'] = $width;
+    $extent[1]['y'] = 0.0;
+    $extent[2]['x'] = $width;
+    $extent[2]['y'] = $height;
+    $extent[3]['x'] = 0.0;
+    $extent[3]['y'] = $height;
+
+    for ($i = 0; $i < 4; $i++) {
+      $extent[$i] = $this->gdAffineApplyToPointF($extent[$i], $affine);
+    }
+    $min = $extent[0];
+    $max = $extent[0];
+
+    for ($i = 1; $i < 4; $i++) {
+      $min['x'] = $min['x'] > $extent[$i]['x'] ? $extent[$i]['x'] : $min['x'];
+      $min['y'] = $min['y'] > $extent[$i]['y'] ? $extent[$i]['y'] : $min['y'];
+      $max['x'] = $max['x'] < $extent[$i]['x'] ? $extent[$i]['x'] : $max['x'];
+      $max['y'] = $max['y'] < $extent[$i]['y'] ? $extent[$i]['y'] : $max['y'];
+    }
+
+    return [
+      'x' => (int) $min['x'],
+      'y' => (int) $min['y'],
+      'width' => (int) ceil(($max['x'] - $min['x'])) + 1,
+      'height' => (int) ceil($max['y'] - $min['y']) + 1,
+    ];
   }
 
   /**
@@ -137,8 +201,14 @@ class Rectangle {
    * @return float
    *   A value, where imprecision is added to input if the delta part of the
    *   input is lower than the absolute imprecision.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/TODO
    */
   protected function fixImprecision($input, $imprecision) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
     if ($this->delta($input) < abs($imprecision)) {
       return $input + $imprecision;
     }
@@ -153,8 +223,14 @@ class Rectangle {
    *
    * @return float
    *   The fractional part of the input number, unsigned.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/TODO
    */
   protected function fraction($input) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
     return abs((int) $input - $input);
   }
 
@@ -166,8 +242,14 @@ class Rectangle {
    *
    * @return float
    *   the difference of a fraction from the closest between 0 and 1.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/TODO
    */
   protected function delta($input) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
     $fraction = $this->fraction($input);
     return $fraction > 0.5 ? (1 - $fraction) : $fraction;
   }
