@@ -221,14 +221,14 @@ class ImageDimensionsTest extends BrowserTestBase {
 
     $effect_id = $style->addImageEffect($effect);
     $style->save();
-    $this->assertEqual($this->getImageTag($variables), '<img src="' . $url . '" width="43" height="43" alt="" loading="lazy" class="image-style-test" />');
+    $this->assertEquals('<img src="' . $url . '" width="43" height="43" alt="" loading="lazy" class="image-style-test" />', $this->getImageTag($variables));
     $this->assertFileNotExists($generated_uri);
     $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertFileExists($generated_uri);
     $image_file = $image_factory->get($generated_uri);
-    $this->assertEqual($image_file->getWidth(), 43);
-    $this->assertEqual($image_file->getHeight(), 43);
+    $this->assertEquals(43, $image_file->getWidth());
+    $this->assertEquals(43, $image_file->getHeight());
 
     $effect_plugin = $style->getEffect($effect_id);
     $style->deleteImageEffect($effect_plugin);

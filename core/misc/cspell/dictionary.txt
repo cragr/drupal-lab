@@ -839,6 +839,7 @@ ldquo
 leftjoin
 libc
 libellé
+libgd
 libicu
 libmysqlclient
 libyaml

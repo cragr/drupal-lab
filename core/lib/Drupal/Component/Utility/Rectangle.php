@@ -205,10 +205,10 @@ class Rectangle {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/TODO
+   * @see https://www.drupal.org/node/1
    */
   protected function fixImprecision($input, $imprecision) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
     if ($this->delta($input) < abs($imprecision)) {
       return $input + $imprecision;
     }
@@ -227,10 +227,10 @@ class Rectangle {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/TODO
+   * @see https://www.drupal.org/node/1
    */
   protected function fraction($input) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
     return abs((int) $input - $input);
   }
 
@@ -246,10 +246,10 @@ class Rectangle {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/TODO
+   * @see https://www.drupal.org/node/1
    */
   protected function delta($input) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/TODO', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
     $fraction = $this->fraction($input);
     return $fraction > 0.5 ? (1 - $fraction) : $fraction;
   }
