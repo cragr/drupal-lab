@@ -4,7 +4,7 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Pager\PagerManagerInterface;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 
 /**
  * Query builder for SELECT statements.
