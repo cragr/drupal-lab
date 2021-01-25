@@ -96,12 +96,12 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     $normalizer->setSerializer($this->serializer);
     $actual = $normalizer->normalize($link_collection);
     $this->assertInstanceOf(CacheableNormalization::class, $actual);
-    $this->assertTrue(in_array('user', $actual->getCacheContexts()));
-    $normalized = $actual->getNormalization();
     // Check that the link object keys are prefixed by "related".
+    $normalized = $actual->getNormalization();
     foreach (array_keys($normalized) as $key) {
       $this->assertStringStartsWith('related', $key);
     }
+    $this->assertTrue(in_array('user', $actual->getCacheContexts()));
     $this->assertSame($expected, array_values($normalized));
     // Injects the second test user as the current user into the SUT.
     $this->setCurrentUser($this->testUsers[0]);
@@ -111,7 +111,6 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     // visible since the current user is the entity owner.
     $actual = $normalizer->normalize($link_collection);
     $this->assertInstanceOf(CacheableNormalization::class, $actual);
-    $this->assertTrue(in_array('user', $actual->getCacheContexts()));
     $normalized = $actual->getNormalization();
     array_unshift($expected, [
       'href' => $edit_form_url->toString(),
@@ -120,6 +119,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
       ],
     ]);
     $this->assertSame($expected, array_values($normalized));
+    $this->assertTrue(in_array('user', $actual->getCacheContexts()));
   }
 
 }
