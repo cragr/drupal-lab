@@ -4,6 +4,7 @@ namespace Drupal\database_test\Form;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\Entity\User;
@@ -40,7 +41,7 @@ class DatabaseTestForm extends FormBase {
 
     $query = $query
       ->extend(PagerSelectExtender::class)
-      ->extend('Drupal\Core\Database\Query\TableSortExtender');
+      ->extend(TableSortExtender::class);
     $query
       ->fields('u', ['uid'])
       ->limit(50)
