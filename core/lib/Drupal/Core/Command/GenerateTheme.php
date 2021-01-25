@@ -60,24 +60,23 @@ class GenerateTheme extends Command {
       return 1;
     }
 
-    if (!$this->copyRecursive($source, $destination)) {
-      // @todo better error message
-      // @todo should we reverse changes in a case where something fails?
-      $io->getErrorStyle()->error('The theme could not be generated');
+    $tmp_dir = $this->getUniqueTmpDirPath();
+    if (!$this->copyRecursive($source, $tmp_dir)) {
+      $io->getErrorStyle()->error('Failed generating theme into a temporary folder.');
       return 1;
     }
 
     // Rename files based on the theme machine name.
     $file_pattern = "/$source_theme\.(theme|[^.]+\.yml)/";
-    if ($files = @scandir($destination)) {
+    if ($files = @scandir($tmp_dir)) {
       foreach ($files as $file) {
-        $location = $destination . '/' . $file;
+        $location = $tmp_dir . '/' . $file;
         if (is_dir($location)) {
           continue;
         }
 
         if (preg_match($file_pattern, $file, $matches)) {
-          if (!@rename($location, $destination . '/' . $destination_theme . '.' . $matches[1])) {
+          if (!@rename($location, $tmp_dir . '/' . $destination_theme . '.' . $matches[1])) {
             $io->getErrorStyle()->error("The file $location could not be moved.");
             return 1;
           }
@@ -85,12 +84,12 @@ class GenerateTheme extends Command {
       }
     }
     else {
-      $io->getErrorStyle()->error("The destination directory $destination cannot be opened.");
+      $io->getErrorStyle()->error("Temporary directory $tmp_dir cannot be opened.");
       return 1;
     }
 
     // Info file.
-    $info_file = "$destination/$destination_theme.info.yml";
+    $info_file = "$tmp_dir/$destination_theme.info.yml";
     if (file_exists($info_file)) {
       $info_file_contents = file_get_contents($info_file);
       $name = $input->getOption('description') ?: $destination_theme;
@@ -113,7 +112,7 @@ class GenerateTheme extends Command {
     }
 
     // Rename hooks.
-    $theme_file = "$destination/$destination_theme.theme";
+    $theme_file = "$tmp_dir/$destination_theme.theme";
     if (file_exists($theme_file)) {
       if (!@file_put_contents($theme_file, preg_replace("/(function )($source_theme)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
         $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
@@ -124,7 +123,7 @@ class GenerateTheme extends Command {
     // Rename references to libraries in templates.
     $iterator = new TemplateDirIterator(new \RegexIterator(
       new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($destination), \RecursiveIteratorIterator::LEAVES_ONLY
+        new \RecursiveDirectoryIterator($tmp_dir), \RecursiveIteratorIterator::LEAVES_ONLY
       ), '/' . preg_quote('.html.twig') . '$/'
     ));
 
@@ -134,6 +133,11 @@ class GenerateTheme extends Command {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
         return 1;
       }
+    }
+
+    if (!@rename($tmp_dir, $destination)) {
+      $io->getErrorStyle()->error("The theme could not be moved to the destination: $destination.");
+      return 1;
     }
 
     return 0;
@@ -187,6 +191,15 @@ class GenerateTheme extends Command {
     }
 
     return TRUE;
+  }
+
+  /**
+   * Generates a path to a temporary location.
+   *
+   * @return string
+   */
+  private function getUniqueTmpDirPath(): string {
+    return sys_get_temp_dir() . '/drupal-starterkit-theme-' . uniqid(md5(microtime()), TRUE);
   }
 
 }
