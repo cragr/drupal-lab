@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\PagerSelectExtender;
 
 /**
  * The base extender class for Select queries.
