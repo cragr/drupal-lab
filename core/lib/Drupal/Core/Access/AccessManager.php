@@ -124,13 +124,10 @@ class AccessManager implements AccessManagerInterface {
 
     // Filter out checks which require the incoming request.
     if (!isset($request)) {
-      $request_checks = $this->checkProvider->getChecksNeedRequest();
-      $checks = array_diff($checks, $request_checks);
+      $checks = array_diff($checks, $this->checkProvider->getChecksNeedRequest());
     }
 
-    // Allow access if there are checks and every check is allowed. Also allow
-    // access if there are no remaining checks because all checks required a
-    // request and a request was not provided. No opinion otherwise.
+    $result = AccessResult::neutral();
     if (!empty($checks)) {
       $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account, $request);
       $result = AccessResult::allowed();
@@ -138,10 +135,6 @@ class AccessManager implements AccessManagerInterface {
         $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
       }
     }
-    else {
-      $result = AccessResult::allowedIf(!empty($request_checks) && !isset($request));
-    }
-
     return $return_as_object ? $result : $result->isAllowed();
   }
 
