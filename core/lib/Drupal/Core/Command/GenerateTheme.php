@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Command;
 
+use Drupal\Core\File\FileSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,20 +15,6 @@ use Twig\Util\TemplateDirIterator;
  * Generates a new theme based on latest default markup.
  */
 class GenerateTheme extends Command {
-
-  /**
-   * Default mode for new directories.
-   *
-   * @todo should this be configurable?
-   */
-  const CHMOD_DIRECTORY = 0775;
-
-  /**
-   * Default mode for new files.
-   *
-   * @todo should this be configurable?
-   */
-  const CHMOD_FILE = 0664;
 
   /**
    * {@inheritdoc}
@@ -142,7 +129,7 @@ class GenerateTheme extends Command {
     ));
 
     foreach ($iterator as $template_file => $contents) {
-      $new_template_content = preg_replace("/(attach_library\(['\")])classy(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
+      $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
       if (!@file_put_contents($template_file, $new_template_content)) {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
         return 1;
@@ -188,10 +175,10 @@ class GenerateTheme extends Command {
     // Set permissions for the directory or file.
     if (!is_link($dest)) {
       if (is_dir($dest)) {
-        $mode = static::CHMOD_DIRECTORY;
+        $mode = FileSystem::CHMOD_DIRECTORY;
       }
       else {
-        $mode = static::CHMOD_FILE;
+        $mode = FileSystem::CHMOD_FILE;
       }
 
       if (!@chmod($dest, $mode)) {
