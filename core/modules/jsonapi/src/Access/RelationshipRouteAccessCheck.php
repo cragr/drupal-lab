@@ -52,10 +52,10 @@ final class RelationshipRouteAccessCheck implements AccessInterface {
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check against.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The currently logged in account.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The currently logged in account.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
