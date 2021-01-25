@@ -44,7 +44,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $new_set = $this->container->get('entity_type.manager')->getStorage('shortcut_set')->load($edit['id']);
-    $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
+    $this->assertSame($edit['id'], $new_set->id(), 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
     // Verify that generated shortcut set was listed as a choice on the user
     // account page.
@@ -101,7 +101,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
     // Check to ensure that the shortcut weights have changed and that
     // ShortcutSet::.getShortcuts() returns shortcuts in the new order.
-    $this->assertIdentical(array_reverse(array_keys($shortcuts)), array_keys($set->getShortcuts()));
+    $this->assertSame(array_reverse(array_keys($shortcuts)), array_keys($set->getShortcuts()));
   }
 
   /**
@@ -140,7 +140,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     ];
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $current_set = shortcut_current_displayed_set($this->adminUser);
-    $this->assertNotEqual($current_set->id(), $this->set->id(), 'A shortcut set can be switched to at the same time as it is created.');
+    $this->assertNotEquals($this->set->id(), $current_set->id(), 'A shortcut set can be switched to at the same time as it is created.');
     $this->assertEqual($current_set->label(), $edit['label'], 'The new set is correctly assigned to the user.');
   }
 

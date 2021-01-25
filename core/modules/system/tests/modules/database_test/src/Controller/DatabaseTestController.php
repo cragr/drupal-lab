@@ -5,6 +5,7 @@ namespace Drupal\database_test\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\TableSortExtender;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -129,7 +130,7 @@ class DatabaseTestController extends ControllerBase {
       ->fields('t', ['tid', 'pid', 'task', 'priority']);
 
     $query = $query
-      ->extend('Drupal\Core\Database\Query\TableSortExtender')
+      ->extend(TableSortExtender::class)
       ->orderByHeader($header);
 
     // We need all the results at once to check the sort.
@@ -161,7 +162,7 @@ class DatabaseTestController extends ControllerBase {
       ->fields('t', ['tid', 'pid', 'task', 'priority']);
 
     $query = $query
-      ->extend('Drupal\Core\Database\Query\TableSortExtender')
+      ->extend(TableSortExtender::class)
       ->orderByHeader($header)
       ->orderBy('priority');
 
