@@ -4,6 +4,7 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
  * Query builder for SELECT statements.
@@ -319,12 +320,15 @@ class Select extends Query implements SelectInterface {
    */
   public function extend($extender_name) {
     $parts = explode('\\', $extender_name);
-    $class = end($parts);
-    $driver_class = $this->connection->getDriverClass($class);
-    if ($driver_class !== $class) {
-      return new $driver_class($this, $this->connection);
+    $base_class = end($parts);
+    $driver_class = $this->connection->getDriverClass($base_class);
+    $class = $driver_class !== $base_class ? $driver_class : $extender_name;
+    if (is_subclass_of($class, PagerSelectExtender::class)) {
+      return new $class($this, $this->connection, \Drupal::service('pager.manager'));
     }
-    return new $extender_name($this, $this->connection);
+    else {
+      return new $class($this, $this->connection);
+    }
   }
 
   /**

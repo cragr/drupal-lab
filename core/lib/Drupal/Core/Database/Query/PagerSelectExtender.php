@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
  * Query extender for pager queries.
@@ -44,9 +45,23 @@ class PagerSelectExtender extends SelectExtender {
    */
   protected $pagerManager;
 
-  public function __construct(SelectInterface $query, Connection $connection) {
+  /**
+   * Constructs a PagerSelectExtender object.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   Select query object.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection object.
+   * @param \Drupal\Core\Pager\PagerManagerInterface $pager_manager
+   *   The pager manager service.
+   */
+  public function __construct(SelectInterface $query, Connection $connection, PagerManagerInterface $pager_manager = NULL) {
     parent::__construct($query, $connection);
-    $this->pagerManager = \Drupal::service('pager.manager');
+    if (!$pager_manager) {
+      @trigger_error('The pager.manager service must be passed to PagerSelectExtender::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $pager_manager = \Drupal::service('pager.manager');
+    }
+    $this->pagerManager = $pager_manager;
 
     // Add pager tag. Do this here to ensure that it is always added before
     // preExecute() is called.
