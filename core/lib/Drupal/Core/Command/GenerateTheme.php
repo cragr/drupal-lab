@@ -3,6 +3,7 @@
 namespace Drupal\Core\Command;
 
 use Drupal\Core\File\FileSystem;
+use Drupal\Component\Serialization\Yaml;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -90,25 +91,57 @@ class GenerateTheme extends Command {
 
     // Info file.
     $info_file = "$tmp_dir/$destination_theme.info.yml";
-    if (file_exists($info_file)) {
-      $info_file_contents = file_get_contents($info_file);
-      $name = $input->getOption('description') ?: $destination_theme;
-      $info_file_contents = preg_replace("/(name:).*/", "$1 $name", $info_file_contents);
-      if ($description = $input->getOption('description')) {
-        // @todo should we ensure that description exists since it's not required?
-        $info_file_contents = preg_replace("/(description:).*/", "$1 '$description'", $info_file_contents);
-      }
-      // Replace references to libraries.
-      $info_file_contents = preg_replace("/$source_theme(\/[^\/]+(\n|$))/", "$destination_theme$1", $info_file_contents);
-
-      if (!@file_put_contents($info_file, $info_file_contents)) {
-        $io->getErrorStyle()->error("The theme info file $info_file could not be written.");
-        return 1;
-      }
-    }
-    else {
+    if (!file_exists($info_file)) {
       $io->getErrorStyle()->error("The theme info file $info_file could not be read.");
       return 1;
+    }
+
+    $info = Yaml::decode(file_get_contents($info_file));
+    $info['name'] = $input->getOption('name') ?: $destination_theme;
+
+    if ($description = $input->getOption('description')) {
+      $info['description'] = $description;
+    }
+    else {
+      unset($info['description']);
+    }
+
+    // Replace references to libraries.
+    if (isset($info['libraries'])) {
+      $info['libraries'] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $info['libraries']);
+    }
+    if (isset($info['libraries-extend'])) {
+      foreach ($info['libraries-extend'] as $key => $value) {
+        $info['libraries-extend'][$key] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $info['libraries-extend'][$key]);
+      }
+    }
+    if (isset($info['libraries-override'])) {
+      foreach ($info['libraries-override'] as $key => $value) {
+        if (isset($info['libraries-override'][$key]['dependencies'])) {
+          $info['libraries-override'][$key]['dependencies'] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $info['libraries-override'][$key]['dependencies']);
+        }
+      }
+    }
+
+    if (!@file_put_contents($info_file, Yaml::encode($info))) {
+      $io->getErrorStyle()->error("The theme info file $info_file could not be written.");
+      return 1;
+    }
+
+    // Replace references to libraries in libraries.yml file.
+    $libraries_file = "$tmp_dir/$destination_theme.libraries.yml";
+    if (file_exists($libraries_file)) {
+      $libraries = Yaml::decode(file_get_contents($libraries_file));
+      foreach ($libraries as $key => $value) {
+        if (isset($libraries[$key]['dependencies'])) {
+          $libraries[$key]['dependencies'] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $libraries[$key]['dependencies']);
+        }
+      }
+
+      if (!@file_put_contents($libraries_file, Yaml::encode($libraries))) {
+        $io->getErrorStyle()->error("The libraries file $libraries_file could not be written.");
+        return 1;
+      }
     }
 
     // Rename hooks.
