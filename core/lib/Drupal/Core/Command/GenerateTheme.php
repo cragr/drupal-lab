@@ -149,10 +149,10 @@ class GenerateTheme extends Command {
    *
    * @return bool
    */
-  private function copyRecursive($src, $dest) {
+  private function copyRecursive($src, $dest): bool {
     // Copy all subdirectories and files.
     if (is_dir($src)) {
-      if (!mkdir($dest, static::CHMOD_DIRECTORY, FALSE)) {
+      if (!mkdir($dest, FileSystem::CHMOD_DIRECTORY, FALSE)) {
         return FALSE;
       }
       $handle = @opendir($src);
