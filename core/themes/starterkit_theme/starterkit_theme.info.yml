@@ -1,6 +1,6 @@
 name: starterkit_theme
 type: theme
-'base theme': stable
+'base theme': stable9
 version: VERSION
 hidden: true
 libraries:
