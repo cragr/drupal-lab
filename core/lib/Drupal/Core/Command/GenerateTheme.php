@@ -2,8 +2,10 @@
 
 namespace Drupal\Core\Command;
 
-use Drupal\Core\File\FileSystem;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\File\FileSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +18,22 @@ use Twig\Util\TemplateDirIterator;
  * Generates a new theme based on latest default markup.
  */
 class GenerateTheme extends Command {
+
+  /**
+   * The path for the Drupal root.
+   *
+   * @var string
+   */
+  private $root;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(string $name = NULL) {
+    parent::__construct($name);
+
+    $this->root = dirname(__DIR__, 5);
+  }
 
   /**
    * {@inheritdoc}
@@ -36,7 +54,7 @@ class GenerateTheme extends Command {
     $io = new SymfonyStyle($input, $output);
 
     // Change the directory to the Drupal root.
-    chdir(dirname(__DIR__, 5));
+    chdir($this->root);
 
     // Path where the generated theme should be placed.
     // @todo allow configuring this.
@@ -52,9 +70,12 @@ class GenerateTheme extends Command {
     // Source directory for the theme.
     // @todo allow configuring this.
     // @todo create new theme specifically for this purpose.
-    $source_theme = 'classy';
-    // @todo should we find the source directory based on theme machine name?
-    $source = "core/themes/$source_theme";
+    $source_theme_name = 'classy';
+    if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
+      $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found .");
+      return 1;
+    }
+    $source = $source_theme->getPath();
 
     if (!is_dir($source)) {
       $io->getErrorStyle()->error("Theme could not be generated because the source directory $source does not exist.");
@@ -68,7 +89,7 @@ class GenerateTheme extends Command {
     }
 
     // Rename files based on the theme machine name.
-    $file_pattern = "/$source_theme\.(theme|[^.]+\.yml)/";
+    $file_pattern = "/$source_theme_name\.(theme|[^.]+\.yml)/";
     if ($files = @scandir($tmp_dir)) {
       foreach ($files as $file) {
         $location = $tmp_dir . '/' . $file;
@@ -108,17 +129,17 @@ class GenerateTheme extends Command {
 
     // Replace references to libraries.
     if (isset($info['libraries'])) {
-      $info['libraries'] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $info['libraries']);
+      $info['libraries'] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $info['libraries']);
     }
     if (isset($info['libraries-extend'])) {
       foreach ($info['libraries-extend'] as $key => $value) {
-        $info['libraries-extend'][$key] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $info['libraries-extend'][$key]);
+        $info['libraries-extend'][$key] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $info['libraries-extend'][$key]);
       }
     }
     if (isset($info['libraries-override'])) {
       foreach ($info['libraries-override'] as $key => $value) {
         if (isset($info['libraries-override'][$key]['dependencies'])) {
-          $info['libraries-override'][$key]['dependencies'] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $info['libraries-override'][$key]['dependencies']);
+          $info['libraries-override'][$key]['dependencies'] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $info['libraries-override'][$key]['dependencies']);
         }
       }
     }
@@ -134,7 +155,7 @@ class GenerateTheme extends Command {
       $libraries = Yaml::decode(file_get_contents($libraries_file));
       foreach ($libraries as $key => $value) {
         if (isset($libraries[$key]['dependencies'])) {
-          $libraries[$key]['dependencies'] = preg_replace("/$source_theme(\/.*)/", "$destination_theme$1", $libraries[$key]['dependencies']);
+          $libraries[$key]['dependencies'] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $libraries[$key]['dependencies']);
         }
       }
 
@@ -147,7 +168,7 @@ class GenerateTheme extends Command {
     // Rename hooks.
     $theme_file = "$tmp_dir/$destination_theme.theme";
     if (file_exists($theme_file)) {
-      if (!@file_put_contents($theme_file, preg_replace("/(function )($source_theme)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
+      if (!@file_put_contents($theme_file, preg_replace("/(function )($source_theme_name)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
         $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
         return 1;
       }
@@ -161,7 +182,7 @@ class GenerateTheme extends Command {
     ));
 
     foreach ($iterator as $template_file => $contents) {
-      $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
+      $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme_name(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
       if (!@file_put_contents($template_file, $new_template_content)) {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
         return 1;
@@ -233,6 +254,25 @@ class GenerateTheme extends Command {
    */
   private function getUniqueTmpDirPath(): string {
     return sys_get_temp_dir() . '/drupal-starterkit-theme-' . uniqid(md5(microtime()), TRUE);
+  }
+
+  /**
+   * Gets theme info using the theme name.
+   *
+   * @param string $theme
+   *   The machine name of the theme.
+   *
+   * @return \Drupal\Core\Extension\Extension|null
+   */
+  private function getThemeInfo(string $theme): ? Extension {
+    $extension_discovery = new ExtensionDiscovery($this->root, FALSE, []);
+    $themes = $extension_discovery->scan('theme');
+
+    if (!isset($themes[$theme])) {
+      return NULL;
+    }
+
+    return $themes[$theme];
   }
 
 }
