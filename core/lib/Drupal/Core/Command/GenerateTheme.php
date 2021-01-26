@@ -70,7 +70,7 @@ class GenerateTheme extends Command {
     // Source directory for the theme.
     // @todo allow configuring this.
     // @todo create new theme specifically for this purpose.
-    $source_theme_name = 'classy';
+    $source_theme_name = 'starterkit_theme';
     if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
       $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found .");
       return 1;
@@ -119,6 +119,10 @@ class GenerateTheme extends Command {
 
     $info = Yaml::decode(file_get_contents($info_file));
     $info['name'] = $input->getOption('name') ?: $destination_theme;
+
+    // Unhide hidden themes.
+    // @todo find better way to hide the starterkit theme.
+    unset($info['hidden']);
 
     if ($description = $input->getOption('description')) {
       $info['description'] = $description;
