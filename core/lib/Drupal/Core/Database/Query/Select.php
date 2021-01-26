@@ -322,7 +322,7 @@ class Select extends Query implements SelectInterface {
     $base_class = end($parts);
     $driver_class = $this->connection->getDriverClass($base_class);
     $class = $driver_class !== $base_class ? $driver_class : $extender_name;
-    if (strpos($class, PagerSelectExtender::class) !== FALSE || is_subclass_of($class, PagerSelectExtender::class)) {
+    if (is_a($class, PagerSelectExtender::class, TRUE)) {
       return new $class($this, $this->connection, \Drupal::service('pager.manager'));
     }
     else {
