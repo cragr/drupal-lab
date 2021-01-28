@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\EntityReferenceSelection;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -284,11 +285,22 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     $stripped_results = [];
     foreach ($results as $id => $row) {
       $entity = $row['#row']->_entity;
-      $stripped_results[$entity->bundle()][$id] = ViewsRenderPipelineMarkup::create(
+      $markup = ViewsRenderPipelineMarkup::create(
         Xss::filter($this->renderer->renderPlain($row), $allowed_tags)
       );
+      // @see \Drupal\views\Plugin\views\style\EntityReference::extractResultsFromGroup
+      if (!empty($row['#_entity_reference_grouping'])) {
+        $parents = array_merge($row['#_entity_reference_grouping'], [$id]);
+        $parents = array_map('strip_tags', $parents);
+      }
+      else {
+        $parents = [$entity->bundle(), $id];
+      }
+      NestedArray::setValue($stripped_results, $parents, $markup);
     }
 
+    // @fixme Nope, returning a nested array directly irritates
+    //   \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::getSettableOptions
     return $stripped_results;
   }
 
