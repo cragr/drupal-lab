@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Plugin\EntityReferenceSelection;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -288,19 +287,20 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
       $markup = ViewsRenderPipelineMarkup::create(
         Xss::filter($this->renderer->renderPlain($row), $allowed_tags)
       );
-      // @see \Drupal\views\Plugin\views\style\EntityReference::extractResultsFromGroup
-      if (!empty($row['#_entity_reference_grouping'])) {
-        $parents = array_merge($row['#_entity_reference_grouping'], [$id]);
-        $parents = array_map('strip_tags', $parents);
+      if (!empty($row['#_entity_reference_option_groups'])) {
+        // Sigh, expose grouping info while retaining BC.
+        // Pack the groupings into a string key, mark it by prepending \n.
+        // @see \Drupal\views\Plugin\views\style\EntityReference::extractResultsFromGroup
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::getSettableOptions
+        $groupings = array_map('strip_tags', $row['#_entity_reference_option_groups']);
+        $key = "\n" . implode("\n", $groupings);
       }
       else {
-        $parents = [$entity->bundle(), $id];
+        $key = $entity->bundle();
       }
-      NestedArray::setValue($stripped_results, $parents, $markup);
+      $stripped_results[$key][$id] = $markup;
     }
 
-    // @fixme Nope, returning a nested array directly irritates
-    //   \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::getSettableOptions
     return $stripped_results;
   }
 

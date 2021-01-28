@@ -112,7 +112,9 @@ class EntityReference extends StylePluginBase {
       }
       elseif ($row instanceof ResultRow) {
         $results[$row->{$id_field_alias}] = $this->view->rowPlugin->render($row);
-        $results[$row->{$id_field_alias}]['#_entity_reference_grouping'] = $parent_groups;
+        // Sigh, expose grouping info while retaining BC.
+        // @see \Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection::stripAdminAndAnchorTagsFromResults
+        $results[$row->{$id_field_alias}]['#_entity_reference_option_groups'] = $parent_groups;
         // Sanitize HTML, remove line breaks and extra whitespace.
         $results[$row->{$id_field_alias}]['#post_render'][] = function ($html, array $elements) {
           return Xss::filterAdmin(preg_replace('/\s\s+/', ' ', str_replace("\n", '', $html)));
