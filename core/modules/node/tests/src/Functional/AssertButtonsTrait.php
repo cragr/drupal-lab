@@ -31,7 +31,7 @@ trait AssertButtonsTrait {
       $this->assertCount($count, $elements);
       foreach ($elements as $element) {
         $value = $element->getValue() ?: '';
-        $this->assertEqual($buttons[$i], $value);
+        $this->assertEquals($buttons[$i], $value);
         $i++;
       }
     }

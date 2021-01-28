@@ -66,7 +66,7 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertText('Some text.');
     $item_ids = \Drupal::entityQuery('aggregator_item')->condition('link', 'http://example.org/2003/12/13/atom03')->execute();
     $item = Item::load(array_values($item_ids)[0]);
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
+    $this->assertEquals('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
 
     // Check for second feed entry.
     $this->assertText('We tried to stop them, but we failed.');
@@ -74,7 +74,7 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertText('Some other text.');
     $item_ids = \Drupal::entityQuery('aggregator_item')->condition('link', 'http://example.org/2003/12/14/atom03')->execute();
     $item = Item::load(array_values($item_ids)[0]);
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
+    $this->assertEquals('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
   }
 
   /**
@@ -98,7 +98,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     // Make sure that the feed URL was updated correctly.
-    $this->assertEqual(Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString(), $feed->getUrl());
+    $this->assertEquals(Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString(), $feed->getUrl());
   }
 
   /**

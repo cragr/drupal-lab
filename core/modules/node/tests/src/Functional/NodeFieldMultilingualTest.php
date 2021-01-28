@@ -140,7 +140,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
       ':node-class' => ' node ',
       ':content-class' => 'node__content',
     ]);
-    $this->assertEqual($body[0]->getText(), $node->body->value, 'Node body found.');
+    $this->assertEquals($body[0]->getText(), $node->body->value, 'Node body found.');
   }
 
 }

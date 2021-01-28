@@ -291,7 +291,7 @@ class FilterFormTest extends BrowserTestBase {
     ]));
     $textarea = reset($textarea);
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($expected, $textarea->getText(), new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', ['@id' => $id]));
+    $this->assertEquals($expected, $textarea->getText(), new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', ['@id' => $id]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $this->assertNoSelect($select_id);

@@ -85,7 +85,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $element = $this->xpath('//select[@id = :id]/option[@selected]', [':id' => 'edit-menu-parent']);
     $this->assertNotEmpty($element, 'A default menu parent was found.');
-    $this->assertEqual('admin:', $element[0]->getValue(), '<Administration> menu is the parent.');
+    $this->assertEquals('admin:', $element[0]->getValue(), '<Administration> menu is the parent.');
     // Test that the field description is present.
     $this->assertRaw('The location this menu link points to.');
 
