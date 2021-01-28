@@ -33,7 +33,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $loaded_file = File::load($file->id());
     $this->assertNotNull($loaded_file, 'Record exists in the database.');
     $this->assertEquals($file->isPermanent(), $loaded_file->isPermanent(), 'Status was saved correctly.');
-    $this->assertEquals(filesize($file->getFileUri()), $file->getSize(), 'File size was set correctly.', 'File');
+    $this->assertEquals(filesize($file->getFileUri()), $file->getSize(), 'File size was set correctly.');
     // Verify that the new file size was set correctly.
     $this->assertGreaterThan(1, $file->getChangedTime());
     $this->assertEquals('en', $loaded_file->langcode->value, 'Langcode was defaulted correctly.');
@@ -46,7 +46,7 @@ class SaveTest extends FileManagedUnitTestBase {
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['load', 'update']);
 
-    $this->assertEquals($file->id(), $file->id(), 'The file ID of an existing file is not changed when updating the database.', 'File');
+    $this->assertEquals($file->id(), $file->id(), 'The file ID of an existing file is not changed when updating the database.');
     $loaded_file = File::load($file->id());
     // Verify that the timestamp didn't go backwards.
     $this->assertGreaterThanOrEqual($file->getChangedTime(), $loaded_file->getChangedTime());
