@@ -60,7 +60,7 @@ abstract class ViewResourceTestBase extends EntityResourceTestBase {
             'display_extenders' => [],
             'query' => [
               'options' => [],
-               'type' => 'views_query',
+              'type' => 'views_query',
             ],
           ],
           'cache_metadata' => [
