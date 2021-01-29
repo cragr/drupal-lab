@@ -544,7 +544,6 @@ get involved. They organize communications and logistics, and actively
 participate in mentoring.
 
 - Mauricio Dinarte 'dinarcon' https://www.drupal.org/u/dinarcon
-- Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
 - Tara King 'sparklingrobots' https://www.drupal.org/u/sparklingrobots
 - Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
@@ -552,6 +551,7 @@ participate in mentoring.
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
 - (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
+- (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
 - (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
 
 Provisional membership: None at this time.
