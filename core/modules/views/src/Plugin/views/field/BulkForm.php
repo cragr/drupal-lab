@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
