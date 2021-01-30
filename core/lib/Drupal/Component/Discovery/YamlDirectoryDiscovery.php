@@ -46,7 +46,7 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    *
    * @var string
    */
-  protected $excludePattern = '';
+  protected $excludePattern;
 
   /**
    * Constructs a YamlDirectoryDiscovery object.
@@ -140,9 +140,10 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
         if (is_dir($directory)) {
           /** @var \SplFileInfo $fileInfo */
           foreach ($this->getDirectoryIterator($directory) as $fileInfo) {
-            if (!preg_match($this->excludePattern, $fileInfo->getPathname())) {
-              $file_list[$fileInfo->getPathname()] = $provider;
+            if ($this->excludePattern && preg_match($this->excludePattern, $fileInfo->getPathname())) {
+              continue;
             }
+            $file_list[$fileInfo->getPathname()] = $provider;
           }
         }
       }
