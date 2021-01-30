@@ -394,20 +394,19 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
         // Skip execution if the user did not have access.
         $access_result = $action->getPlugin()->access($entity, $this->view->getUser(), TRUE);
         if (!$access_result->isAllowed()) {
-          // Use the reason if one is specified.
-          if ($access_result instanceof AccessResultReasonInterface) {
-            $reason = $access_result->getReason();
-            if (!empty($reason)) {
-              $this->messenger->addError($reason);
-              continue;
-            }
-          }
-          // Else use the normal message.
-          $this->messenger->addError($this->t('No access to execute %action on the @entity_type_label %entity_label.', [
+          $message = $this->t('No access to execute %action on the @entity_type_label %entity_label.', [
             '%action' => $action->label(),
             '@entity_type_label' => $entity->getEntityType()->getLabel(),
             '%entity_label' => $entity->label(),
-          ]));
+          ]);
+          // Append the reason if one is provided.
+          if ($access_result instanceof AccessResultReasonInterface) {
+            $reason = $access_result->getReason();
+            if (!empty($reason)) {
+              $message .= ': ' . $reason;
+            }
+          }
+          $this->messenger->addError($message);
           continue;
         }
 
