@@ -141,10 +141,10 @@ class ConfigImportUITest extends BrowserTestBase {
 
     $this->rebuildContainer();
     // Verify site name has changed.
-    $this->assertIdentical($new_site_name, $this->config('system.site')->get('name'));
+    $this->assertSame($new_site_name, $this->config('system.site')->get('name'));
 
     // Verify that new config entity exists.
-    $this->assertIdentical($original_dynamic_data, $this->config($dynamic_name)->get());
+    $this->assertSame($original_dynamic_data, $this->config($dynamic_name)->get());
 
     // Verify the cache got cleared.
     $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
@@ -161,7 +161,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
     $expected = ['automated_cron', 'ban', 'text', 'options'];
-    $this->assertIdentical($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
+    $this->assertSame($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
     $this->assertTrue(empty($uninstalled), 'No modules uninstalled during import');
 
     // Verify that the automated_cron configuration object was only written
@@ -170,7 +170,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // used during configuration import and, additionally, that after installing
     // a module, that configuration is not synced twice.
     $interval_values = \Drupal::state()->get('ConfigImportUITest.automated_cron.settings.interval', []);
-    $this->assertIdentical($interval_values, [10000]);
+    $this->assertSame([10000], $interval_values);
 
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['automated_cron']);
@@ -214,7 +214,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
     $expected = ['options', 'text', 'ban', 'automated_cron'];
-    $this->assertIdentical($expected, $uninstalled, 'Options, Text, Ban and Automated Cron modules uninstalled in the correct order.');
+    $this->assertSame($expected, $uninstalled, 'Options, Text, Ban and Automated Cron modules uninstalled in the correct order.');
     $this->assertTrue(empty($installed), 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
@@ -223,7 +223,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Verify that the automated_cron.settings configuration object was only
     // deleted once during the import process.
     $delete_called = \Drupal::state()->get('ConfigImportUITest.automated_cron.settings.delete', 0);
-    $this->assertIdentical($delete_called, 1, "The automated_cron.settings configuration was deleted once during configuration import.");
+    $this->assertSame(1, $delete_called, "The automated_cron.settings configuration was deleted once during configuration import.");
   }
 
   /**
@@ -250,7 +250,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->container->get('lock.persistent')->release($config_importer::LOCK_NAME);
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, $this->config('system.site')->get('name'));
+    $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
   }
 
   /**
@@ -369,7 +369,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Config import validate error 2.');
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, $this->config('system.site')->get('name'));
+    $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
   }
 
   public function testConfigUninstallConfigException() {

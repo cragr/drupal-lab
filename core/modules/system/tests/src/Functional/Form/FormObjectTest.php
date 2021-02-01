@@ -39,7 +39,7 @@ class FormObjectTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The FormTestObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
-    $this->assertIdentical('green', $value);
+    $this->assertSame('green', $value);
 
     $this->drupalGet('form-test/object-arguments-builder/yellow');
     $this->assertSession()->pageTextContains('The FormTestArgumentsObject::buildForm() method was used for this form.');
@@ -49,7 +49,7 @@ class FormObjectTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The FormTestArgumentsObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestArgumentsObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
-    $this->assertIdentical('yellow', $value);
+    $this->assertSame('yellow', $value);
 
     $this->drupalGet('form-test/object-service-builder');
     $this->assertSession()->pageTextContains('The FormTestServiceObject::buildForm() method was used for this form.');
@@ -59,7 +59,7 @@ class FormObjectTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The FormTestServiceObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestServiceObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
-    $this->assertIdentical('brown', $value);
+    $this->assertSame('brown', $value);
 
     $this->drupalGet('form-test/object-controller-builder');
     $this->assertSession()->pageTextContains('The FormTestControllerObject::create() method was used for this form.');
@@ -74,7 +74,7 @@ class FormObjectTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The FormTestControllerObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestControllerObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
-    $this->assertIdentical('black', $value);
+    $this->assertSame('black', $value);
   }
 
 }

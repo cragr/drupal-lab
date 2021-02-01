@@ -60,11 +60,11 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $originalSlogan = $this->config('system.site')->get('slogan');
     $this->assertEmpty($originalSlogan);
     $newSlogan = $this->randomMachineName(16);
-    $this->assertNotEqual($newSlogan, $originalSlogan);
+    $this->assertNotEquals($originalSlogan, $newSlogan);
     $this->config('system.site')
       ->set('slogan', $newSlogan)
       ->save();
-    $this->assertEqual($this->config('system.site')->get('slogan'), $newSlogan);
+    $this->assertEqual($newSlogan, $this->config('system.site')->get('slogan'));
 
     // Tests changes of system.site.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
@@ -84,13 +84,13 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
     $this->assertSession()->pageTextContains("name: 'Drupal Arrr'");
     $this->assertSession()->pageTextContains("slogan: '$originalSlogan Arrr'");
-    $this->assertEqual($this->config('system.site')->get('name'), 'Drupal');
-    $this->assertEqual($this->config('system.site')->get('slogan'), $newSlogan);
+    $this->assertEquals('Drupal', $this->config('system.site')->get('name'));
+    $this->assertEquals($newSlogan, $this->config('system.site')->get('slogan'));
 
     // Sync the configuration.
     $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
-    $this->assertEqual($this->config('system.site')->get('name'), 'Drupal Arrr');
-    $this->assertEqual($this->config('system.site')->get('slogan'), $originalSlogan . " Arrr");
+    $this->assertEqual('Drupal Arrr', $this->config('system.site')->get('name'));
+    $this->assertEqual($originalSlogan . " Arrr", $this->config('system.site')->get('slogan'));
 
     // Assert that the event was dispatched again on the new config.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
