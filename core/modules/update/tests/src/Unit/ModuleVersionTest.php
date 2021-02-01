@@ -28,6 +28,21 @@ class ModuleVersionTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getMinorVersion
+   *
+   * @dataProvider providerVersionInfos
+   *
+   * @param string $version
+   *   The version string to test.
+   * @param array $expected_version_info
+   *   The expected version information.
+   */
+  public function testGetMinorVersion($version, array $expected_version_info) {
+    $version = ModuleVersion::createFromVersionString($version);
+    $this->assertSame($expected_version_info['minor'], $version->getMinorVersion());
+  }
+
+  /**
    * @covers ::getVersionExtra
    *
    * @dataProvider providerVersionInfos
@@ -59,6 +74,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-1.3',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => NULL,
         ],
       ],
@@ -66,6 +82,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-1.0',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => NULL,
         ],
       ],
@@ -73,6 +90,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-1.0-alpha1',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => 'alpha1',
         ],
       ],
@@ -80,6 +98,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-1.3-alpha1',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => 'alpha1',
         ],
       ],
@@ -87,6 +106,7 @@ class ModuleVersionTest extends UnitTestCase {
         '0.1',
         [
           'major' => '0',
+          'minor' => NULL,
           'extra' => NULL,
         ],
       ],
@@ -94,6 +114,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.0',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => NULL,
         ],
       ],
@@ -101,6 +122,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.3',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => NULL,
         ],
       ],
@@ -108,6 +130,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.0-alpha1',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => 'alpha1',
         ],
       ],
@@ -115,6 +138,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.3-alpha1',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => 'alpha1',
         ],
       ],
@@ -122,6 +146,7 @@ class ModuleVersionTest extends UnitTestCase {
         '0.2.0',
         [
           'major' => '0',
+          'minor' => '2',
           'extra' => NULL,
         ],
       ],
@@ -129,6 +154,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.2.0',
         [
           'major' => '1',
+          'minor' => '2',
           'extra' => NULL,
         ],
       ],
@@ -136,6 +162,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.0.3',
         [
           'major' => '1',
+          'minor' => '0',
           'extra' => NULL,
         ],
       ],
@@ -143,6 +170,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.2.3',
         [
           'major' => '1',
+          'minor' => '2',
           'extra' => NULL,
         ],
       ],
@@ -150,6 +178,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.2.0-alpha1',
         [
           'major' => '1',
+          'minor' => '2',
           'extra' => 'alpha1',
         ],
       ],
@@ -157,6 +186,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.2.3-alpha1',
         [
           'major' => '1',
+          'minor' => '2',
           'extra' => 'alpha1',
         ],
       ],
@@ -164,6 +194,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-1.x-dev',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => 'dev',
         ],
       ],
@@ -171,6 +202,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-8.x-dev',
         [
           'major' => '8',
+          'minor' => NULL,
           'extra' => 'dev',
         ],
       ],
@@ -178,6 +210,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.x-dev',
         [
           'major' => '1',
+          'minor' => NULL,
           'extra' => 'dev',
         ],
       ],
@@ -185,6 +218,7 @@ class ModuleVersionTest extends UnitTestCase {
         '8.x-dev',
         [
           'major' => '8',
+          'minor' => NULL,
           'extra' => 'dev',
         ],
       ],
@@ -192,6 +226,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.0.x-dev',
         [
           'major' => '1',
+          'minor' => '0',
           'extra' => 'dev',
         ],
       ],
@@ -199,6 +234,7 @@ class ModuleVersionTest extends UnitTestCase {
         '1.2.x-dev',
         [
           'major' => '1',
+          'minor' => '2',
           'extra' => 'dev',
         ],
       ],

@@ -2,3 +2,8 @@ services:
   datetime.time:
     class: Drupal\update_test\Datetime\TestTime
     arguments: ['@request_stack']
+  http_client.update_test:
+    public: false
+    class: Drupal\update_test\AdvisoriesTestHttpClient
+    decorates: http_client
+    arguments: ['@http_client.update_test.inner']
