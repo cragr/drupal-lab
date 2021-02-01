@@ -549,5 +549,3 @@ participate in mentoring.
 - (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
 - (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
 - (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
-
-Provisional membership: None at this time.
