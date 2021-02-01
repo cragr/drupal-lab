@@ -124,6 +124,8 @@ class GenerateTheme extends Command {
     // @todo find better way to hide the starterkit theme.
     unset($info['hidden']);
 
+    $info['core_version_requirement'] = '^' . $this->getVersion();
+
     if ($description = $input->getOption('description')) {
       $info['description'] = $description;
     }
@@ -277,6 +279,15 @@ class GenerateTheme extends Command {
     }
 
     return $themes[$theme];
+  }
+
+  /**
+   * Gets the current Drupal major version.
+   *
+   * @return string
+   */
+  private function getVersion(): string {
+    return explode('.', \Drupal::VERSION)[0];
   }
 
 }
