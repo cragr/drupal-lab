@@ -134,9 +134,8 @@ class ThemeTest extends BrowserTestBase {
         $explicit_file = 'public://' . $input;
         $local_file = PublicStream::basePath() . '/' . $input;
       }
-      $this->assertEqual($implicit_public_file, $elements[0]->getText());
-      $this->assertEqual($explicit_file, $elements[1]->getText());
-      $this->assertEqual($local_file, $elements[2]->getText());
+      $this->assertEquals($elements[2]->getText(), $explicit_file);
+      $this->assertEquals($elements[1]->getText(), $local_file);
 
       // Verify the actual 'src' attribute of the logo being output in a site
       // branding block.
@@ -199,9 +198,9 @@ class ThemeTest extends BrowserTestBase {
       $this->drupalGet('');
       $elements = $this->xpath('//header//a[@rel=:rel]/img', [
         ':rel' => 'home',
-      ]
-    );
-    $this->assertEqual(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
+      ]);
+      $this->assertEquals($elements[0]->getAttribute('src'), file_url_transform_relative(file_create_url($uploaded_filename)));
+    }
 
     $this->container->get('theme_installer')->install(['bartik']);
 
