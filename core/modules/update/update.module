@@ -211,7 +211,7 @@ function update_theme() {
       'render element' => 'element',
       'variables' => ['error_message' => [], 'fetch_type' => 'update'],
     ],
-    'update_advisory_notify' => [
+    'update_advisory_notification' => [
       'variables' => [
         'advisories' => [],
       ],

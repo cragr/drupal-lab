@@ -121,7 +121,7 @@ final class EmailNotifier {
       return new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
     }, $advisories);
     $params['body'] = [
-      '#theme' => 'update_advisory_notify',
+      '#theme' => 'update_advisory_notification',
       '#advisories' => $advisory_links,
     ];
     $user_storage = $this->entityTypeManager->getStorage('user');

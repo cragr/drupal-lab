@@ -179,7 +179,7 @@ final class SecurityAdvisory {
    * Whether the security advisory is a PSA or not.
    *
    * @return bool
-   *   TRUE if the advisory is a PSA otherwise, FALSE.
+   *   TRUE if the advisory is a PSA, otherwise FALSE.
    */
   public function isPsa(): bool {
     return $this->isPsa;
