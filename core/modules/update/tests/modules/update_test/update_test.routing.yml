@@ -20,7 +20,5 @@ update_test.json_test:
   defaults:
     _title: 'Update test'
     _controller: '\Drupal\update_test\Controller\AdvisoryTestController::getPsaJson'
-    version: NULL
-    project_name: NULL
   requirements:
     _access: 'TRUE'

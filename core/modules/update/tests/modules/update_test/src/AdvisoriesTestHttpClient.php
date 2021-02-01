@@ -2,6 +2,7 @@
 
 namespace Drupal\update_test;
 
+use Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use GuzzleHttp\Client;
 
 /**
@@ -39,9 +40,14 @@ class AdvisoriesTestHttpClient extends Client {
    *
    * @param string $test_endpoint
    *   The test endpoint.
+   * @param bool $delete_tempstore
+   *   Whether to delete the temp store response.
    */
-  public static function setTestEndpoint(string $test_endpoint):void {
+  public static function setTestEndpoint(string $test_endpoint, $delete_tempstore = FALSE):void {
     \Drupal::state()->set('advisories_test_endpoint', $test_endpoint);
+    if ($delete_tempstore) {
+      \Drupal::service('keyvalue.expirable')->get('update')->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
+    }
   }
 
 }

@@ -97,12 +97,7 @@ function update_uninstall() {
  */
 function update_update_9101() {
   $config = \Drupal::configFactory()->getEditable('update.settings');
-  $config->set(
-    'advisories',
-    [
-      'interval_hours' => 12,
-    ]
-  )->save();
+  $config->set('advisories.interval_hours', 12)->save();
 }
 
 /**

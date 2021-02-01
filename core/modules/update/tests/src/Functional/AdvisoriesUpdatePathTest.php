@@ -25,17 +25,15 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
    */
   public function testUpdatePath() {
     /** @var \Drupal\Core\Config\Config $config */
-    $config = $this->container->get('config.factory')->get('update.settings');
-    $this->assertNull($config->get('advisories'));
+    $this->assertNull($this->config('update.settings')->get('advisories'));
 
     $this->runUpdates();
 
-    $config = \Drupal::configFactory()->get('update.settings');
     $this->assertSame(
       [
         'interval_hours' => 12,
       ],
-      $config->get('advisories')
+      $this->config('update.settings')->get('advisories')
     );
   }
 

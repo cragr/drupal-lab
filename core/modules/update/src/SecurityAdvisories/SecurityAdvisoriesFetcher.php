@@ -8,8 +8,6 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\update\ModuleVersion;
 use GuzzleHttp\Client;

@@ -161,8 +161,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $assert->linkNotExists('Critical Release - SA-2019-02-19');
 
     // Test a PSA endpoint that returns invalid JSON.
-    AdvisoriesTestHttpClient::setTestEndpoint($this->invalidJsonEndpoint);
-    $this->tempStore->delete('advisories_response');
+    AdvisoriesTestHttpClient::setTestEndpoint($this->invalidJsonEndpoint, TRUE);
     // On admin pages no message should be displayed if the feed is malformed.
     $this->drupalGet(Url::fromRoute('system.admin'));
     $assert->linkNotExists('Critical Release - PSA-2019-02-19');
@@ -171,8 +170,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $assert->pageTextNotContains('Failed to fetch security advisory data:');
     $assert->linkNotExists('Critical Release - PSA-2019-02-19');
 
-    $this->tempStore->delete('advisories_response');
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly);
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
     $expected_links = [
       'Critical Release - PSA-Really Old',
       'BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
@@ -182,8 +180,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertAdminPageLinks($expected_links, REQUIREMENT_WARNING);
     $this->assertStatusReportLinks($expected_links, REQUIREMENT_WARNING);
 
-    $this->tempStore->delete('advisories_response');
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointNonPsaOnly);
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointNonPsaOnly, TRUE);
     $expected_links = [
       'Critical Release - SA-2019-02-19',
       'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
@@ -239,9 +236,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
 
     // Deleting the security advisory tempstore item will result in another
     // email if the messages have changed.
-    $this->tempStore->delete('advisories_response');
     $this->container->get('state')->set('system.test_mail_collector', []);
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPlus1);
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPlus1, TRUE);
     $this->cronRun();
     $this->assertAdvisoryEmailCount(2);
     $this->assertMailString('subject', '5 urgent security announcements require your attention', 1);
@@ -261,7 +257,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
       ->set('notification.emails', ['admin@example.com'])
       ->save();
     AdvisoriesTestHttpClient::setTestEndpoint($this->invalidJsonEndpoint);
-    $this->tempStore->delete('advisories_response');
     $this->cronRun();
     $this->assertAdvisoryEmailCount(0);
   }
