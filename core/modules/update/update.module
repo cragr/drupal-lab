@@ -46,11 +46,14 @@ function update_help($route_name, RouteMatchInterface $route_match) {
         $output .= '<dd>' . t('You can also add new modules and themes in the same fashion, through the <a href=":install">Add new modules and themes page</a>, or by clicking the <em>Add new module/theme</em> links at the top of the <a href=":modules_page">Extend page</a> and the <a href=":themes_page">Appearance page</a>. In this case, you are prompted to provide either the URL to the download, or to upload a packaged release file from your local computer.', [':modules_page' => Url::fromRoute('system.modules_list')->toString(), ':themes_page' => Url::fromRoute('system.themes_page')->toString(), ':install' => Url::fromRoute('update.report_install')->toString()]) . '</dd>';
       }
       $output .= '</dl>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Displaying critical security advisories') . '</dt>';
-      $output .= '<dd>' . t('The Update Manager module displays highly critical and time-sensitive security announcements. Some security announcements will be displayed until a critical security update is installed. Announcements that are not associated with a specific release will appear for a fixed period of time.') . '</dd>';
-      $output .= '<dd>' . t('Only the most highly critical security announcements will be shown within Drupal. To view all security announcements view the <a href=":advisory-list">complete list on Drupal.org.</a>', [':advisory-list' => 'https://www.drupal.org/security']) . '</dd>';
-      $output .= '</dl>';
+      if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
+        $output .= '<dl>';
+        $output .= '<dt>' . t('Displaying critical security advisories') . '</dt>';
+        $output .= '<dd>' . t('The Update Manager module displays highly critical and time-sensitive security announcements to site administrators. Some security announcements will be displayed until a critical security update is installed. Announcements that are not associated with a specific release will appear for a fixed period of time.') . '</dd>';
+        $output .= '<dd>' . t('Only the most highly critical security announcements will be shown within Drupal. To view all security announcements view the <a href=":advisory-list">complete list on Drupal.org.</a>', [':advisory-list' => 'https://www.drupal.org/security']) . '</dd>';
+        $output .= '</dl>';
+      }
+
       return $output;
 
     case 'update.status':
