@@ -92,7 +92,7 @@ function update_page_top() {
             \Drupal::messenger()->addError($message);
           }
           if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'update')) {
-            \Drupal::messenger()->addError(t('<a href=":update-help">What are critical security announcements?</a>.', [
+            \Drupal::messenger()->addError(t('(<a href=":update-help">What are critical security announcements?</a>)', [
               ':update-help' => Url::fromRoute('help.page', ['name' => 'update'])->toString(),
             ]));
           }
