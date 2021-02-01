@@ -87,16 +87,16 @@ final class SecurityAdvisoriesFetcher {
   }
 
   /**
-   * Gets security advisory links that are applicable for the current site.
+   * Gets security advisories that are applicable for the current site.
    *
-   * @return \Drupal\Core\Link[]
-   *   Links to the upstream advisories, using the advisory title as the text.
+   * @return \Drupal\update\SecurityAdvisories\SecurityAdvisory[]
+   *   The upstream security advisories.
    *
    * @throws \GuzzleHttp\Exception\TransferException
    *   Thrown if an error occurs while retrieving security advisories.
    */
-  public function getSecurityAdvisoryLinks(): array {
-    $links = [];
+  public function getSecurityAdvisories(): array {
+    $advisories = [];
 
     $response = $this->keyValueExpirable->get(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
     if (!$response) {
@@ -136,7 +136,7 @@ final class SecurityAdvisoriesFetcher {
         // Other advisories are only displayed if they match the existing
         // version.
         if ($sa->isPsa() || $this->matchesExistingVersion($sa)) {
-          $links[] = new Link($sa->getTitle(), Url::fromUri($sa->getUrl()));
+          $advisories[] = $sa;
         }
       }
     }
@@ -144,7 +144,7 @@ final class SecurityAdvisoriesFetcher {
       $this->logger->error('The security advisory JSON feed from Drupal.org could not be decoded.');
     }
 
-    return $links;
+    return $advisories;
   }
 
   /**

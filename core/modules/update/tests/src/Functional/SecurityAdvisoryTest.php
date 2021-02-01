@@ -40,18 +40,32 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   protected $user;
 
   /**
-   * A working test PSA endpoint.
+   * A test PSA endpoint that will display both PSA and non-PSA advisories.
    *
    * @var string
    */
-  protected $workingEndpoint;
+  protected $workingEndpointMixed;
 
   /**
-   * A working test PSA endpoint that has 1 more item than $workingEndpoint.
+   * A test PSA endpoint that has 1 more item than $workingEndpoint.
    *
    * @var string
    */
   protected $workingEndpointPlus1;
+
+  /**
+   * A test PSA endpoint that will only display PSA advisories.
+   *
+   * @var string
+   */
+  protected $workingEndpointPsaOnly;
+
+  /**
+   * A test PSA endpoint that will only display non-PSA advisories.
+   *
+   * @var string
+   */
+  protected $workingEndpointNonPsaOnly;
 
   /**
    * A non-working test PSA endpoint.
@@ -103,7 +117,9 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($this->user);
     $fixtures_path = $this->baseUrl . '/core/modules/update/tests/fixtures/psa_feed';
-    $this->workingEndpoint = $this->buildUrl('/update-test-json/valid');
+    $this->workingEndpointMixed = $this->buildUrl('/update-test-json/valid-mixed');
+    $this->workingEndpointPsaOnly = $this->buildUrl('/update-test-json/valid-psa-only');
+    $this->workingEndpointNonPsaOnly = $this->buildUrl('/update-test-json/valid-non-psa-only');
     $this->workingEndpointPlus1 = $this->buildUrl('/update-test-json/valid_plus1');
     $this->nonWorkingEndpoint = $this->buildUrl('/update-test-json/missing');
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
@@ -117,27 +133,22 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   public function testPsa(): void {
     $assert = $this->assertSession();
     // Setup test PSA endpoint.
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpoint);
-    $this->drupalGet(Url::fromRoute('system.admin'));
-    $assert->linkExists('Critical Release - SA-2019-02-19');
-    $assert->linkExists('Critical Release - PSA-Really Old');
-    $assert->linkExists('AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02');
-    $assert->linkExists('BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02');
-
-    // Test site status report.
-    $this->drupalGet(Url::fromRoute('system.status'));
-    $assert->linkExists('Critical Release - SA-2019-02-19');
-    $assert->linkExists('Critical Release - PSA-Really Old');
-    $assert->linkExists('AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02');
-    $assert->linkExists('BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02');
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
+    $expected_links = [
+      'Critical Release - SA-2019-02-19',
+      'Critical Release - PSA-Really Old',
+      'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+    ];
+    // If both PSA and non-PSA advisories are displayed they should be displayed
+    // as errors.
+    $this->assertAdminPageLinks($expected_links, REQUIREMENT_ERROR);
+    $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
 
     // Test cache.
     AdvisoriesTestHttpClient::setTestEndpoint($this->nonWorkingEndpoint);
-    $this->drupalGet(Url::fromRoute('system.admin'));
-    $assert->linkExists('Critical Release - SA-2019-02-19');
-    $assert->linkExists('Critical Release - PSA-Really Old');
-    $assert->linkExists('AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02');
-    $assert->linkExists('BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02');
+    $this->assertAdminPageLinks($expected_links, REQUIREMENT_ERROR);
+    $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
 
     // Tests transmit errors with a JSON endpoint.
     $this->tempStore->delete('advisories_response');
@@ -159,6 +170,28 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('system.status'));
     $assert->pageTextNotContains('Failed to fetch security advisory data:');
     $assert->linkNotExists('Critical Release - PSA-2019-02-19');
+
+    $this->tempStore->delete('advisories_response');
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly);
+    $expected_links = [
+      'Critical Release - PSA-Really Old',
+      'BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+    ];
+    // If only PSA advisories are displayed they should be displayed as
+    // warnings.
+    $this->assertAdminPageLinks($expected_links, REQUIREMENT_WARNING);
+    $this->assertStatusReportLinks($expected_links, REQUIREMENT_WARNING);
+
+    $this->tempStore->delete('advisories_response');
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointNonPsaOnly);
+    $expected_links = [
+      'Critical Release - SA-2019-02-19',
+      'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+    ];
+    // If only non-PSA advisories are displayed they should be displayed as
+    // errors.
+    $this->assertAdminPageLinks($expected_links, REQUIREMENT_ERROR);
+    $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
   }
 
   /**
@@ -166,7 +199,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    */
   public function testPsaMail(): void {
     // Set up test PSA endpoint.
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpoint);
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
     $this->createUser([], 'GracieDog');
     // Setup a default destination email address.
     $this->config('update.settings')
@@ -241,6 +274,49 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    */
   protected function assertAdvisoryEmailCount(int $expected_count): void {
     $this->assertCount($expected_count, $this->getMails(['id' => 'update_advisory_notify']));
+  }
+
+  /**
+   * Asserts the correct links appear on an admin page.
+   *
+   * @param string[] $expected_link_texts
+   *   The expected links' text.
+   * @param int $error_or_warning
+   *   Whether the error is a warning or an error.
+   */
+  private function assertAdminPageLinks(array $expected_link_texts, int $error_or_warning) {
+    $assert = $this->assertSession();
+    $this->drupalGet(Url::fromRoute('system.admin'));
+    if ($error_or_warning === REQUIREMENT_ERROR) {
+      $assert->pageTextContainsOnce('Error message');
+      $assert->pageTextNotContains('Warning message');
+    }
+    else {
+      $assert->pageTextNotContains('Error message');
+      $assert->pageTextContainsOnce('Warning message');
+    }
+    foreach ($expected_link_texts as $expected_link_text) {
+      $assert->linkExists($expected_link_text);
+    }
+  }
+
+  /**
+   * Asserts the correct links appear on the status report page.
+   *
+   * @param string[] $expected_link_texts
+   *   The expected links' text.
+   * @param int $error_or_warning
+   *   Whether the error is a warning or an error.
+   */
+  private function assertStatusReportLinks(array $expected_link_texts, int $error_or_warning) {
+    $this->drupalGet(Url::fromRoute('system.status'));
+    $assert = $this->assertSession();
+    $selector = 'h3#' . ($error_or_warning === REQUIREMENT_ERROR ? 'error' : 'warning')
+      . ' ~ details.system-status-report__entry:contains("Critical security announcements")';
+    $assert->elementExists('css', $selector);
+    foreach ($expected_link_texts as $expected_link_text) {
+      $assert->linkExists($expected_link_text);
+    }
   }
 
 }

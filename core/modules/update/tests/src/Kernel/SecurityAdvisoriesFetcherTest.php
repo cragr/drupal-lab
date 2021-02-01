@@ -44,10 +44,10 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    */
   public function testShowAdvisories(array $feed_item, string $existing_version = NULL): void {
     $this->setProphesizedServices($feed_item, $existing_version);
-    $links = $this->getAdvisoryLinks();
+    $links = $this->getAdvisories();
     $this->assertCount(1, $links);
-    self::assertSame('http://example.com', $links[0]->getUrl()->toString());
-    $this->assertSame('SA title', (string) $links[0]->getText());
+    self::assertSame('http://example.com', $links[0]->getUrl());
+    $this->assertSame('SA title', $links[0]->getTitle());
   }
 
   /**
@@ -211,7 +211,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    */
   public function testIgnoreAdvisories(array $feed_item, string $existing_version = NULL): void {
     $this->setProphesizedServices($feed_item, $existing_version);
-    $this->assertCount(0, $this->getAdvisoryLinks());
+    $this->assertCount(0, $this->getAdvisories());
   }
 
   /**
@@ -514,16 +514,16 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
       'insecure' => [\Drupal::VERSION],
     ];
     $this->setProphesizedServices($feed_item_1);
-    $links = $this->getAdvisoryLinks();
-    $this->assertCount(1, $links);
-    $this->assertSame($feed_item_1['title'], $links[0]->getText());
+    $advisories = $this->getAdvisories();
+    $this->assertCount(1, $advisories);
+    $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
     // Ensure that new feed item is not retrieved because the stored response
     // has not expired.
     $this->setProphesizedServices($feed_item_2);
-    $links = $this->getAdvisoryLinks();
-    $this->assertCount(1, $links);
-    $this->assertSame($feed_item_1['title'], $links[0]->getText());
+    $advisories = $this->getAdvisories();
+    $this->assertCount(1, $advisories);
+    $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
     /** @var \Drupal\Core\Config\Config $config */
     $config = $this->container->get('config.factory')->getEditable('update.settings');
@@ -532,26 +532,26 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
 
     // Ensure that new feed item is not retrieved when the interval is
     // increased.
-    $links = $this->getAdvisoryLinks();
-    $this->assertCount(1, $links);
-    $this->assertSame($feed_item_1['title'], $links[0]->getText());
+    $advisories = $this->getAdvisories();
+    $this->assertCount(1, $advisories);
+    $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
     // Ensure that new feed item is retrieved when the interval is decreased.
     $config->set('advisories.interval_hours', $interval - 1)->save();
-    $links = $this->getAdvisoryLinks();
-    $this->assertCount(1, $links);
-    $this->assertSame($feed_item_2['title'], $links[0]->getText());
+    $advisories = $this->getAdvisories();
+    $this->assertCount(1, $advisories);
+    $this->assertSame($feed_item_2['title'], $advisories[0]->getTitle());
   }
 
   /**
-   * Gets the advisories links from the 'update.sa_fetcher' service.
+   * Gets the advisories from the 'update.sa_fetcher' service.
    *
-   * @return \Drupal\Core\Link[]
+   * @return \Drupal\update\SecurityAdvisories\SecurityAdvisory[]
    *   The advisory links.
    */
-  protected function getAdvisoryLinks(): array {
+  protected function getAdvisories(): array {
     $fetcher = $this->container->get('update.sa_fetcher');
-    return $fetcher->getSecurityAdvisoryLinks();
+    return $fetcher->getSecurityAdvisories();
   }
 
 }

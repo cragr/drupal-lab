@@ -9,6 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\update\ProjectSecurityData;
 use Drupal\update\ProjectSecurityRequirement;
+use Drupal\update\SecurityAdvisories\SecurityAdvisory;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -205,7 +206,7 @@ function _update_advisories_requirements(array &$requirements): void {
   /** @var \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
   $fetcher = \Drupal::service('update.sa_fetcher');
   try {
-    $messages = $fetcher->getSecurityAdvisoryLinks();
+    $advisories = $fetcher->getSecurityAdvisories();
   }
   catch (TransferException $exception) {
     $requirements['update_advisories']['title'] = t('Critical security announcements');
@@ -215,13 +216,21 @@ function _update_advisories_requirements(array &$requirements): void {
     return;
   }
 
-  if (!empty($messages)) {
+  if (!empty($advisories)) {
+    $has_all_psa_advisories = TRUE;
+    $advisory_links = [];
+    foreach ($advisories as $advisory) {
+      if (!$advisory->isPsa()) {
+        $has_all_psa_advisories = FALSE;
+      }
+      $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+    }
     $requirements['update_advisories']['title'] = t('Critical security announcements');
-    $requirements['update_advisories']['severity'] = REQUIREMENT_ERROR;
+    $requirements['update_advisories']['severity'] = $has_all_psa_advisories ? REQUIREMENT_WARNING : REQUIREMENT_ERROR;
     $requirements['update_advisories']['description'] = [
       'list' => [
         '#theme' => 'item_list',
-        '#items' => $messages,
+        '#items' => $advisory_links,
       ],
     ];
     if (\Drupal::moduleHandler()->moduleExists('help')) {

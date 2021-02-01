@@ -17,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\update\SecurityAdvisories\SecurityAdvisory;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -85,14 +86,28 @@ function update_page_top() {
       /** @var \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('update.sa_fetcher');
       try {
-        $messages = $fetcher->getSecurityAdvisoryLinks();
-        if ($messages) {
-          \Drupal::messenger()->addError(t('Critical security announcements:'));
-          foreach ($messages as $message) {
-            \Drupal::messenger()->addError($message);
+        $advisories = $fetcher->getSecurityAdvisories();
+        if ($advisories) {
+          $has_non_psa_advisories = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
+            return !$advisory->isPsa();
+          }));
+          // If all the advisories are PSA advisories then display them as
+          // warnings because they may not be actionable, otherwise display them
+          // as errors.
+          $call_messenger = function ($message) use ($has_non_psa_advisories) {
+            if ($has_non_psa_advisories) {
+              \Drupal::messenger()->addError($message);
+            }
+            else {
+              \Drupal::messenger()->addWarning($message);
+            }
+          };
+          $call_messenger(t('Critical security announcements:'));
+          foreach ($advisories as $advisory) {
+            $call_messenger(new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl())));
           }
           if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'update')) {
-            \Drupal::messenger()->addError(t('(<a href=":update-help">What are critical security announcements?</a>)', [
+            $call_messenger(t('(<a href=":update-help">What are critical security announcements?</a>)', [
               ':update-help' => Url::fromRoute('help.page', ['name' => 'update'])->toString(),
             ]));
           }

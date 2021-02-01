@@ -4,10 +4,12 @@ namespace Drupal\update\SecurityAdvisories;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a service to send email notifications for security advisories.
@@ -97,37 +99,37 @@ final class EmailNotifier {
     if (!$notify_emails) {
       return;
     }
-    $links = $this->securityAdvisoriesFetcher->getSecurityAdvisoryLinks();
+    $advisories = $this->securityAdvisoriesFetcher->getSecurityAdvisories();
 
-    if (!$links) {
+    if (!$advisories) {
       return;
     }
 
-    $links_string = '';
-    foreach ($links as $link) {
-      $links_string .= ':' . $link->getUrl()->getUri() . ':' . $link->getText();
-    }
+    $advisories_hash = hash('sha256', serialize($advisories));
     // Return if the links are the same as the last links sent.
-    if ($links_string === $this->state->get(static::LAST_LINKS_STATE_KEY)) {
+    if ($advisories_hash === $this->state->get(static::LAST_LINKS_STATE_KEY)) {
       return;
     }
 
     $params['subject'] = $this->formatPlural(
-      count($links),
+      count($advisories),
       'An urgent security announcement requires your attention for @site_name',
       '@count urgent security announcements require your attention for @site_name',
       ['@site_name' => $this->configFactory->get('system.site')->get('name')]
     );
+    $advisory_links = array_map(function (SecurityAdvisory $advisory) {
+      return new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+    }, $advisories);
     $params['body'] = [
       '#theme' => 'update_advisory_notify',
-      '#advisories' => $links,
+      '#advisories' => $advisory_links,
     ];
     $user_storage = $this->entityTypeManager->getStorage('user');
     foreach ($user_storage->loadByProperties(['mail' => $notify_emails]) as $user) {
       $params['langcode'] = $user->getPreferredLangcode();
       $this->mailManager->mail('update', 'advisory_notify', $user->mail, $params['langcode'], $params);
     }
-    $this->state->set(static::LAST_LINKS_STATE_KEY, $links_string);
+    $this->state->set(static::LAST_LINKS_STATE_KEY, $advisories_hash);
   }
 
 }
