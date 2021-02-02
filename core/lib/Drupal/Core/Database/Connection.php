@@ -556,13 +556,21 @@ abstract class Connection {
     try {
       // @todo in Drupal 10, only return the StatementWrapper.
       // @see https://www.drupal.org/node/3177490
-      return $this->statementWrapperClass ?
+      $statement = $this->statementWrapperClass ?
         new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? []) :
         $this->connection->prepare($query, $options['pdo'] ?? []);
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
+    // BC layer: $options['throw_exception'] = FALSE or a \PDO::prepare() call
+    // returning false would lead to returning a value that fails the return
+    // typehint. Throw an exception in that case.
+    // @todo in Drupal 10, remove the check.
+    if (!$statement instanceof StatementInterface) {
+      throw new DatabaseExceptionWrapper("Statement preparation failure for query: $query");
+    }
+    return $statement;
   }
 
   /**
