@@ -58,7 +58,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     }
     $links = $this->getAdvisories();
     $this->assertCount(1, $links);
-    self::assertSame('http://example.com', $links[0]->getUrl());
+    $this->assertSame('http://example.com', $links[0]->getUrl());
     $this->assertSame('SA title', $links[0]->getTitle());
     $this->assertCount(1, $this->history);
   }
