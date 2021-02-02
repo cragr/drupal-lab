@@ -6,8 +6,10 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\KernelTests\KernelTestBase;
 use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * @coversDefaultClass \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher
@@ -22,6 +24,13 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   protected static $modules = [
     'update',
   ];
+
+  /**
+   * History of requests/responses.
+   *
+   * @var array
+   */
+  protected $history = [];
 
   /**
    * {@inheritdoc}
@@ -43,11 +52,15 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    * @dataProvider providerShowAdvisories
    */
   public function testShowAdvisories(array $feed_item, string $existing_version = NULL): void {
-    $this->setProphesizedServices($feed_item, $existing_version);
+    $this->setFeedItems([$feed_item]);
+    if ($existing_version !== NULL) {
+      $this->setExistingProjectVersion($existing_version);
+    }
     $links = $this->getAdvisories();
     $this->assertCount(1, $links);
     self::assertSame('http://example.com', $links[0]->getUrl());
     $this->assertSame('SA title', $links[0]->getTitle());
+    $this->assertCount(1, $this->history);
   }
 
   /**
@@ -210,8 +223,12 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    * @dataProvider providerIgnoreAdvisories
    */
   public function testIgnoreAdvisories(array $feed_item, string $existing_version = NULL): void {
-    $this->setProphesizedServices($feed_item, $existing_version);
+    $this->setFeedItems([$feed_item]);
+    if ($existing_version !== NULL) {
+      $this->setExistingProjectVersion($existing_version);
+    }
     $this->assertCount(0, $this->getAdvisories());
+    $this->assertCount(1, $this->history);
   }
 
   /**
@@ -453,46 +470,48 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   }
 
   /**
-   * Sets prophesized 'http_client' and 'extension.list.module' services.
+   * Sets the feed items to be returned for the test.
    *
-   * @param mixed[] $feed_item
-   *   The feed item to test. 'title' and 'link' are omitted from this array
-   *   because they do not need to vary between test cases.
-   * @param string|null $existing_version
-   *   The existing version of the module.
+   * @param array[] $feed_items
+   *   The feeds items to test. Every time the http_client makes a request the
+   *   next item in this array will be returned. For each feed item 'title' and
+   *   'link' are omitted because they do not need to vary between test cases.
    */
-  protected function setProphesizedServices(array $feed_item, string $existing_version = NULL): void {
-    // Rebuild the container so that the 'update.sa_fetcher' service will use
-    // the new 'http_client' service.
-    $this->container->get('kernel')->rebuildContainer();
-    $this->container = $this->container->get('kernel')->getContainer();
-    $feed_item += [
-      'title' => 'SA title',
-      'link' => 'http://example.com',
-    ];
-    $json_string = json_encode([$feed_item]);
-    $stream = $this->prophesize(StreamInterface::class);
-    $stream->__toString()->willReturn($json_string);
-    $response = $this->prophesize(ResponseInterface::class);
-    $response->getBody()->willReturn($stream->reveal());
-    $client = $this->prophesize(Client::class);
-    $client->get('https://updates.drupal.org/psa.json')
-      ->willReturn($response->reveal());
-    $this->container->set('http_client', $client->reveal());
-
-    if ($existing_version !== NULL) {
-      $module_list = $this->prophesize(ModuleExtensionList::class);
-      $extension = $this->prophesize(Extension::class)->reveal();
-      $extension->info = [
-        'project' => 'the_project',
+  protected function setFeedItems(array $feed_items): void {
+    $responses = [];
+    foreach ($feed_items as $feed_item) {
+      $feed_item += [
+        'title' => 'SA title',
+        'link' => 'http://example.com',
       ];
-      if (!empty($existing_version)) {
-        $extension->info['version'] = $existing_version;
-      }
-      $module_list->getList()->willReturn([$extension]);
-
-      $this->container->set('extension.list.module', $module_list->reveal());
+      $responses[] = new Response('200', [], json_encode([$feed_item]));
     }
+
+    // Create a mock and queue responses.
+    $mock = new MockHandler($responses);
+    $handler_stack = HandlerStack::create($mock);
+    $history = Middleware::history($this->history);
+    $handler_stack->push($history);
+    $this->container->set('http_client', new Client(['handler' => $handler_stack]));
+  }
+
+  /**
+   * Sets the existing version of the project.
+   *
+   * @param string $existing_version
+   *   The existing version of the project.
+   */
+  protected function setExistingProjectVersion(string $existing_version):void {
+    $module_list = $this->prophesize(ModuleExtensionList::class);
+    $extension = $this->prophesize(Extension::class)->reveal();
+    $extension->info = [
+      'project' => 'the_project',
+    ];
+    if (!empty($existing_version)) {
+      $extension->info['version'] = $existing_version;
+    }
+    $module_list->getList()->willReturn([$extension]);
+    $this->container->set('extension.list.module', $module_list->reveal());
   }
 
   /**
@@ -513,15 +532,16 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
       'project' => 'drupal',
       'insecure' => [\Drupal::VERSION],
     ];
-    $this->setProphesizedServices($feed_item_1);
+    $this->setFeedItems([$feed_item_1, $feed_item_2]);
     $advisories = $this->getAdvisories();
     $this->assertCount(1, $advisories);
     $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
+    $this->assertCount(1, $this->history);
 
     // Ensure that new feed item is not retrieved because the stored response
     // has not expired.
-    $this->setProphesizedServices($feed_item_2);
     $advisories = $this->getAdvisories();
+    $this->assertCount(1, $this->history);
     $this->assertCount(1, $advisories);
     $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
@@ -533,12 +553,14 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     // Ensure that new feed item is not retrieved when the interval is
     // increased.
     $advisories = $this->getAdvisories();
+    $this->assertCount(1, $this->history);
     $this->assertCount(1, $advisories);
     $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
     // Ensure that new feed item is retrieved when the interval is decreased.
     $config->set('advisories.interval_hours', $interval - 1)->save();
     $advisories = $this->getAdvisories();
+    $this->assertCount(2, $this->history);
     $this->assertCount(1, $advisories);
     $this->assertSame($feed_item_2['title'], $advisories[0]->getTitle());
   }
