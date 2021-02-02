@@ -115,7 +115,7 @@ class ContentTranslationSynchronizedFieldsConstraintValidator extends Constraint
         // hasTranslationChanges() over multiple entity translations.
         if (!$entity->original) {
           $id = $entity->getOriginalId() !== NULL ? $entity->getOriginalId() : $entity->id();
-          $entity->original = $this->entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($id);
+          $entity->original = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($id);
         }
         foreach ($entity->getTranslationLanguages(FALSE) as $langcode => $language) {
           if ($entity->getTranslation($langcode)->hasTranslationChanges()) {
