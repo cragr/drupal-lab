@@ -14,12 +14,18 @@ use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 
 /**
- * Defines a service class to get security advisories.
+ * Defines a service to get security advisories.
  */
 final class SecurityAdvisoriesFetcher {
 
+  /**
+   * The advisories feed URL.
+   */
   protected const ADVISORIES_FEED_URL = 'https://updates.drupal.org/psa.json';
 
+  /**
+   * The key to use to store the advisories feed response.
+   */
   const ADVISORIES_RESPONSE_EXPIRABLE_KEY = 'advisories_response';
   /**
    * The 'update.settings' configuration.
