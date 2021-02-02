@@ -40,8 +40,8 @@ class ConfigSubscriber implements EventSubscriberInterface {
     $saved_config = $event->getConfig();
     if ($saved_config->getName() === 'update.settings' && $event->isChanged('advisories.interval_hours')) {
       $original_interval = $saved_config->getOriginal('advisories.interval_hours');
-      if ($original_interval && $saved_config->get('advisories.interval_hours') < $saved_config->getOriginal('advisories.interval_hours')) {
-        // If the new interval is less than the original interval delete the
+      if ($original_interval && $saved_config->get('advisories.interval_hours') < $original_interval) {
+        // If the new interval is less than the original interval, delete the
         // stored results.
         $this->keyValueExpirable->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
       }
