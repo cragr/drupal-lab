@@ -561,7 +561,7 @@ abstract class Connection {
         $this->connection->prepare($query, $options['pdo'] ?? []);
     }
     catch (\Exception $e) {
-      $this->exceptionHandler($e)->handleStatementException($query, $options);
+      $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
   }
 
@@ -868,7 +868,7 @@ abstract class Connection {
       // (e.g. the SQLite driver) may need to re-run the query, so the return
       // value will be the same as for static::query().
       if (is_string($query)) {
-        return $this->exceptionHandler($e)->handleExecutionException($stmt, $args, $options);
+        return $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, $options);
       }
       else {
         return $this->handleQueryException($e, $query, $args, $options);
@@ -1072,15 +1072,12 @@ abstract class Connection {
   /**
    * Returns the database exceptions handler.
    *
-   * @param \Exception $exception
-   *   The exception.
-   *
    * @return \Drupal\Core\Database\ExceptionHandler
    *   The database exceptions handler.
    */
-  public function exceptionHandler(\Exception $exception) {
+  public function exceptionHandler() {
     $class = $this->getDriverClass('ExceptionHandler');
-    return new $class($exception);
+    return new $class();
   }
 
   /**
