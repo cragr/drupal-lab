@@ -501,7 +501,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    * @param string $existing_version
    *   The existing version of the project.
    */
-  protected function setExistingProjectVersion(string $existing_version):void {
+  protected function setExistingProjectVersion(string $existing_version): void {
     $module_list = $this->prophesize(ModuleExtensionList::class);
     $extension = $this->prophesize(Extension::class)->reveal();
     $extension->info = [

@@ -27,6 +27,7 @@ final class SecurityAdvisoriesFetcher {
    * The key to use to store the advisories feed response.
    */
   const ADVISORIES_RESPONSE_EXPIRABLE_KEY = 'advisories_response';
+
   /**
    * The 'update.settings' configuration.
    *
