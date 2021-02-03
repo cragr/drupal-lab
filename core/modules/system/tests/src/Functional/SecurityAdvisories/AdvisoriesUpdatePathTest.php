@@ -16,7 +16,7 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      dirname(__DIR__, 4) . '/system/tests/fixtures/update/drupal-8.8.0.filled.standard.php.gz',
+      dirname(__DIR__, 3) . '/fixtures/update/drupal-8.8.0.filled.standard.php.gz',
     ];
   }
 
@@ -24,17 +24,11 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
    * Tests advisories settings update path.
    */
   public function testUpdatePath() {
-    /** @var \Drupal\Core\Config\Config $config */
-    $this->assertNull($this->config('update.settings')->get('advisories'));
+    $this->assertNull($this->config('system.advisories')->get('interval_hours'));
 
     $this->runUpdates();
 
-    $this->assertSame(
-      [
-        'interval_hours' => 12,
-      ],
-      $this->config('update.settings')->get('advisories')
-    );
+    $this->assertSame(12, $this->config('system.advisories')->get('interval_hours'));
   }
 
 }

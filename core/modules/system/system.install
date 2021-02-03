@@ -1455,8 +1455,8 @@ function system_update_8901() {
  * Add new security advisories retrieval settings.
  */
 function system_update_9101() {
-  $config = \Drupal::configFactory()->getEditable('update.settings');
-  $config->set('advisories.interval_hours', 12)->save();
+  $config = \Drupal::configFactory()->getEditable('system.advisories');
+  $config->set('interval_hours', 12)->save();
 }
 
 /**
