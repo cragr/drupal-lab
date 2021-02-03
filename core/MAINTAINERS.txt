@@ -489,8 +489,6 @@ Usability
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 - Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 
-Provisional membership: None at this time.
-
 
 Security team
 -------------
@@ -524,8 +522,6 @@ Layout Initiative
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
-
-Provisional membership: None at this time.
 
 
 Core mentoring coordinators
