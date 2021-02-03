@@ -606,7 +606,7 @@ function system_page_attachments(array &$page) {
   }
 
   // Get the major Drupal version.
-  [$version,] = explode('.', \Drupal::VERSION);
+  list($version,) = explode('.', \Drupal::VERSION);
 
   // Attach default meta tags.
   $meta_default = [
