@@ -273,7 +273,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   private function assertAdminPageLinks(array $expected_link_texts, int $error_or_warning) {
     $assert = $this->assertSession();
     $this->drupalGet(Url::fromRoute('system.admin'));
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     if ($error_or_warning === REQUIREMENT_ERROR) {
       $assert->pageTextContainsOnce('Error message');
       $assert->pageTextNotContains('Warning message');

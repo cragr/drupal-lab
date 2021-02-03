@@ -28,7 +28,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\system\SecurityAdvisories\SecurityAdvisory;
-use Drupal\update\UpdateManagerInterface;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
