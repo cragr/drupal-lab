@@ -31,9 +31,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     'aaa_update_test',
     'advisory_feed_test',
     // @todo Update is needed for test pass until \Drupal\update\ModuleVersion
-    // is copied to system module.
+    // is copied to system module and email setting is added to system module.
     'update',
-    'update_test',
   ];
 
   /**
@@ -190,6 +189,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
     $this->createUser([], 'GracieDog');
     // Setup a default destination email address.
+    // @todo Email setting still come from update module. Add a new settings and
+    // form element to system module?
     $this->config('update.settings')
       ->set('notification.emails', ['admin@example.com', 'GracieDog@example.com'])
       ->save();
