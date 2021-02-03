@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\update\EventSubscriber;
+namespace Drupal\system\EventSubscriber;
 
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
-use Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher;
+use Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -27,7 +27,7 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
    *   The expirable key/value factory.
    */
   public function __construct(KeyValueExpirableFactoryInterface $key_value_factory) {
-    $this->keyValueExpirable = $key_value_factory->get('update');
+    $this->keyValueExpirable = $key_value_factory->get('system');
   }
 
   /**
@@ -38,9 +38,9 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
    */
   public function onConfigSave(ConfigCrudEvent $event) {
     $saved_config = $event->getConfig();
-    if ($saved_config->getName() === 'update.settings' && $event->isChanged('advisories.interval_hours')) {
-      $original_interval = $saved_config->getOriginal('advisories.interval_hours');
-      if ($original_interval && $saved_config->get('advisories.interval_hours') < $original_interval) {
+    if ($saved_config->getName() === 'system.advisories' && $event->isChanged('interval_hours')) {
+      $original_interval = $saved_config->getOriginal('interval_hours');
+      if ($original_interval && $saved_config->get('interval_hours') < $original_interval) {
         // If the new interval is less than the original interval, delete the
         // stored results.
         $this->keyValueExpirable->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update_test\Controller;
+namespace Drupal\advisory_feed_test\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

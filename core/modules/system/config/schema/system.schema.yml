@@ -304,7 +304,7 @@ system.theme.global:
   label: 'Theme global settings'
 
 system.advisories:
-  type: mapping
+  type: config_object
   label: 'Security advisory settings'
   mapping:
     interval_hours:

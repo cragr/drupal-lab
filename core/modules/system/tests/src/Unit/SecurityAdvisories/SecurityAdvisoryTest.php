@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\update\Unit;
+namespace Drupal\Tests\system\Unit\SecurityAdvisories;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\update\SecurityAdvisories\SecurityAdvisory;
+use Drupal\system\SecurityAdvisories\SecurityAdvisory;
 
 /**
- * @coversDefaultClass \Drupal\update\SecurityAdvisories\SecurityAdvisory
+ * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisory
  *
  * @group update
  */

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update\SecurityAdvisories;
+namespace Drupal\system\SecurityAdvisories;
 
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;

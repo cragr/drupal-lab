@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\update_test;
+namespace Drupal\advisory_feed_test;
 
-use Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher;
+use Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use GuzzleHttp\Client;
 
 /**
@@ -46,7 +46,7 @@ class AdvisoriesTestHttpClient extends Client {
   public static function setTestEndpoint(string $test_endpoint, $delete_tempstore = FALSE):void {
     \Drupal::state()->set('advisories_test_endpoint', $test_endpoint);
     if ($delete_tempstore) {
-      \Drupal::service('keyvalue.expirable')->get('update')->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
+      \Drupal::service('keyvalue.expirable')->get('system')->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
     }
   }
 

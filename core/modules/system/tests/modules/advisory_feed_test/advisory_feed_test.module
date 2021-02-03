@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Module for testing Update Manager functionality.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function advisory_feed_test_system_info_alter(&$info, Extension $file) {
+  // Alter the 'aaa_update_test' module to use the 'aaa_update_project'
+  // project name.  This ensures that for an extension where the 'name' and
+  // the 'project' properties do not match, 'project' is used for matching
+  // 'project' in the JSON feed.
+  // @todo Change to use system module test modules.
+  $system_info = [
+    'aaa_update_test' => [
+      'project' => 'aaa_update_project',
+      'version' => '8.x-1.1',
+      'hidden' => FALSE,
+    ],
+    'bbb_update_test' => [
+      'project' => 'bbb_update_project',
+      'version' => '8.x-1.1',
+      'hidden' => FALSE,
+    ],
+  ];
+  if (!empty($system_info[$file->getName()])) {
+    foreach ($system_info[$file->getName()] as $key => $value) {
+      $info[$key] = $value;
+    }
+  }
+}

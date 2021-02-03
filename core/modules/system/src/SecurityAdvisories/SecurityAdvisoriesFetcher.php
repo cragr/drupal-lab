@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update\SecurityAdvisories;
+namespace Drupal\system\SecurityAdvisories;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -82,8 +82,8 @@ final class SecurityAdvisoriesFetcher {
    *   The logger.
    */
   public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, Client $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger) {
-    $this->config = $config_factory->get('update.settings');
-    $this->keyValueExpirable = $key_value_factory->get('update');
+    $this->config = $config_factory->get('system.advisories');
+    $this->keyValueExpirable = $key_value_factory->get('system');
     $this->httpClient = $client;
     $this->extensionLists['module'] = $module_list;
     $this->extensionLists['theme'] = $theme_list;
@@ -94,7 +94,7 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Gets security advisories that are applicable for the current site.
    *
-   * @return \Drupal\update\SecurityAdvisories\SecurityAdvisory[]
+   * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]
    *   The upstream security advisories.
    *
    * @throws \GuzzleHttp\Exception\TransferException
@@ -106,7 +106,7 @@ final class SecurityAdvisoriesFetcher {
     $response = $this->keyValueExpirable->get(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
     if (!$response) {
       $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL)->getBody();
-      $interval_seconds = $this->config->get('advisories.interval_hours') * 60 * 60;
+      $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       // This value will be deleted if the 'advisories.interval_hours' config is
       // changed to a lower value.
       // @see \Drupal\update\EventSubscriber\ConfigSubscriber::onConfigSave()
@@ -155,7 +155,7 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Determines if an advisory matches for the existing version of a project.
    *
-   * @param \Drupal\update\SecurityAdvisories\SecurityAdvisory $sa
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
    *   The security advisory.
    *
    * @return bool
@@ -213,7 +213,7 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Gets the project information for a security advisory.
    *
-   * @param \Drupal\update\SecurityAdvisories\SecurityAdvisory $sa
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
    *   The security advisory.
    *
    * @return mixed[]|null
@@ -237,7 +237,7 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Gets the existing project version.
    *
-   * @param \Drupal\update\SecurityAdvisories\SecurityAdvisory $sa
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
    *   The security advisory.
    *
    * @return string|null

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\update\Kernel;
+namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -12,7 +12,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 /**
- * @coversDefaultClass \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher
+ * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
  *
  * @group update
  */
@@ -22,7 +22,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'update',
+    'system',
   ];
 
   /**
@@ -37,7 +37,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installConfig('update');
+    $this->installConfig('system');
   }
 
   /**
@@ -546,9 +546,9 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
     /** @var \Drupal\Core\Config\Config $config */
-    $config = $this->container->get('config.factory')->getEditable('update.settings');
-    $interval = $config->get('advisories.interval_hours');
-    $config->set('advisories.interval_hours', $interval + 1)->save();
+    $config = $this->container->get('config.factory')->getEditable('system.advisories');
+    $interval = $config->get('interval_hours');
+    $config->set('interval_hours', $interval + 1)->save();
 
     // Ensure that new feed item is not retrieved when the interval is
     // increased.
@@ -558,7 +558,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     $this->assertSame($feed_item_1['title'], $advisories[0]->getTitle());
 
     // Ensure that new feed item is retrieved when the interval is decreased.
-    $config->set('advisories.interval_hours', $interval - 1)->save();
+    $config->set('interval_hours', $interval - 1)->save();
     $advisories = $this->getAdvisories();
     $this->assertCount(2, $this->history);
     $this->assertCount(1, $advisories);
@@ -566,13 +566,13 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   }
 
   /**
-   * Gets the advisories from the 'update.sa_fetcher' service.
+   * Gets the advisories from the 'system.sa_fetcher' service.
    *
-   * @return \Drupal\update\SecurityAdvisories\SecurityAdvisory[]
+   * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]
    *   The advisory links.
    */
   protected function getAdvisories(): array {
-    $fetcher = $this->container->get('update.sa_fetcher');
+    $fetcher = $this->container->get('system.sa_fetcher');
     return $fetcher->getSecurityAdvisories();
   }
 

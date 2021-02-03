@@ -27,7 +27,7 @@ use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\update\SecurityAdvisories\SecurityAdvisory;
+use Drupal\system\SecurityAdvisories\SecurityAdvisory;
 use Drupal\update\UpdateManagerInterface;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1327,9 +1327,9 @@ function system_page_top() {
   $route_match = \Drupal::routeMatch();
   if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     $route_name = \Drupal::routeMatch()->getRouteName();
-    if ($route_name !== 'system.status' && \Drupal::hasService('update.sa_fetcher')) {
-      /** @var \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
-      $fetcher = \Drupal::service('update.sa_fetcher');
+    if ($route_name !== 'system.status' && \Drupal::hasService('system.sa_fetcher')) {
+      /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+      $fetcher = \Drupal::service('system.sa_fetcher');
       try {
         $advisories = $fetcher->getSecurityAdvisories();
         if ($advisories) {

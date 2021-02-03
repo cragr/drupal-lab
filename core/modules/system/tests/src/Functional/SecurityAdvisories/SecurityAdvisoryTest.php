@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\update\Functional;
+namespace Drupal\Tests\system\Functional\SecurityAdvisories;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use Drupal\update_test\AdvisoriesTestHttpClient;
+use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
 
 /**
  * Tests of security advisories functionality.
@@ -27,8 +27,12 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'update',
+    'system',
     'aaa_update_test',
+    'advisory_feed_test',
+    // @todo Update is needed for test pass until \Drupal\update\ModuleVersion
+    // is copied to system module.
+    'update',
     'update_test',
   ];
 
@@ -93,23 +97,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // Alter the 'aaa_update_test' module to use the 'aaa_update_project'
-    // project name.  This ensures that for an extension where the 'name' and
-    // the 'project' properties do not match, 'project' is used for matching
-    // 'project' in the JSON feed.
-    $system_info = [
-      'aaa_update_test' => [
-        'project' => 'aaa_update_project',
-        'version' => '8.x-1.1',
-        'hidden' => FALSE,
-      ],
-      'bbb_update_test' => [
-        'project' => 'bbb_update_project',
-        'version' => '8.x-1.1',
-        'hidden' => FALSE,
-      ],
-    ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->user = $this->drupalCreateUser([
       'access administration pages',
       'administer site configuration',
@@ -124,7 +111,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->nonWorkingEndpoint = $this->buildUrl('/advisory-feed-json/missing');
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
 
-    $this->tempStore = $this->container->get('keyvalue.expirable')->get('update');
+    $this->tempStore = $this->container->get('keyvalue.expirable')->get('system');
   }
 
   /**
@@ -137,6 +124,10 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $expected_links = [
       'Critical Release - SA-2019-02-19',
       'Critical Release - PSA-Really Old',
+      // The info for the test modules 'aaa_update_test' and 'bbb_update_test'
+      // are altered for this test so match the items in the test json feeds.
+      // @see advisory_feed_test_system_info_alter()
+      // @todo change to use system module test modules.
       'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
       'BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
@@ -282,6 +273,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   private function assertAdminPageLinks(array $expected_link_texts, int $error_or_warning) {
     $assert = $this->assertSession();
     $this->drupalGet(Url::fromRoute('system.admin'));
+    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     if ($error_or_warning === REQUIREMENT_ERROR) {
       $assert->pageTextContainsOnce('Error message');
       $assert->pageTextNotContains('Warning message');

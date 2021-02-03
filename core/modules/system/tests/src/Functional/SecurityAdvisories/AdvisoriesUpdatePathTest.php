@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\update\Functional;
+namespace Drupal\Tests\system\Functional\SecurityAdvisories;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 

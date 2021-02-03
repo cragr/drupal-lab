@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\update\SecurityAdvisories;
+namespace Drupal\system\SecurityAdvisories;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -17,7 +17,7 @@ use Drupal\Core\Url;
  * @internal
  *   hook_mail_alter() can be used to alter the emails produced by this class.
  *   To send other emails or other notifications for service advisories use the
- *   'update.sa_fetcher' service directly to retrieve the advisories.
+ *   'system.sa_fetcher' service directly to retrieve the advisories.
  */
 final class EmailNotifier {
 
@@ -38,7 +38,7 @@ final class EmailNotifier {
   /**
    * The security advisory fetcher service.
    *
-   * @var \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher
+   * @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
    */
   protected $securityAdvisoriesFetcher;
 
@@ -68,7 +68,7 @@ final class EmailNotifier {
    *
    * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
    *   The mail manager.
-   * @param \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher $sa_fetcher
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $sa_fetcher
    *   The security advisory fetcher service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
