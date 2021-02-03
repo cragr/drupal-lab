@@ -121,13 +121,13 @@ final class EmailNotifier {
       return new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
     }, $advisories);
     $params['body'] = [
-      '#theme' => 'update_advisory_notification',
+      '#theme' => 'system_advisory_notification',
       '#advisories' => $advisory_links,
     ];
     $user_storage = $this->entityTypeManager->getStorage('user');
     foreach ($user_storage->loadByProperties(['mail' => $notify_emails]) as $user) {
       $params['langcode'] = $user->getPreferredLangcode();
-      $this->mailManager->mail('update', 'advisory_notify', $user->mail, $params['langcode'], $params);
+      $this->mailManager->mail('system', 'advisory_notify', $user->mail, $params['langcode'], $params);
     }
     $this->state->set(static::LAST_LINKS_STATE_KEY, $advisories_hash);
   }

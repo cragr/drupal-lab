@@ -1070,12 +1070,29 @@ function system_cron() {
   // Ensure that all of Drupal's standard directories (e.g., the public files
   // directory and config directory) have appropriate .htaccess files.
   \Drupal::service('file.htaccess_writer')->ensure();
+
+  if (\Drupal::hasService('system.sa_notifier')) {
+    /** @var \Drupal\system\SecurityAdvisories\EmailNotifier $notify */
+    $notify = \Drupal::service('system.sa_notifier');
+    // Any exceptions encountered retrieving advisories will be caught and
+    // logged.
+    // @see \Drupal\Core\Cron::invokeCronHandlers()
+    $notify->send();
+  }
+
 }
 
 /**
  * Implements hook_mail().
  */
 function system_mail($key, &$message, $params) {
+  if ($key === 'advisory_notify') {
+    $renderer = \Drupal::service('renderer');
+
+    $message['subject'] = $params['subject'];
+    $message['body'][] = $renderer->render($params['body']);
+    return;
+  }
   $token_service = \Drupal::token();
 
   $context = $params['context'];

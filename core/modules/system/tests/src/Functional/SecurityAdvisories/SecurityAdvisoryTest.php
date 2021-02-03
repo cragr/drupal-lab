@@ -259,7 +259,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    *   The expected count.
    */
   protected function assertAdvisoryEmailCount(int $expected_count): void {
-    $this->assertCount($expected_count, $this->getMails(['id' => 'update_advisory_notify']));
+    $this->assertCount($expected_count, $this->getMails(['id' => 'system_advisory_notify']));
   }
 
   /**
