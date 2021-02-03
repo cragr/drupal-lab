@@ -567,7 +567,7 @@ abstract class Connection {
     // returning false would lead to returning a value that fails the return
     // typehint. Throw an exception in that case.
     // @todo in Drupal 10, remove the check.
-    if (!$statement instanceof StatementInterface) {
+    if (!isset($statement) || !$statement instanceof StatementInterface) {
       throw new DatabaseExceptionWrapper("Statement preparation failure for query: $query");
     }
     return $statement;
