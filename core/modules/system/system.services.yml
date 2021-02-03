@@ -61,7 +61,7 @@ services:
     arguments: [ '@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.system' ]
   system.sa_notifier:
     class: Drupal\system\SecurityAdvisories\EmailNotifier
-    arguments: [ '@plugin.manager.mail', '@system.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation' ]
+    arguments: [ '@plugin.manager.mail', '@system.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation', '@language_manager' ]
   update.config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
     arguments: [ '@keyvalue.expirable' ]

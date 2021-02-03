@@ -187,8 +187,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   public function testPsaMail(): void {
     // Set up test PSA endpoint.
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
-    $this->createUser([], 'GracieDog');
-    // Setup a default destination email address.
+    // Set two notification email addresses. One is associated with a user and
+    // and is not.
     // @todo Email setting still come from update module. Add a new settings and
     // form element to system module?
     $this->config('update.settings')

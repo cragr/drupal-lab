@@ -4,6 +4,7 @@ namespace Drupal\system\SecurityAdvisories;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Link;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\State\StateInterface;
@@ -64,6 +65,13 @@ final class EmailNotifier {
   protected $entityTypeManager;
 
   /**
+   * The language manager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
    * Constructs an EmailNotifier object.
    *
    * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
@@ -78,14 +86,17 @@ final class EmailNotifier {
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager service.
    */
-  public function __construct(MailManagerInterface $mail_manager, SecurityAdvisoriesFetcher $sa_fetcher, ConfigFactoryInterface $config_factory, StateInterface $state, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
+  public function __construct(MailManagerInterface $mail_manager, SecurityAdvisoriesFetcher $sa_fetcher, ConfigFactoryInterface $config_factory, StateInterface $state, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, LanguageManager $language_manager) {
     $this->mailManager = $mail_manager;
     $this->securityAdvisoriesFetcher = $sa_fetcher;
     $this->configFactory = $config_factory;
     $this->state = $state;
     $this->entityTypeManager = $entity_type_manager;
     $this->setStringTranslation($string_translation);
+    $this->languageManager = $language_manager;
   }
 
   /**
@@ -124,10 +135,15 @@ final class EmailNotifier {
       '#theme' => 'system_advisory_notification',
       '#advisories' => $advisory_links,
     ];
-    $user_storage = $this->entityTypeManager->getStorage('user');
-    foreach ($user_storage->loadByProperties(['mail' => $notify_emails]) as $user) {
-      $params['langcode'] = $user->getPreferredLangcode();
-      $this->mailManager->mail('system', 'advisory_notify', $user->mail, $params['langcode'], $params);
+    $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
+    foreach ($notify_emails as $email) {
+      if ($target_user = user_load_by_mail($email)) {
+        $params['langcode'] = $target_user->getPreferredLangcode();
+      }
+      else {
+        $params['langcode'] = $default_langcode;
+      }
+      $this->mailManager->mail('system', 'advisory_notify', $email, $params['langcode'], $params);
     }
     $this->state->set(static::LAST_LINKS_STATE_KEY, $advisories_hash);
   }
