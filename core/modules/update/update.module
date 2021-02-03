@@ -17,10 +17,8 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\update\SecurityAdvisories\SecurityAdvisory;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
-use GuzzleHttp\Exception\TransferException;
 
 /**
  * Implements hook_help().
@@ -47,14 +45,6 @@ function update_help($route_name, RouteMatchInterface $route_match) {
         $output .= '<dd>' . t('You can also add new modules and themes in the same fashion, through the <a href=":install">Add new modules and themes page</a>, or by clicking the <em>Add new module/theme</em> links at the top of the <a href=":modules_page">Extend page</a> and the <a href=":themes_page">Appearance page</a>. In this case, you are prompted to provide either the URL to the download, or to upload a packaged release file from your local computer.', [':modules_page' => Url::fromRoute('system.modules_list')->toString(), ':themes_page' => Url::fromRoute('system.themes_page')->toString(), ':install' => Url::fromRoute('update.report_install')->toString()]) . '</dd>';
       }
       $output .= '</dl>';
-      if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
-        $output .= '<dl>';
-        $output .= '<dt>' . t('Displaying critical security advisories') . '</dt>';
-        $output .= '<dd>' . t('The Update Manager module displays highly critical and time-sensitive security announcements to site administrators. Some security announcements will be displayed until a critical security update is installed. Announcements that are not associated with a specific release will appear for a fixed period of time.') . '</dd>';
-        $output .= '<dd>' . t('Only the most highly critical security announcements will be shown within Drupal. To view all security announcements view the <a href=":advisory-list">complete list on Drupal.org.</a>', [':advisory-list' => 'https://www.drupal.org/security']) . '</dd>';
-        $output .= '</dl>';
-      }
-
       return $output;
 
     case 'update.status':
@@ -80,43 +70,6 @@ function update_page_top() {
   $route_match = \Drupal::routeMatch();
   if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     $route_name = \Drupal::routeMatch()->getRouteName();
-    module_load_install('update');
-    $status = update_requirements('runtime');
-    if ($route_name !== 'system.status' && \Drupal::hasService('update.sa_fetcher')) {
-      /** @var \Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
-      $fetcher = \Drupal::service('update.sa_fetcher');
-      try {
-        $advisories = $fetcher->getSecurityAdvisories();
-        if ($advisories) {
-          $has_non_psa_advisories = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
-            return !$advisory->isPsa();
-          }));
-          // If all the advisories are PSA advisories then display them as
-          // warnings because they may not be actionable, otherwise display them
-          // as errors.
-          $call_messenger = function ($message) use ($has_non_psa_advisories) {
-            if ($has_non_psa_advisories) {
-              \Drupal::messenger()->addError($message);
-            }
-            else {
-              \Drupal::messenger()->addWarning($message);
-            }
-          };
-          $call_messenger(t('Critical security announcements:'));
-          foreach ($advisories as $advisory) {
-            $call_messenger(new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl())));
-          }
-          if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'update')) {
-            $call_messenger(t('(<a href=":update-help">What are critical security announcements?</a>)', [
-              ':update-help' => Url::fromRoute('help.page', ['name' => 'update'])->toString(),
-            ]));
-          }
-        }
-      }
-      catch (TransferException $exception) {
-        watchdog_exception('update', $exception, 'Failed to retrieve security advisory data. See https://www.drupal.org/node/3170647 for possible solutions.');
-      }
-    }
     switch ($route_name) {
       // These pages don't need additional nagging.
       case 'update.theme_update':
@@ -139,6 +92,8 @@ function update_page_top() {
         break;
 
     }
+    module_load_install('update');
+    $status = update_requirements('runtime');
     foreach (['core', 'contrib'] as $report_type) {
       $type = 'update_' . $report_type;
       // hook_requirements() supports render arrays therefore we need to render
@@ -211,11 +166,6 @@ function update_theme() {
       'render element' => 'element',
       'variables' => ['error_message' => [], 'fetch_type' => 'update'],
     ],
-    'update_advisory_notification' => [
-      'variables' => [
-        'advisories' => [],
-      ],
-    ],
   ];
 }
 
@@ -245,15 +195,6 @@ function update_cron() {
     // updates possibly available.
     module_load_include('inc', 'update', 'update.fetch');
     _update_cron_notify();
-  }
-
-  if (\Drupal::hasService('update.sa_notifier')) {
-    /** @var \Drupal\update\SecurityAdvisories\EmailNotifier $notify */
-    $notify = \Drupal::service('update.sa_notifier');
-    // Any exceptions encountered retrieving advisories will be caught and
-    // logged.
-    // @see \Drupal\Core\Cron::invokeCronHandlers()
-    $notify->send();
   }
 
   // Clear garbage from disk.
@@ -450,8 +391,7 @@ function update_fetch_data_finished($success, $results) {
  * Constructs the email notification message when the site is out of date.
  *
  * @param $key
- *   Unique key to indicate what message to build, either 'status_notify' or
- *   'advisory_notify'.
+ *   Unique key to indicate what message to build, always 'status_notify'.
  * @param $message
  *   Reference to the message array being built.
  * @param $params
@@ -466,32 +406,23 @@ function update_fetch_data_finished($success, $results) {
  * @see \Drupal\update\UpdateManagerInterface
  */
 function update_mail($key, &$message, $params) {
-  if ($key === 'advisory_notify') {
-    $renderer = \Drupal::service('renderer');
-
-    $message['subject'] = $params['subject'];
-    $message['body'][] = $renderer->render($params['body']);
+  $langcode = $message['langcode'];
+  $language = \Drupal::languageManager()->getLanguage($langcode);
+  $message['subject'] .= t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name')], ['langcode' => $langcode]);
+  foreach ($params as $msg_type => $msg_reason) {
+    $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
+  }
+  $message['body'][] = t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
+  if (_update_manager_access()) {
+    $message['body'][] = t('You can automatically install your missing updates using the Update manager:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.report_update', [], ['absolute' => TRUE, 'language' => $language])->toString();
+  }
+  $settings_url = Url::fromRoute('update.settings', [], ['absolute' => TRUE])->toString();
+  if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
+    $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, @url.', ['@url' => $settings_url]);
   }
   else {
-    $langcode = $message['langcode'];
-    $language = \Drupal::languageManager()->getLanguage($langcode);
-    $message['subject'] .= t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name')], ['langcode' => $langcode]);
-    foreach ($params as $msg_type => $msg_reason) {
-      $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
-    }
-    $message['body'][] = t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
-    if (_update_manager_access()) {
-      $message['body'][] = t('You can automatically install your missing updates using the Update manager:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.report_update', [], ['absolute' => TRUE, 'language' => $language])->toString();
-    }
-    $settings_url = Url::fromRoute('update.settings', [], ['absolute' => TRUE])->toString();
-    if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
-      $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, @url.', ['@url' => $settings_url]);
-    }
-    else {
-      $message['body'][] = t('Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, @url.', ['@url' => $settings_url]);
-    }
+    $message['body'][] = t('Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, @url.', ['@url' => $settings_url]);
   }
-
 }
 
 /**

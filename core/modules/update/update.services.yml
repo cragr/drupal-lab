@@ -22,17 +22,3 @@ services:
     class: Drupal\update\UpdateRootFactory
     arguments: ['@kernel', '@request_stack']
     public: false
-  logger.channel.update:
-    parent: logger.channel_base
-    arguments: ['update']
-  update.sa_fetcher:
-    class: Drupal\update\SecurityAdvisories\SecurityAdvisoriesFetcher
-    arguments: ['@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.update']
-  update.sa_notifier:
-    class: Drupal\update\SecurityAdvisories\EmailNotifier
-    arguments: ['@plugin.manager.mail', '@update.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation']
-  update.config_subscriber:
-    class: Drupal\update\EventSubscriber\ConfigSubscriber
-    arguments: [ '@keyvalue.expirable']
-    tags:
-      - { name: event_subscriber }

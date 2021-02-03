@@ -53,3 +53,17 @@ services:
     arguments: ['@config.factory']
     tags:
       - { name: event_subscriber }
+  syterm.channel.system:
+    parent: logger.channel_base
+    arguments: [ 'system' ]
+  update.sa_fetcher:
+    class: Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
+    arguments: [ '@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.update' ]
+  system.sa_notifier:
+    class: Drupal\system\SecurityAdvisories\EmailNotifier
+    arguments: [ '@plugin.manager.mail', '@system.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation' ]
+  update.config_subscriber:
+    class: Drupal\system\EventSubscriber\ConfigSubscriber
+    arguments: [ '@keyvalue.expirable' ]
+    tags:
+      - { name: event_subscriber }

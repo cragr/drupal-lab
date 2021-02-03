@@ -40,10 +40,3 @@ update.settings:
         threshold:
           type: string
           label: 'Email notification threshold'
-    advisories:
-      type: mapping
-      label: 'Security advisory settings'
-      mapping:
-        interval_hours:
-          type: integer
-          label: 'Frequency to check for security advisories. Defaults to 12 hours.'

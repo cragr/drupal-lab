@@ -116,12 +116,12 @@ class SecurityAdvisoryTest extends BrowserTestBase {
       'administer software updates',
     ]);
     $this->drupalLogin($this->user);
-    $fixtures_path = $this->baseUrl . '/core/modules/update/tests/fixtures/psa_feed';
-    $this->workingEndpointMixed = $this->buildUrl('/update-test-json/valid-mixed');
-    $this->workingEndpointPsaOnly = $this->buildUrl('/update-test-json/valid-psa-only');
-    $this->workingEndpointNonPsaOnly = $this->buildUrl('/update-test-json/valid-non-psa-only');
-    $this->workingEndpointPlus1 = $this->buildUrl('/update-test-json/valid_plus1');
-    $this->nonWorkingEndpoint = $this->buildUrl('/update-test-json/missing');
+    $fixtures_path = $this->baseUrl . '/core/modules/system/tests/fixtures/psa_feed';
+    $this->workingEndpointMixed = $this->buildUrl('/advisory-feed-json/valid-mixed');
+    $this->workingEndpointPsaOnly = $this->buildUrl('/advisory-feed-json/valid-psa-only');
+    $this->workingEndpointNonPsaOnly = $this->buildUrl('/advisory-feed-json/valid-non-psa-only');
+    $this->workingEndpointPlus1 = $this->buildUrl('/advisory-feed-json/valid_plus1');
+    $this->nonWorkingEndpoint = $this->buildUrl('/advisory-feed-json/missing');
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
 
     $this->tempStore = $this->container->get('keyvalue.expirable')->get('update');

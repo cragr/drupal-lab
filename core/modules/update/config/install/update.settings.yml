@@ -8,5 +8,3 @@ fetch:
 notification:
   emails: {  }
   threshold: all
-advisories:
-  interval_hours: 12

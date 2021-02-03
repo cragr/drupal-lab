@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Deletes the stored response from the advisories feed, if needed.
  */
-class ConfigSubscriber implements EventSubscriberInterface {
+class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
 
   /**
    * The update expirable key/value store.

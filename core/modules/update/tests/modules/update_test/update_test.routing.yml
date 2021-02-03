@@ -14,11 +14,3 @@ update_test.update_test:
     project_name: NULL
   requirements:
     _access: 'TRUE'
-
-update_test.json_test:
-  path: '/update-test-json/{json_name}'
-  defaults:
-    _title: 'Update test'
-    _controller: '\Drupal\update_test\Controller\AdvisoryTestController::getPsaJson'
-  requirements:
-    _access: 'TRUE'
