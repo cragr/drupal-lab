@@ -1367,15 +1367,15 @@ function system_page_top() {
           foreach ($advisories as $advisory) {
             $call_messenger(new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl())));
           }
-          if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'update')) {
-            $call_messenger(t('(<a href=":update-help">What are critical security announcements?</a>)', [
-              ':update-help' => Url::fromRoute('help.page', ['name' => 'update'])->toString(),
+          if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'system')) {
+            $call_messenger(t('(<a href=":system-help">What are critical security announcements?</a>)', [
+              ':system-help' => Url::fromRoute('help.page', ['name' => 'update'])->toString(),
             ]));
           }
         }
       }
       catch (TransferException $exception) {
-        watchdog_exception('update', $exception, 'Failed to retrieve security advisory data. See https://www.drupal.org/node/3170647 for possible solutions.');
+        watchdog_exception('system', $exception, 'Failed to retrieve security advisory data. See https://www.drupal.org/node/3170647 for possible solutions.');
       }
     }
   }

@@ -254,7 +254,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   }
 
   /**
-   * Assert the count of the 'update_advisory_notify' emails during the test.
+   * Assert the count of the 'system_advisory_notify' emails during the test.
    *
    * @param int $expected_count
    *   The expected count.

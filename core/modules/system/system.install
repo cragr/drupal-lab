@@ -1476,10 +1476,10 @@ function _system_advisories_requirements(array &$requirements): void {
     $advisories = $fetcher->getSecurityAdvisories();
   }
   catch (TransferException $exception) {
-    $requirements['update_advisories']['title'] = t('Critical security announcements');
-    $requirements['update_advisories']['severity'] = REQUIREMENT_WARNING;
-    $requirements['update_advisories']['description'] = ['#theme' => 'update_fetch_error_message', '#fetch_type' => 'advisories'];
-    watchdog_exception('update', $exception, 'Failed to retrieve security advisory data.');
+    $requirements['system_advisories']['title'] = t('Critical security announcements');
+    $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
+    $requirements['system_advisories']['description'] = ['#theme' => 'update_fetch_error_message', '#fetch_type' => 'advisories'];
+    watchdog_exception('system', $exception, 'Failed to retrieve security advisory data.');
     return;
   }
 
@@ -1492,16 +1492,16 @@ function _system_advisories_requirements(array &$requirements): void {
       }
       $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
     }
-    $requirements['update_advisories']['title'] = t('Critical security announcements');
-    $requirements['update_advisories']['severity'] = $has_all_psa_advisories ? REQUIREMENT_WARNING : REQUIREMENT_ERROR;
-    $requirements['update_advisories']['description'] = [
+    $requirements['system_advisories']['title'] = t('Critical security announcements');
+    $requirements['system_advisories']['severity'] = $has_all_psa_advisories ? REQUIREMENT_WARNING : REQUIREMENT_ERROR;
+    $requirements['system_advisories']['description'] = [
       'list' => [
         '#theme' => 'item_list',
         '#items' => $advisory_links,
       ],
     ];
     if (\Drupal::moduleHandler()->moduleExists('help')) {
-      $requirements['update_advisories']['description']['help_link'] = Link::createFromRoute('What are critical security announcements?', 'help.page', ['name' => 'update'])->toRenderable();
+      $requirements['system_advisories']['description']['help_link'] = Link::createFromRoute('What are critical security announcements?', 'help.page', ['name' => 'system'])->toRenderable();
     }
   }
 }

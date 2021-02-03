@@ -27,7 +27,7 @@ final class EmailNotifier {
   /**
    * State key used to store a hash of the last links emailed.
    */
-  protected const LAST_LINKS_STATE_KEY = 'update_sa.last_links_string';
+  protected const LAST_LINKS_STATE_KEY = 'system.last_advisories_hash';
 
   /**
    * The mail manager.
