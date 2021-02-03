@@ -11,9 +11,9 @@
     "pubDate":"Tue, 19 Feb 2017 14:11:01 +0000"
   },
   {
-    "title":"AAA Update Test - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "title":"Generic Module1 Test - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
     "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
-    "project":"aaa_update_test",
+    "project":"generic_module1_test",
     "type":"module",
     "is_psa":"0",
     "insecure":[
@@ -22,9 +22,9 @@
     "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
   },
   {
-    "title":"BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "title":"Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
     "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
-    "project":"bbb_update_project",
+    "project":"generic_module2_project",
     "type":"module",
     "is_psa":"1",
     "insecure":[

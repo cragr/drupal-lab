@@ -1369,7 +1369,7 @@ function system_page_top() {
           }
           if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'system')) {
             $call_messenger(t('(<a href=":system-help">What are critical security announcements?</a>)', [
-              ':system-help' => Url::fromRoute('help.page', ['name' => 'update'])->toString(),
+              ':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString(),
             ]));
           }
         }

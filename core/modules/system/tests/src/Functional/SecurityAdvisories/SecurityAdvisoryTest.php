@@ -28,7 +28,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    */
   protected static $modules = [
     'system',
-    'aaa_update_test',
+    'generic_module1_test',
     'advisory_feed_test',
     // @todo Update is needed for test pass until \Drupal\update\ModuleVersion
     // is copied to system module and email setting is added to system module.
@@ -123,12 +123,12 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $expected_links = [
       'Critical Release - SA-2019-02-19',
       'Critical Release - PSA-Really Old',
-      // The info for the test modules 'aaa_update_test' and 'bbb_update_test'
-      // are altered for this test so match the items in the test json feeds.
+      // The info for the test modules 'generic_module1_test' and
+      // 'generic_module2_test' are altered for this test so match the items in
+      // the test json feeds.
       // @see advisory_feed_test_system_info_alter()
-      // @todo change to use system module test modules.
-      'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
-      'BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
     // If both PSA and non-PSA advisories are displayed they should be displayed
     // as errors.
@@ -163,7 +163,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
     $expected_links = [
       'Critical Release - PSA-Really Old',
-      'BBB Update project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
     // If only PSA advisories are displayed they should be displayed as
     // warnings.
@@ -173,7 +173,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointNonPsaOnly, TRUE);
     $expected_links = [
       'Critical Release - SA-2019-02-19',
-      'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
     // If only non-PSA advisories are displayed they should be displayed as
     // errors.
@@ -210,8 +210,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertMailString('subject', '4 urgent security announcements require your attention', 1);
     $this->assertMailString('body', 'Critical Release - SA-2019-02-19', 1);
     $this->assertMailString('body', 'Critical Release - PSA-Really Old', 1);
-    $this->assertMailString('body', 'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
-    $this->assertMailString('body', 'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
     $this->assertMailString('body', 'To see all public service announcements, visit https://www.drupal.org/security/psa', 1);
     $this->assertMailString('body', 'To change how you are notified, you may configure email notifications', 1);
     $this->assertMailString('body', $this->baseUrl . '/admin/reports/updates/settings', 1);
@@ -235,8 +235,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertMailString('subject', '5 urgent security announcements require your attention', 1);
     $this->assertMailString('body', 'Critical Release - SA-2019-02-19', 1);
     $this->assertMailString('body', 'Critical Release - PSA-Really Old', 1);
-    $this->assertMailString('body', 'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
-    $this->assertMailString('body', 'AAA Update Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
     $this->assertMailString('body', 'Critical Release - PSA because 2020', 1);
   }
 

@@ -143,9 +143,9 @@ class SecurityAdvisoryTest extends UnitTestCase {
    */
   protected function getValidData(): array {
     return [
-      'title' => 'AAA Update Test - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'title' => 'Generic Module1 Test - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
       'link' => 'https://www.drupal.org/SA-CONTRIB-2019-02-02',
-      'project' => 'aaa_update_test',
+      'project' => 'generic_module1_test',
       'type' => 'module',
       'is_psa' => 0,
       'insecure' => [
