@@ -31,6 +31,13 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
   protected $serializer;
 
   /**
+   * The subject under test.
+   *
+   * @var \Drupal\jsonapi\Normalizer\LinkCollectionNormalizer
+   */
+  protected $normalizer;
+
+  /**
    * Test users.
    *
    * @var \Drupal\user\UserInterface[]
@@ -62,21 +69,26 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     $this->testUsers[] = $this->createUser([], NULL, FALSE, ['uid' => 2]);
     $this->testUsers[] = $this->createUser([], NULL, FALSE, ['uid' => 3]);
     $this->serializer = $this->container->get('jsonapi.serializer');
+    // Create the SUT.
+    $this->normalizer = new LinkCollectionNormalizer();
+    $this->normalizer->setSerializer($this->serializer);
   }
 
   /**
    * Tests the link collection normalizer.
    */
   public function testNormalize() {
-    // Get the edit form URL for the second test user.
-    $edit_form_url = $this->testUsers[0]->toUrl('edit-form');
     $link_context = new ResourceObject(new CacheableMetadata(), new ResourceType('n/a', 'n/a', 'n/a'), 'n/a', NULL, [], new LinkCollection([]));
     $link_collection = (new LinkCollection([]))
-      ->withLink('edit-form', new Link(new CacheableMetadata(), $edit_form_url, 'edit-form', ['title' => 'Edit']))
       ->withLink('related', new Link(new CacheableMetadata(), Url::fromUri('http://example.com/post/42'), 'related', ['title' => 'Most viewed']))
       ->withLink('related', new Link(new CacheableMetadata(), Url::fromUri('http://example.com/post/42'), 'related', ['title' => 'Top rated']))
       ->withContext($link_context);
-    $expected = [
+    $normalized = $this->normalizer->normalize($link_collection)->getNormalization();
+    $this->assertIsArray($normalized);
+    foreach (array_keys($normalized) as $key) {
+      $this->assertStringStartsWith('related', $key);
+    }
+    $this->assertSame([
       [
         'href' => 'http://example.com/post/42',
         'meta' => [
@@ -89,37 +101,89 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
           'title' => 'Top rated',
         ],
       ],
-    ];
-    // Injects the first test user as the current user into the SUT.
-    $this->setCurrentUser($this->testUsers[1]);
-    $normalizer = new LinkCollectionNormalizer($this->testUsers[1]);
-    $normalizer->setSerializer($this->serializer);
-    $actual = $normalizer->normalize($link_collection);
-    $this->assertInstanceOf(CacheableNormalization::class, $actual);
-    // Check that the link object keys are prefixed by "related".
-    $normalized = $actual->getNormalization();
-    foreach (array_keys($normalized) as $key) {
-      $this->assertStringStartsWith('related', $key);
+    ], array_values($normalized));
+  }
+
+  /**
+   * Tests the link collection normalizer.
+   *
+   * @dataProvider linkAccessTestData
+   */
+  public function testLinkAccess($current_user_id, $edit_form_uid, $expected_link_keys, $expected_cache_contexts) {
+    // Get the current user and an edit-form URL.
+    foreach ($this->testUsers as $user) {
+      $uid = (int) $user->id();
+      if ($uid === $current_user_id) {
+        $current_user = $user;
+      }
+      if ($uid === $edit_form_uid) {
+        $edit_form_url = $user->toUrl('edit-form');
+      }
     }
-    $this->assertTrue(in_array('user', $actual->getCacheContexts()));
-    $this->assertSame($expected, array_values($normalized));
-    // Injects the second test user as the current user into the SUT.
-    $this->setCurrentUser($this->testUsers[0]);
-    $normalizer = new LinkCollectionNormalizer($this->testUsers[0]);
-    $normalizer->setSerializer($this->serializer);
-    // Add the edit-form link to the expected output since it should not be
-    // visible since the current user is the entity owner.
-    $actual = $normalizer->normalize($link_collection);
-    $this->assertInstanceOf(CacheableNormalization::class, $actual);
-    $normalized = $actual->getNormalization();
-    array_unshift($expected, [
-      'href' => $edit_form_url->toString(),
-      'meta' => [
-        'title' => 'Edit',
-      ],
+    assert(isset($current_user));
+    assert(isset($edit_form_url));
+
+    // Set the current user. The current user is used to check access to
+    // resources targeted by the link collection.
+    $this->setCurrentUser($current_user);
+
+    // Create a link collection to normalize.
+    //$link_context = new ResourceObject(new CacheableMetadata(), new ResourceType('n/a', 'n/a', 'n/a'), 'n/a', NULL, [], new LinkCollection([]));
+    $mock_resource_object = $this->createMock(ResourceObject::class);
+    $link_collection = new LinkCollection([
+      'edit-form' => new Link(new CacheableMetadata(), $edit_form_url, 'edit-form', ['title' => 'Edit']),
     ]);
-    $this->assertSame($expected, array_values($normalized));
-    $this->assertTrue(in_array('user', $actual->getCacheContexts()));
+    $link_collection = $link_collection->withContext($mock_resource_object);
+
+    // Normalize the collection.
+    $actual_normalization = $this->normalizer->normalize($link_collection);
+
+    // Check that it returned the expected value object.
+    $this->assertInstanceOf(CacheableNormalization::class, $actual_normalization);
+
+    // Get the raw normalized data.
+    $actual_data = $actual_normalization->getNormalization();
+    $this->assertIsArray($actual_data);
+
+    // Check that the expected links are present and unexpected links are
+    // present.
+    $actual_link_keys = array_keys($actual_data);
+    sort($expected_link_keys);
+    sort($actual_link_keys);
+    $this->assertSame($expected_link_keys, $actual_link_keys);
+
+    // Check that the expected cache contexts were added.
+    $actual_cache_contexts = $actual_normalization->getCacheContexts();
+    sort($expected_cache_contexts);
+    sort($actual_cache_contexts);
+    $this->assertSame($expected_cache_contexts, $actual_cache_contexts);
+
+    // If the edit-form link was present, check that it has the correct href.
+    if (isset($actual_data['edit-form'])) {
+      $this->assertSame($actual_data['edit-form'], [
+        'href' => $edit_form_url->setAbsolute()->toString(),
+        'meta' => [
+          'title' => 'Edit',
+        ],
+      ]);
+    }
+  }
+
+  public function linkAccessTestData() {
+    return [
+      'uid  2 can access the edit-form link because the account has permission to edit itself' => [
+        'uid' => 2,
+        'edit-form uid' => 2,
+        'expected link keys' => ['edit-form'],
+        'expected cache contexts' => ['user'],
+      ],
+      "uid  3 cannot access the edit-form link because the account doesn't have permission to edit another account" => [
+        'uid' => 3,
+        'edit-form uid' => 2,
+        'expected link keys' => [],
+        'expected cache contexts' => ['user'],
+      ],
+    ];
   }
 
 }
