@@ -152,16 +152,15 @@ class OEmbedForm extends AddFormBase {
   public function validateUrl(array &$form, FormStateInterface $form_state) {
     $url = $form_state->getValue('url');
     if ($url) {
-      // Create a temporary media entity to validate.
-      $source_field_value = [$url];
+      // Create a temporary media entity with the URL as the source field value,
+      // and validate the source field.
       $media_type = $this->getMediaType($form_state);
-      $media_storage = $this->entityTypeManager->getStorage('media');
       $source_field_name = $this->getSourceFieldName($media_type);
-      $temp = $this->createMediaFromValue($media_type, $media_storage, $source_field_name, $source_field_value);
-      $violations = $temp->validate();
-      $oembed_violations = $violations->getByField($source_field_name);
-      if (count($oembed_violations) > 0) {
-        $form_state->setErrorByName('url', $oembed_violations->get(0)->getMessage());
+      $violations = $this->createMediaFromValue($media_type, $this->entityTypeManager->getStorage('media'), $source_field_name, $url)
+        ->validate()
+        ->getByField($source_field_name);
+      if (count($violations) > 0) {
+        $form_state->setErrorByName('url', $violations[0]->getMessage());
       }
     }
   }
