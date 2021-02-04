@@ -2,7 +2,6 @@
 
 namespace Drupal\advisory_feed_test;
 
-use Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use GuzzleHttp\Client;
 
 /**
@@ -40,13 +39,13 @@ class AdvisoriesTestHttpClient extends Client {
    *
    * @param string $test_endpoint
    *   The test endpoint.
-   * @param bool $delete_tempstore
-   *   Whether to delete the temp store response.
+   * @param bool $delete_stored_response
+   *   Whether to delete stored feed response.
    */
-  public static function setTestEndpoint(string $test_endpoint, $delete_tempstore = FALSE):void {
+  public static function setTestEndpoint(string $test_endpoint, $delete_stored_response = FALSE):void {
     \Drupal::state()->set('advisories_test_endpoint', $test_endpoint);
-    if ($delete_tempstore) {
-      \Drupal::service('keyvalue.expirable')->get('system')->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
+    if ($delete_stored_response) {
+      \Drupal::service('system.sa_fetcher')->deleteStoredResponse();
     }
   }
 

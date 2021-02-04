@@ -26,7 +26,7 @@ final class SecurityAdvisoriesFetcher {
   /**
    * The key to use to store the advisories feed response.
    */
-  const ADVISORIES_RESPONSE_EXPIRABLE_KEY = 'advisories_response';
+  protected const ADVISORIES_RESPONSE_EXPIRABLE_KEY = 'advisories_response';
 
   /**
    * The 'update.settings' configuration.
@@ -150,6 +150,13 @@ final class SecurityAdvisoriesFetcher {
     }
 
     return $advisories;
+  }
+
+  /**
+   * Deletes the stored JSON feed response, if any.
+   */
+  public function deleteStoredResponse(): void {
+    $this->keyValueExpirable->delete(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
   }
 
   /**

@@ -4,7 +4,6 @@ namespace Drupal\system\EventSubscriber;
 
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -14,20 +13,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
 
   /**
-   * The update expirable key/value store.
+   * The security advisory fetcher service.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
+   * @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
    */
-  protected $keyValueExpirable;
+  protected $securityAdvisoriesFetcher;
 
   /**
    * Constructs a new ConfigSubscriber object.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_factory
-   *   The expirable key/value factory.
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $security_advisories_fetcher
+   *   The security advisory fetcher service.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_factory) {
-    $this->keyValueExpirable = $key_value_factory->get('system');
+  public function __construct(SecurityAdvisoriesFetcher $security_advisories_fetcher) {
+    $this->securityAdvisoriesFetcher = $security_advisories_fetcher;
   }
 
   /**
@@ -43,7 +42,7 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
       if ($original_interval && $saved_config->get('interval_hours') < $original_interval) {
         // If the new interval is less than the original interval, delete the
         // stored results.
-        $this->keyValueExpirable->delete(SecurityAdvisoriesFetcher::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
+        $this->securityAdvisoriesFetcher->deleteStoredResponse();
       }
     }
   }

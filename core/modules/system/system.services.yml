@@ -64,6 +64,6 @@ services:
     arguments: [ '@plugin.manager.mail', '@system.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation', '@language_manager' ]
   update.config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
-    arguments: [ '@keyvalue.expirable' ]
+    arguments: [ '@system.sa_fetcher' ]
     tags:
       - { name: event_subscriber }
