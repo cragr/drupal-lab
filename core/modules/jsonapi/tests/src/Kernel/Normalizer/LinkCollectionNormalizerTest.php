@@ -128,7 +128,6 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     $this->setCurrentUser($current_user);
 
     // Create a link collection to normalize.
-    //$link_context = new ResourceObject(new CacheableMetadata(), new ResourceType('n/a', 'n/a', 'n/a'), 'n/a', NULL, [], new LinkCollection([]));
     $mock_resource_object = $this->createMock(ResourceObject::class);
     $link_collection = new LinkCollection([
       'edit-form' => new Link(new CacheableMetadata(), $edit_form_url, 'edit-form', ['title' => 'Edit']),
