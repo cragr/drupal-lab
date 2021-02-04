@@ -722,8 +722,8 @@ function drupal_environment_initialize() {
 /**
  * Validates that a hostname (for example $_SERVER['HTTP_HOST']) is safe.
  *
- * @return
- *  TRUE if only containing valid characters, or FALSE otherwise.
+ * @return bool
+ *   TRUE if only containing valid characters, or FALSE otherwise.
  */
 function drupal_valid_http_host($host) {
   // Limit the length of the host name to 1000 bytes to prevent DoS attacks with
@@ -2651,6 +2651,18 @@ function _drupal_bootstrap_configuration() {
   // Initialize the configuration, including variables from settings.php.
   drupal_settings_initialize();
 
+  // Check trusted HTTP Host headers to protect against header attacks.
+  if (PHP_SAPI !== 'cli') {
+    $host_patterns = variable_get('trusted_host_patterns', array());
+    if (!empty($host_patterns)) {
+      if (!drupal_check_trusted_hosts($_SERVER['HTTP_HOST'], $host_patterns)) {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+        print 'The provided host name is not valid for this server.';
+        exit;
+      }
+    }
+  }
+
   // Sanitize unsafe keys from the request.
   DrupalRequestSanitizer::sanitize();
 }
@@ -3878,4 +3890,34 @@ function drupal_clear_opcode_cache($filepath) {
     // @see http://php.net/apc-delete-file
     @apc_delete_file($filepath);
   }
+}
+
+/**
+ * Check trusted HTTP Host headers to protect against header injection attacks.
+ *
+ * @param string $host
+ *   The host name.
+ * @param array $host_patterns
+ *   The array of trusted host patterns.
+ *
+ * @return bool
+ *   TRUE if the host is trusted, FALSE otherwise.
+ */
+function drupal_check_trusted_hosts($host, array $host_patterns) {
+  if (!empty($host_patterns)) {
+    // Trim and remove the port number from host, host is lowercase as per
+    // RFC 952/2181.
+    $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
+
+    foreach ($host_patterns as $pattern) {
+      $pattern = sprintf('{%s}i', $pattern);
+      if (preg_match($pattern, $host)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  return TRUE;
 }
