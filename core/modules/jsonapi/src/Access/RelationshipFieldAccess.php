@@ -17,7 +17,12 @@ use Symfony\Component\Routing\Route;
  * @todo Deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is
  * no replacement. JSON:API's access checkers are not part of its public API.
  *
+ * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
+ *   may change at any time and could break any dependencies on it.
+ *
  * @see https://www.drupal.org/node/3194641.
+ * @see https://www.drupal.org/project/drupal/issues/3032787
+ * @see jsonapi.api.php
  */
 class RelationshipFieldAccess implements AccessInterface {
 
