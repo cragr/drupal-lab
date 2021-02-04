@@ -492,6 +492,8 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     $handler_stack = HandlerStack::create($mock);
     $history = Middleware::history($this->history);
     $handler_stack->push($history);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->container = $this->container->get('kernel')->getContainer();
     $this->container->set('http_client', new Client(['handler' => $handler_stack]));
   }
 
