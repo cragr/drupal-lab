@@ -507,7 +507,7 @@ The security team lead is:
 Initiative coordinators
 -----------------------
 
-The Drupal Core Initiative coordinators oversee approved projects that
+The Drupal Core initiative coordinators oversee approved projects that
 re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
 their responsibilities. The initiative coordinators are:
