@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
@@ -153,12 +152,16 @@ class OEmbedForm extends AddFormBase {
   public function validateUrl(array &$form, FormStateInterface $form_state) {
     $url = $form_state->getValue('url');
     if ($url) {
-      try {
-        $resource_url = $this->urlResolver->getResourceUrl($url);
-        $this->resourceFetcher->fetchResource($resource_url);
-      }
-      catch (ResourceException $e) {
-        $form_state->setErrorByName('url', $e->getMessage());
+      // Create a temporary media entity to validate.
+      $source_field_value = [$url];
+      $media_type = $this->getMediaType($form_state);
+      $media_storage = $this->entityTypeManager->getStorage('media');
+      $source_field_name = $this->getSourceFieldName($media_type);
+      $temp = $this->createMediaFromValue($media_type, $media_storage, $source_field_name, $source_field_value);
+      $violations = $temp->validate();
+      $oembed_violations = $violations->getByField($source_field_name);
+      if (count($oembed_violations) > 0) {
+        $form_state->setErrorByName('url', $oembed_violations->get(0)->getMessage());
       }
     }
   }
