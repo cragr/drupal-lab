@@ -137,12 +137,8 @@ final class EmailNotifier {
     ];
     $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
     foreach ($notify_emails as $email) {
-      if ($target_user = user_load_by_mail($email)) {
-        $params['langcode'] = $target_user->getPreferredLangcode();
-      }
-      else {
-        $params['langcode'] = $default_langcode;
-      }
+      $users = $this->entityTypeManager->getStorage('user')->loadByProperties(['mail' => $email]);
+      $params['langcode'] = $users ? reset($users)->getPreferredLangcode() : $default_langcode;
       $this->mailManager->mail('system', 'advisory_notify', $email, $params['langcode'], $params);
     }
     $this->state->set(static::LAST_LINKS_STATE_KEY, $advisories_hash);
