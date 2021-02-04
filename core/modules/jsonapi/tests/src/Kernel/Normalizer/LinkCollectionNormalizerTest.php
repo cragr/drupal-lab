@@ -170,17 +170,17 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
 
   public function linkAccessTestData() {
     return [
-      'uid  2 can access the edit-form link because the account has permission to edit itself' => [
+      'the edit-form link is present because uid 2 has access to the targeted resource (its own edit form)' => [
         'uid' => 2,
         'edit-form uid' => 2,
         'expected link keys' => ['edit-form'],
-        'expected cache contexts' => ['user'],
+        'expected cache contexts' => ['url.site', 'user'],
       ],
-      "uid  3 cannot access the edit-form link because the account doesn't have permission to edit another account" => [
+      "the edit-form link is omitted because uid 3 doesn't have access to the targeted resource (another account's edit form)" => [
         'uid' => 3,
         'edit-form uid' => 2,
         'expected link keys' => [],
-        'expected cache contexts' => ['user'],
+        'expected cache contexts' => ['url.site', 'user'],
       ],
     ];
   }
