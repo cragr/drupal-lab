@@ -34,6 +34,9 @@
 .quickedit-form .form-item .error {
   border: 1px solid #eea0a0;
 }
+.quickedit-editing--padded {
+  padding: 5px;
+}
 
 /**
  * Default form styling overrides.
