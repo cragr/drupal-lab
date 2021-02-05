@@ -7,11 +7,6 @@
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend(
     /** @lends Drupal.quickedit.FieldDecorationView# */ {
       /**
-       * @type {null}
-       */
-      _widthAttributeIsEmpty: null,
-
-      /**
        * @type {object}
        */
       events: {
