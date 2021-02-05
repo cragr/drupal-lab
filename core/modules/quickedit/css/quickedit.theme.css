@@ -73,10 +73,6 @@
   -webkit-transition-delay: 0.2s;
   transition-delay: 0.2s;
 }
-.quickedit-animate-disable-width {
-  -webkit-transition: width 0s;
-  transition: width 0s;
-}
 .quickedit-animate-only-visibility {
   -webkit-transition: opacity 0.2s ease;
   transition: opacity 0.2s ease;
