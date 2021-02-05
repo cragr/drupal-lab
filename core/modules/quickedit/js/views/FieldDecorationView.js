@@ -7,7 +7,6 @@
 
 (function ($, Backbone, Drupal) {
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend({
-    _widthAttributeIsEmpty: null,
     events: {
       'mouseenter.quickedit': 'onMouseEnter',
       'mouseleave.quickedit': 'onMouseLeave',
