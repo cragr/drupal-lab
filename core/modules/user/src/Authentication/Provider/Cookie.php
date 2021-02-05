@@ -52,15 +52,16 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
    *   The session configuration.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   * @param \Drupal\Core\Messenger\MessengerInterface|null $messenger
    *   The messenger.
    */
-  public function __construct(SessionConfigurationInterface $session_configuration, Connection $connection, MessengerInterface $messenger) {
+  public function __construct(SessionConfigurationInterface $session_configuration, Connection $connection, MessengerInterface $messenger = NULL) {
     $this->sessionConfiguration = $session_configuration;
     $this->connection = $connection;
     $this->messenger = $messenger;
     if ($this->messenger === NULL) {
       @trigger_error('The MessengerInterface must be passed to ' . __NAMESPACE__ . '\Cookie::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $this->messenger = \Drupal::messenger();
     }
   }
 
