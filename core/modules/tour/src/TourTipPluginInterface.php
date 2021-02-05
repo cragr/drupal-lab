@@ -2,8 +2,6 @@
 
 namespace Drupal\tour;
 
-@trigger_error(__NAMESPACE__ . '\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ' . __NAMESPACE__ . '\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234', E_USER_DEPRECATED);
-
 /**
  * Defines an interface for tour items.
  *
@@ -12,7 +10,7 @@ namespace Drupal\tour;
  * @see \Drupal\tour\TipPluginManager
  * @see plugin_api
  */
-interface TipPluginInterface {
+interface TourTipPluginInterface {
 
   /**
    * Returns id of the tip.
@@ -39,14 +37,6 @@ interface TipPluginInterface {
   public function getWeight();
 
   /**
-   * Returns an array of attributes for the tip wrapper.
-   *
-   * @return array
-   *   An array of classes and values.
-   */
-  public function getAttributes();
-
-  /**
    * Used for returning values by key.
    *
    * @var string
@@ -69,11 +59,32 @@ interface TipPluginInterface {
   public function set($key, $value);
 
   /**
-   * Returns a renderable array.
+   * The selector the tour tip will attach to.
    *
-   * @return array
-   *   A renderable array.
+   * @return null|string
+   *   A selector string, or null for an unattached tip.
    */
-  public function getOutput();
+  public function getSelector();
+
+  /**
+   * Provides the body content of the tooltip.
+   *
+   * This is mapped to the `text` property of the Shepherd tooltip options.
+   *
+   * @return string
+   *   The body content of the tooltip.
+   */
+  public function getBody();
+
+  /**
+   * The title of the tour tip.
+   *
+   * This is what is displayed in the tip's header. It may differ from the tip
+   * label, which is defined in the tip's configuration.
+   *
+   * @return string
+   *   The title.
+   */
+  public function getTitle();
 
 }

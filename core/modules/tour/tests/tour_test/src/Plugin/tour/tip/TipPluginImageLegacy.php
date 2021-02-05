@@ -2,20 +2,21 @@
 
 namespace Drupal\tour_test\Plugin\tour\tip;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
-use Drupal\tour\TourTipPluginBase;
+use Drupal\tour\TipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays an image as a tip.
  *
  * @Tip(
- *   id = "image",
- *   title = @Translation("Image")
+ *   id = "image_legacy",
+ *   title = @Translation("Image Legacy")
  * )
  */
-class TipPluginImage extends TourTipPluginBase implements ContainerFactoryPluginInterface {
+class TipPluginImageLegacy extends TipPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The url which is used for the image in this Tip.
@@ -67,16 +68,32 @@ class TipPluginImage extends TourTipPluginBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function getBody() {
+  public function getConfigurationOrNot() {
     $image = [
       '#theme' => 'image',
       '#uri' => $this->get('url'),
       '#alt' => $this->get('alt'),
     ];
 
-    $rendered_image = \Drupal::service('renderer')->renderPlain($image);
-    $image_string = $rendered_image->__toString();
-    return trim($image_string);
+    return [
+      'title' => Html::escape($this->get('label')),
+      'body' => $this->token->replace(\Drupal::service('renderer')->renderPlain($image)),
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOutput() {
+    $prefix = '<h2 class="tour-tip-label" id="tour-tip-' . $this->get('ariaId') . '-label">' . Html::escape($this->get('label')) . '</h2>';
+    $prefix .= '<p class="tour-tip-image" id="tour-tip-' . $this->get('ariaId') . '-contents">';
+    return [
+      '#prefix' => $prefix,
+      '#theme' => 'image',
+      '#uri' => $this->get('url'),
+      '#alt' => $this->get('alt'),
+      '#suffix' => '</p>',
+    ];
   }
 
 }

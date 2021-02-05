@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Backbone, Drupal, document) {
+(function ($, Backbone, Drupal, settings, document, Shepherd) {
   var queryString = decodeURI(window.location.search);
   Drupal.behaviors.tour = {
     attach: function attach(context) {
@@ -15,9 +15,13 @@
           el: $(context).find('#toolbar-tab-tour'),
           model: model
         });
-        model.on('change:isActive', function (model, isActive) {
+        model.on('change:isActive', function (tourModel, isActive) {
           $(document).trigger(isActive ? 'drupalTourStarted' : 'drupalTourStopped');
-        }).set('tour', $(context).find('ol#tour'));
+        });
+
+        if (settings.tour) {
+          model.set('tour', settings.tour);
+        }
 
         if (/tour=?/i.test(queryString)) {
           model.set('isActive', true);
@@ -47,36 +51,62 @@
     render: function render() {
       this.$el.toggleClass('hidden', this._getTour().length === 0);
       var isActive = this.model.get('isActive');
-      this.$el.find('button').toggleClass('is-active', isActive).prop('aria-pressed', isActive);
+      this.$el.find('button').toggleClass('is-active', isActive).attr('aria-pressed', isActive);
       return this;
     },
     toggleTour: function toggleTour() {
       if (this.model.get('isActive')) {
-        var $tour = this._getTour();
+        this._removeIrrelevantTourItems(this._getTour());
 
-        this._removeIrrelevantTourItems($tour, this._getDocument());
-
+        var tourItems = this.model.get('tour');
         var that = this;
-        var close = Drupal.t('Close');
 
-        if ($tour.find('li').length) {
-          $tour.joyride({
-            autoStart: true,
-            postRideCallback: function postRideCallback() {
-              that.model.set('isActive', false);
-            },
-            template: {
-              link: "<a href=\"#close\" class=\"joyride-close-tip\" aria-label=\"".concat(close, "\">&times;</a>"),
-              button: '<a href="#" class="button button--primary joyride-next-tip"></a>'
-            }
+        if (tourItems.length) {
+          var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
+          shepherdTour.on('cancel', function () {
+            that.model.set('isActive', false);
           });
+          shepherdTour.on('complete', function () {
+            that.model.set('isActive', false);
+          });
+          tourItems.forEach(function (step, index) {
+            var tourItemOptions = {
+              title: step.title,
+              text: function text() {
+                return "<p>".concat(step.body, "</p><div class=\"tour-progress tp-js\">").concat(step.counter, "</div>");
+              },
+              attachTo: {
+                element: step.selector,
+                on: step.location ? step.location : 'bottom'
+              },
+              buttons: [{
+                classes: 'button button--primary',
+                text: step.cancelText ? step.cancelText : Drupal.t('Next'),
+                action: step.cancelText ? shepherdTour.cancel : shepherdTour.next
+              }],
+              classes: step.classes,
+              joyride_content_container_name: step.joyride_content_container_name,
+              index: index
+            };
+
+            if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
+              tourItemOptions.when = {
+                show: function show() {
+                  Drupal.tour.convertToJoyrideMarkup(shepherdTour);
+                }
+              };
+            }
+
+            shepherdTour.addStep(tourItemOptions);
+          });
+          shepherdTour.start();
           this.model.set({
             isActive: true,
-            activeTour: $tour
+            activeTour: shepherdTour
           });
         }
       } else {
-        this.model.get('activeTour').joyride('destroy');
+        this.model.get('activeTour').cancel();
         this.model.set({
           isActive: false,
           activeTour: []
@@ -91,48 +121,29 @@
     _getTour: function _getTour() {
       return this.model.get('tour');
     },
-    _getDocument: function _getDocument() {
-      return $(document);
-    },
-    _removeIrrelevantTourItems: function _removeIrrelevantTourItems($tour, $document) {
-      var removals = false;
+    _removeIrrelevantTourItems: function _removeIrrelevantTourItems(tourItems) {
       var tips = /tips=([^&]+)/.exec(queryString);
-      $tour.find('li').each(function () {
-        var $this = $(this);
-        var itemId = $this.attr('data-id');
-        var itemClass = $this.attr('data-class');
-
-        if (tips && !$(this).hasClass(tips[1])) {
-          removals = true;
-          $this.remove();
-          return;
+      var filteredTour = tourItems.filter(function (tourItem) {
+        if (tips && tourItem.class.indexOf(tips[1]) === -1) {
+          return false;
         }
 
-        if (!itemId && !itemClass || itemId && $document.find("#".concat(itemId)).length || itemClass && $document.find(".".concat(itemClass)).length) {
-          return;
-        }
-
-        removals = true;
-        $this.remove();
+        return !(tourItem.selector && !document.querySelector(tourItem.selector));
       });
 
-      if (removals) {
-        var total = $tour.find('li').length;
-
-        if (!total) {
-          this.model.set({
-            tour: []
+      if (tourItems.length !== filteredTour.length) {
+        filteredTour.forEach(function (filteredTourItem, filteredTourItemId) {
+          filteredTour[filteredTourItemId].counter = Drupal.t('!tour_item of !total', {
+            '!tour_item': filteredTourItemId + 1,
+            '!total': filteredTour.length
           });
-        }
 
-        $tour.find('li').each(function (index) {
-          var progress = Drupal.t('!tour_item of !total', {
-            '!tour_item': index + 1,
-            '!total': total
-          });
-          $(this).find('.tour-progress').text(progress);
-        }).eq(-1).attr('data-text', Drupal.t('End tour'));
+          if (filteredTourItemId === filteredTour.length - 1) {
+            filteredTour[filteredTourItemId].cancelText = Drupal.t('End tour');
+          }
+        });
+        this.model.set('tour', filteredTour);
       }
     }
   });
-})(jQuery, Backbone, Drupal, document);
+})(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);
