@@ -35,6 +35,7 @@ class TourViewBuilder extends EntityViewBuilder {
           'tip-' . Html::cleanCssIdentifier($tip->id()),
         ];
 
+<<<<<<< HEAD
         $selector = NULL;
         $location = NULL;
 
@@ -46,13 +47,25 @@ class TourViewBuilder extends EntityViewBuilder {
           $output = [
             'body' => $body,
             'title' => $tip->getTitle(),
+=======
+        // @todo remove conditional in https://drupal.org/node/3195193, as all
+        //   instances will already be instances of TourTipPluginInterface.
+        if ($tip instanceof TourTipPluginInterface) {
+          $output = [
+            'body' => $tip->getBody(),
+            'title' => $tip->getTitle(),
+            'location' => $tip->getLocation(),
+>>>>>>> 60a9cab915... no
             // @todo this property can be removed when the Stable9 theme is
             //   removed from core. It only exists to provide Joyride backwards
             //   compatibility.
             'joyride_content_container_name' => $tip->getJoyrideContentContainerName(),
           ];
+<<<<<<< HEAD
 
           $location = $tip->getLocation();
+=======
+>>>>>>> 60a9cab915... no
           $selector = $tip->getSelector();
 
         }
@@ -67,6 +80,7 @@ class TourViewBuilder extends EntityViewBuilder {
           // plugin used.
           $classes[] = 'tip-uses-getoutput';
 
+<<<<<<< HEAD
           $selector = $tip->get('selector');
 
           // If a tour using the deprecated TipPluginInterface was installed
@@ -99,6 +113,16 @@ class TourViewBuilder extends EntityViewBuilder {
               'right' => 'left',
             ];
             $location = $location_swap[$location];
+=======
+          if (!empty($attributes['data-class'])) {
+            $selector = ".{$attributes['data-class']}";
+          }
+          elseif (!empty($attributes['data-id'])) {
+            $selector = "#{$attributes['data-id']}";
+          }
+          else {
+            $selector = NULL;
+>>>>>>> 60a9cab915... no
           }
         }
 
@@ -106,7 +130,10 @@ class TourViewBuilder extends EntityViewBuilder {
           $items[] = [
             'id' => $tip->id(),
             'selector' => $selector,
+<<<<<<< HEAD
             'location' => $location,
+=======
+>>>>>>> 60a9cab915... no
             'module' => $tourEntity->getModule(),
             'type' => $tip->getPluginId(),
             'counter' => t('@tour_item of @total', [

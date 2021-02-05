@@ -71,9 +71,15 @@
           });
           tourItems.forEach(function (step, index) {
             var tourItemOptions = {
+<<<<<<< HEAD
               title: step.title ? Drupal.checkPlain(step.title) : null,
               text: function text() {
                 return "<p>".concat(step.body, "</p><div class=\"tour-progress\">").concat(step.counter, "</div>");
+=======
+              title: step.title,
+              text: function text() {
+                return "<p>".concat(step.body, "</p><div class=\"tour-progress tp-js\">").concat(step.counter, "</div>");
+>>>>>>> 60a9cab915... no
               },
               attachTo: {
                 element: step.selector,
