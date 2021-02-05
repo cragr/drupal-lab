@@ -141,3 +141,11 @@
   top: 0;
   left: 0;
 }
+
+/* In Joyride, display: block is added as an inline style. */
+.shepherd-element.joyride-tip-guide {
+  display: block;
+}
+.shepherd-element.joyride-tip-guide[hidden] {
+  display: none;
+}
