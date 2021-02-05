@@ -4,6 +4,8 @@ namespace Drupal\tour;
 
 use Drupal\Core\Plugin\PluginBase;
 
+@trigger_error(__NAMESPACE__ . '\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ' . __NAMESPACE__ . '\TourTipPluginBase instead. See https://www.drupal.org/node/3195234', E_USER_DEPRECATED);
+
 /**
  * Defines a base tour item implementation.
  *

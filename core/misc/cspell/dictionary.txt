@@ -648,6 +648,7 @@ getfile
 gethttpclient
 getlist
 getmachine
+getoutput
 getview
 gids
 gifs
