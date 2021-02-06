@@ -347,7 +347,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @return \Drupal\Core\Image\ImageFactory
    *   The image factory.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getImageFactory() {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
@@ -360,7 +360,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @return string
    *   The Drupal private key.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getPrivateKey() {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
@@ -375,7 +375,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *
    * @throws \RuntimeException
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getHashSalt() {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
@@ -396,7 +396,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *   The given path if this image style doesn't change its extension, or the
    *   path with the added extension if it does.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function addExtension($path) {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
@@ -416,7 +416,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @return string
    *   'public', 'private' or any other file scheme defined as the default.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function fileDefaultScheme() {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
@@ -429,7 +429,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @return \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    *   The stream wrapper manager service
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getStreamWrapperManager() {
     @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);

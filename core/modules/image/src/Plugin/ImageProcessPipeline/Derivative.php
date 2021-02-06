@@ -140,7 +140,7 @@ class Derivative extends ImageProcessPipelineBase {
    *   TRUE if the image is supported, FALSE otherwise.
    */
   public function isSourceImageProcessable(): bool {
-    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABILITY);
+    $this->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE);
     return $this->getVariable('isSourceImageProcessable');
   }
 

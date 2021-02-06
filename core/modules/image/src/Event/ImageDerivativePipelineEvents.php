@@ -24,11 +24,11 @@ final class ImageDerivativePipelineEvents {
    * @Event
    *
    * @see \Drupal\image\Plugin\ImageProcessPipeline\Derivative::isSourceImageProcessable()
-   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveSourceImageProcessability()
+   * @see \Drupal\image\EventSubscriber\ImageDerivativeSubscriber::resolveSourceImageProcessable()
    *
    * @var string
    */
-  const RESOLVE_SOURCE_IMAGE_PROCESSABILITY = 'image.pipeline.derivative.resolve_source_image_processability';
+  const RESOLVE_SOURCE_IMAGE_PROCESSABLE = 'image.pipeline.derivative.resolve_source_image_processable';
 
   /**
    * Name of the event fired to determine the format of the derivative image.

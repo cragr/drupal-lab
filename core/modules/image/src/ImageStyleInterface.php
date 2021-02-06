@@ -41,7 +41,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return string
    *   The URI to the image derivative for this style.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function buildUri($uri);
 
@@ -60,7 +60,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @see \Drupal\image\Controller\ImageStyleDownloadController::deliver()
    * @see file_url_transform_relative()
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function buildUrl($path, $clean_urls = NULL);
 
@@ -77,7 +77,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   An eight-character token which can be used to protect image style
    *   derivatives against denial-of-service attacks.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function getPathToken($uri);
 
@@ -107,7 +107,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   TRUE if an image derivative was generated, or FALSE if the image
    *   derivative could not be generated.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function createDerivative($original_uri, $derivative_uri);
 
@@ -133,7 +133,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *
    * @see ImageEffectInterface::transformDimensions
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function transformDimensions(array &$dimensions, $uri);
 
@@ -147,7 +147,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   The extension the derivative image will have, given the extension of the
    *   original.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function getDerivativeExtension($extension);
 
@@ -200,7 +200,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return bool
    *   TRUE if the image is supported, FALSE otherwise.
    *
-   * @deprecated since version 9.x.x and will be removed in y.y.y.
+   * #deprecated since version 9.x.x and will be removed in y.y.y.
    */
   public function supportsUri($uri);
 

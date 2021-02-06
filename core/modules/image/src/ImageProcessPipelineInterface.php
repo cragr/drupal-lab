@@ -87,7 +87,7 @@ interface ImageProcessPipelineInterface extends ContainerFactoryPluginInterface,
   /**
    * Dispatches an event to be executed on the pipeline.
    *
-   * The evnt envelope will contain the pipeline itself as the subject, and any
+   * The event envelope will contain the pipeline itself as the subject, and any
    * additional argument specified.
    *
    * @param string $event

@@ -134,7 +134,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     return [
       ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_FORMAT => 'resolveSourceImageFormat',
-      ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABILITY => 'resolveSourceImageProcessability',
+      ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE => 'resolveSourceImageProcessable',
       ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_FORMAT => 'resolveDerivativeImageFormat',
       ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_DIMENSIONS => 'resolveDerivativeImageDimensions',
       ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_URI => 'resolveDerivativeImageUri',
@@ -172,7 +172,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
    * @param \Drupal\image\Event\ImageProcessEvent $event
    *   The image process event, carrying the process pipeline object.
    */
-  public function resolveSourceImageProcessability(ImageProcessEvent $event): void {
+  public function resolveSourceImageProcessable(ImageProcessEvent $event): void {
     $pipeline = $event->getPipeline();
 
     // Determine the image toolkit.
@@ -210,7 +210,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     $pipeline = $event->getPipeline();
 
     // Ensure we can process the source image.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABILITY);
+    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE);
     if (!$pipeline->getVariable('isSourceImageProcessable')) {
       throw new ImageProcessException('Cannot determine derivative image format, source image not processable');
     }
@@ -243,7 +243,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
 
     // It's still possible to calculate dimensions even if the image at source
     // is not processable but we have input dimensions.
-    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABILITY);
+    $pipeline->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE);
     if (!$pipeline->getVariable('isSourceImageProcessable') && (!$pipeline->hasVariable('sourceImageWidth') || !$pipeline->hasVariable('sourceImageHeight'))) {
       return;
     }
@@ -335,10 +335,10 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
     $suppress_itok_output = $this->configFactory->get('image.settings')->get('suppress_itok_output');
     if (!$suppress_itok_output) {
       // The sourceUri property can be either a relative path or a full URI.
-      $original_uri_normalised = $this->streamWrapperManager->getScheme($pipeline->getVariable('sourceImageUri')) ? $this->streamWrapperManager->normalizeUri($pipeline->getVariable('sourceImageUri')) : file_build_uri($pipeline->getVariable('sourceImageUri'));
-      $cryptable_uri = $pipeline->getVariable('derivativeImageFileExtension') === $pipeline->getVariable('sourceImageFileExtension') ? $original_uri_normalised : $original_uri_normalised . '.' . $pipeline->getVariable('derivativeImageFileExtension');
+      $original_uri_normalized = $this->streamWrapperManager->getScheme($pipeline->getVariable('sourceImageUri')) ? $this->streamWrapperManager->normalizeUri($pipeline->getVariable('sourceImageUri')) : file_build_uri($pipeline->getVariable('sourceImageUri'));
+      $encryptable_uri = $pipeline->getVariable('derivativeImageFileExtension') === $pipeline->getVariable('sourceImageFileExtension') ? $original_uri_normalized : $original_uri_normalized . '.' . $pipeline->getVariable('derivativeImageFileExtension');
       // Return the first 8 characters.
-      $token_query = [IMAGE_DERIVATIVE_TOKEN => substr(Crypt::hmacBase64($pipeline->getVariable('imageStyle')->id() . ':' . $cryptable_uri, $this->privateKey . Settings::getHashSalt()), 0, 8)];
+      $token_query = [IMAGE_DERIVATIVE_TOKEN => substr(Crypt::hmacBase64($pipeline->getVariable('imageStyle')->id() . ':' . $encryptable_uri, $this->privateKey . Settings::getHashSalt()), 0, 8)];
       $pipeline->setVariable('derivativeImageUrlProtection', $token_query);
     }
   }
@@ -448,7 +448,7 @@ class ImageDerivativeSubscriber implements EventSubscriberInterface {
    */
   public function buildDerivativeImage(ImageProcessEvent $event): void {
     $event->getPipeline()
-      ->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABILITY)
+      ->dispatch(ImageDerivativePipelineEvents::RESOLVE_SOURCE_IMAGE_PROCESSABLE)
       ->dispatch(ImageDerivativePipelineEvents::LOAD_SOURCE_IMAGE)
       ->dispatch(ImageDerivativePipelineEvents::APPLY_IMAGE_STYLE)
       ->dispatch(ImageDerivativePipelineEvents::SAVE_DERIVATIVE_IMAGE);
