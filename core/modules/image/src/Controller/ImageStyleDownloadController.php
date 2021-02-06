@@ -53,7 +53,7 @@ class ImageStyleDownloadController extends FileDownloadController {
   protected $logger;
 
   /**
-   * File system service,
+   * File system service.
    *
    * @var \Drupal\Core\File\FileSystemInterface
    */

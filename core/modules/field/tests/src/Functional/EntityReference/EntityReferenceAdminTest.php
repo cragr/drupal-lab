@@ -172,7 +172,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertText('There are no entities matching "Test"');
+    $this->assertText('There are no content items matching "Test"');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -182,7 +182,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertText('Multiple entities match this reference;');
+    $this->assertText('Multiple content items match this reference;');
     $this->assertText($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertText($node2->getTitle() . ' (' . $node2->id() . ')');
     $this->assertText('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
@@ -335,13 +335,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);
     // Expect that the target bundle has been saved in the backend.
-    $this->assertEqual($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+    $this->assertEqual($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the other bundle. Field config should not be affected.
     $vocabularies[0]->delete();
     $field_config = FieldConfig::load($field_id);
     $this->assertTrue($field_config->getSetting('handler_settings')['auto_create']);
-    $this->assertIdentical($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+    $this->assertSame($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the bundle set for entity auto-creation. Auto-created settings
     // should be reset (no auto-creation).
@@ -400,7 +400,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       });
       sort($options);
       sort($expected_options);
-      $this->assertIdentical($options, $expected_options);
+      $this->assertSame($expected_options, $options);
     }
     else {
       $this->fail('Unable to find field ' . $name);

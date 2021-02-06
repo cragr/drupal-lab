@@ -4,6 +4,7 @@ namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
+use GuzzleHttp\Exception\GuzzleException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
@@ -162,6 +163,21 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testSubsequentContainerIsolation() {
     $this->enableModules(['system', 'user']);
     $this->assertNull($this->installConfig('user'));
+  }
+
+  /**
+   * Tests that an outbound HTTP request can be performed inside of a test.
+   */
+  public function testOutboundHttpRequest() {
+    // The middleware test.http_client.middleware calls drupal_generate_test_ua
+    // which checks the DRUPAL_TEST_IN_CHILD_SITE constant, that is not defined
+    // in Kernel tests.
+    try {
+      $this->container->get('http_client')->get('http://example.com');
+    }
+    catch (GuzzleException $e) {
+      // Ignore any HTTP errors.
+    }
   }
 
   /**
@@ -336,6 +352,36 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testAssertIdenticalObject() {
     $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
     $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertNotEqual.
+   *
+   * @group legacy
+    */
+  public function testAssertNotEqual() {
+    $this->expectDeprecation('AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738');
+    $this->assertNotEqual('foo', 'bar');
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertIdentical.
+   *
+   * @group legacy
+    */
+  public function testAssertIdentical() {
+    $this->expectDeprecation('AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738');
+    $this->assertIdentical('foo', 'foo');
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertNotIdentical.
+   *
+   * @group legacy
+    */
+  public function testAssertNotIdentical() {
+    $this->expectDeprecation('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738');
+    $this->assertNotIdentical('foo', 'bar');
   }
 
   /**
