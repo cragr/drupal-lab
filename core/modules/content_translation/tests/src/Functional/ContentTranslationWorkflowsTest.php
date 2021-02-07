@@ -348,7 +348,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     if ($expected_status['edit_translation'] == 200) {
       $this->drupalGet($translations_url);
       $this->clickLink('Edit', intval($expected_status['edit'] == 200));
-      $this->assertSession->addressEquals($edit_translation_url->toString());
+      $this->assertSession()->addressEquals($edit_translation_url->toString());
       // Check that the translation form does not contain shared elements.
       $this->assertNoSharedElements();
     }
@@ -377,7 +377,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     if ($expected_status['delete_translation'] == 200) {
       $this->drupalGet($translations_url);
       $this->clickLink('Delete');
-      $this->assertSession->addressEquals($delete_translation_url->toString());
+      $this->assertSession()->addressEquals($delete_translation_url->toString());
     }
     else {
       $this->drupalGet($delete_translation_url);
