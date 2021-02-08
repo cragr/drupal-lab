@@ -9,7 +9,7 @@ use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Utility\ProjectInfo;
-use Drupal\update\ModuleVersion;
+use Drupal\system\ExtensionVersion;
 use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 
@@ -171,7 +171,7 @@ final class SecurityAdvisoriesFetcher {
    */
   protected function matchesExistingVersion(SecurityAdvisory $sa): bool {
     if ($existing_version = $this->getProjectExistingVersion($sa)) {
-      $existing_project_version = ModuleVersion::createFromVersionString($existing_version);
+      $existing_project_version = ExtensionVersion::createFromVersionString($existing_version);
       $insecure_versions = $sa->getInsecureVersions();
       // If a site is running a dev version of Drupal core or an extension we
       // cannot be certain if their version has the security vulnerabilities
@@ -184,7 +184,7 @@ final class SecurityAdvisoriesFetcher {
       if ($existing_project_version->getVersionExtra() === 'dev') {
         foreach ($insecure_versions as $insecure_version) {
           try {
-            $insecure_project_version = ModuleVersion::createFromVersionString($insecure_version);
+            $insecure_project_version = ExtensionVersion::createFromVersionString($insecure_version);
           }
           catch (\UnexpectedValueException $exception) {
             // Any invalid versions should not stop the evaluating of

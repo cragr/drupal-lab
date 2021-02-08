@@ -1,22 +1,18 @@
 <?php
 
-namespace Drupal\update;
+namespace Drupal\system;
 
 /**
- * Provides a module version value object.
- *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. This is an
- *   internal class and should not be used outside of Drupal core so a
- *   replacement is not available.
+ * Provides a extension version value object.
  *
  * @internal
  *
  * @see https://www.drupal.org/drupalorg/docs/apis/update-status-xml.
  */
-final class ModuleVersion {
+final class ExtensionVersion {
 
   /**
-   * The '8.x-' prefix is used on contrib module version numbers.
+   * The '8.x-' prefix is used on contrib extension version numbers.
    *
    * @var string
    */
@@ -39,7 +35,7 @@ final class ModuleVersion {
   /**
    * The version extra string.
    *
-   * For example, if the module version is '2.0.3-alpha1', then the version
+   * For example, if the extension version is '2.0.3-alpha1', then the version
    * extra string is 'alpha1'.
    *
    * @var string|null
@@ -47,13 +43,13 @@ final class ModuleVersion {
   protected $versionExtra;
 
   /**
-   * Constructs a module version object from a version string.
+   * Constructs a extension version object from a version string.
    *
    * @param string $version_string
    *   The version string.
    *
-   * @return \Drupal\update\ModuleVersion
-   *   The module version instance.
+   * @return \Drupal\system\ExtensionVersion
+   *   The extension version instance.
    */
   public static function createFromVersionString($version_string) {
     $original_version = $version_string;
@@ -66,7 +62,7 @@ final class ModuleVersion {
       if ($dot_x_position === 1 || $dot_x_position === 2) {
         $after_core_prefix = explode('.x-', $version_string)[1];
         if ($after_core_prefix !== 'dev') {
-          throw new \UnexpectedValueException("Unexpected version core prefix in $version_string. The only core prefix expected in \Drupal\update\ModuleVersion is: 8.x-");
+          throw new \UnexpectedValueException("Unexpected version core prefix in $version_string. The only core prefix expected in \Drupal\system\ExtensionVersion is: 8.x-");
         }
       }
     }
@@ -94,7 +90,7 @@ final class ModuleVersion {
   }
 
   /**
-   * Constructs a ModuleVersion object.
+   * Constructs a ExtensionVersion object.
    *
    * @param string $major_version
    *   The major version.
@@ -110,7 +106,7 @@ final class ModuleVersion {
   }
 
   /**
-   * Constructs a module version object from a support branch.
+   * Constructs a ExtensionVersion version object from a support branch.
    *
    * This can be used to determine the major version of the branch.
    * ::getVersionExtra() will always return NULL for branches.
@@ -118,8 +114,8 @@ final class ModuleVersion {
    * @param string $branch
    *   The support branch.
    *
-   * @return \Drupal\update\ModuleVersion
-   *   The module version instance.
+   * @return \Drupal\system\ExtensionVersion
+   *   The ExtensionVersion instance.
    */
   public static function createFromSupportBranch($branch) {
     if (substr($branch, -1) !== '.') {
