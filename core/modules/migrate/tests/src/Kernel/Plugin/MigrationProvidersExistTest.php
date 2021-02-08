@@ -7,7 +7,7 @@ use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 
-// cspell:ignore imagefield optionwidgets userreference
+// cspell:ignore imagefield optionwidgets
 
 /**
  * Tests that modules exist for all source and destination plugins.
@@ -138,6 +138,14 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
       ],
       'entityreference' => [
         'source_module' => 'entityreference',
+        'destination_module' => 'core',
+      ],
+      'node_reference' => [
+        'source_module' => 'node_reference',
+        'destination_module' => 'core',
+      ],
+      'user_reference' => [
+        'source_module' => 'user_reference',
         'destination_module' => 'core',
       ],
     ];
