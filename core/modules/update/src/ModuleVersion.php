@@ -30,13 +30,6 @@ final class ModuleVersion {
   protected $majorVersion;
 
   /**
-   * The minor version.
-   *
-   * @var string|null
-   */
-  protected $minorVersion;
-
-  /**
    * The version extra string.
    *
    * For example, if the module version is '2.0.3-alpha1', then the version
@@ -73,12 +66,6 @@ final class ModuleVersion {
     $version_parts = explode('.', $version_string);
     $major_version = $version_parts[0];
     $version_parts_count = count($version_parts);
-    if ($version_parts_count === 2) {
-      $minor_version = NULL;
-    }
-    elseif ($version_parts_count === 3) {
-      $minor_version = $version_parts[1];
-    }
     $last_part_split = explode('-', $version_parts[count($version_parts) - 1]);
     $version_extra = count($last_part_split) === 1 ? NULL : $last_part_split[1];
     if ($version_parts_count > 3 || $version_parts_count < 2
@@ -90,7 +77,7 @@ final class ModuleVersion {
        || (!is_numeric($last_part_split[0]) && $last_part_split !== 'x' && $version_extra !== 'dev')) {
       throw new \UnexpectedValueException("Unexpected version number in: $original_version");
     }
-    return new static($major_version, $minor_version, $version_extra);
+    return new static($major_version, $version_extra);
   }
 
   /**
@@ -98,14 +85,11 @@ final class ModuleVersion {
    *
    * @param string $major_version
    *   The major version.
-   * @param string|null $minor_version
-   *   The minor version.
    * @param string|null $version_extra
    *   The extra version string.
    */
-  private function __construct(string $major_version, ?string $minor_version, ?string $version_extra) {
+  private function __construct($major_version, $version_extra) {
     $this->majorVersion = $major_version;
-    $this->minorVersion = $minor_version;
     $this->versionExtra = $version_extra;
   }
 
@@ -136,16 +120,6 @@ final class ModuleVersion {
    */
   public function getMajorVersion() {
     return $this->majorVersion;
-  }
-
-  /**
-   * Gets the minor version.
-   *
-   * @return string|null
-   *   The minor version.
-   */
-  public function getMinorVersion(): ?string {
-    return $this->minorVersion;
   }
 
   /**

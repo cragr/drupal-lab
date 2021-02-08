@@ -72,7 +72,7 @@ class UpdateReportTest extends KernelTestBase {
     $this->assertRaw('Failed to fetch available update data:<ul><li>See <a href="https://www.drupal.org/node/3170647">PHP OpenSSL requirements</a> in the Drupal.org handbook for possible reasons this could happen and what you can do to resolve them.</li><li>Check your local system logs for additional error messages.</li></ul>');
 
     \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.report');
-    $variables = ['fetch_type' => 'update'];
+    $variables = [];
     template_preprocess_update_fetch_error_message($variables);
     $this->assertArrayHasKey('error_message', $variables);
     $this->assertEquals('Failed to fetch available update data:', $variables['error_message']['message']['#markup']);
@@ -101,7 +101,7 @@ class UpdateReportTest extends KernelTestBase {
     $this->render($build);
     $this->assertRaw('Failed to fetch available update data:<ul><li>See <a href="https://www.drupal.org/node/3170647">PHP OpenSSL requirements</a> in the Drupal.org handbook for possible reasons this could happen and what you can do to resolve them.</li><li>Check your local system logs for additional error messages.</li></ul>');
 
-    $variables = ['fetch_type' => 'update'];
+    $variables = [];
     template_preprocess_update_fetch_error_message($variables);
     $this->assertArrayHasKey('error_message', $variables);
     $this->assertEquals('Failed to fetch available update data:', $variables['error_message']['message']['#markup']);
@@ -118,7 +118,7 @@ class UpdateReportTest extends KernelTestBase {
     $this->assertRaw(Link::fromTextAndUrl('your local system logs', $dblog_url)->toString());
     $this->assertRaw(' for additional error messages.</li></ul>');
 
-    $variables = ['fetch_type' => 'update'];
+    $variables = [];
     template_preprocess_update_fetch_error_message($variables);
     $this->assertArrayHasKey('error_message', $variables);
     $this->assertEquals('Failed to fetch available update data:', $variables['error_message']['message']['#markup']);
