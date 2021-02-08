@@ -98,7 +98,7 @@ class TourViewBuilder extends EntityViewBuilder {
               'left' => 'right',
               'right' => 'left',
             ];
-            $location  = $location_swap[$location];
+            $location = $location_swap[$location];
           }
         }
 
