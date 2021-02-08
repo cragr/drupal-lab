@@ -11,7 +11,7 @@ namespace Drupal\update;
  *
  * @internal
  *
- * @see https://www.drupal.org/drupalorg/docs/apis/update-status-xml.
+ * @see https://www.drupal.org/node/3095201
  */
 final class ModuleVersion {
 
