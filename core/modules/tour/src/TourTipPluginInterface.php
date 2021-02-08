@@ -71,8 +71,8 @@ interface TourTipPluginInterface {
    *
    * This is mapped to the `text` property of the Shepherd tooltip options.
    *
-   * @return string
-   *   The body content of the tooltip.
+   * @return array
+   *   A render array.
    */
   public function getBody();
 

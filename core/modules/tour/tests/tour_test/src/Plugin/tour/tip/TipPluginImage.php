@@ -74,9 +74,11 @@ class TipPluginImage extends TourTipPluginBase implements ContainerFactoryPlugin
       '#alt' => $this->get('alt'),
     ];
 
-    $rendered_image = \Drupal::service('renderer')->renderPlain($image);
-    $image_string = $rendered_image->__toString();
-    return trim($image_string);
+    return $image;
+
+//    $rendered_image = \Drupal::service('renderer')->renderPlain($image);
+//    $image_string = $rendered_image->__toString();
+//    return trim($image_string);
   }
 
 }

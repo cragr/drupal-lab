@@ -23,6 +23,17 @@ function tour_update_9200() {
         unset($tip['attributes']['data-class']);
         unset($tip['attributes']['data-id']);
       }
+      if (isset($tip['location'])) {
+        $save = TRUE;
+        $location_swap = [
+          'top' => 'bottom',
+          'bottom' => 'top',
+          'left' => 'right',
+          'right' => 'left',
+        ];
+        $tip['position'] = $location_swap[$tip['location']];
+        unset($tip['location']);
+      }
     }
 
     if ($save) {

@@ -35,18 +35,24 @@ class TourViewBuilder extends EntityViewBuilder {
           'tip-' . Html::cleanCssIdentifier($tip->id()),
         ];
 
+        $selector = NULL;
+        $location = NULL;
+
         // @todo remove conditional in https://drupal.org/node/3195193, as all
         //   instances will already be instances of TourTipPluginInterface.
         if ($tip instanceof TourTipPluginInterface) {
+          $body_render_array = $tip->getBody();
+          $body = \Drupal::service('renderer')->renderPlain($body_render_array)->__toString();
           $output = [
-            'body' => $tip->getBody(),
+            'body' => $body,
             'title' => $tip->getTitle(),
-            'location' => $tip->getLocation(),
             // @todo this property can be removed when the Stable9 theme is
             //   removed from core. It only exists to provide Joyride backwards
             //   compatibility.
             'joyride_content_container_name' => $tip->getJoyrideContentContainerName(),
           ];
+
+          $location = $tip->getLocation();
           $selector = $tip->getSelector();
 
         }
@@ -61,14 +67,38 @@ class TourViewBuilder extends EntityViewBuilder {
           // plugin used.
           $classes[] = 'tip-uses-getoutput';
 
-          if (!empty($attributes['data-class'])) {
-            $selector = ".{$attributes['data-class']}";
+          $selector = $tip->get('selector');
+
+          // If a tour using the deprecated TipPluginInterface was installed
+          // after tour_update_9200() ran, it may attributes instead of the
+          // `selector` property to associate the tip with an element.
+          // @see tour_update_9200()
+          if (!$selector) {
+            if (!empty($attributes['data-class'])) {
+              $selector = ".{$attributes['data-class']}";
+            }
+            elseif (!empty($attributes['data-id'])) {
+              $selector = "#{$attributes['data-id']}";
+            }
           }
-          elseif (!empty($attributes['data-id'])) {
-            $selector = "#{$attributes['data-id']}";
-          }
-          else {
-            $selector = NULL;
+
+          // If this tip uses the deprecated TipPluginInterface but installed
+          // after If the tip has been updated with tour_update_9200(), the
+          // value will still be provided by `location`. This should only be
+          // checked for if `position` does not return a value.
+          // @see tour_update_9200()
+          $location = $tip->get('position');
+          if (!$location && $location = $tip->get('location')) {
+            // If the `location` property still has a value, this means the tip
+            // is configured for Joyride. The position value must be inverted
+            // to work with Shepherd.
+            $location_swap = [
+              'top' => 'bottom',
+              'bottom' => 'top',
+              'left' => 'right',
+              'right' => 'left',
+            ];
+            $location  = $location_swap[$location];
           }
         }
 
@@ -76,6 +106,7 @@ class TourViewBuilder extends EntityViewBuilder {
           $items[] = [
             'id' => $tip->id(),
             'selector' => $selector,
+            'location' => $location,
             'module' => $tourEntity->getModule(),
             'type' => $tip->getPluginId(),
             'counter' => t('@tour_item of @total', [
