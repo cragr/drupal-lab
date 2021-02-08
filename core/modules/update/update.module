@@ -164,7 +164,7 @@ function update_theme() {
     'update_fetch_error_message' => [
       'file' => 'update.report.inc',
       'render element' => 'element',
-      'variables' => ['error_message' => [], 'fetch_type' => 'update'],
+      'variables' => ['error_message' => []],
     ],
   ];
 }

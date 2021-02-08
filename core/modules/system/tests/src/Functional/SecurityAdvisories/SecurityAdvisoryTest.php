@@ -30,8 +30,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     'system',
     'generic_module1_test',
     'advisory_feed_test',
-    // @todo Update is needed for test pass until \Drupal\update\ModuleVersion
-    // is copied to system module and email setting is added to system module.
+    // @todo Requires update until email setting is added to system module.
     'update',
   ];
 

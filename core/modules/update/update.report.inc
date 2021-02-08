@@ -346,7 +346,7 @@ function template_preprocess_update_project_status(&$variables) {
 function template_preprocess_update_fetch_error_message(&$variables): void {
   $variables['error_message'] = [
     'message' => [
-      '#markup' => $variables['fetch_type'] === 'update' ? t('Failed to fetch available update data:') : t('Failed to fetch security advisory data:'),
+      '#markup' => t('Failed to fetch available update data:'),
     ],
     'items' => [
       '#theme' => 'item_list',

@@ -254,6 +254,11 @@ function system_theme() {
         'advisories' => [],
       ],
     ],
+    'system_fetch_error_message' => [
+      'file' => 'system.theme.inc',
+      'render element' => 'element',
+      'variables' => ['error_message' => []],
+    ],
     ]);
 }
 
