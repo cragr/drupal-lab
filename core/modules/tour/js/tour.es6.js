@@ -189,10 +189,7 @@
                   step.joyride_content_container_name,
                 index,
               };
-<<<<<<< HEAD
 
-=======
->>>>>>> 60a9cab915... no
               // When Stable or Stable 9 are part of the active theme, the
               // Drupal.tour.convertToJoyrideMarkup() function is available.
               // This function converts Shepherd markup to Joyride markup,

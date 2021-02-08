@@ -89,17 +89,8 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
    *
    * If null, the tip will automatically determine the best position based on
    * the element's position in the viewport.
-<<<<<<< HEAD
    *
    * @return string|null
-=======
-   * This is mapped to the `attachTo.on` property of the Shepherd tooltip
-   * options. Accepted values: 'auto', 'auto-start', 'auto-end', 'top',
-   * 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'right',
-   * 'right-start', 'right-end', 'left', 'left-start', 'left-end'.
-   *
-   * @return string
->>>>>>> 60a9cab915... no
    *   The tip placement relative to the element.
    *
    * @see https://shepherdjs.dev/docs/Step.html
