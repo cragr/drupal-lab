@@ -8,6 +8,8 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Confirms tour tip `selector` config was updated properly.
  *
  * @group Update
+ * @group legacy
+ *
  * @see tour_update_9200()
  */
 class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
@@ -17,7 +19,7 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.8.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
     ];
   }
 
@@ -45,6 +47,18 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
     // Confirm the value of the tour-test-5 `data-class` attribute.
     $this->assertEquals('tour-test-5', $tips['tour-test-legacy-6']['attributes']['data-class']);
 
+    $legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
+    $tips = $legacy_location_tour_config->get('tips');
+
+    $this->assertEquals('top', $tips['location-test-top']['location']);
+    $this->assertFalse(isset($tips['location-test-top']['position']));
+    $this->assertEquals('bottom', $tips['location-test-bottom']['location']);
+    $this->assertFalse(isset($tips['location-test-bottom']['position']));
+    $this->assertEquals('right', $tips['location-test-right']['location']);
+    $this->assertFalse(isset($tips['location-test-right']['position']));
+    $this->assertEquals('left', $tips['location-test-left']['location']);
+    $this->assertFalse(isset($tips['location-test-left']['position']));
+
     $this->runUpdates();
 
     $updated_legacy_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy');
@@ -57,6 +71,18 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
     // Confirm that tour-test-5 uses `selector` instead of `data-class`.
     $this->assertEquals('.tour-test-5', $updated_tips['tour-test-legacy-6']['selector']);
     $this->assertFalse(isset($updated_tips['tour-test-legacy-6']['attributes']['data-class']));
+
+    $updated_legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
+    $updated_location_tips = $updated_legacy_location_tour_config->get('tips');
+
+    $this->assertEquals('bottom', $updated_location_tips['location-test-top']['position']);
+    $this->assertFalse(isset($updated_location_tips['location-test-top']['location']));
+    $this->assertEquals('top', $updated_location_tips['location-test-bottom']['position']);
+    $this->assertFalse(isset($updated_location_tips['location-test-bottom']['location']));
+    $this->assertEquals('left', $updated_location_tips['location-test-right']['position']);
+    $this->assertFalse(isset($updated_location_tips['location-test-right']['location']));
+    $this->assertEquals('right', $updated_location_tips['location-test-left']['position']);
+    $this->assertFalse(isset($updated_location_tips['location-test-left']['location']));
   }
 
 }

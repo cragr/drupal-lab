@@ -97,7 +97,7 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
   private function assertToolTipMarkup($index, $nub_position, $joyride_content_container_name = 'body') {
     $assert_session = $this->assertSession();
     $tip = $assert_session->waitForElementVisible('css', ".joyride-tip-guide[data-index=\"$index\"]");
-    $this->assertNotNull($tip, 'The tour tip element is present.');
+    $this->assertNotNull($tip, 'The tour tip element is present.' . "index: $index");
 
     $nub = $tip->find('css', ".joyride-tip-guide[data-index=\"$index\"] > .joyride-nub");
     $this->assertNotNull($nub, 'The nub element is present.');
@@ -142,12 +142,13 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
   }
 
   /**
-   * Test the deprecations for TipPluginBase and TipPluginInterface.
+   * Test plugin and schema deprecations.
    */
   public function testTipDeprecations() {
     $this->expectDeprecation('Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234');
     $this->expectDeprecation('Drupal\tour\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginBase instead. See https://www.drupal.org/node/3195234');
-    $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to.");
+    $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3195234");
+    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3195234");
     $this->drupalGet('tour-test-legacy');
   }
 

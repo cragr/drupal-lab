@@ -64,13 +64,6 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function getAttributes() {
-    return $this->get('attributes') ?: [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function get($key) {
     if (!empty($this->configuration[$key])) {
       return $this->configuration[$key];
@@ -96,18 +89,36 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
    *
    * If null, the tip will automatically determine the best position based on
    * the element's position in the viewport.
-   * This is mapped to the `attachTo.on` property of the Shepherd tooltip
-   * options. Accepted values: 'auto', 'auto-start', 'auto-end', 'top',
-   * 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'right',
-   * 'right-start', 'right-end', 'left', 'left-start', 'left-end'.
    *
-   * @return string
+   * @return string|null
    *   The tip placement relative to the element.
    *
    * @see https://shepherdjs.dev/docs/Step.html
    */
   public function getLocation() {
-    return $this->get('location');
+    $location = $this->get('position');
+
+    // The location values accepted by PopperJS, the library used for
+    // positioning the tip.
+    $valid_values = [
+      'auto',
+      'auto-start',
+      'auto-end',
+      'top',
+      'top-start',
+      'top-end',
+      'bottom',
+      'bottom-start',
+      'bottom-end',
+      'right',
+      'right-start',
+      'right-end',
+      'left',
+      'left-start',
+      'left-end'
+    ];
+
+    return in_array(trim($location), $valid_values) ? $location : NULL;
   }
 
   /**
@@ -165,6 +176,22 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
    */
   public function set($key, $value) {
     $this->configuration[$key] = $value;
+  }
+
+  /**
+   * This method should not actually be used. Returns an empty array.
+   *
+   * This method exists so the class can implement TipPluginInterface, which is
+   * needed for plugin discovery in Drupal 9. TipPluginInterface is deprecated
+   * and will be replaced with TourTipPluginInterface in Drupal 10.
+   *
+   * @return array
+   *   An empty array.
+   *
+   * @todo remove in https://drupal.org/node/3195193
+   */
+  final public function getAttributes() {
+    return [];
   }
 
   /**
