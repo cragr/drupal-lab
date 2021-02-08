@@ -26,5 +26,5 @@ tips:
     id: location-test-right
     plugin: text
     label: 'Right position'
-    body: "I don't really give a [pause] about tryin' to top that"
+    body: "I don't really give a [pause] about trying to top that"
     location: right

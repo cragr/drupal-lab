@@ -115,7 +115,7 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
       'right-end',
       'left',
       'left-start',
-      'left-end'
+      'left-end',
     ];
 
     return in_array(trim($location), $valid_values) ? $location : NULL;
