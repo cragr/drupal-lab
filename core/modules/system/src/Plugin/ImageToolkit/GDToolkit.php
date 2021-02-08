@@ -401,8 +401,8 @@ class GDToolkit extends ImageToolkitBase {
 
     // Verify supported image formats.
     $check_formats = [
-      'imagecreatefromjpeg' => 'JPEG',
       'imagecreatefromgif' => 'GIF',
+      'imagecreatefromjpeg' => 'JPEG',
       'imagecreatefrompng' => 'PNG',
       'imagecreatefromwebp' => 'WEBP',
     ];
