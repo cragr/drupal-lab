@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Url;
-
 /**
  * @file
  * Preprocessors functions for the system module.
  */
+
+use Drupal\Core\Url;
 
 /**
  * Prepares variables for system fetch error message templates.
@@ -13,7 +13,7 @@ use Drupal\Core\Url;
  * Default template: system-fetch-error-message.html.twig.
  *
  * @param array $variables
-  *   An associative array of template variables.
+ *   An associative array of template variables.
  */
 function template_preprocess_system_fetch_error_message(array &$variables): void {
   $variables['error_message'] = [
