@@ -401,14 +401,16 @@ class GDToolkit extends ImageToolkitBase {
 
     // Verify supported image formats.
     $check_formats = [
-      'jpeg' => 'JPEG',
-      'gif' => 'GIF',
-      'png' => 'PNG',
-      'webp' => 'WEBP',
+      'imagecreatefromjpeg' => 'JPEG',
+      'imagecreatefromgif' => 'GIF',
+      'imagecreatefrompng' => 'PNG',
+      'imagecreatefromwebp' => 'WEBP',
     ];
     $supported_formats = [];
-    foreach ($check_formats as $funct => $format) {
-      if (function_exists('imagecreatefrom' . $funct)) {
+    // We verify if an image format is supported by checking if its image
+    // creation function from a file exists.
+    foreach ($check_formats as $function => $format) {
+      if (function_exists($function)) {
         $supported_formats[] = $format;
       }
       else {
@@ -427,7 +429,7 @@ class GDToolkit extends ImageToolkitBase {
     // Check for filter and rotate support.
     if (!function_exists('imagefilter') || !function_exists('imagerotate')) {
       $requirements['version']['severity'] = REQUIREMENT_WARNING;
-      $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from http://www.libgd.org instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="http://php.net/manual/book.image.php">the PHP manual</a>.');
+      $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from the <a href="https://libgd.github.io/">gdLibrary site</a> instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="https://www.php.net/manual/book.image.php">the PHP manual</a>.');
     }
 
     if (count($descriptions) > 1) {
