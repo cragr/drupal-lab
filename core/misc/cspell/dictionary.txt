@@ -346,7 +346,6 @@ dashoffset
 data's
 databasefilename
 databasename
-datalen
 datapoint
 datas
 datatypes
@@ -1257,7 +1256,6 @@ protossl
 proxied
 proxying
 pseudotag
-psfs
 ptablenode
 pterm
 pulks
@@ -1849,7 +1847,6 @@ vals
 vampirize
 vancode
 varchar
-vardumper's
 veeeery
 vendored
 veniam
