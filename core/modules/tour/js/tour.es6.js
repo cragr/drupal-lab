@@ -165,9 +165,9 @@
 
             tourItems.forEach((step, index) => {
               const tourItemOptions = {
-                title: step.title,
+                title: step.title ? Drupal.checkPlain(step.title) : null,
                 text: () =>
-                  `<p>${step.body}</p><div class="tour-progress tp-js">${step.counter}</div>`,
+                  `<p>${step.body}</p><div class="tour-progress">${step.counter}</div>`,
                 attachTo: {
                   element: step.selector,
                   on: step.location ? step.location : 'bottom',
@@ -189,6 +189,7 @@
                   step.joyride_content_container_name,
                 index,
               };
+
               // When Stable or Stable 9 are part of the active theme, the
               // Drupal.tour.convertToJoyrideMarkup() function is available.
               // This function converts Shepherd markup to Joyride markup,
