@@ -76,4 +76,14 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
+  /**
+   * Tests GD toolkit requirements on the Status Report.
+   */
+  public function testGdToolkitRequirements(): void {
+    // Get Status Report.
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->pageTextContains('GD2 image manipulation toolkit');
+    $this->assertSession()->pageTextContains('Supported image file formats: JPEG, GIF, PNG, WEBP');
+  }
+
 }
