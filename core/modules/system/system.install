@@ -1456,7 +1456,7 @@ function system_update_8901() {
  */
 function system_update_9101() {
   $config = \Drupal::configFactory()->getEditable('system.advisories');
-  $config->set('interval_hours', 12)->save();
+  $config->set('interval_hours', 12)->set('enabled', TRUE)->save();
 }
 
 /**
@@ -1466,7 +1466,7 @@ function system_update_9101() {
  *   The requirements array as specified in hook_requirements().
  */
 function _system_advisories_requirements(array &$requirements): void {
-  if (!\Drupal::hasService('system.sa_fetcher')) {
+  if (!\Drupal::config('system.advisories')->get('enabled')) {
     return;
   }
 

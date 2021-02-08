@@ -115,7 +115,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $assert = $this->assertSession();
     // Setup test PSA endpoint.
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
-    $expected_links = [
+    $advisory_links = [
       'Critical Release - SA-2019-02-19',
       'Critical Release - PSA-Really Old',
       // The info for the test modules 'generic_module1_test' and
@@ -125,15 +125,28 @@ class SecurityAdvisoryTest extends BrowserTestBase {
       'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
       'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
+    // Confirm that links are not displayed if they are enabled.
+    $this->config('system.advisories')->set('enabled', FALSE)->save();
+    $this->assertAdvisoriesNotDisplayed($advisory_links);
+    $this->config('system.advisories')->set('enabled', TRUE)->save();
     // If both PSA and non-PSA advisories are displayed they should be displayed
     // as errors.
-    $this->assertAdminPageLinks($expected_links, REQUIREMENT_ERROR);
-    $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
+    $this->assertAdminPageLinks($advisory_links, REQUIREMENT_ERROR);
+    $this->assertStatusReportLinks($advisory_links, REQUIREMENT_ERROR);
 
+    // Confirm that a user without the correct permission will not see the
+    // advisories on admin pages.
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+    ]));
+    $this->assertAdvisoriesNotDisplayed($advisory_links, ['system.admin']);
+
+    // Log back in with user with permission to see the advisories.
+    $this->drupalLogin($this->user);
     // Test cache.
     AdvisoriesTestHttpClient::setTestEndpoint($this->nonWorkingEndpoint);
-    $this->assertAdminPageLinks($expected_links, REQUIREMENT_ERROR);
-    $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
+    $this->assertAdminPageLinks($advisory_links, REQUIREMENT_ERROR);
+    $this->assertStatusReportLinks($advisory_links, REQUIREMENT_ERROR);
 
     // Tests transmit errors with a JSON endpoint.
     $this->tempStore->delete('advisories_response');
@@ -156,24 +169,28 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $assert->linkNotExists('Critical Release - PSA-2019-02-19');
 
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
-    $expected_links = [
+    $advisory_links = [
       'Critical Release - PSA-Really Old',
       'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
     // If only PSA advisories are displayed they should be displayed as
     // warnings.
-    $this->assertAdminPageLinks($expected_links, REQUIREMENT_WARNING);
-    $this->assertStatusReportLinks($expected_links, REQUIREMENT_WARNING);
+    $this->assertAdminPageLinks($advisory_links, REQUIREMENT_WARNING);
+    $this->assertStatusReportLinks($advisory_links, REQUIREMENT_WARNING);
 
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointNonPsaOnly, TRUE);
-    $expected_links = [
+    $advisory_links = [
       'Critical Release - SA-2019-02-19',
       'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];
     // If only non-PSA advisories are displayed they should be displayed as
     // errors.
-    $this->assertAdminPageLinks($expected_links, REQUIREMENT_ERROR);
-    $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
+    $this->assertAdminPageLinks($advisory_links, REQUIREMENT_ERROR);
+    $this->assertStatusReportLinks($advisory_links, REQUIREMENT_ERROR);
+
+    // Confirm that advisory fetching can be displayed after enabled.
+    $this->config('system.advisories')->set('enabled', FALSE)->save();
+    $this->assertAdvisoriesNotDisplayed($advisory_links);
   }
 
   /**
@@ -216,6 +233,22 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $assert->elementExists('css', $selector);
     foreach ($expected_link_texts as $expected_link_text) {
       $assert->linkExists($expected_link_text);
+    }
+  }
+
+  /**
+   * Assert the links are not shown on the admin pages.
+   *
+   * @param array $links
+   *   The advisory links.
+   */
+  private function assertAdvisoriesNotDisplayed(array $links, array $routes = ['system.admin', 'system.status']): void {
+    foreach ($routes as $route) {
+      $this->drupalGet(Url::fromRoute($route));
+      $this->assertSession()->statusCodeEquals(200);
+      foreach ($links as $link) {
+        $this->assertSession()->linkNotExists($link, "'$link' not displayed on route '$route'.");
+      }
     }
   }
 

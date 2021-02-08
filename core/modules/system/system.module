@@ -1333,7 +1333,7 @@ function system_page_top() {
   $route_match = \Drupal::routeMatch();
   if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     $route_name = \Drupal::routeMatch()->getRouteName();
-    if ($route_name !== 'system.status' && \Drupal::hasService('system.sa_fetcher')) {
+    if ($route_name !== 'system.status' && \Drupal::config('system.advisories')->get('enabled')) {
       /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('system.sa_fetcher');
       try {
