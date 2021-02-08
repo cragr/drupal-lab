@@ -3,6 +3,7 @@
 namespace Drupal\Tests\jsonapi\Kernel\Normalizer;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
@@ -12,6 +13,7 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\user\Entity\User;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\Normalizer\LinkCollectionNormalizer
@@ -69,9 +71,6 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     $this->testUsers[] = $this->createUser([], NULL, FALSE, ['uid' => 2]);
     $this->testUsers[] = $this->createUser([], NULL, FALSE, ['uid' => 3]);
     $this->serializer = $this->container->get('jsonapi.serializer');
-    // Create the SUT.
-    $this->normalizer = new LinkCollectionNormalizer();
-    $this->normalizer->setSerializer($this->serializer);
   }
 
   /**
@@ -83,7 +82,8 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
       ->withLink('related', new Link(new CacheableMetadata(), Url::fromUri('http://example.com/post/42'), 'related', ['title' => 'Most viewed']))
       ->withLink('related', new Link(new CacheableMetadata(), Url::fromUri('http://example.com/post/42'), 'related', ['title' => 'Top rated']))
       ->withContext($link_context);
-    $normalized = $this->normalizer->normalize($link_collection)->getNormalization();
+    // Create the SUT.
+    $normalized = $this->getNormalizer()->normalize($link_collection)->getNormalization();
     $this->assertIsArray($normalized);
     foreach (array_keys($normalized) as $key) {
       $this->assertStringStartsWith('related', $key);
@@ -123,10 +123,6 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     assert(isset($current_user));
     assert(isset($edit_form_url));
 
-    // Set the current user. The current user is used to check access to
-    // resources targeted by the link collection.
-    $this->setCurrentUser($current_user);
-
     // Create a link collection to normalize.
     $mock_resource_object = $this->createMock(ResourceObject::class);
     $link_collection = new LinkCollection([
@@ -135,7 +131,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     $link_collection = $link_collection->withContext($mock_resource_object);
 
     // Normalize the collection.
-    $actual_normalization = $this->normalizer->normalize($link_collection);
+    $actual_normalization = $this->getNormalizer($current_user)->normalize($link_collection);
 
     // Check that it returned the expected value object.
     $this->assertInstanceOf(CacheableNormalization::class, $actual_normalization);
@@ -168,6 +164,11 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Provides test cases for testing link access checking.
+   *
+   * @return array[]
+   */
   public function linkAccessTestData() {
     return [
       'the edit-form link is present because uid 2 has access to the targeted resource (its own edit form)' => [
@@ -183,6 +184,21 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
         'expected cache contexts' => ['url.site', 'user'],
       ],
     ];
+  }
+
+  /**
+   * Get an instance of the normalizer to test.
+   */
+  protected function getNormalizer(AccountInterface $current_user = NULL) {
+    if (is_null($current_user)) {
+      $current_user = $this->setUpCurrentUser();
+    }
+    else {
+      $this->setCurrentUser($current_user);
+    }
+    $normalizer = new LinkCollectionNormalizer($current_user);
+    $normalizer->setSerializer($this->serializer);
+    return $normalizer;
   }
 
 }
