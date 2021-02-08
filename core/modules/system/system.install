@@ -1473,7 +1473,7 @@ function _system_advisories_requirements(array &$requirements): void {
   /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
   $fetcher = \Drupal::service('system.sa_fetcher');
   try {
-    $advisories = $fetcher->getSecurityAdvisories();
+    $advisories = $fetcher->getSecurityAdvisories(5);
   }
   catch (TransferException $exception) {
     $requirements['system_advisories']['title'] = t('Critical security announcements');

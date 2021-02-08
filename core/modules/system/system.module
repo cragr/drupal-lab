@@ -1070,6 +1070,14 @@ function system_cron() {
   // Ensure that all of Drupal's standard directories (e.g., the public files
   // directory and config directory) have appropriate .htaccess files.
   \Drupal::service('file.htaccess_writer')->ensure();
+
+  if (\Drupal::config('system.advisories')->get('enabled')) {
+    // Fetch the security advisories so that they will be pre-fetched during
+    // _system_advisories_requirements() and system_page_top().
+    /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+    $fetcher = \Drupal::service('system.sa_fetcher');
+    $fetcher->getSecurityAdvisories();
+  }
 }
 
 /**
@@ -1337,7 +1345,7 @@ function system_page_top() {
       /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('system.sa_fetcher');
       try {
-        $advisories = $fetcher->getSecurityAdvisories();
+        $advisories = $fetcher->getSecurityAdvisories(1);
         if ($advisories) {
           $has_non_psa_advisories = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
             return !$advisory->isPsa();

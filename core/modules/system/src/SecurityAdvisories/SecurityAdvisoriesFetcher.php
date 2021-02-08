@@ -11,6 +11,7 @@ use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\system\ExtensionVersion;
 use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -94,18 +95,22 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Gets security advisories that are applicable for the current site.
    *
+   * @param int $timeout
+   *   (optional) The timeout in seconds for the request. Defaults to 0 which is
+   *   no timeout.
+   *
    * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]
    *   The upstream security advisories.
    *
    * @throws \GuzzleHttp\Exception\TransferException
    *   Thrown if an error occurs while retrieving security advisories.
    */
-  public function getSecurityAdvisories(): array {
+  public function getSecurityAdvisories(int $timeout = 0): array {
     $advisories = [];
 
     $response = $this->keyValueExpirable->get(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
     if (!$response) {
-      $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL)->getBody();
+      $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::CONNECT_TIMEOUT => $timeout])->getBody();
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       // This value will be deleted if the 'advisories.interval_hours' config is
       // changed to a lower value.
