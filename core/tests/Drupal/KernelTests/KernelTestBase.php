@@ -66,7 +66,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * KernelTestBase::installEntitySchema(). Alternately, tests which need modules
  * to be fully installed could inherit from \Drupal\Tests\BrowserTestBase.
  *
- * Using Symfony VarDumper's dump() in Kernel tests will produce output on the
+ * Using Symfony's dump() function() in Kernel tests will produce output on the
  * command line, whether the call to dump() is in test code or site code.
  *
  * @see \Drupal\Tests\KernelTestBase::$modules

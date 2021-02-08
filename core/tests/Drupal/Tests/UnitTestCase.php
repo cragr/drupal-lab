@@ -18,7 +18,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 /**
  * Provides a base class and helpers for Drupal unit tests.
  *
- * Using Symfony VarDumper's dump() in Unit tests will produce output on the
+ * Using Symfony's dump() function() in Unit tests will produce output on the
  * command line.
  *
  * @ingroup testing
