@@ -312,7 +312,7 @@ system.advisories:
       label: 'Security Advisories display enabled'
     interval_hours:
       type: integer
-      label: 'Frequency to check for security advisories. Defaults to 12 hours.'
+      label: 'How often to check for security advisories, in hours.'
 
 block.settings.system_branding_block:
   type: block_settings
