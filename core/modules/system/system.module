@@ -1337,36 +1337,31 @@ function system_page_top() {
     if ($route_name !== 'system.status' && \Drupal::config('system.advisories')->get('enabled')) {
       /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('system.sa_fetcher');
-      try {
-        $advisories = $fetcher->getSecurityAdvisories(FALSE);
-        if ($advisories) {
-          $has_non_psa_advisories = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
-            return !$advisory->isPsa();
-          }));
-          // If all the advisories are PSA advisories then display them as
-          // warnings because they may not be actionable, otherwise display them
-          // as errors.
-          $call_messenger = function ($message) use ($has_non_psa_advisories) {
-            if ($has_non_psa_advisories) {
-              \Drupal::messenger()->addError($message);
-            }
-            else {
-              \Drupal::messenger()->addWarning($message);
-            }
-          };
-          $call_messenger(t('Critical security announcements:'));
-          foreach ($advisories as $advisory) {
-            $call_messenger(new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl())));
+      $advisories = $fetcher->getSecurityAdvisories(FALSE);
+      if ($advisories) {
+        $has_non_psa_advisories = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
+          return !$advisory->isPsa();
+        }));
+        // If all the advisories are PSA advisories then display them as
+        // warnings because they may not be actionable, otherwise display them
+        // as errors.
+        $call_messenger = function ($message) use ($has_non_psa_advisories) {
+          if ($has_non_psa_advisories) {
+            \Drupal::messenger()->addError($message);
           }
-          if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'system')) {
-            $call_messenger(t('(<a href=":system-help">What are critical security announcements?</a>)', [
-              ':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString(),
-            ]));
+          else {
+            \Drupal::messenger()->addWarning($message);
           }
+        };
+        $call_messenger(t('Critical security announcements:'));
+        foreach ($advisories as $advisory) {
+          $call_messenger(new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl())));
         }
-      }
-      catch (TransferException $exception) {
-        watchdog_exception('system', $exception, 'Failed to retrieve security advisory data. See https://www.drupal.org/node/3170647 for possible solutions.');
+        if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'system')) {
+          $call_messenger(t('(<a href=":system-help">What are critical security announcements?</a>)', [
+            ':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString(),
+          ]));
+        }
       }
     }
   }
