@@ -140,7 +140,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     $this->assertIsArray($actual_data);
 
     // Check that the expected links are present and unexpected links are
-    // present.
+    // absent.
     $actual_link_keys = array_keys($actual_data);
     sort($expected_link_keys);
     sort($actual_link_keys);
