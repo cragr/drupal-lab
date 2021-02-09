@@ -186,7 +186,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertStatusReportLinks($non_psa_advisory_links, REQUIREMENT_ERROR);
     $this->assertAdminPageLinks($non_psa_advisory_links, REQUIREMENT_ERROR);
 
-    // Confirm that advisory fetching can be displayed after enabled.
+    // Confirm that advisory fetching can be disabled after enabled.
     $this->config('system.advisories')->set('enabled', FALSE)->save();
     $this->assertAdvisoriesNotDisplayed($non_psa_advisory_links);
   }
