@@ -103,8 +103,8 @@ final class SecurityAdvisoriesFetcher {
    *   no timeout.
    *
    * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]|null
-   *   The upstream security advisories if any or NULL if there was an exception
-   *   retrieving the JSON feed or if there was not a stored JSON response and
+   *   The upstream security advisories, if any. NULL if there was a problem
+   *   retrieving the JSON feed, or if there was no stored response and
    *   $allow_http_request was set to FALSE.
    */
   public function getSecurityAdvisories(bool $allow_http_request = TRUE, int $timeout = 0): ?array {
@@ -128,7 +128,6 @@ final class SecurityAdvisoriesFetcher {
         $this->logger->error('The security advisory JSON feed from Drupal.org could not be decoded.');
         return NULL;
       }
-
     }
 
     foreach ($json_payload as $json) {
@@ -143,24 +142,10 @@ final class SecurityAdvisoriesFetcher {
         continue;
       }
 
-      $project_type = $sa->getProjectType();
-      // Skip projects that are not in the site's codebase. Core will always
-      // be present so it will never be skipped. Otherwise projects are
-      // skipped if the project type is not a valid extension type or if
-      // ::getProjectInfo() does not find a matching extension for the
-      // project name.
-      if ($project_type !== 'core' && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
-        continue;
-      }
-      // PSA advisories are always displayed because they are not dependent on
-      // the version of the project that is currently present on the site.
-      // Other advisories are only displayed if they match the existing
-      // version.
-      if ($sa->isPsa() || $this->matchesExistingVersion($sa)) {
+      if ($this->isApplicable($sa)) {
         $advisories[] = $sa;
       }
     }
-
     return $advisories;
   }
 
@@ -269,6 +254,30 @@ final class SecurityAdvisoriesFetcher {
     }
     $project_info = $this->getProjectInfo($sa);
     return $project_info['version'] ?? NULL;
+  }
+
+  /**
+   * Determines if a security advisory is applicable for the current site.
+   *
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
+   *   The security advisory.
+   *
+   * @return bool
+   *   TRUE if the advisory is applicable for the current site, otherwise FALSE.
+   */
+  protected function isApplicable(SecurityAdvisory $sa) {
+    $project_type = $sa->getProjectType();
+    // Projects that are not in the site's codebase are not applicable. Core
+    // will always be present. Otherwise projects are not applicable if the
+    // project type is not a valid extension type or if ::getProjectInfo() does
+    // not find a matching extension for the project name.
+    if ($project_type !== 'core' && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
+      return FALSE;
+    }
+    // PSA advisories are always applicable because they are not dependent on
+    // the version of the project that is currently present on the site. Other
+    // advisories are only applicable if they match the existing version.
+    return $sa->isPsa() || $this->matchesExistingVersion($sa);
   }
 
 }
