@@ -112,11 +112,11 @@ final class SecurityAdvisoriesFetcher {
     if (!is_array($json_payload)) {
       $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::TIMEOUT => $timeout])->getBody();
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
-      // This value will be deleted if the 'advisories.interval_hours' config is
-      // changed to a lower value.
-      // @see \Drupal\update\EventSubscriber\ConfigSubscriber::onConfigSave()
       $json_payload = Json::decode($response);
       if (is_array($json_payload)) {
+        // This value will be deleted if the 'advisories.interval_hours' config
+        // is changed to a lower value.
+        // @see \Drupal\update\EventSubscriber\ConfigSubscriber::onConfigSave()
         $this->keyValueExpirable->setWithExpire(self::ADVISORIES_JSON_EXPIRABLE_KEY, $json_payload, $interval_seconds);
       }
       else {
