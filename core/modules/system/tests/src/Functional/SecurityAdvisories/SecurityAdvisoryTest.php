@@ -210,9 +210,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
       $assert->pageTextNotContains('Error message');
       $assert->pageTextContainsOnce('Warning message');
     }
-    foreach ($expected_link_texts as $expected_link_text) {
-      $assert->linkExists($expected_link_text);
-    }
+    array_walk($expected_link_texts, [$assert, 'linkExists']);
   }
 
   /**
@@ -229,9 +227,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $selector = 'h3#' . ($error_or_warning === REQUIREMENT_ERROR ? 'error' : 'warning')
       . ' ~ details.system-status-report__entry:contains("Critical security announcements")';
     $assert->elementExists('css', $selector);
-    foreach ($expected_link_texts as $expected_link_text) {
-      $assert->linkExists($expected_link_text);
-    }
+    array_walk($expected_link_texts, [$assert, 'linkExists']);
   }
 
   /**
