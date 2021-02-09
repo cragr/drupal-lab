@@ -19,7 +19,7 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'tour',
-    'tour_test',
+    'tour_legacy_test',
     'toolbar',
   ];
 
