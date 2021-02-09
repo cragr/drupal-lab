@@ -1331,9 +1331,9 @@ function system_theme_registry_alter(array &$theme_registry) {
 function system_page_top() {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
-  $route_match = \Drupal::routeMatch();
-  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
-    $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($admin_context->isAdminRoute() && \Drupal::currentUser()->hasPermission('administer site configuration')) {
+    $route_match = \Drupal::routeMatch();
+    $route_name = $route_match->getRouteName();
     if ($route_name !== 'system.status' && \Drupal::config('system.advisories')->get('enabled')) {
       /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('system.sa_fetcher');
