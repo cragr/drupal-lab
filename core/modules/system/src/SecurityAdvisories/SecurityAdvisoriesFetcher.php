@@ -110,7 +110,7 @@ final class SecurityAdvisoriesFetcher {
 
     $response = $this->keyValueExpirable->get(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
     if (!$response) {
-      $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::CONNECT_TIMEOUT => $timeout])->getBody();
+      $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::TIMEOUT => $timeout])->getBody();
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       // This value will be deleted if the 'advisories.interval_hours' config is
       // changed to a lower value.
