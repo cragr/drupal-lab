@@ -35,5 +35,4 @@ function template_preprocess_system_fetch_error_message(array &$variables): void
   else {
     $variables['error_message']['items']['#items']['logs'] = t('Check your local system logs for additional error messages.');
   }
-
 }
