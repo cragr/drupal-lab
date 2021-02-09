@@ -621,6 +621,9 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     $handler_stack = HandlerStack::create($mock);
     $history = Middleware::history($this->history);
     $handler_stack->push($history);
+    // Rebuild the container because the 'system.sa_fetcher' service and other
+    // services may already have an instantiated instance of the 'http_client'
+    // service without these changes.
     $this->container->get('kernel')->rebuildContainer();
     $this->container = $this->container->get('kernel')->getContainer();
     $this->container->set('http_client', new Client(['handler' => $handler_stack]));

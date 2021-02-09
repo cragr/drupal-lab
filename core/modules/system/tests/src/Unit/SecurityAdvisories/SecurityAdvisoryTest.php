@@ -44,9 +44,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
   public function testCreateFromArrayIsPsa($value, bool $expected) {
     $data = $this->getValidData();
     $data['is_psa'] = $value;
-    $sa = SecurityAdvisory::createFromArray($data);
-    $this->assertInstanceOf(SecurityAdvisory::class, $sa);
-    $this->assertSame($expected, $sa->isPsa());
+    $this->assertSame($expected, SecurityAdvisory::createFromArray($data)->isPsa());
   }
 
   /**
