@@ -25,10 +25,12 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
    */
   public function testUpdatePath() {
     $this->assertNull($this->config('system.advisories')->get('interval_hours'));
+    $this->assertNull($this->config('system.advisories')->get('enabled'));
 
     $this->runUpdates();
 
     $this->assertSame(12, $this->config('system.advisories')->get('interval_hours'));
+    $this->assertSame(TRUE, $this->config('system.advisories')->get('enabled'));
   }
 
 }
