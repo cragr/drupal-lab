@@ -45,13 +45,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   protected $workingEndpointMixed;
 
   /**
-   * A test PSA endpoint that has 1 more item than $workingEndpoint.
-   *
-   * @var string
-   */
-  protected $workingEndpointPlus1;
-
-  /**
    * A test PSA endpoint that will only display PSA advisories.
    *
    * @var string
@@ -101,7 +94,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->workingEndpointMixed = $this->buildUrl('/advisory-feed-json/valid-mixed');
     $this->workingEndpointPsaOnly = $this->buildUrl('/advisory-feed-json/valid-psa-only');
     $this->workingEndpointNonPsaOnly = $this->buildUrl('/advisory-feed-json/valid-non-psa-only');
-    $this->workingEndpointPlus1 = $this->buildUrl('/advisory-feed-json/valid_plus1');
     $this->nonWorkingEndpoint = $this->buildUrl('/advisory-feed-json/missing');
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
 
