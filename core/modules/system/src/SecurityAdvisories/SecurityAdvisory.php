@@ -141,7 +141,7 @@ final class SecurityAdvisory {
       foreach ($violations as $violation) {
         $violation_messages[] = (string) $violation;
       }
-      throw new \UnexpectedValueException('Malformed PSA data: ' . implode(",  \n", $violation_messages));
+      throw new \UnexpectedValueException('Malformed PSA data: ' . implode(",\n", $violation_messages));
     }
   }
 
