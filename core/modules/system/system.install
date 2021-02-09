@@ -1484,16 +1484,16 @@ function _system_advisories_requirements(array &$requirements): void {
   }
 
   if (!empty($advisories)) {
-    $has_all_psa_advisories = TRUE;
     $advisory_links = [];
+    $severity = REQUIREMENT_WARNING;
     foreach ($advisories as $advisory) {
       if (!$advisory->isPsa()) {
-        $has_all_psa_advisories = FALSE;
+        $severity = REQUIREMENT_ERROR;
       }
       $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
     }
     $requirements['system_advisories']['title'] = t('Critical security announcements');
-    $requirements['system_advisories']['severity'] = $has_all_psa_advisories ? REQUIREMENT_WARNING : REQUIREMENT_ERROR;
+    $requirements['system_advisories']['severity'] = $severity;
     $requirements['system_advisories']['description'] = [
       'list' => [
         '#theme' => 'item_list',
