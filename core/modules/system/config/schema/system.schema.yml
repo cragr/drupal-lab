@@ -309,7 +309,7 @@ system.advisories:
   mapping:
     enabled:
       type: boolean
-      label: 'Security Advisories display enabled'
+      label: 'Display critical security advisories'
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours.'

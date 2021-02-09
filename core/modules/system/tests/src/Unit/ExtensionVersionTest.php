@@ -8,7 +8,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\system\ExtensionVersion
  *
- * @group update
+ * @group system
  */
 class ExtensionVersionTest extends UnitTestCase {
 

@@ -27,7 +27,7 @@ class AdvisoriesTestHttpClient extends Client {
    * {@inheritdoc}
    */
   public function get($uri, array $options = []) {
-    $test_end_point = \Drupal::state()->get('advisories_test_endpoint', NULL);
+    $test_end_point = \Drupal::state()->get('advisories_test_endpoint');
     if ($test_end_point && $uri === 'https://updates.drupal.org/psa.json') {
       $uri = $test_end_point;
     }
@@ -42,7 +42,7 @@ class AdvisoriesTestHttpClient extends Client {
    * @param bool $delete_stored_response
    *   Whether to delete stored feed response.
    */
-  public static function setTestEndpoint(string $test_endpoint, $delete_stored_response = FALSE):void {
+  public static function setTestEndpoint(string $test_endpoint, bool $delete_stored_response = FALSE): void {
     \Drupal::state()->set('advisories_test_endpoint', $test_endpoint);
     if ($delete_stored_response) {
       \Drupal::service('system.sa_fetcher')->deleteStoredResponse();

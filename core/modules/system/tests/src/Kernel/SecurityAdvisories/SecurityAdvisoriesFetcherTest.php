@@ -14,7 +14,7 @@ use GuzzleHttp\Psr7\Response;
 /**
  * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
  *
- * @group update
+ * @group system
  */
 class SecurityAdvisoriesFetcherTest extends KernelTestBase {
 
@@ -564,7 +564,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    */
   public function testInvalidJsonResponse(): void {
     $non_json_response = new Response(200, [], '1');
-    $json_response = new Response(200, [], json_encode([]));
+    $json_response = new Response(200, [], '[]');
     // Set 2 non-JSON responses and 1 JSON response.
     $this->setTestFeedResponses([
       $non_json_response,

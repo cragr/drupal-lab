@@ -7,7 +7,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 /**
  * Tests advisories settings update path.
  *
- * @group update
+ * @group system
  */
 class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
 

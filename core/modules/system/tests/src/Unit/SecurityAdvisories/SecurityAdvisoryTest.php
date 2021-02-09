@@ -8,7 +8,7 @@ use Drupal\system\SecurityAdvisories\SecurityAdvisory;
 /**
  * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisory
  *
- * @group update
+ * @group system
  */
 class SecurityAdvisoryTest extends UnitTestCase {
 
@@ -41,7 +41,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
    *
    * @dataProvider providerCreateFromArrayIsPsa
    */
-  public function testCreateFromArrayIsPsa($value, bool $expected) {
+  public function testCreateFromArrayIsPsa($value, bool $expected): void {
     $data = $this->getValidData();
     $data['is_psa'] = $value;
     $this->assertSame($expected, SecurityAdvisory::createFromArray($data)->isPsa());
@@ -50,7 +50,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromArrayIsPsa().
    */
-  public function providerCreateFromArrayIsPsa() {
+  public function providerCreateFromArrayIsPsa(): array {
     return [
       [1, TRUE],
       ['1', TRUE],
@@ -71,7 +71,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
    *
    * @dataProvider providerCreateFromArrayMissingField
    */
-  public function testCreateFromArrayMissingField(string $missing_field) {
+  public function testCreateFromArrayMissingField(string $missing_field): void {
     $data = $this->getValidData();
     unset($data[$missing_field]);
     $this->expectException(\UnexpectedValueException::class);

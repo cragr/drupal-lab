@@ -10,7 +10,7 @@ use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
 /**
  * Tests of security advisories functionality.
  *
- * @group update
+ * @group system
  */
 class SecurityAdvisoryTest extends BrowserTestBase {
 
