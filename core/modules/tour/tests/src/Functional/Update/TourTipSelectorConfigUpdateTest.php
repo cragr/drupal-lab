@@ -32,7 +32,7 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
    * tour_update_9200(), and this test confirms it is done properly.
    */
   public function testSelectorUpdate() {
-    $this->container->get('module_installer')->install(['tour', 'tour_test']);
+    $this->container->get('module_installer')->install(['tour', 'tour_test', 'tour_legacy_test']);
 
     $legacy_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy');
     $tips = $legacy_tour_config->get('tips');

@@ -163,9 +163,7 @@ class TourTest extends TourTestBasic {
           'label' => 'The rain in spain',
           'body' => 'Falls mostly on the plain.',
           'weight' => '100',
-          'attributes' => [
-            'data-id' => 'tour-code-test-1',
-          ],
+          'selector' => '#tour-code-test-1',
         ],
         'tour-code-test-2' => [
           'id' => 'tour-code-test-2',
@@ -173,9 +171,7 @@ class TourTest extends TourTestBasic {
           'label' => 'The awesome image',
           'url' => 'http://local/image.png',
           'weight' => 1,
-          'attributes' => [
-            'data-id' => 'tour-code-test-2',
-          ],
+          'selector' => '#tour-code-test-2',
         ],
       ],
     ]);
