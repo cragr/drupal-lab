@@ -95,21 +95,26 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Gets security advisories that are applicable for the current site.
    *
+   * @param bool $allow_http_request
+   *   (optional) Whether to allow an HTTP request to fetch the advisories if
+   *   there is no stored JSON response. Defaults to TRUE.
    * @param int $timeout
    *   (optional) The timeout in seconds for the request. Defaults to 0 which is
    *   no timeout.
    *
-   * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]
-   *   The upstream security advisories.
-   *
-   * @throws \GuzzleHttp\Exception\TransferException
-   *   Thrown if an error occurs while retrieving security advisories.
+   * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]|null
+   *   The upstream security advisories if any or NULL if there was an exception
+   *   retrieving the JSON feed or if there was not a stored JSON response and
+   *   $allow_http_request was set to FALSE.
    */
-  public function getSecurityAdvisories(int $timeout = 0): array {
+  public function getSecurityAdvisories(bool $allow_http_request = TRUE, int $timeout = 0): ?array {
     $advisories = [];
 
     $json_payload = $this->keyValueExpirable->get(self::ADVISORIES_JSON_EXPIRABLE_KEY);
     if (!is_array($json_payload)) {
+      if (!$allow_http_request) {
+        return NULL;
+      }
       $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::TIMEOUT => $timeout])->getBody();
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       $json_payload = Json::decode($response);
@@ -121,7 +126,7 @@ final class SecurityAdvisoriesFetcher {
       }
       else {
         $this->logger->error('The security advisory JSON feed from Drupal.org could not be decoded.');
-        return $advisories;
+        return NULL;
       }
 
     }

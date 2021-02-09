@@ -1345,7 +1345,7 @@ function system_page_top() {
       /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
       $fetcher = \Drupal::service('system.sa_fetcher');
       try {
-        $advisories = $fetcher->getSecurityAdvisories(1);
+        $advisories = $fetcher->getSecurityAdvisories(FALSE);
         if ($advisories) {
           $has_non_psa_advisories = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
             return !$advisory->isPsa();

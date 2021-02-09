@@ -571,33 +571,42 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
       $non_json_response,
       $json_response,
     ]);
-    $advisories = $this->getAdvisories();
+    $this->assertNull($this->getAdvisories());
     $this->assertCount(1, $this->history);
-    $this->assertCount(0, $advisories);
+
     // Confirm that previous non-JSON response was not stored.
-    $advisories = $this->getAdvisories();
+    $this->assertNull($this->getAdvisories());
     $this->assertCount(2, $this->history);
-    $this->assertCount(0, $advisories);
+
+    // Confirm that if $allow_http_request is set to FALSE a new request will
+    // not be attempted.
+    $this->assertNull($this->getAdvisories(FALSE));
+    $this->assertCount(2, $this->history);
+
     // Make a 3rd request that will return a valid JSON response.
-    $advisories = $this->getAdvisories();
+    $this->assertCount(0, $this->getAdvisories());
     $this->assertCount(3, $this->history);
-    $this->assertCount(0, $advisories);
+
     // Confirm that getting the advisories after a valid JSON response will use
     // the stored response and not make another 'http_client' request.
     $advisories = $this->getAdvisories();
+    $this->assertCount(0, $this->getAdvisories());
     $this->assertCount(3, $this->history);
-    $this->assertCount(0, $advisories);
   }
 
   /**
    * Gets the advisories from the 'system.sa_fetcher' service.
    *
-   * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]
-   *   The advisory links.
+   * @param bool $allow_http_request
+   *   Argument to pass on to
+   *   SecurityAdvisoriesFetcher::getSecurityAdvisories().
+   *
+   * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]|null
+   *   The return value of SecurityAdvisoriesFetcher::getSecurityAdvisories().
    */
-  protected function getAdvisories(): array {
+  protected function getAdvisories(bool $allow_http_request = TRUE): ?array {
     $fetcher = $this->container->get('system.sa_fetcher');
-    return $fetcher->getSecurityAdvisories();
+    return $fetcher->getSecurityAdvisories($allow_http_request);
   }
 
   /**
