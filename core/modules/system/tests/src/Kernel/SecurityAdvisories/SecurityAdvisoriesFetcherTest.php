@@ -472,7 +472,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   /**
    * Sets the feed items to be returned for the test.
    *
-   * @param array[] $feed_items
+   * @param mixed[][] $feed_items
    *   The feeds items to test. Every time the http_client makes a request the
    *   next item in this array will be returned. For each feed item 'title' and
    *   'link' are omitted because they do not need to vary between test cases.
@@ -486,15 +486,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
       ];
       $responses[] = new Response('200', [], json_encode([$feed_item]));
     }
-
-    // Create a mock and queue responses.
-    $mock = new MockHandler($responses);
-    $handler_stack = HandlerStack::create($mock);
-    $history = Middleware::history($this->history);
-    $handler_stack->push($history);
-    $this->container->get('kernel')->rebuildContainer();
-    $this->container = $this->container->get('kernel')->getContainer();
-    $this->container->set('http_client', new Client(['handler' => $handler_stack]));
+    $this->setTestFeedResponses($responses);
   }
 
   /**
@@ -568,6 +560,36 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   }
 
   /**
+   * Tests that invalid JSON feed responses are not stored.
+   */
+  public function testInvalidJsonResponse(): void {
+    $non_json_response = new Response(200, [], '1');
+    $json_response = new Response(200, [], json_encode([]));
+    // Set 2 non-JSON responses and 1 JSON response.
+    $this->setTestFeedResponses([
+      $non_json_response,
+      $non_json_response,
+      $json_response,
+    ]);
+    $advisories = $this->getAdvisories();
+    $this->assertCount(1, $this->history);
+    $this->assertCount(0, $advisories);
+    // Confirm that previous non-JSON response was not stored.
+    $advisories = $this->getAdvisories();
+    $this->assertCount(2, $this->history);
+    $this->assertCount(0, $advisories);
+    // Make a 3rd request that will return a valid JSON response.
+    $advisories = $this->getAdvisories();
+    $this->assertCount(3, $this->history);
+    $this->assertCount(0, $advisories);
+    // Confirm that getting the advisories after a valid JSON response will use
+    // the stored response and not make another 'http_client' request.
+    $advisories = $this->getAdvisories();
+    $this->assertCount(3, $this->history);
+    $this->assertCount(0, $advisories);
+  }
+
+  /**
    * Gets the advisories from the 'system.sa_fetcher' service.
    *
    * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]
@@ -576,6 +598,23 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   protected function getAdvisories(): array {
     $fetcher = $this->container->get('system.sa_fetcher');
     return $fetcher->getSecurityAdvisories();
+  }
+
+  /**
+   * Sets test feed responses.
+   *
+   * @param \GuzzleHttp\Psr7\Response[] $responses
+   *   The responses for the http_client service to return.
+   */
+  protected function setTestFeedResponses(array $responses): void {
+    // Create a mock and queue responses.
+    $mock = new MockHandler($responses);
+    $handler_stack = HandlerStack::create($mock);
+    $history = Middleware::history($this->history);
+    $handler_stack->push($history);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->container = $this->container->get('kernel')->getContainer();
+    $this->container->set('http_client', new Client(['handler' => $handler_stack]));
   }
 
 }

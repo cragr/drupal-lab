@@ -27,7 +27,7 @@ final class SecurityAdvisoriesFetcher {
   /**
    * The key to use to store the advisories feed response.
    */
-  protected const ADVISORIES_RESPONSE_EXPIRABLE_KEY = 'advisories_response';
+  protected const ADVISORIES_JSON_EXPIRABLE_KEY = 'advisories_response';
 
   /**
    * The 'update.settings' configuration.
@@ -108,50 +108,52 @@ final class SecurityAdvisoriesFetcher {
   public function getSecurityAdvisories(int $timeout = 0): array {
     $advisories = [];
 
-    $response = $this->keyValueExpirable->get(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
-    if (!$response) {
+    $json_payload = $this->keyValueExpirable->get(self::ADVISORIES_JSON_EXPIRABLE_KEY);
+    if (!is_array($json_payload)) {
       $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::TIMEOUT => $timeout])->getBody();
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       // This value will be deleted if the 'advisories.interval_hours' config is
       // changed to a lower value.
       // @see \Drupal\update\EventSubscriber\ConfigSubscriber::onConfigSave()
-      $this->keyValueExpirable->setWithExpire(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY, $response, $interval_seconds);
-    }
-
-    $json_payload = Json::decode($response);
-    if (is_array($json_payload)) {
-      foreach ($json_payload as $json) {
-        try {
-          $sa = SecurityAdvisory::createFromArray($json);
-        }
-        catch (\UnexpectedValueException $unexpected_value_exception) {
-          // Ignore items in the feed that are in an invalid format. Although
-          // this is highly unlikely we should still display the items that are
-          // in the correct format.
-          watchdog_exception('system', $unexpected_value_exception, 'Invalid security advisory format: ' . Json::encode($json));
-          continue;
-        }
-
-        $project_type = $sa->getProjectType();
-        // Skip projects that are not in the site's codebase. Core will always
-        // be present so it will never be skipped. Otherwise projects are
-        // skipped if the project type is not a valid extension type or if
-        // ::getProjectInfo() does not find a matching extension for the
-        // project name.
-        if ($project_type !== 'core' && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
-          continue;
-        }
-        // PSA advisories are always displayed because they are not dependent on
-        // the version of the project that is currently present on the site.
-        // Other advisories are only displayed if they match the existing
-        // version.
-        if ($sa->isPsa() || $this->matchesExistingVersion($sa)) {
-          $advisories[] = $sa;
-        }
+      $json_payload = Json::decode($response);
+      if (is_array($json_payload)) {
+        $this->keyValueExpirable->setWithExpire(self::ADVISORIES_JSON_EXPIRABLE_KEY, $json_payload, $interval_seconds);
       }
+      else {
+        $this->logger->error('The security advisory JSON feed from Drupal.org could not be decoded.');
+        return $advisories;
+      }
+
     }
-    else {
-      $this->logger->error('The security advisory JSON feed from Drupal.org could not be decoded.');
+
+    foreach ($json_payload as $json) {
+      try {
+        $sa = SecurityAdvisory::createFromArray($json);
+      }
+      catch (\UnexpectedValueException $unexpected_value_exception) {
+        // Ignore items in the feed that are in an invalid format. Although
+        // this is highly unlikely we should still display the items that are
+        // in the correct format.
+        watchdog_exception('system', $unexpected_value_exception, 'Invalid security advisory format: ' . Json::encode($json));
+        continue;
+      }
+
+      $project_type = $sa->getProjectType();
+      // Skip projects that are not in the site's codebase. Core will always
+      // be present so it will never be skipped. Otherwise projects are
+      // skipped if the project type is not a valid extension type or if
+      // ::getProjectInfo() does not find a matching extension for the
+      // project name.
+      if ($project_type !== 'core' && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
+        continue;
+      }
+      // PSA advisories are always displayed because they are not dependent on
+      // the version of the project that is currently present on the site.
+      // Other advisories are only displayed if they match the existing
+      // version.
+      if ($sa->isPsa() || $this->matchesExistingVersion($sa)) {
+        $advisories[] = $sa;
+      }
     }
 
     return $advisories;
@@ -161,7 +163,7 @@ final class SecurityAdvisoriesFetcher {
    * Deletes the stored JSON feed response, if any.
    */
   public function deleteStoredResponse(): void {
-    $this->keyValueExpirable->delete(self::ADVISORIES_RESPONSE_EXPIRABLE_KEY);
+    $this->keyValueExpirable->delete(self::ADVISORIES_JSON_EXPIRABLE_KEY);
   }
 
   /**
