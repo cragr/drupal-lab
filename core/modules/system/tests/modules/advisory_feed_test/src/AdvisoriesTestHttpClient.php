@@ -29,6 +29,9 @@ class AdvisoriesTestHttpClient extends Client {
   public function get($uri, array $options = []) {
     $test_end_point = \Drupal::state()->get('advisories_test_endpoint');
     if ($test_end_point && $uri === 'https://updates.drupal.org/psa.json') {
+      // Only override $uri if it matches the advisories JSON feed to avoid
+      // changing any other uses of the 'http_client' service during tests with
+      // this module installed.
       $uri = $test_end_point;
     }
     return $this->innerClient->get($uri, $options);
