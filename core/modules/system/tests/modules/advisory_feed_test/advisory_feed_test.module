@@ -15,7 +15,6 @@ function advisory_feed_test_system_info_alter(&$info, Extension $file) {
   // project name.  This ensures that for an extension where the 'name' and
   // the 'project' properties do not match, 'project' is used for matching
   // 'project' in the JSON feed.
-  // @todo Change to use system module test modules.
   $system_info = [
     'generic_module1_test' => [
       'project' => 'generic_module1_project',
