@@ -494,6 +494,8 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *   The current form state.
    */
   protected function processInputValues(array $source_field_values, array $form, FormStateInterface $form_state) {
+    // At this point, ::validateMediaSourceValues() should have already created
+    // and validated media items and placed them in form_state.
     // Save the selected items in the form state so they are remembered when an
     // item is removed.
     $media = $this->entityTypeManager->getStorage('media')

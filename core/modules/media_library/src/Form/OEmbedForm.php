@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
@@ -153,10 +152,16 @@ class OEmbedForm extends AddFormBase {
     $this->processInputValues($this->getSourceValuesFromInput($form, $form_state), $form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getSourceValuesFromInput(array $form, FormStateInterface $form_state) {
     return [$form_state->getValue('url')];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getSourceInputName() {
     return 'url';
   }
