@@ -72,9 +72,8 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
         return [$directory . '/migrations'];
       }, $this->moduleHandler->getModuleDirectories());
 
-      // We need to filter out /migrations/state/*.yml files. Otherwise, it'll
-      // fail because of missing 'id' key.
-      $yaml_discovery = new YamlRecursiveDirectoryDiscovery($directories, 'migrate', 'id', '/.*\/migrations\/state\/.*/');
+      // Retrieves *.yml files but gets rid of /migrations/state/*.yml files.
+      $yaml_discovery = new YamlRecursiveDirectoryDiscovery($directories, 'migrate', 'id', '#/migrations/state/#');
       // This gets rid of migrations which try to use a non-existent source
       // plugin. The common case for this is if the source plugin has, or
       // specifies, a non-existent provider.
