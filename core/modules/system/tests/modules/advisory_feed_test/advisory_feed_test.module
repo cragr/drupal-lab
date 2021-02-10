@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Module for testing Update Manager functionality.
+ * Module for testing the display of security advisories.
  */
 
 use Drupal\Core\Extension\Extension;
