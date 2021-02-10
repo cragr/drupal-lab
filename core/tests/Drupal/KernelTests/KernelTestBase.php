@@ -5,7 +5,6 @@ namespace Drupal\KernelTests;
 use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -22,6 +21,7 @@ use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Reference;
@@ -30,6 +30,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
@@ -63,6 +64,9 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * KernelTestBase::installConfig(), KernelTestBase::installSchema(), and
  * KernelTestBase::installEntitySchema(). Alternately, tests which need modules
  * to be fully installed could inherit from \Drupal\Tests\BrowserTestBase.
+ *
+ * Using Symfony's dump() function in Kernel tests will produce output on the
+ * command line, whether the call to dump() is in test code or site code.
  *
  * @see \Drupal\Tests\KernelTestBase::$modules
  * @see \Drupal\Tests\KernelTestBase::enableModules()
@@ -223,6 +227,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    */
   public static function setUpBeforeClass() {
     parent::setUpBeforeClass();
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
 
     // Change the current dir to DRUPAL_ROOT.
     chdir(static::getDrupalRoot());
@@ -895,7 +900,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Glean the content from the response object.
     $content = $response->getContent();
     $this->setRawContent($content);
-    $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
   }
 

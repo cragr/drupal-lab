@@ -817,7 +817,7 @@ trait AssertContentTrait {
           '@expected' => var_export($title, TRUE),
         ]);
       }
-      return $this->assertEqual($actual, $title, $message, $group);
+      return $this->assertEqual($title, $actual, $message, $group);
     }
     return $this->fail('No title element found on the page.');
   }
@@ -885,11 +885,6 @@ trait AssertContentTrait {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($callback, $variables) {
       return \Drupal::theme()->render($callback, $variables);
     });
-    $this->verbose(
-      '<hr />' . 'Result:' . '<pre>' . Html::escape(var_export($output, TRUE)) . '</pre>'
-      . '<hr />' . 'Expected:' . '<pre>' . Html::escape(var_export($expected, TRUE)) . '</pre>'
-      . '<hr />' . $output
-    );
     if (!$message) {
       $message = '%callback rendered correctly.';
     }
