@@ -23,6 +23,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    */
   protected static $modules = [
     'system',
+    'advisory_feed_test',
   ];
 
   /**
@@ -573,10 +574,18 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     ]);
     $this->assertNull($this->getAdvisories());
     $this->assertCount(1, $this->history);
+    $this->assertSame(
+      'The security advisory JSON feed from Drupal.org could not be decoded.',
+      $this->container->get('logger.channel.system')->getErrorMessages()[0]
+    );
 
     // Confirm that previous non-JSON response was not stored.
     $this->assertNull($this->getAdvisories());
     $this->assertCount(2, $this->history);
+    $this->assertSame(
+      'The security advisory JSON feed from Drupal.org could not be decoded.',
+      $this->container->get('logger.channel.system')->getErrorMessages()[0]
+    );
 
     // Confirm that if $allow_http_request is set to FALSE a new request will
     // not be attempted.
@@ -592,6 +601,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     $advisories = $this->getAdvisories();
     $this->assertCount(0, $this->getAdvisories());
     $this->assertCount(3, $this->history);
+    $this->assertSame([], $this->container->get('logger.channel.system')->getErrorMessages());
   }
 
   /**
