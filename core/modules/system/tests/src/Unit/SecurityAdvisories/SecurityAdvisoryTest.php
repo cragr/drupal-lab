@@ -15,49 +15,73 @@ class SecurityAdvisoryTest extends UnitTestCase {
   /**
    * Tests creating with valid data.
    *
+   * @param mixed[] $changes
+   *   The changes to the valid data set to test.
+   * @param mixed[] $expected
+   *   The expected changes for the object methods.
+   *
    * @covers ::createFromArray
+   * @covers ::isCoreAdvisory
+   * @covers ::isPsa
+   *
+   * @dataProvider providerCreateFromArray
    */
-  public function testCreateFromArray(): void {
-    $data = $this->getValidData();
+  public function testCreateFromArray(array $changes, array $expected = []): void {
+    $data = $changes;
+    $data += $this->getValidData();
+    $expected += $data;
+
     $sa = SecurityAdvisory::createFromArray($data);
     $this->assertInstanceOf(SecurityAdvisory::class, $sa);
-    $this->assertSame($data['title'], $sa->getTitle());
-    $this->assertSame($data['project'], $sa->getProject());
-    $this->assertSame($data['type'], $sa->getProjectType());
-    $this->assertSame($data['link'], $sa->getUrl());
-    $this->assertSame($data['insecure'], $sa->getInsecureVersions());
-    $this->assertSame(FALSE, $sa->isPsa());
+    $this->assertSame($expected['title'], $sa->getTitle());
+    $this->assertSame($expected['project'], $sa->getProject());
+    $this->assertSame($expected['type'], $sa->getProjectType());
+    $this->assertSame($expected['link'], $sa->getUrl());
+    $this->assertSame($expected['insecure'], $sa->getInsecureVersions());
+    $this->assertSame($expected['is_psa'], $sa->isPsa());
+    $this->assertSame($expected['type'] === 'core', $sa->isCoreAdvisory());
   }
 
   /**
-   * Tests creating with possible values of 'is_psa'.
-   *
-   * @param mixed $value
-   *   The 'is_psa' value to test.
-   * @param bool $expected
-   *   The expected value from ::isPsa().
-   *
-   * @covers ::createFromArray
-   *
-   * @dataProvider providerCreateFromArrayIsPsa
+   * Data provider for testCreateFromArray().
    */
-  public function testCreateFromArrayIsPsa($value, bool $expected): void {
-    $data = $this->getValidData();
-    $data['is_psa'] = $value;
-    $this->assertSame($expected, SecurityAdvisory::createFromArray($data)->isPsa());
-  }
-
-  /**
-   * Data provider for testCreateFromArrayIsPsa().
-   */
-  public function providerCreateFromArrayIsPsa(): array {
+  public function providerCreateFromArray() {
     return [
-      [1, TRUE],
-      ['1', TRUE],
-      [TRUE, TRUE],
-      [0, FALSE],
-      ['0', FALSE],
-      [FALSE, FALSE],
+      // For 'is_psa' the return value should converted to any array.
+      [
+        ['is_psa' => 1],
+        ['is_psa' => TRUE],
+      ],
+      [
+        ['is_psa' => '1'],
+        ['is_psa' => TRUE],
+      ],
+      [
+        ['is_psa' => TRUE],
+        ['is_psa' => TRUE],
+      ],
+      [
+        ['is_psa' => 0],
+        ['is_psa' => FALSE],
+      ],
+      [
+        ['is_psa' => '0'],
+        ['is_psa' => FALSE],
+      ],
+      [
+        ['is_psa' => FALSE],
+        ['is_psa' => FALSE],
+      ],
+      // Test cases that ensure ::isCoreAdvisory only return TRUE for core.
+      [
+        ['type' => 'module'],
+      ],
+      [
+        ['type' => 'theme'],
+      ],
+      [
+        ['type' => 'core'],
+      ],
     ];
   }
 
@@ -145,7 +169,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
       'link' => 'https://www.drupal.org/SA-CONTRIB-2019-02-02',
       'project' => 'generic_module1_test',
       'type' => 'module',
-      'is_psa' => 0,
+      'is_psa' => FALSE,
       'insecure' => [
         '8.x-1.1',
       ],

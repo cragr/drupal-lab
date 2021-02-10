@@ -176,6 +176,16 @@ final class SecurityAdvisory {
   }
 
   /**
+   * Whether the security advisory is for core or not.
+   *
+   * @return bool
+   *   TRUE if the advisory is for core, otherwise FALSE.
+   */
+  public function isCoreAdvisory(): bool {
+    return $this->type === 'core';
+  }
+
+  /**
    * Whether the security advisory is a PSA or not.
    *
    * @return bool

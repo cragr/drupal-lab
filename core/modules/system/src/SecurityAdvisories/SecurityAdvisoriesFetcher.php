@@ -249,7 +249,7 @@ final class SecurityAdvisoriesFetcher {
    *   the site.
    */
   protected function getProjectExistingVersion(SecurityAdvisory $sa): ?string {
-    if ($sa->getProjectType() === 'core') {
+    if ($sa->isCoreAdvisory()) {
       return \Drupal::VERSION;
     }
     $project_info = $this->getProjectInfo($sa);
@@ -271,7 +271,7 @@ final class SecurityAdvisoriesFetcher {
     // will always be present. Otherwise projects are not applicable if the
     // project type is not a valid extension type or if ::getProjectInfo() does
     // not find a matching extension for the project name.
-    if ($project_type !== 'core' && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
+    if (!$sa->isCoreAdvisory() && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
       return FALSE;
     }
     // PSA advisories are always applicable because they are not dependent on
