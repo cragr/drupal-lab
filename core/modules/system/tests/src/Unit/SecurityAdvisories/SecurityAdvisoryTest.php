@@ -72,7 +72,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
         ['is_psa' => FALSE],
         ['is_psa' => FALSE],
       ],
-      // Test cases that ensure ::isCoreAdvisory only return TRUE for core.
+      // Test cases that ensure ::isCoreAdvisory only returns TRUE for core.
       [
         ['type' => 'module'],
       ],

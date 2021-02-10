@@ -268,7 +268,7 @@ final class SecurityAdvisoriesFetcher {
    * @return bool
    *   TRUE if the advisory is applicable for the current site, otherwise FALSE.
    */
-  protected function isApplicable(SecurityAdvisory $sa) {
+  protected function isApplicable(SecurityAdvisory $sa): bool {
     // Projects that are not in the site's codebase are not applicable. Core
     // will always be present. Otherwise projects are not applicable
     // ::getProjectInfo() does not find a matching extension for the project
