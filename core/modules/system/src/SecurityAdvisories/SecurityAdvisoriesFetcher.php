@@ -227,6 +227,9 @@ final class SecurityAdvisoriesFetcher {
    */
   protected function getProjectInfo(SecurityAdvisory $sa): ?array {
     $project_info = new ProjectInfo();
+    if (!isset($this->extensionLists[$sa->getProjectType()])) {
+      return NULL;
+    }
     // The project name on the security advisory will not always match the
     // machine name for the extension, so we need to search through all
     // extensions of the expected type to find the matching project.
@@ -266,12 +269,11 @@ final class SecurityAdvisoriesFetcher {
    *   TRUE if the advisory is applicable for the current site, otherwise FALSE.
    */
   protected function isApplicable(SecurityAdvisory $sa) {
-    $project_type = $sa->getProjectType();
     // Projects that are not in the site's codebase are not applicable. Core
-    // will always be present. Otherwise projects are not applicable if the
-    // project type is not a valid extension type or if ::getProjectInfo() does
-    // not find a matching extension for the project name.
-    if (!$sa->isCoreAdvisory() && (!isset($this->extensionLists[$project_type]) || !$this->getProjectInfo($sa))) {
+    // will always be present. Otherwise projects are not applicable
+    // ::getProjectInfo() does not find a matching extension for the project
+    // name.
+    if (!$sa->isCoreAdvisory() && !$this->getProjectInfo($sa)) {
       return FALSE;
     }
     // PSA advisories are always applicable because they are not dependent on
