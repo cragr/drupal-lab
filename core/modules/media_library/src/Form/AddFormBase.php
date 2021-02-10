@@ -527,7 +527,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *
    * @return string
    *
-   * @see ::validateMediaSourceValues().
+   * @see ::validateMediaSourceValues()
    */
   abstract protected function getSourceInputName();
 
@@ -552,7 +552,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
       $all_valid = TRUE;
       foreach ($source_values as $delta => $source_value) {
         $media = $this->createMediaFromValue($media_type, $media_storage, $source_field_name, $source_value);
-        $violations = $media->validate()->getByField($source_field_name);;
+        $violations = $media->validate()->getByField($source_field_name);
         if (count($violations) > 0) {
           $form_state->setErrorByName($this->getSourceInputName(), $violations->get(0)->getMessage());
           $all_valid = FALSE;
@@ -711,7 +711,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *
    * This is different from ::validateMediaSourceValues() in that
    * ::validateMediaEntity() validates all fields present on the
-   * media_library form display whereas ::validateMEdiaSourceValues()
+   * media_library form display whereas ::validateMediaSourceValues()
    * only validates the source field value.
    *
    * @param \Drupal\media\MediaInterface $media
