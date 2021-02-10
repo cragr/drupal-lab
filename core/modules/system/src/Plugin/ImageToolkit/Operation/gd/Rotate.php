@@ -89,7 +89,7 @@ class Rotate extends GDImageToolkitOperationBase {
       return FALSE;
     }
 
-    // In Drupal we rotate anti-clockwise whereas GD rotates clockwise. We need
+    // In Drupal we rotate clockwise whereas GD rotates anti-clockwise. We need
     // to reconcile the value in Drupal with the argument to be passed to
     // rotate.
     $degrees = 360 - $arguments['degrees'];
