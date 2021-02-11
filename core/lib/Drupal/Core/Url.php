@@ -807,9 +807,8 @@ class Url implements TrustedCallbackInterface {
    *
    * Determines whether the route is accessible or not.
    *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   (optional) Run access checks for this account. Defaults to the current
-   *   user.
+   * @param \Drupal\Core\Session\AccountInterface|null $account
+   *   (optional) Run access checks for this account. NULL for the current user.
    * @param bool $return_as_object
    *   (optional) Defaults to FALSE.
    *
@@ -820,8 +819,7 @@ class Url implements TrustedCallbackInterface {
    *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
    *   access is either explicitly forbidden or "no opinion".
    */
-  public function access($account = NULL, $return_as_object = FALSE) {
-    assert(is_null($account) || $account instanceof AccountInterface);
+  public function access(?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($this->isRouted()) {
       return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account, $return_as_object);
     }
