@@ -140,6 +140,9 @@ trait DeprecationListenerTrait {
       // @todo remove the TipPluginInterface deprecation message from this list
       //   in https://drupal.org/node/3195193
       'Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234',
+      // The schema deprecation is skipped as it is triggered by tests extending
+      // UpdatePathTestBase that use 9.0 or 9.1 fixtures that have Tour enabled.
+      "The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3195234",
     ];
   }
 
