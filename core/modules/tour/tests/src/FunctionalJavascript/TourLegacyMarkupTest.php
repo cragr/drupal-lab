@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\tour\FunctionalJavascript;
 
+use Drupal\Core\Config\FileStorage;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\tour\Entity\Tour;
 
 /**
  * Tests Tour's backwards compatible markup.
@@ -33,6 +35,15 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    */
   public function setUp(): void {
     parent::setUp();
+
+    $config_path = drupal_get_path('module', 'tour') . '/tests/fixtures/legacy_config';
+    $source = new FileStorage($config_path);
+    $config_storage = \Drupal::service('config.storage');
+    $this->assertTrue($source->exists('tour.tour.tour-test-legacy'));
+    $config_storage->write('tour.tour.tour-test-legacy', $source->read('tour.tour.tour-test-legacy'));
+    drupal_flush_all_caches();
+    //    $leg = $this->container->get('config.factory')->getEditable('tour.tour.tour-test-legacy');
+//    $this->assertEquals(1, 2, print_r($leg, 1));
 
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
@@ -69,8 +80,25 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->drupalGet($path);
+    // BAD
+    $routes = [];
+    $route_match = \Drupal::routeMatch();
+    $route_name = $route_match->getRouteName();
+    $results = \Drupal::entityQuery('tour')
+      //      ->condition('routes.*.route_name', 'tour_test.legacy')
+      ->execute();
+    if (!empty($results) && $tours = Tour::loadMultiple(array_keys($results))) {
+      foreach ($tours as $id => $tour) {
+        $routes[] = $tour->getRoutes();
+      }
+    }
+//    $this->assertEquals(1, 2, "reult:: " . count($tours) .  ' Route name:' . $route_name . ' Routes: '. print_r($routes, 1));
+//    $assert_session->waitForElementVisible('css', '.test-go', 500000000);
+    // BAD
     $assert_session->waitForElementVisible('css', '#toolbar-tab-tour button');
     $page->find('css', '#toolbar-tab-tour button')->press();
+//    $this->assertEquals(1, 2, "reult:: " . count($tours) .  ' Route name:' . $route_name . ' Routes: '. print_r($routes, 1));
+
     $this->assertToolTipMarkup(0, 'top');
     $page->find('css', '.joyride-tip-guide[data-index="0"]')->clickLink('Next');
     $this->assertToolTipMarkup(1, '', 'image');
@@ -134,10 +162,10 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    */
   public function providerTestTourTipMarkup() {
     return [
-      'Using current TourTipPlugin with Stable theme' => ['tour-test-1'],
       'Using the the deprecated TipPlugin with Stable theme' => ['tour-test-legacy'],
-      'Using current TourTipPlugin with Stable 9 theme' => ['tour-test-1', 'stable9'],
+      'Using current TourTipPlugin with Stable theme' => ['tour-test-1'],
       'Using the the deprecated TipPlugin with Stable 9 theme' => ['tour-test-legacy', 'stable9'],
+      'Using current TourTipPlugin with Stable 9 theme' => ['tour-test-1', 'stable9'],
     ];
   }
 
@@ -148,7 +176,6 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
     $this->expectDeprecation('Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234');
     $this->expectDeprecation('Drupal\tour\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginBase instead. See https://www.drupal.org/node/3195234');
     $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3195234");
-    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3195234");
     $this->drupalGet('tour-test-legacy');
   }
 
