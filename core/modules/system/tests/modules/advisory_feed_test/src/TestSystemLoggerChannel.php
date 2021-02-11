@@ -4,8 +4,8 @@ namespace Drupal\advisory_feed_test;
 
 use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\State\StateInterface;
-use Drush\Log\LogLevel;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * Provides a decorator for the 'logger.channel.system' service for testing.
@@ -48,7 +48,7 @@ final class TestSystemLoggerChannel extends LoggerChannel {
       $messages[] = $message;
       $this->state->set('advisory_feed_test.error_messages', $messages);
     }
-    $this->innerLogger->critical($message, $context);
+    $this->innerLogger->log($level, $message, $context);
   }
 
   /**
