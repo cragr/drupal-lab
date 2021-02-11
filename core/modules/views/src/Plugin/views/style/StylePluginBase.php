@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -594,7 +595,20 @@ abstract class StylePluginBase extends PluginBase {
           if (isset($this->view->field[$field])) {
             $group_content = $this->getField($index, $field);
             if ($this->view->field[$field]->options['label']) {
-              $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
+              if ($group_content instanceof MarkupInterface) {
+                $rendered = FALSE;
+                $group_content = [
+                  [
+                    '#markup' => $this->t($this->view->field[$field]->options['label'] . ': '),
+                  ],
+                  [
+                    '#markup' => $group_content,
+                  ],
+                ];
+              }
+              else {
+                $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
+              }
             }
             if ($rendered) {
               $grouping = (string) $group_content;
