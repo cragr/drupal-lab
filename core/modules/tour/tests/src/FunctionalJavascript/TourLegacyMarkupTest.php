@@ -135,10 +135,10 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    */
   public function providerTestTourTipMarkup() {
     return [
-      'Using current TourTipPlugin with Stable theme' => ['tour-test-1'],
       'Using the the deprecated TipPlugin with Stable theme' => ['tour-test-legacy'],
-      'Using current TourTipPlugin with Stable 9 theme' => ['tour-test-1', 'stable9'],
+      'Using current TourTipPlugin with Stable theme' => ['tour-test-1'],
       'Using the the deprecated TipPlugin with Stable 9 theme' => ['tour-test-legacy', 'stable9'],
+      'Using current TourTipPlugin with Stable 9 theme' => ['tour-test-1', 'stable9'],
     ];
   }
 
@@ -149,7 +149,6 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
     $this->expectDeprecation('Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234');
     $this->expectDeprecation('Drupal\tour\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginBase instead. See https://www.drupal.org/node/3195234');
     $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3195234");
-    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3195234");
     $this->drupalGet('tour-test-legacy');
   }
 
