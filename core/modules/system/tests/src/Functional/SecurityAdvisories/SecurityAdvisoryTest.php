@@ -6,7 +6,6 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests of security advisories functionality.
@@ -101,17 +100,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
 
     $this->tempStore = $this->container->get('keyvalue.expirable')->get('system');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function initConfig(ContainerInterface $container) {
-    parent::initConfig($container);
-    // Enable service advisories fetching for this test.
-    $container->get('config.factory')->getEditable('system.advisories')
-      ->set('enabled', TRUE)
-      ->save();
   }
 
   /**
