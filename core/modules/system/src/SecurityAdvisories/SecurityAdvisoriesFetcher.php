@@ -8,7 +8,6 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\system\ExtensionVersion;
 use GuzzleHttp\Client;
@@ -281,15 +280,6 @@ final class SecurityAdvisoriesFetcher {
     // the version of the project that is currently present on the site. Other
     // advisories are only applicable if they match the existing version.
     return $sa->isPsa() || $this->matchesExistingVersion($sa);
-  }
-
-  /**
-   * Determines if the advisories should be fetched.
-   *
-   * @return bool
-   */
-  public function isEnabled() {
-    return $this->config->get('enabled') && Settings::get('system_fetch_advisories');
   }
 
 }

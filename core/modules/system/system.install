@@ -1466,12 +1466,12 @@ function system_update_9101() {
  *   The requirements array as specified in hook_requirements().
  */
 function _system_advisories_requirements(array &$requirements): void {
-  /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
-  $fetcher = \Drupal::service('system.sa_fetcher');
-  if (!$fetcher->isEnabled()) {
+  if (!\Drupal::config('system.advisories')->get('enabled')) {
     return;
   }
 
+  /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+  $fetcher = \Drupal::service('system.sa_fetcher');
   try {
     $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
   }

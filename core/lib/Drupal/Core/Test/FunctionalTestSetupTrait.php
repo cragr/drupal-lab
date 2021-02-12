@@ -104,7 +104,7 @@ trait FunctionalTestSetupTrait {
       'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
     ];
-    $settings['settings']['system_fetch_advisories'] = (object) [
+    $settings['config']['system.advisories']['enabled'] = (object) [
       'value' => $this->systemFetchAdvisories,
       'required' => TRUE,
     ];
