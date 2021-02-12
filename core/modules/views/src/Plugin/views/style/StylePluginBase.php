@@ -596,19 +596,9 @@ abstract class StylePluginBase extends PluginBase {
             $group_content = $this->getField($index, $field);
             if ($this->view->field[$field]->options['label']) {
               if ($group_content instanceof MarkupInterface) {
-                $rendered = FALSE;
-                $group_content = [
-                  [
-                    '#markup' => $this->t($this->view->field[$field]->options['label'] . ': '),
-                  ],
-                  [
-                    '#markup' => $group_content,
-                  ],
-                ];
+                $group_content = strip_tags(htmlspecialchars_decode((string) $group_content));
               }
-              else {
-                $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
-              }
+              $group_content = $this->view->field[$field]->options['label'] . ': ' . $group_content;
             }
             if ($rendered) {
               $grouping = (string) $group_content;
