@@ -324,6 +324,12 @@ trait FunctionalTestSetupTrait {
       ->set('interface.default', 'test_mail_collector')
       ->save();
 
+    // Make sure tests do not make service advisory fetching unless the test
+    // opts in.
+    $config->getEditable('system.advisories')
+      ->set('enabled', FALSE)
+      ->save();
+
     // By default, verbosely display all errors and disable all production
     // environment optimizations for all tests to avoid needless overhead and
     // ensure a sane default experience for test authors.
