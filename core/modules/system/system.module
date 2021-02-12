@@ -1071,11 +1071,12 @@ function system_cron() {
   // directory and config directory) have appropriate .htaccess files.
   \Drupal::service('file.htaccess_writer')->ensure();
 
-  if (\Drupal::config('system.advisories')->get('enabled')) {
+  /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+  $fetcher = \Drupal::service('system.sa_fetcher');
+  if ($fetcher->isEnabled()) {
     // Fetch the security advisories so that they will be pre-fetched during
     // _system_advisories_requirements() and system_page_top().
-    /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
-    $fetcher = \Drupal::service('system.sa_fetcher');
+
     $fetcher->getSecurityAdvisories();
   }
 }
@@ -1334,9 +1335,10 @@ function system_page_top() {
   if ($admin_context->isAdminRoute() && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     $route_match = \Drupal::routeMatch();
     $route_name = $route_match->getRouteName();
-    if ($route_name !== 'system.status' && \Drupal::config('system.advisories')->get('enabled')) {
-      /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
-      $fetcher = \Drupal::service('system.sa_fetcher');
+    /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+    $fetcher = \Drupal::service('system.sa_fetcher');
+    if ($route_name !== 'system.status' && $fetcher->isEnabled()) {
+
       $advisories = $fetcher->getSecurityAdvisories(FALSE);
       if ($advisories) {
         // To ensure that all the advisory messages are grouped together on

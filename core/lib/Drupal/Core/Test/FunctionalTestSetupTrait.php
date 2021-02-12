@@ -58,6 +58,8 @@ trait FunctionalTestSetupTrait {
    */
   protected $apcuEnsureUniquePrefix = FALSE;
 
+  protected $systemFetchAdvisories = FALSE;
+
   /**
    * Prepares site settings and services before installation.
    */
@@ -100,6 +102,10 @@ trait FunctionalTestSetupTrait {
     ];
     $settings['settings']['apcu_ensure_unique_prefix'] = (object) [
       'value' => $this->apcuEnsureUniquePrefix,
+      'required' => TRUE,
+    ];
+    $settings['settings']['system_fetch_advisories'] = (object) [
+      'value' => $this->systemFetchAdvisories,
       'required' => TRUE,
     ];
     $this->writeSettings($settings);

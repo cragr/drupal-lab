@@ -31,6 +31,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     'advisory_feed_test',
   ];
 
+  protected $systemFetchAdvisories = TRUE;
+
   /**
    * A user with permission to administer site configuration and updates.
    *
