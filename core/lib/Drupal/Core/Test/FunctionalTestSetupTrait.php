@@ -58,7 +58,15 @@ trait FunctionalTestSetupTrait {
    */
   protected $apcuEnsureUniquePrefix = FALSE;
 
-  protected $systemFetchAdvisories = FALSE;
+  /**
+   * The flag to set 'system.advisories.enabled' config.
+   *
+   * Defaults to FALSE so that advisories are not fetched during tests unless a
+   * test opts-in.
+   *
+   * @var bool
+   */
+  protected $systemAdvisoriesEnabled = FALSE;
 
   /**
    * Prepares site settings and services before installation.
@@ -104,8 +112,9 @@ trait FunctionalTestSetupTrait {
       'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
     ];
+    // Disable fetching of advisories during tests to avoid outbound calls.
     $settings['config']['system.advisories']['enabled'] = (object) [
-      'value' => $this->systemFetchAdvisories,
+      'value' => $this->systemAdvisoriesEnabled,
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
