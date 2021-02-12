@@ -30,8 +30,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     'advisory_feed_test',
   ];
 
-  protected $systemFetchAdvisories = TRUE;
-
   /**
    * A user with permission to administer site configuration and updates.
    *
@@ -100,6 +98,16 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
 
     $this->tempStore = $this->container->get('keyvalue.expirable')->get('system');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeSettings(array $settings) {
+    // Unset 'system.advisories' to allow testing enabling and disabling this
+    // setting.
+    unset($settings['config']['system.advisories']);
+    parent::writeSettings($settings);
   }
 
   /**
