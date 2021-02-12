@@ -249,7 +249,7 @@ function system_theme() {
     'off_canvas_page_wrapper' => [
       'variables' => ['children' => NULL],
     ],
-    'system_fetch_error_message' => [
+    'system_security_advisories_fetch_error_message' => [
       'file' => 'system.theme.inc',
       'render element' => 'element',
       'variables' => ['error_message' => []],

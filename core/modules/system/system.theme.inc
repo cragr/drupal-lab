@@ -8,14 +8,14 @@
 use Drupal\Core\Url;
 
 /**
- * Prepares variables for system fetch error message templates.
+ * Prepares variables for security advisories fetch error message templates.
  *
- * Default template: system-fetch-error-message.html.twig.
+ * Default template: system-security-advisories-fetch-error-message.html.twig.
  *
  * @param array $variables
  *   An associative array of template variables.
  */
-function template_preprocess_system_fetch_error_message(array &$variables): void {
+function template_preprocess_system_security_advisories_fetch_error_message(array &$variables): void {
   $variables['error_message'] = [
     'message' => [
       '#markup' => t('Failed to fetch security advisory data:'),

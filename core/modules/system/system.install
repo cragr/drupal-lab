@@ -1478,7 +1478,7 @@ function _system_advisories_requirements(array &$requirements): void {
   catch (TransferException $exception) {
     $requirements['system_advisories']['title'] = t('Critical security announcements');
     $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
-    $requirements['system_advisories']['description'] = ['#theme' => 'system_fetch_error_message'];
+    $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
     watchdog_exception('system', $exception, 'Failed to retrieve security advisory data.');
     return;
   }
