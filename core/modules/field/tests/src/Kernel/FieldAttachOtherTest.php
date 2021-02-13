@@ -285,8 +285,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $form_state = new FormState();
     $display->buildForm($entity, $form, $form_state);
 
-    $this->assertFalse(isset($form[$this->fieldTestData->field_name]), 'The first field does not exist in the form');
-    $this->assertEqual($this->fieldTestData->field_2->getLabel(), $form[$this->fieldTestData->field_name_2]['widget']['#title'], "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
+    $this->assertArrayNotHasKey($this->fieldTestData->field_name, $form);
+    $this->assertEquals($this->fieldTestData->field_2->getLabel(), $form[$this->fieldTestData->field_name_2]['widget']['#title'], "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage_2->getCardinality(); $delta++) {
       // field_test_widget uses 'textfield'
       $this->assertEqual('textfield', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");

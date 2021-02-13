@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
 
@@ -71,13 +70,16 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
     // Test admin user can see vertical tabs and wrapper.
     $this->drupalGet('form_test/vertical-tabs');
     $wrapper = $this->xpath("//div[@data-vertical-tabs-panes]");
-    $this->assertTrue(isset($wrapper[0]), 'Vertical tab panes found.');
+    // Verify that vertical tab panes found.
+    $this->assertArrayHasKey(0, $wrapper);
 
     // Test wrapper markup not present for non-privileged web user.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('form_test/vertical-tabs');
     $wrapper = $this->xpath("//div[@data-vertical-tabs-panes]");
-    $this->assertFalse(isset($wrapper[0]), 'Vertical tab wrappers are not displayed to unprivileged users.');
+    // Verify that vertical tab wrappers are not displayed to unprivileged
+    // users.
+    $this->assertArrayNotHasKey(0, $wrapper);
   }
 
   /**
@@ -100,7 +102,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
     $this->drupalGet('form_test/form-state-values-clean');
     $this->submitForm([], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertFalse(isset($values['vertical_tabs__active_tab']), new FormattableMarkup('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
+    $this->assertArrayNotHasKey('vertical_tabs__active_tab', $values);
   }
 
 }

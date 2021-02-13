@@ -1247,11 +1247,12 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertOption($id, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
-    return $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]), $group);
+    $this->assertArrayHasKey(0, $options, $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]), $group);
+    return TRUE;
   }
 
   /**
@@ -1265,11 +1266,12 @@ trait AssertContentTrait {
    *   (optional) A message to display with the assertion.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertOptionByText($id, $text, $message = '') {
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
-    return $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
+    $this->assertArrayHasKey(0, $options, $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
+    return TRUE;
   }
 
   /**
@@ -1291,11 +1293,12 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
-    return $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
+    $this->assertArrayHasKey(0, $options, $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
+    return TRUE;
   }
 
   /**
@@ -1378,7 +1381,7 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    *
    * @todo $id is unusable. Replace with $name.
    */

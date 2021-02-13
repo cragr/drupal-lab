@@ -131,7 +131,8 @@ class FormTest extends BrowserTestBase {
           $form_output = ($type == 'radios') ? '' : \Drupal::service('renderer')->renderRoot($form);
           if ($required) {
             // Make sure we have a form error for this element.
-            $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
+            $this->assertArrayHasKey($element, $errors, "Check empty($key) '$type' field '$element'");
+            $this->assertNotNull($errors[$element]);
             if (!empty($form_output)) {
               // Make sure the form element is marked as required.
               $this->assertRegExp($required_marker_preg, (string) $form_output, "Required '$type' field is marked as required");
@@ -857,7 +858,7 @@ class FormTest extends BrowserTestBase {
         ':div-class' => $class,
         ':value' => isset($item['#value']) ? $item['#value'] : '',
       ]);
-      $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
+      $this->assertArrayHasKey(0, $element, new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => $item['#type']]));
     }
 
     // Verify special element #type text-format.
@@ -865,12 +866,12 @@ class FormTest extends BrowserTestBase {
       ':name' => 'text_format[value]',
       ':div-class' => 'form-disabled',
     ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
+    $this->assertArrayHasKey(0, $element, new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
     $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', [
       ':name' => 'text_format[format]',
       ':div-class' => 'form-disabled',
     ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
+    $this->assertArrayHasKey(0, $element, new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
   }
 
   /**

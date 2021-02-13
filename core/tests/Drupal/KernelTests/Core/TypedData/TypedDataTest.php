@@ -377,10 +377,11 @@ class TypedDataTest extends KernelTestBase {
     // Test using array access.
     $this->assertEqual('one', $typed_data[0]->getValue());
     $typed_data[] = 'four';
-    $this->assertEqual('four', $typed_data[3]->getValue());
-    $this->assertEqual(4, $typed_data->count());
-    $this->assertTrue(isset($typed_data[0]));
-    $this->assertTrue(!isset($typed_data[6]));
+    $this->assertEquals('four', $typed_data[3]->getValue());
+    $this->assertEquals(4, $typed_data->count());
+    $this->assertArrayHasKey(0, $typed_data);
+    $this->assertNotNull($typed_data[0]);
+    $this->assertArrayNotHasKey(6, $typed_data);
 
     // Test isEmpty and cloning.
     $this->assertFalse($typed_data->isEmpty());
@@ -638,14 +639,25 @@ class TypedDataTest extends KernelTestBase {
 
     // Test getting constraint definitions by type.
     $definitions = $this->typedDataManager->getValidationConstraintManager()->getDefinitionsByType('entity');
-    $this->assertTrue(isset($definitions['EntityType']), 'Constraint plugin found for type entity.');
-    $this->assertTrue(isset($definitions['Null']), 'Constraint plugin found for type entity.');
-    $this->assertTrue(isset($definitions['NotNull']), 'Constraint plugin found for type entity.');
+    // Verify that constraint plugin found for type entity.
+    $this->assertArrayHasKey('EntityType', $definitions);
+    $this->assertNotNull($definitions['EntityType']);
+    // Verify that constraint plugin found for type entity.
+    $this->assertArrayHasKey('Null', $definitions);
+    $this->assertNotNull($definitions['Null']);
+    // Verify that constraint plugin found for type entity.
+    $this->assertArrayHasKey('NotNull', $definitions);
+    $this->assertNotNull($definitions['NotNull']);
 
     $definitions = $this->typedDataManager->getValidationConstraintManager()->getDefinitionsByType('string');
-    $this->assertFalse(isset($definitions['EntityType']), 'Constraint plugin not found for type string.');
-    $this->assertTrue(isset($definitions['Null']), 'Constraint plugin found for type string.');
-    $this->assertTrue(isset($definitions['NotNull']), 'Constraint plugin found for type string.');
+    // Verify that constraint plugin not found for type string.
+    $this->assertArrayNotHasKey('EntityType', $definitions);
+    // Verify that constraint plugin found for type string.
+    $this->assertArrayHasKey('Null', $definitions);
+    $this->assertNotNull($definitions['Null']);
+    // Verify that constraint plugin found for type string.
+    $this->assertArrayHasKey('NotNull', $definitions);
+    $this->assertNotNull($definitions['NotNull']);
 
     // Test automatic 'required' validation.
     $definition = DataDefinition::create('integer')

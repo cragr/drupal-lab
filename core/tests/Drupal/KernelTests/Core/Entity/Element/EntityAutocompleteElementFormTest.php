@@ -251,9 +251,9 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // First value is an existing entity.
     $this->assertEqual($this->referencedEntities[0]->id(), $value[0]['target_id']);
     // Second value is an autocreated entity.
-    $this->assertTrue(!isset($value[1]['target_id']));
-    $this->assertEqual('tags - autocreated entity label', $value[1]['entity']->label());
-    $this->assertEqual($this->testUser->id(), $value[1]['entity']->getOwnerId());
+    $this->assertArrayNotHasKey('target_id', $value[1]);
+    $this->assertEquals('tags - autocreated entity label', $value[1]['entity']->label());
+    $this->assertEquals($this->testUser->id(), $value[1]['entity']->getOwnerId());
     // Third value is an existing entity.
     $this->assertEqual($this->referencedEntities[1]->id(), $value[2]['target_id']);
 
@@ -262,9 +262,9 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // First value is an existing entity.
     $this->assertEqual($this->referencedEntities[0]->id(), $value[0]['target_id']);
     // Second value is an autocreated entity.
-    $this->assertTrue(!isset($value[1]['target_id']));
-    $this->assertEqual('tags - autocreated entity label with specific uid', $value[1]['entity']->label());
-    $this->assertEqual($this->testAutocreateUser->id(), $value[1]['entity']->getOwnerId());
+    $this->assertArrayNotHasKey('target_id', $value[1]);
+    $this->assertEquals('tags - autocreated entity label with specific uid', $value[1]['entity']->label());
+    $this->assertEquals($this->testAutocreateUser->id(), $value[1]['entity']->getOwnerId());
     // Third value is an existing entity.
     $this->assertEqual($this->referencedEntities[1]->id(), $value[2]['target_id']);
 
