@@ -76,7 +76,7 @@ class RectangleTest extends TestCase {
    *
    * @dataProvider providerGd222RotateDimensions
    */
-  public function testGdRotate(int $width, int $height, int $angle, int $exp_width, int $exp_height): void {
+  public function testGdRotate(int $width, int $height, float $angle, int $exp_width, int $exp_height): void {
     $libgd_version_from_info = gd_info()['GD Version'];
     $libgd_version_found = preg_match('/.*((0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*))/', $libgd_version_from_info, $matches);
     if ($libgd_version_found !== 1) {
