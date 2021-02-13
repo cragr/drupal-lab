@@ -205,7 +205,7 @@ class Rectangle {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1
+   * @see https://www.drupal.org/node/3198325
    */
   protected function fixImprecision($input, $imprecision) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
@@ -227,7 +227,7 @@ class Rectangle {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1
+   * @see https://www.drupal.org/node/3198325
    */
   protected function fraction($input) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
@@ -246,7 +246,7 @@ class Rectangle {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1
+   * @see https://www.drupal.org/node/3198325
    */
   protected function delta($input) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);

@@ -68,18 +68,25 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Assert two colors are equal by RGBA.
    *
-   * Uses an adjusted formula for square Euclidean color distance to account
+   * Uses an adjusted formula for squared Euclidean color distance to account
    * for the alpha channel.
+   *
+   * @param int[] $expected
+   *   The expected RGBA array.
+   * @param int[] $actual
+   *   The actual RGBA array.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
    *
    * @see https://en.wikipedia.org/wiki/Color_difference
    */
-  private function assertColorsAreEqual(array $expected, array $actual, string $message = ''): void {
+  protected function assertColorsAreEqual(array $expected, array $actual, string $message = ''): void {
     // Fully transparent colors are equal, regardless of RGB.
     if ($actual[3] == 127 && $expected[3] == 127) {
       return;
     }
     $distance = pow(($actual[0] - $expected[0]), 2) + pow(($actual[1] - $expected[1]), 2) + pow(($actual[2] - $expected[2]), 2) + pow(($actual[3] - $expected[3]), 2);
-    // Colors are equal when their square Euclidean distance is zero.
+    // Colors are equal when their squared Euclidean distance is zero.
     $this->assertEquals(0, $distance, $message . ($message ? ' - ' : '') . "Actual: {" . implode(',', $actual) . "}, Expected: {" . implode(',', $expected) . "}, Distance: " . $distance);
   }
 
@@ -89,7 +96,7 @@ class ToolkitGdTest extends KernelTestBase {
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
    *   ::assertColorsAreEqual() instead.
    *
-   * @see https://www.drupal.org/node/1
+   * @see https://www.drupal.org/node/3198325
    */
   public function colorsAreEqual($color_a, $color_b) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ::assertColorsAreEqual() instead. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
