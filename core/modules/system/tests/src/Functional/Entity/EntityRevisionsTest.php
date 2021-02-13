@@ -171,8 +171,8 @@ class EntityRevisionsTest extends BrowserTestBase {
       }
 
       // Check non-revisioned values are loaded.
-      $this->assertTrue(isset($entity_revision->created->value), new FormattableMarkup('%entity_type: Non-revisioned field is loaded.', ['%entity_type' => $entity_type]));
-      $this->assertEqual($values['en'][2]['created'], $entity_revision->created->value, new FormattableMarkup('%entity_type: Non-revisioned field value is the same between revisions.', ['%entity_type' => $entity_type]));
+      $this->assertNotNull($entity_revision->created->value, new FormattableMarkup('%entity_type: Non-revisioned field is loaded.', ['%entity_type' => $entity_type]));
+      $this->assertEquals($values['en'][2]['created'], $entity_revision->created->value, new FormattableMarkup('%entity_type: Non-revisioned field value is the same between revisions.', ['%entity_type' => $entity_type]));
     }
 
     // Confirm the correct revision text appears in the edit form.

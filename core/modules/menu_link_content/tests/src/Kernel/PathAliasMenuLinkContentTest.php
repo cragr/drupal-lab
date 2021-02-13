@@ -82,7 +82,8 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
     // Delete the alias.
     $path_alias->delete();
     $tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertTrue(isset($tree[$menu_link_content->getPluginId()]));
+    $this->assertArrayHasKey($menu_link_content->getPluginId(), $tree);
+    $this->assertNotNull($tree[$menu_link_content->getPluginId()]);
     $this->assertEqual('', $tree[$menu_link_content->getPluginId()]->link->getRouteName());
     // Verify the plugin now references a path that does not match any route.
     $this->assertEqual('base:my-blog', $tree[$menu_link_content->getPluginId()]->link->getUrlObject()->getUri());

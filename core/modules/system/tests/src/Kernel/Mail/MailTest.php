@@ -137,7 +137,7 @@ class MailTest extends KernelTestBase {
     // Message reply-to headers are set.
     $this->assertEquals($reply_email, $sent_message['headers']['Reply-to']);
     // Errors-to header must not be set, it is deprecated.
-    $this->assertFalse(isset($sent_message['headers']['Errors-To']));
+    $this->assertArrayNotHasKey('Errors-To', $sent_message['headers']);
 
     // Test that long site names containing characters that need MIME encoding
     // works as expected.
@@ -150,9 +150,9 @@ class MailTest extends KernelTestBase {
     $this->assertEquals('=?UTF-8?B?RHLDqXBhbCB0aGlzIGlzIGEgdmVyeSBsb25nIHRlc3Qgc2VudGVuY2UgdG8gdGU=?= <mailtest@example.com>', $sent_message['headers']['From']);
     // From header is correctly encoded.
     $this->assertEquals('Drépal this is a very long test sentence to te <mailtest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']));
-    $this->assertFalse(isset($sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
+    $this->assertArrayNotHasKey('Reply-to', $sent_message['headers'], 'Message reply-to is not set if not specified.');
     // Errors-to header must not be set, it is deprecated.
-    $this->assertFalse(isset($sent_message['headers']['Errors-To']));
+    $this->assertArrayNotHasKey('Errors-To', $sent_message['headers']);
 
     // Test RFC-2822 rules are respected for 'display-name' component of
     // 'From:' header. Specials characters are not allowed, so randomly add one
