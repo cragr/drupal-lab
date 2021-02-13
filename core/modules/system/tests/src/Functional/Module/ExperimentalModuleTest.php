@@ -93,7 +93,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $this->assertNoText('The following modules are experimental: Experimental Dependency Test');
 
     // There should be a message about enabling dependencies.
-    $this->assertText('You must enable the Experimental Test module to install Experimental Dependency Test');
+    $this->assertText('You must enable the Experimental Test module to install the following modules: Experimental Dependency Test');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');

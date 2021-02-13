@@ -177,7 +177,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['color'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
-    $this->assertText('You must enable the Configuration Manager, Help modules to install Color.');
+    $this->assertText('You must enable the Configuration Manager, Help modules to install the following modules: Color.');
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
