@@ -14,8 +14,8 @@ trait MapJoinTrait {
   /**
    * Joins a source query to the map table.
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface $query The source query
-   *   to add the join to.
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   The source query to add the join to.
    * @param \Drupal\Core\Database\Query\ConditionInterface $condition_group
    *   (optional) A condition group that the map table conditions should be
    *   added to, instead of directly to the query. If this is specified, the
