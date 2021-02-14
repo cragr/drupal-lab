@@ -100,8 +100,8 @@ class EntityFormTest extends BrowserTestBase {
    */
   public function testEntityFormDisplayAlter() {
     $this->drupalGet('entity_test/add');
-    $altered_field = $this->xpath('//input[@name="field_test_text[0][value]" and @size="42"]');
-    $this->assertCount(1, $altered_field, 'The altered field has the correct size value.');
+    $altered_field = $this->assertSession()->fieldExists('field_test_text[0][value]');
+    $this->assertEquals(42, $altered_field->getAttribute('size'), 'The altered field has the correct size value.');
   }
 
   /**
