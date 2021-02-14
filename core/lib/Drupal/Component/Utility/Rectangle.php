@@ -18,9 +18,14 @@ namespace Drupal\Component\Utility;
  * This class implements a calculation algorithm that returns, given input
  * width, height and rotation angle, dimensions of the expected image after
  * rotation that are consistent with those produced by the GD rotate image
- * toolkit operation using libgd 2.2.2 and above.
+ * toolkit operation using libgd 2.2.2 and above. The code is taken from the C++
+ * libgd implementation that uses affine transformation math, ported for use in
+ * PHP.
  *
  * @see \Drupal\system\Plugin\ImageToolkit\Operation\gd\Rotate
+ * @see https://github.com/libgd/libgd/blob/master/src/gd_interpolation.c
+ * @see https://github.com/libgd/libgd/blob/master/src/gd_matrix.c
+ * @see https://en.wikipedia.org/wiki/Affine_transformation
  */
 class Rectangle {
 
@@ -208,7 +213,7 @@ class Rectangle {
    * @see https://www.drupal.org/node/3198325
    */
   protected function fixImprecision($input, $imprecision) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3198325', E_USER_DEPRECATED);
     if ($this->delta($input) < abs($imprecision)) {
       return $input + $imprecision;
     }
@@ -230,7 +235,7 @@ class Rectangle {
    * @see https://www.drupal.org/node/3198325
    */
   protected function fraction($input) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3198325', E_USER_DEPRECATED);
     return abs((int) $input - $input);
   }
 
@@ -249,7 +254,7 @@ class Rectangle {
    * @see https://www.drupal.org/node/3198325
    */
   protected function delta($input) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3198325', E_USER_DEPRECATED);
     $fraction = $this->fraction($input);
     return $fraction > 0.5 ? (1 - $fraction) : $fraction;
   }

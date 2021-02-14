@@ -99,7 +99,7 @@ class ToolkitGdTest extends KernelTestBase {
    * @see https://www.drupal.org/node/3198325
    */
   public function colorsAreEqual($color_a, $color_b) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ::assertColorsAreEqual() instead. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ::assertColorsAreEqual() instead. See https://www.drupal.org/node/3198325', E_USER_DEPRECATED);
     // Fully transparent pixels are equal, regardless of RGB.
     if ($color_a[3] == 127 && $color_b[3] == 127) {
       return TRUE;
