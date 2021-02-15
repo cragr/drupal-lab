@@ -41,8 +41,8 @@
 }
 
 .views-exposed-form__item.views-exposed-form__item {
-  margin: 0.75rem 0.5rem 0 0; /* LTR */
   max-width: 100%;
+  margin: 0.75rem 0.5rem 0 0; /* LTR */
 }
 
 [dir="rtl"] .views-exposed-form__item.views-exposed-form__item {

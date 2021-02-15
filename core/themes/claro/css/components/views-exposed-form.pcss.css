@@ -35,8 +35,8 @@
 }
 
 .views-exposed-form__item.views-exposed-form__item {
-  margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
   max-width: 100%;
+  margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
 }
 [dir="rtl"] .views-exposed-form__item.views-exposed-form__item {
   margin-right: 0;
