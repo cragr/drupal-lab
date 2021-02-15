@@ -68,26 +68,20 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Assert two colors are equal by RGBA.
    *
-   * Uses an adjusted formula for squared Euclidean color distance to account
-   * for the alpha channel.
-   *
    * @param int[] $expected
    *   The expected RGBA array.
    * @param int[] $actual
    *   The actual RGBA array.
    * @param string $message
    *   (optional) A message to display with the assertion.
-   *
-   * @see https://en.wikipedia.org/wiki/Color_difference
    */
   protected function assertColorsAreEqual(array $expected, array $actual, string $message = ''): void {
     // Fully transparent colors are equal, regardless of RGB.
     if ($actual[3] == 127 && $expected[3] == 127) {
       return;
     }
-    $distance = pow(($actual[0] - $expected[0]), 2) + pow(($actual[1] - $expected[1]), 2) + pow(($actual[2] - $expected[2]), 2) + pow(($actual[3] - $expected[3]), 2);
-    // Colors are equal when their squared Euclidean distance is zero.
-    $this->assertEquals(0, $distance, $message . ($message ? ' - ' : '') . "Actual: {" . implode(',', $actual) . "}, Expected: {" . implode(',', $expected) . "}, Distance: " . $distance);
+    // Colors are equal when their RGBA components are the same.
+    $this->assertSame($expected, $actual, $message);
   }
 
   /**

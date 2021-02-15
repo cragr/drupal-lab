@@ -122,12 +122,14 @@ class Rotate extends GDImageToolkitOperationBase {
         if ($this->getToolkit()->getWidth() > $expected_width || $this->getToolkit()->getHeight() > $expected_height) {
           $crop_width = min($expected_width, $this->getToolkit()->getWidth());
           $crop_height = min($expected_height, $this->getToolkit()->getHeight());
-          if (!$this->getToolkit()->apply('crop', [
+          // Prepare the crop.
+          $data = [
             'x' => $this->getToolkit()->getWidth() / 2 - $crop_width / 2,
             'y' => $this->getToolkit()->getHeight() / 2 - $crop_height / 2,
             'width' => $crop_width,
             'height' => $crop_height,
-          ])) {
+          ];
+          if (!$this->getToolkit()->apply('crop', $data)) {
             return FALSE;
           }
         }
@@ -157,6 +159,9 @@ class Rotate extends GDImageToolkitOperationBase {
           imagesavealpha($temp_res, TRUE);
           imagealphablending($this->getToolkit()->getResource(), TRUE);
           imagesavealpha($this->getToolkit()->getResource(), TRUE);
+          // We determine the position of the top-left point in the canvas
+          // where the overlay of the current image should be copied to, so
+          // that the current image results centered on the canvas.
           $x_pos = (int) ($expected_width / 2 - imagesx($temp_res) / 2);
           $y_pos = (int) ($expected_height / 2 - imagesy($temp_res) / 2);
           if (imagecopy($this->getToolkit()->getResource(), $temp_res, $x_pos, $y_pos, 0, 0, imagesx($temp_res), imagesy($temp_res))) {
