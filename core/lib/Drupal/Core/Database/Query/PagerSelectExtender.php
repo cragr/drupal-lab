@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
  * Query extender for pager queries.
@@ -39,29 +38,15 @@ class PagerSelectExtender extends SelectExtender {
   protected $customCountQuery = FALSE;
 
   /**
-   * The pager manager service.
-   *
-   * @var \Drupal\Core\Pager\PagerManagerInterface
-   */
-  protected $pagerManager;
-
-  /**
    * Constructs a PagerSelectExtender object.
    *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   Select query object.
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection object.
-   * @param \Drupal\Core\Pager\PagerManagerInterface $pager_manager
-   *   The pager manager service.
    */
-  public function __construct(SelectInterface $query, Connection $connection, PagerManagerInterface $pager_manager = NULL) {
+  public function __construct(SelectInterface $query, Connection $connection) {
     parent::__construct($query, $connection);
-    if (!$pager_manager) {
-      @trigger_error('The pager.manager service must be passed to PagerSelectExtender::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $pager_manager = \Drupal::service('pager.manager');
-    }
-    $this->pagerManager = $pager_manager;
 
     // Add pager tag. Do this here to ensure that it is always added before
     // preExecute() is called.
@@ -76,7 +61,7 @@ class PagerSelectExtender extends SelectExtender {
   public function __get($name) {
     if ($name === 'maxElement') {
       @trigger_error("PagerSelectExtender::\$maxElement should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. Use \Drupal::service('pager.manager')->getMaxPagerElementId() instead. See https://www.drupal.org/node/3194594", E_USER_DEPRECATED);
-      return $this->pagerManager->getMaxPagerElementId();
+      return $this->connection->getPagerManager()->getMaxPagerElementId();
     }
   }
 
@@ -101,7 +86,7 @@ class PagerSelectExtender extends SelectExtender {
     $this->ensureElement();
 
     $total_items = $this->getCountQuery()->execute()->fetchField();
-    $pager = $this->pagerManager->createPager($total_items, $this->limit, $this->element);
+    $pager = $this->connection->getPagerManager()->createPager($total_items, $this->limit, $this->element);
     $this->range($pager->getCurrentPage() * $this->limit, $this->limit);
 
     // Now that we've added our pager-based range instructions, run the query normally.
@@ -116,7 +101,7 @@ class PagerSelectExtender extends SelectExtender {
    */
   protected function ensureElement() {
     if (!isset($this->element)) {
-      $this->element = $this->pagerManager->getMaxPagerElementId() + 1;
+      $this->element = $this->connection()->getPagerManager->getMaxPagerElementId() + 1;
     }
   }
 

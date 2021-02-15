@@ -319,15 +319,12 @@ class Select extends Query implements SelectInterface {
    */
   public function extend($extender_name) {
     $parts = explode('\\', $extender_name);
-    $base_class = end($parts);
-    $driver_class = $this->connection->getDriverClass($base_class);
-    $class = $driver_class !== $base_class ? $driver_class : $extender_name;
-    if (is_a($class, PagerSelectExtender::class, TRUE)) {
-      return new $class($this, $this->connection, \Drupal::service('pager.manager'));
+    $class = end($parts);
+    $driver_class = $this->connection->getDriverClass($class);
+    if ($driver_class !== $class) {
+      return new $driver_class($this, $this->connection);
     }
-    else {
-      return new $class($this, $this->connection);
-    }
+    return new $extender_name($this, $this->connection);
   }
 
   /**
