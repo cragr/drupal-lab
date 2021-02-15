@@ -22,7 +22,6 @@
 .views-exposed-form.views-exposed-form {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
   margin-top: var(--space-l);
   margin-bottom: var(--space-l);
   padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
