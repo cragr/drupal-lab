@@ -36,9 +36,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
    * Return the build id of the current form.
    */
   protected function getFormBuildId() {
-    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $build_id_fields, 'One form build id field on the page');
-    return $build_id_fields[0]->getValue();
+    return $this->assertSession()->fieldExists('form_build_id')->getValue();
   }
 
   /**

@@ -43,7 +43,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
     $this->createImageField($field_name, 'article', $storage_settings, $field_settings);
     $this->drupalLogin($this->drupalCreateUser(['access content', 'create article content']));
     $this->drupalGet('node/add/article');
-    $this->xpath('//input[@name="title[0][value]"]')[0]->setValue('Test');
+    $this->assertSession()->fieldExists('title[0][value]')->setValue('Test');
 
     $images = $this->getTestFiles('image');
     $images = array_slice($images, 0, 5);

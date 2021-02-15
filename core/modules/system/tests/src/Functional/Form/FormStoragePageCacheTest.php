@@ -36,9 +36,8 @@ class FormStoragePageCacheTest extends BrowserTestBase {
    * Return the build id of the current form.
    */
   protected function getFormBuildId() {
-    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $build_id_fields, 'One form build id field on the page');
-    return (string) $build_id_fields[0]->getAttribute('value');
+    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    return (string) $build_id_field->getAttribute('value');
   }
 
   /**

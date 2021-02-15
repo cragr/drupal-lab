@@ -149,9 +149,8 @@ class StorageTest extends BrowserTestBase {
   public function testImmutableForm() {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $buildIdFields, 'One form build id field on the page');
-    $buildId = $buildIdFields[0]->getValue();
+    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    $buildId = $build_id_field->getValue();
 
     // Trigger validation error by submitting an empty title.
     $edit = ['title' => ''];
@@ -161,9 +160,8 @@ class StorageTest extends BrowserTestBase {
     $this->assertSession()->hiddenFieldValueNotEquals('form_build_id', $buildId);
 
     // Retrieve the new build-id.
-    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $buildIdFields, 'One form build id field on the page');
-    $buildId = (string) $buildIdFields[0]->getValue();
+    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    $buildId = (string) $build_id_field->getValue();
 
     // Trigger validation error by again submitting an empty title.
     $edit = ['title' => ''];
@@ -178,9 +176,8 @@ class StorageTest extends BrowserTestBase {
    */
   public function testImmutableFormLegacyProtection() {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $build_id_fields, 'One form build id field on the page');
-    $build_id = $build_id_fields[0]->getValue();
+    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    $build_id = $build_id_field->getValue();
 
     // Try to poison the form cache.
     $response = $this->drupalGet('form-test/form-storage-legacy/' . $build_id, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
