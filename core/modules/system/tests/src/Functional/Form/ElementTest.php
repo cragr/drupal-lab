@@ -100,7 +100,6 @@ class ElementTest extends BrowserTestBase {
   public function testRadiosChecked() {
     // Verify that there is only one radio option checked.
     $this->drupalGet('form-test/radios-checked');
-    $elements = $this->xpath();
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios" and @checked]', 1);
     $this->assertSession()->fieldValueEquals("radios", '0');
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios-string" and @checked]', 1);
