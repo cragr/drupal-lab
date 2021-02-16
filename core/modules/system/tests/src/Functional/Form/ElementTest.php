@@ -100,38 +100,28 @@ class ElementTest extends BrowserTestBase {
   public function testRadiosChecked() {
     // Verify that there is only one radio option checked.
     $this->drupalGet('form-test/radios-checked');
-    $elements = $this->xpath('//input[@name="radios" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('0', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-string" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('bar', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-boolean-true" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('1', $elements[0]->getValue());
+    $elements = $this->xpath();
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios", '0');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-string" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-string", 'bar');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-boolean-true" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-boolean-true", '1');
     // A default value of FALSE indicates that nothing is set.
-    $elements = $this->xpath('//input[@name="radios-boolean-false" and @checked]');
-    $this->assertCount(0, $elements);
-    $elements = $this->xpath('//input[@name="radios-boolean-any" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('All', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-string-zero" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('0', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-int-non-zero" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('10', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-int-non-zero-as-string" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('100', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-empty-string" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('0', $elements[0]->getValue());
-    $elements = $this->xpath('//input[@name="radios-empty-array" and @checked]');
-    $this->assertCount(0, $elements);
-    $elements = $this->xpath('//input[@name="radios-key-FALSE" and @checked]');
-    $this->assertCount(1, $elements);
-    $this->assertSame('0', $elements[0]->getValue());
+    $this->assertSession()->elementsNotExists('xpath', '//input[@name="radios-boolean-false" and @checked]');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-boolean-any" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-boolean-any", 'All');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-string-zero" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-string-zero", '0');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-int-non-zero" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-int-non-zero", '10');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-int-non-zero-as-string" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-int-non-zero-as-string", '100');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-empty-string" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-empty-string", '0');
+    $this->assertSession()->elementsNotExists('xpath', '//input[@name="radios-empty-array" and @checked]');
+    $this->assertSession()->elementsCount('xpath', '//input[@name="radios-key-FALSE" and @checked]', 1);
+    $this->assertSession()->fieldValueEquals("radios-key-FALSE", '0');
   }
 
   /**

@@ -160,7 +160,7 @@ class StorageTest extends BrowserTestBase {
     $this->assertSession()->hiddenFieldValueNotEquals('form_build_id', $buildId);
 
     // Retrieve the new build-id.
-    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    $build_id_field = $this->assertSession()->hiddenFieldExists('form_build_id');
     $buildId = (string) $build_id_field->getValue();
 
     // Trigger validation error by again submitting an empty title.
@@ -176,7 +176,7 @@ class StorageTest extends BrowserTestBase {
    */
   public function testImmutableFormLegacyProtection() {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    $build_id_field = $this->assertSession()->hiddenFieldExists('form_build_id');
     $build_id = $build_id_field->getValue();
 
     // Try to poison the form cache.
