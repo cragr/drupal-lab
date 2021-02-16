@@ -36,7 +36,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
    * Return the build id of the current form.
    */
   protected function getFormBuildId() {
-    return $this->assertSession()->fieldExists('form_build_id')->getValue();
+    return $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
   }
 
   /**

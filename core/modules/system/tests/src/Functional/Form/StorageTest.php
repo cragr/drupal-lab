@@ -149,7 +149,7 @@ class StorageTest extends BrowserTestBase {
   public function testImmutableForm() {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    $build_id_field = $this->assertSession()->fieldExists('form_build_id');
+    $build_id_field = $this->assertSession()->hiddenFieldExists('form_build_id');
     $buildId = $build_id_field->getValue();
 
     // Trigger validation error by submitting an empty title.
