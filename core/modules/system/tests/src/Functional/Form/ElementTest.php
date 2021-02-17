@@ -32,11 +32,8 @@ class ElementTest extends BrowserTestBase {
     $expected = 'placeholder-text';
     // Test to make sure non-textarea elements have the proper placeholder text.
     foreach (['textfield', 'tel', 'url', 'password', 'email', 'number'] as $type) {
-      $element = $this->xpath('//input[@id=:id and @placeholder=:expected]', [
-        ':id' => 'edit-' . $type,
-        ':expected' => $expected,
-      ]);
-      $this->assertTrue(!empty($element), new FormattableMarkup('Placeholder text placed in @type.', ['@type' => $type]));
+      $field = $this->assertSession()->fieldExists("edit-$type");
+      $this->assertSame($expected, $field->getAttribute('placeholder'), "Placeholder text placed in $type.");
     }
 
     // Test to make sure textarea has the proper placeholder text.
@@ -192,10 +189,9 @@ class ElementTest extends BrowserTestBase {
   public function testFormAutocomplete() {
     $this->drupalGet('form-test/autocomplete');
 
-    $result = $this->xpath('//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
-    $this->assertCount(0, $result, 'Ensure that the user does not have access to the autocompletion');
-    $result = $this->xpath('//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
-    $this->assertCount(0, $result, 'Ensure that the user does not have access to the autocompletion');
+    // Ensure that the user does not have access to the autocompletion.
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
 
     $user = $this->drupalCreateUser(['access autocomplete test']);
     $this->drupalLogin($user);
@@ -204,10 +200,9 @@ class ElementTest extends BrowserTestBase {
     // Make sure that the autocomplete library is added.
     $this->assertRaw('core/misc/autocomplete.js');
 
-    $result = $this->xpath('//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
-    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
-    $result = $this->xpath('//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
-    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
+    // Ensure that the user does have access to the autocompletion.
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-autocomplete-2" and contains(@data-autocomplete-path, "form-test/autocomplete-2/value")]');
   }
 
   /**

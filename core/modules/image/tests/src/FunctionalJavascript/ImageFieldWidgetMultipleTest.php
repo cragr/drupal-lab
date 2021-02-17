@@ -58,7 +58,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
       $remote_paths[] = $web_driver->uploadFileAndGetRemoteFilePath($path);
     }
 
-    $multiple_field = $this->xpath('//input[@multiple]')[0];
+    $multiple_field = $this->assertSession()->elementExists('xpath', '//input[@multiple]');
     $multiple_field->setValue(implode("\n", $remote_paths));
     $this->assertSession()->waitForElementVisible('css', '[data-drupal-selector="edit-images-4-preview"]');
     $this->getSession()->getPage()->findButton('Save')->click();

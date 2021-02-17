@@ -102,18 +102,17 @@ class ValidationTest extends BrowserTestBase {
     $this->drupalGet($path);
     $expected = 'formnovalidate';
     foreach (['partial', 'partial-numeric-index', 'substring'] as $type) {
-      $element = $this->xpath('//input[@id=:id and @formnovalidate=:expected]', [
+      // Verify the $type button has the proper formnovalidate attribute.
+      $this->assertSession()->elementExists('xpath', '//input[@id=:id and @formnovalidate=:expected]', [
         ':id' => 'edit-' . $type,
         ':expected' => $expected,
       ]);
-      $this->assertTrue(!empty($element), new FormattableMarkup('The @type button has the proper formnovalidate attribute.', ['@type' => $type]));
     }
     // The button with full server-side validation should not have the
     // 'formnovalidate' attribute.
-    $element = $this->xpath('//input[@id=:id and not(@formnovalidate)]', [
+    $this->assertSession()->elementExists('xpath', '//input[@id=:id and not(@formnovalidate)]', [
       ':id' => 'edit-full',
     ]);
-    $this->assertTrue(!empty($element), 'The button with full server-side validation does not have the formnovalidate attribute.');
 
     // Submit the form by pressing the 'Partial validate' button (uses
     // #limit_validation_errors) and ensure that the title field is not
