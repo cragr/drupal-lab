@@ -269,17 +269,16 @@ final class SecurityAdvisoriesFetcher {
    *   TRUE if the advisory is applicable for the current site, otherwise FALSE.
    */
   protected function isApplicable(SecurityAdvisory $sa): bool {
-    // Projects that are not in the site's codebase are not applicable. Core
-    // will always be present. Otherwise projects are not applicable
-    // ::getProjectInfo() does not find a matching extension for the project
-    // name.
-    if (!$sa->isCoreAdvisory() && !$this->getProjectInfo($sa)) {
-      return FALSE;
+    // Only projects that are in the site's codebase can be applicable. Core
+    // will always be in the codebase and other projects are in the codebase if
+    // ::getProjectInfo() finds a matching extension for the project name.
+    if ($sa->isCoreAdvisory() || $this->getProjectInfo($sa)) {
+      // PSA advisories are always applicable because they are not dependent on
+      // the version of the project that is currently present on the site. Other
+      // advisories are only applicable if they match the existing version.
+      return $sa->isPsa() || $this->matchesExistingVersion($sa);
     }
-    // PSA advisories are always applicable because they are not dependent on
-    // the version of the project that is currently present on the site. Other
-    // advisories are only applicable if they match the existing version.
-    return $sa->isPsa() || $this->matchesExistingVersion($sa);
+    return FALSE;
   }
 
 }
