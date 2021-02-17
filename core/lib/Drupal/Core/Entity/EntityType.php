@@ -730,7 +730,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
       return $this->data_table;
     }
     if ($this->data_table !== NULL) {
-      trigger_error("{$this->id()} entity type is not translatable but the the data_table field is set.", E_USER_WARNING);
+      trigger_error("{$this->id()} entity type is not translatable but the the data_table property is set.", E_USER_WARNING);
     }
     return NULL;
   }
