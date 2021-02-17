@@ -107,7 +107,7 @@ class ElementTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios-boolean-true" and @checked]', 1);
     $this->assertSession()->fieldValueEquals("radios-boolean-true", '1');
     // A default value of FALSE indicates that nothing is set.
-    $this->assertSession()->elementsNotExists('xpath', '//input[@name="radios-boolean-false" and @checked]');
+    $this->assertSession()->elementNotExists('xpath', '//input[@name="radios-boolean-false" and @checked]');
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios-boolean-any" and @checked]', 1);
     $this->assertSession()->fieldValueEquals("radios-boolean-any", 'All');
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios-string-zero" and @checked]', 1);
@@ -118,7 +118,7 @@ class ElementTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals("radios-int-non-zero-as-string", '100');
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios-empty-string" and @checked]', 1);
     $this->assertSession()->fieldValueEquals("radios-empty-string", '0');
-    $this->assertSession()->elementsNotExists('xpath', '//input[@name="radios-empty-array" and @checked]');
+    $this->assertSession()->elementNotExists('xpath', '//input[@name="radios-empty-array" and @checked]');
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios-key-FALSE" and @checked]', 1);
     $this->assertSession()->fieldValueEquals("radios-key-FALSE", '0');
   }
