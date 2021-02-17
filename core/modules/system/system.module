@@ -27,7 +27,6 @@ use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\system\SecurityAdvisories\SecurityAdvisory;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -1339,30 +1338,26 @@ function system_page_top() {
       $fetcher = \Drupal::service('system.sa_fetcher');
       $advisories = $fetcher->getSecurityAdvisories(FALSE);
       if ($advisories) {
-        // To ensure that all the advisory messages are grouped together on
-        // the page they must all be warnings or all be errors. If any
-        // advisories are not PSA advisories then display all the messages as
-        // errors because non-PSA advisories are immediately actionable by
-        // upgrading to a secure version of a project.
-        $display_as_errors = !empty(array_filter($advisories, function (SecurityAdvisory $advisory) {
-          return !$advisory->isPsa();
-        }));
-        $call_messenger = function ($message) use ($display_as_errors) {
-          if ($display_as_errors) {
-            \Drupal::messenger()->addError($message);
-          }
-          else {
-            \Drupal::messenger()->addWarning($message);
-          }
-        };
-        $call_messenger(t('Critical security announcements:'));
+        $messenger = \Drupal::messenger();
+        $display_as_errors = FALSE;
+        $links = [];
         foreach ($advisories as $advisory) {
-          $call_messenger(new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl())));
+          // To ensure that all the advisory messages are grouped together on
+          // the page they must all be warnings or all be errors. If any
+          // advisories are not PSA advisories then display all the messages as
+          // errors because non-PSA advisories are immediately actionable by
+          // upgrading to a secure version of a project.
+          $display_as_errors = $display_as_errors ? TRUE : !$advisory->isPsa();
+          $links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+        }
+        foreach ($links as $link) {
+          $display_as_errors ? $messenger->addError($link) : $messenger->addWarning($link);
         }
         if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'system')) {
-          $call_messenger(t('(<a href=":system-help">What are critical security announcements?</a>)', [
+          $help_link = t('(<a href=":system-help">What are critical security announcements?</a>)', [
             ':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString(),
-          ]));
+          ]);
+          $display_as_errors ? $messenger->addError($help_link) : $messenger->addWarning($help_link);
         }
       }
     }
