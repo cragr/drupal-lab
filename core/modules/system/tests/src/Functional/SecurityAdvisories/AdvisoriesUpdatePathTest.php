@@ -23,7 +23,7 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
   /**
    * Tests advisories settings update path.
    */
-  public function testUpdatePath() {
+  public function testUpdatePath(): void {
     $this->assertNull($this->config('system.advisories')->get('interval_hours'));
     $this->assertNull($this->config('system.advisories')->get('enabled'));
 
