@@ -30,7 +30,7 @@ final class SecurityAdvisoriesFetcher {
   protected const ADVISORIES_JSON_EXPIRABLE_KEY = 'advisories_response';
 
   /**
-   * The 'update.settings' configuration.
+   * The 'system.advisories' configuration.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
    */

@@ -55,12 +55,12 @@ services:
       - { name: event_subscriber }
   logger.channel.system:
     parent: logger.channel_base
-    arguments: [ 'system' ]
+    arguments: ['system']
   system.sa_fetcher:
     class: Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
-    arguments: [ '@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.system' ]
+    arguments: ['@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.system']
   system.advisories_config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
-    arguments: [ '@system.sa_fetcher' ]
+    arguments: ['@system.sa_fetcher']
     tags:
       - { name: event_subscriber }
