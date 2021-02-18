@@ -8,4 +8,4 @@ services:
     public: false
     class: Drupal\advisory_feed_test\TestSystemLoggerChannel
     decorates: logger.channel.system
-    arguments: [ '@logger.advisory_feed_test.inner', '@state' ]
+    arguments: ['@logger.advisory_feed_test.inner', '@state']
