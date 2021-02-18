@@ -256,7 +256,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   }
 
   /**
-   * Assert the links are not shown on the admin pages.
+   * Asserts that security advisory links are not shown on admin pages.
    *
    * @param array $links
    *   The advisory links.
