@@ -41,6 +41,8 @@ final class TestSystemLoggerChannel extends LoggerChannel {
 
   /**
    * {@inheritdoc}
+   *
+   * @see \Drupal\Tests\system\Functional\SecurityAdvisories\SecurityAdvisoriesTestTrait::assertServiceAdvisoryLoggedErrors()
    */
   public function log($level, $message, array $context = []) {
     if ($level === LogLevel::ERROR) {
@@ -49,21 +51,6 @@ final class TestSystemLoggerChannel extends LoggerChannel {
       $this->state->set('advisory_feed_test.error_messages', $messages);
     }
     $this->innerLogger->log($level, $message, $context);
-  }
-
-  /**
-   * Gets the error messages logged on the 'system' channel.
-   *
-   * The stored error messages are cleared during this method.
-   *
-   * @return string[]
-   *   The error messages logged on the 'system' channel since last call to this
-   *   method.
-   */
-  public function getErrorMessages(): array {
-    $messages = $this->state->get('advisory_feed_test.error_messages', []);
-    $this->state->set('advisory_feed_test.error_messages', []);
-    return $messages;
   }
 
 }

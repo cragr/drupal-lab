@@ -15,6 +15,7 @@ use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
 class SecurityAdvisoryTest extends BrowserTestBase {
 
   use CronRunTrait;
+  use SecurityAdvisoriesTestTrait;
 
   /**
    * {@inheritdoc}
@@ -169,22 +170,16 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     AdvisoriesTestHttpClient::setTestEndpoint($this->invalidJsonEndpoint, TRUE);
     // Assert that are no logged error messages before attempting to fetch the
     // invalid endpoint.
-    $this->assertSame([], $this->container->get('logger.channel.system')->getErrorMessages());
+    $this->assertServiceAdvisoryLoggedErrors([]);
     // On admin pages no message should be displayed if the feed is malformed.
     $this->assertAdvisoriesNotDisplayed($mixed_advisory_links);
     // Assert that there was an error logged for the invalid endpoint.
-    $this->assertSame(
-      'The security advisory JSON feed from Drupal.org could not be decoded.',
-      $this->container->get('logger.channel.system')->getErrorMessages()[0]
-    );
+    $this->assertServiceAdvisoryLoggedErrors(['The security advisory JSON feed from Drupal.org could not be decoded.']);
     // On the status report there should be no announcements section.
     $this->drupalGet(Url::fromRoute('system.status'));
     $assert->pageTextNotContains('Failed to fetch security advisory data:');
     // Assert the error was logged again.
-    $this->assertSame(
-      'The security advisory JSON feed from Drupal.org could not be decoded.',
-      $this->container->get('logger.channel.system')->getErrorMessages()[0]
-    );
+    $this->assertServiceAdvisoryLoggedErrors(['The security advisory JSON feed from Drupal.org could not be decoded.']);
 
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
     $psa_advisory_links = [
@@ -213,7 +208,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->config('system.advisories')->set('enabled', FALSE)->save();
     $this->assertAdvisoriesNotDisplayed($non_psa_advisory_links);
     // Assert no other errors were logged.
-    $this->assertSame([], $this->container->get('logger.channel.system')->getErrorMessages());
+    $this->assertServiceAdvisoryLoggedErrors([]);
   }
 
   /**
@@ -264,6 +259,10 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    *
    * @param array $links
    *   The advisory links.
+   * @param array $routes
+   *   The routes to test.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
    */
   private function assertAdvisoriesNotDisplayed(array $links, array $routes = ['system.status', 'system.admin']): void {
     foreach ($routes as $route) {

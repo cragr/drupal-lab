@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\system\Functional\SecurityAdvisories\SecurityAdvisoriesTestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -17,6 +18,8 @@ use GuzzleHttp\Psr7\Response;
  * @group system
  */
 class SecurityAdvisoriesFetcherTest extends KernelTestBase {
+
+  use SecurityAdvisoriesTestTrait;
 
   /**
    * {@inheritdoc}
@@ -574,18 +577,12 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     ]);
     $this->assertNull($this->getAdvisories());
     $this->assertCount(1, $this->history);
-    $this->assertSame(
-      'The security advisory JSON feed from Drupal.org could not be decoded.',
-      $this->container->get('logger.channel.system')->getErrorMessages()[0]
-    );
+    $this->assertServiceAdvisoryLoggedErrors(['The security advisory JSON feed from Drupal.org could not be decoded.']);
 
     // Confirm that previous non-JSON response was not stored.
     $this->assertNull($this->getAdvisories());
     $this->assertCount(2, $this->history);
-    $this->assertSame(
-      'The security advisory JSON feed from Drupal.org could not be decoded.',
-      $this->container->get('logger.channel.system')->getErrorMessages()[0]
-    );
+    $this->assertServiceAdvisoryLoggedErrors(['The security advisory JSON feed from Drupal.org could not be decoded.']);
 
     // Confirm that if $allow_http_request is set to FALSE a new request will
     // not be attempted.
@@ -598,10 +595,9 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
 
     // Confirm that getting the advisories after a valid JSON response will use
     // the stored response and not make another 'http_client' request.
-    $advisories = $this->getAdvisories();
     $this->assertCount(0, $this->getAdvisories());
     $this->assertCount(3, $this->history);
-    $this->assertSame([], $this->container->get('logger.channel.system')->getErrorMessages());
+    $this->assertServiceAdvisoryLoggedErrors([]);
   }
 
   /**
