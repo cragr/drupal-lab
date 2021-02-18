@@ -45,7 +45,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromArray().
    */
-  public function providerCreateFromArray() {
+  public function providerCreateFromArray(): array {
     return [
       // For 'is_psa' the return value should converted to any array.
       [
