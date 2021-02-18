@@ -220,7 +220,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @param int $error_or_warning
    *   Whether the links are a warning or an error. Should be one of the REQUIREMENT_* constants.
    */
-  private function assertAdminPageLinks(array $expected_link_texts, int $error_or_warning) {
+  private function assertAdminPageLinks(array $expected_link_texts, int $error_or_warning): void {
     $assert = $this->assertSession();
     $this->drupalGet(Url::fromRoute('system.admin'));
     if ($error_or_warning === REQUIREMENT_ERROR) {
