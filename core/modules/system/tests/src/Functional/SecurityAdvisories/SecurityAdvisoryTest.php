@@ -4,7 +4,7 @@ namespace Drupal\Tests\system\Functional\SecurityAdvisories;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\system\SecurityAdvisoriesTestTrait;
+use Drupal\Tests\system\Traits\SecurityAdvisoriesTestTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
 

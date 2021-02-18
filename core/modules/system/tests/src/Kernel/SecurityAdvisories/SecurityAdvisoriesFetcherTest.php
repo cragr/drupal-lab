@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\system\SecurityAdvisoriesTestTrait;
+use Drupal\Tests\system\Traits\SecurityAdvisoriesTestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;

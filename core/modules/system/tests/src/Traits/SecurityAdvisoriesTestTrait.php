@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system;
+namespace Drupal\Tests\system\Traits;
 
 /**
  * Provides common functionality for security advisory test classes.
