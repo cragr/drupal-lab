@@ -244,7 +244,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @param int $error_or_warning
    *   Whether the error is a warning or an error.
    */
-  private function assertStatusReportLinks(array $expected_link_texts, int $error_or_warning) {
+  private function assertStatusReportLinks(array $expected_link_texts, int $error_or_warning): void {
     $this->drupalGet(Url::fromRoute('system.status'));
     $assert = $this->assertSession();
     $selector = 'h3#' . ($error_or_warning === REQUIREMENT_ERROR ? 'error' : 'warning')
