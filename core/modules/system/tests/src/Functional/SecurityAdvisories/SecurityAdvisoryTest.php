@@ -242,7 +242,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @param string[] $expected_link_texts
    *   The expected links' text.
    * @param int $error_or_warning
-   *   Whether the error is a warning or an error.
+   *   Whether the links are a warning or an error. Should be one of the REQUIREMENT_* constants.
    */
   private function assertStatusReportLinks(array $expected_link_texts, int $error_or_warning): void {
     $this->drupalGet(Url::fromRoute('system.status'));
