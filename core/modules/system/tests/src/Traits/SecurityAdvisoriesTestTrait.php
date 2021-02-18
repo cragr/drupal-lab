@@ -19,9 +19,10 @@ trait SecurityAdvisoriesTestTrait {
    * @see \Drupal\advisory_feed_test\TestSystemLoggerChannel::log()
    */
   protected function assertServiceAdvisoryLoggedErrors(array $expected_messages): void {
-    $messages = $this->container->get('state')->get('advisory_feed_test.error_messages', []);
-    $this->container->get('state')->set('advisory_feed_test.error_messages', []);
+    $state = $this->container->get('state');
+    $messages = $state->get('advisory_feed_test.error_messages', []);
     $this->assertSame($expected_messages, $messages);
+    $state->set('advisory_feed_test.error_messages', []);
   }
 
 }

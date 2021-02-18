@@ -262,7 +262,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    *   The advisory links.
    * @param array $routes
    *   The routes to test.
-   *
    */
   private function assertAdvisoriesNotDisplayed(array $links, array $routes = ['system.status', 'system.admin']): void {
     foreach ($routes as $route) {
