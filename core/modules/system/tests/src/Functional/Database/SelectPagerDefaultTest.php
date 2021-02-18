@@ -180,4 +180,15 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
   }
 
+  /**
+   * Tests deprecation of PagerSelectExtender::$maxElement.
+   *
+   * @group legacy
+   */
+  public function testMaxElementDeprecation() {
+    $this->testElementNumbers();
+    $this->expectDeprecation("PagerSelectExtender::\$maxElement should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. Use \Drupal::service('pager.manager')->getMaxPagerElementId() instead. See https://www.drupal.org/node/3194594");
+    $this->assertSame(3, PagerSelectExtender::$maxElement);
+  }
+
 }
