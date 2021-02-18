@@ -263,7 +263,6 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @param array $routes
    *   The routes to test.
    *
-   * @throws \Behat\Mink\Exception\ExpectationException
    */
   private function assertAdvisoriesNotDisplayed(array $links, array $routes = ['system.status', 'system.admin']): void {
     foreach ($routes as $route) {
