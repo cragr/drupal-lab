@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\SecurityAdvisories;
+namespace Drupal\Tests\system;
 
 /**
  * Provides common functionality for security advisory test classes.
