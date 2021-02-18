@@ -3,8 +3,8 @@
 namespace Drupal\advisory_feed_test;
 
 use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\State\StateInterface;
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
@@ -29,12 +29,12 @@ final class TestSystemLoggerChannel extends LoggerChannel {
   /**
    * Constructs an AdvisoriesTestHttpClient object.
    *
-   * @param \Psr\Log\LoggerInterface $innerLogger
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $innerLogger
    *   The decorated logger.channel.system service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(LoggerInterface $innerLogger, StateInterface $state) {
+  public function __construct(LoggerChannelInterface $innerLogger, StateInterface $state) {
     $this->innerLogger = $innerLogger;
     $this->state = $state;
   }
