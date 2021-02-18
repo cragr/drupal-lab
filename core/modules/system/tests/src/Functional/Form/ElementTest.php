@@ -81,13 +81,7 @@ class ElementTest extends BrowserTestBase {
     }
     // Verify that custom #description properties are output.
     foreach (['checkboxes', 'radios'] as $type) {
-      $elements = $this->xpath('//input[@id=:id]/following-sibling::div[@class=:class]', [
-        ':id' => 'edit-' . $type . '-foo',
-        ':class' => 'description',
-      ]);
-      $this->assertGreaterThan(0, count($elements), new FormattableMarkup('Custom %type option description found.', [
-        '%type' => $type,
-      ]));
+      $this->assertSession()->elementExists('xpath', "//input[@id='edit-$type-foo']/following-sibling::div[@class='description']");
     }
   }
 
