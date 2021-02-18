@@ -29,13 +29,13 @@ final class TestSystemLoggerChannel extends LoggerChannel {
   /**
    * Constructs an AdvisoriesTestHttpClient object.
    *
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $innerLogger
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $inner_logger
    *   The decorated logger.channel.system service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(LoggerChannelInterface $innerLogger, StateInterface $state) {
-    $this->innerLogger = $innerLogger;
+  public function __construct(LoggerChannelInterface $inner_logger, StateInterface $state) {
+    $this->innerLogger = $inner_logger;
     $this->state = $state;
   }
 
