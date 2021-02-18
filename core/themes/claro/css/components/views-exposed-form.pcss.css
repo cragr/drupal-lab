@@ -63,10 +63,6 @@
   margin-left: 0;
 }
 
-.views-exposed-form .claro-autocomplete {
-  display: block;
-}
-
 .views-exposed-form .form-item--no-label,
 .views-exposed-form__item.views-exposed-form__item.views-exposed-form__item--actions {
   /* Line height of a label + existing margin for the element + margin for label */
