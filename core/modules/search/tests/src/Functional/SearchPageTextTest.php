@@ -117,7 +117,7 @@ class SearchPageTextTest extends BrowserTestBase {
     // from the GET params and displayed in the search form.
     $arg = $this->randomMachineName() . '/' . $this->randomMachineName();
     $this->drupalGet('search/node', ['query' => ['keys' => $arg]]);
-    $this->assertSession()->fieldValueNotEquals('edit-keys', $arg);
+    $this->assertSession()->elementExists('xpath', "//input[@id='edit-keys' and @value='{$arg}']");
 
     // Test a search input exceeding the limit of AND/OR combinations to test
     // the Denial-of-Service protection.
