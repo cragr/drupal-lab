@@ -125,7 +125,8 @@ class FileFieldWidgetTest extends WebDriverTestBase {
         $button = $this->assertSession()->buttonExists($upload_button_name);
         $this->assertSame('Upload', $button->getValue());
 
-        // Ensure only at most one button per field is displayed.
+        // Verify that after removing a file, only one "Upload" button for each
+        // possible field is displayed.
         $expected = $current_field_name == $field_name ? 1 : 2;
         $this->assertSession()->elementsCount('xpath', '//input[@type="submit" and @value="Upload"]', $expected);
       }

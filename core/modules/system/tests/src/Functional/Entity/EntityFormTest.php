@@ -96,12 +96,14 @@ class EntityFormTest extends BrowserTestBase {
   /**
    * Tests hook_entity_form_display_alter().
    *
+   * Verify that the altered field has the correct size value.
+   *
    * @see entity_test_entity_form_display_alter()
    */
   public function testEntityFormDisplayAlter() {
     $this->drupalGet('entity_test/add');
     $altered_field = $this->assertSession()->fieldExists('field_test_text[0][value]');
-    $this->assertEquals(42, $altered_field->getAttribute('size'), 'The altered field has the correct size value.');
+    $this->assertEquals(42, $altered_field->getAttribute('size'));
   }
 
   /**

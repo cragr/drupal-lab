@@ -33,7 +33,7 @@ class ElementTest extends BrowserTestBase {
     // Test to make sure non-textarea elements have the proper placeholder text.
     foreach (['textfield', 'tel', 'url', 'password', 'email', 'number'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");
-      $this->assertSame($expected, $field->getAttribute('placeholder'), "Placeholder text placed in $type.");
+      $this->assertSame($expected, $field->getAttribute('placeholder'));
     }
 
     // Test to make sure textarea has the proper placeholder text.
