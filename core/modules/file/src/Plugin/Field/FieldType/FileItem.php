@@ -198,7 +198,6 @@ class FileItem extends EntityReferenceItem {
       '#type' => 'checkbox',
       '#title' => $this->t('Require the <em>Description</em> field'),
       '#default_value' => $settings['description_field_required'] ?? FALSE,
-      '#description' => $this->t('Whether or not the description field is required.'),
       '#weight' => 12,
       '#states' => [
         'visible' => [
