@@ -49,12 +49,12 @@ class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
   public function testStatisticsSettings() {
     $this->assertNodeCounter(1, 2, 0, 1421727536);
     $this->assertNodeCounter(2, 1, 0, 1471428059);
-    $this->assertNodeCounter(4, 1, 1, 1478755275);
+    $this->assertNodeCounter(4, 1, 0, 1478755275);
 
     // Tests that translated node counts include all translation counts.
     $this->executeMigration('statistics_node_translation_counter');
     $this->assertNodeCounter(2, 2, 0, 1471428153);
-    $this->assertNodeCounter(4, 2, 2, 1478755314);
+    $this->assertNodeCounter(4, 4, 2, 1613705378);
   }
 
   /**
