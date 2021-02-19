@@ -50,7 +50,8 @@ class FileItem extends EntityReferenceItem {
       'file_extensions' => 'txt',
       'file_directory' => '[date:custom:Y]-[date:custom:m]',
       'max_filesize' => '',
-      'description_field' => 0,
+      'description_field' => FALSE,
+      'description_field_required' => FALSE,
     ] + parent::defaultFieldSettings();
   }
 
@@ -188,9 +189,22 @@ class FileItem extends EntityReferenceItem {
     $element['description_field'] = [
       '#type' => 'checkbox',
       '#title' => t('Enable <em>Description</em> field'),
-      '#default_value' => isset($settings['description_field']) ? $settings['description_field'] : '',
+      '#default_value' => $settings['description_field'] ?? '',
       '#description' => t('The description field allows users to enter a description about the uploaded file.'),
       '#weight' => 11,
+    ];
+
+    $element['description_field_required'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Require the <em>Description</em> field'),
+      '#default_value' => $settings['description_field_required'] ?? FALSE,
+      '#description' => $this->t('Whether or not the description field is required.'),
+      '#weight' => 12,
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[description_field]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
 
     return $element;

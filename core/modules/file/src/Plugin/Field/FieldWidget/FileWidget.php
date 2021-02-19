@@ -210,9 +210,10 @@ class FileWidget extends WidgetBase {
     // widget is a base class for other widgets (e.g., ImageWidget) that may act
     // on field types without these expected settings.
     $field_settings += [
-      'display_default' => NULL,
-      'display_field' => NULL,
-      'description_field' => NULL,
+      'display_default' => FALSE,
+      'display_field' => FALSE,
+      'description_field' => FALSE,
+      'description_field_required' => FALSE,
     ];
 
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
@@ -240,6 +241,7 @@ class FileWidget extends WidgetBase {
       '#display_field' => (bool) $field_settings['display_field'],
       '#display_default' => $field_settings['display_default'],
       '#description_field' => $field_settings['description_field'],
+      '#description_field_required' => $field_settings['description_field_required'],
       '#cardinality' => $cardinality,
     ];
 
@@ -265,6 +267,10 @@ class FileWidget extends WidgetBase {
       if ($cardinality != 1 && $cardinality != -1) {
         $element['#element_validate'] = [[static::class, 'validateMultipleCount']];
       }
+    }
+
+    if (!empty($element['#description_field_required'])) {
+      $element['#element_validate'][] = [static::class, 'validateRequiredDescription'];
     }
 
     return $element;
@@ -330,6 +336,32 @@ class FileWidget extends WidgetBase {
     ];
 
     return $return;
+  }
+
+  /**
+   * #element_validate callback to check if a required description is filled in.
+   *
+   * @param array $element
+   *   An associative array containing the properties and children of the
+   *   generic form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $complete_form
+   *   The complete form structure.
+   */
+  public static function validateRequiredDescription(array &$element, FormStateInterface $form_state, array &$complete_form) {
+    // Skip validation if a file is being uploaded or deleted.
+    $parent = array_slice($element['#parents'], 0, -1);
+    $trigger_parents = $form_state->getTriggeringElement()['#parents'];
+    if (!array_diff($parent, array_intersect($parent, $trigger_parents))) {
+      if (in_array(array_pop($trigger_parents), ['upload_button', 'remove_button'], TRUE)) {
+        return;
+      }
+    }
+    // Throw a validation error when the file is present but has no description.
+    if (!empty($element['fids']['#value']) && empty($element['description']['#value'])) {
+      $form_state->setError($element, t('@name field is required.', ['@name' => $element['description']['#title']]));
+    }
   }
 
   /**
@@ -412,6 +444,7 @@ class FileWidget extends WidgetBase {
         '#value' => isset($item['description']) ? $item['description'] : '',
         '#maxlength' => $config->get('description.length'),
         '#description' => t('The description may be used as the label of the link to the file.'),
+        '#required' => !empty($element['#description_field_required']),
       ];
     }
 

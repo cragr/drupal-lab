@@ -184,6 +184,16 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertText('The description may be used as the label of the link to the file.');
+
+    // Set the description field as required.
+    $edit = ['settings[description_field_required]' => TRUE];
+    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/node.{$type_name}.field_{$field_name}");
+    $this->submitForm($edit, 'Save settings');
+    // When resubmitting the form a message should be shown indicating that the
+    // description is now required.
+    $this->drupalGet($node->toUrl('edit-form'));
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains('Description field is required.');
   }
 
   /**
