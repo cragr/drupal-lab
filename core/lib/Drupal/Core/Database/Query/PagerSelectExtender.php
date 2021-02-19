@@ -21,8 +21,7 @@ class PagerSelectExtender extends SelectExtender {
    *
    * @var int
    *
-   * @deprecated PagerSelectExtender::\$maxElement should not be accessed in
-   *   drupal:9.2.0 and will error in drupal:10.0.0. Use
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
    *   \Drupal::service('pager.manager')->getMaxPagerElementId() instead.
    *
    * @see https://www.drupal.org/node/3194594
