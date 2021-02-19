@@ -103,7 +103,16 @@ class UserSession implements AccountInterface {
    * {@inheritdoc}
    */
   public function hasPermission($permission) {
-    return $this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles());
+    if ($this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles())) {
+      return TRUE;
+    }
+    elseif ((int) $this->id() === 1) {
+      @trigger_error('Relying on user 1 having all permissions is deprecated in drupal:9.2.0 and will not work anymore in drupal:10.0.0. Make sure the user with uid 1 has the role assigned that has been configured as the administrator role and set up tests to run with a user that specifically received the appropriate permissions. See https://www.drupal.org/node/2910500', E_USER_DEPRECATED);
+
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**
