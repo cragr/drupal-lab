@@ -25,7 +25,11 @@ use Drupal\Core\TypedData\DataDefinition;
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
+ *   constraints = {
+ *    "ReferenceAccess" = {},
+ *    "FileValidation" = {},
+ *    "FileRequiredDescription" = {},
+ *   },
  * )
  */
 class FileItem extends EntityReferenceItem {
