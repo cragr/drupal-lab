@@ -46,7 +46,7 @@ function file_post_update_add_txt_if_allows_insecure_extensions(&$sandbox = NULL
  * Add the 'require description' file field setting.
  */
 function file_post_update_description_required(array &$sandbox): void {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config): bool {
     return $field_config->getType() === 'file';
   });
 }
