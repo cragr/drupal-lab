@@ -19,13 +19,12 @@ export default [
   /* ES Modules */
 
   // once.
-  /*
   [
     {
       ...def,
       output: { file: 'assets/vendor/once/once.js' },
       plugins: [
-        virtual({ entry: 'import once from "once-dom";export default once;' }),
+        virtual({ entry: 'import once from "@drupal/once";export default once;' }),
         resolve(),
       ],
     },
@@ -34,17 +33,15 @@ export default [
       input: 'assets/vendor/once/once.js',
       output: [
         {
+          ...defOutput,
           file: 'assets/vendor/once/once.min.js',
-          sourcemap: true,
           name: 'once',
           format: 'iife',
         },
       ],
-      plugins: [terser({
-        format: { comments: false },
-      })],
+      plugins: [terser()],
     }
-  ],*/
+  ],
 
   // PopperJS.
   [
