@@ -110,16 +110,16 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('comment.comment_node_a_thirty_two_char.default', 'comment_body', 'text_default', 'hidden', 0);
 
     $this->assertEntity('node.article.default');
-    $this->assertComponent('node.article.default', 'body', 'text_default', 'hidden', 0);
-    $this->assertComponent('node.article.default', 'field_tags', 'entity_reference_label', 'above', 10);
-    $this->assertComponent('node.article.default', 'field_image', 'image', 'hidden', -1);
-    $this->assertComponent('node.article.default', 'field_text_plain', 'string', 'above', 11);
-    $this->assertComponent('node.article.default', 'field_text_filtered', 'text_default', 'above', 12);
-    $this->assertComponent('node.article.default', 'field_text_long_plain', 'basic_string', 'above', 14);
-    $this->assertComponent('node.article.default', 'field_text_long_filtered', 'text_default', 'above', 15);
-    $this->assertComponent('node.article.default', 'field_text_sum_filtered', 'text_default', 'above', 18);
-    $this->assertComponent('node.article.default', 'field_reference', 'entity_reference_label', 'above', 20);
-    $this->assertComponent('node.article.default', 'field_reference_2', 'entity_reference_entity_view', 'above', 21);
+    $this->assertComponent('node.article.default', 'body', 'text_default', 'hidden', 1);
+    $this->assertComponent('node.article.default', 'field_tags', 'entity_reference_label', 'above', 3);
+    $this->assertComponent('node.article.default', 'field_image', 'image', 'hidden', 0);
+    $this->assertComponent('node.article.default', 'field_text_plain', 'string', 'above', 4);
+    $this->assertComponent('node.article.default', 'field_text_filtered', 'text_default', 'above', 5);
+    $this->assertComponent('node.article.default', 'field_text_long_plain', 'basic_string', 'above', 7);
+    $this->assertComponent('node.article.default', 'field_text_long_filtered', 'text_default', 'above', 8);
+    $this->assertComponent('node.article.default', 'field_text_sum_filtered', 'text_default', 'above', 11);
+    $this->assertComponent('node.article.default', 'field_reference', 'entity_reference_label', 'above', 13);
+    $this->assertComponent('node.article.default', 'field_reference_2', 'entity_reference_entity_view', 'above', 14);
 
     $this->assertEntity('node.article.teaser');
     $this->assertComponent('node.article.teaser', 'body', 'text_summary_or_trimmed', 'hidden', 0);
