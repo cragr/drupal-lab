@@ -4,8 +4,8 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -18,6 +18,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class TaxonomyFieldVidTest extends ViewsKernelTestBase {
 
   use TaxonomyTestTrait;
+  use UserCreationTrait;
 
   /**
    * Modules to enable.
@@ -66,10 +67,9 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $vocabulary = $this->createVocabulary();
     $this->term1 = $this->createTerm($vocabulary);
 
-    // Create user 1 and set is as the logged in user, so that the logged in
-    // user has the correct permissions to view the vocabulary name.
-    $this->adminUser = User::create(['name' => $this->randomString()]);
-    $this->adminUser->save();
+    // Create an admin user and set it as the logged in user, so that the logged
+    // in user has the correct permissions to view the vocabulary name.
+    $this->adminUser = $this->setUpCurrentUser([], [], TRUE);
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);

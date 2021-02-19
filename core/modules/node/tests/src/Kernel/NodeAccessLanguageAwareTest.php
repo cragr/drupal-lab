@@ -6,7 +6,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -76,9 +75,8 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     // Create a normal authenticated user.
     $this->webUser = $this->drupalCreateUser(['access content']);
 
-    // Load the user 1 user for later use as an admin user with permission to
-    // see everything.
-    $this->adminUser = User::load(1);
+    // Create an admin user with permission to see everything.
+    $this->adminUser = $this->drupalCreateUser([], 'admin_user', TRUE);
 
     // Add Hungarian and Catalan.
     ConfigurableLanguage::createFromLangcode('hu')->save();

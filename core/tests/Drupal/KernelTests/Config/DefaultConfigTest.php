@@ -76,6 +76,7 @@ class DefaultConfigTest extends KernelTestBase {
     // other modules. Therefore they are put into static::$modules, which though
     // doesn't install config files, so import those config files explicitly. Do
     // this for all tests in case optional configuration depends on it.
+    $this->installEntitySchema('user');
     $this->installConfig(['system', 'user']);
 
     $extension_path = drupal_get_path($type, $name) . '/';

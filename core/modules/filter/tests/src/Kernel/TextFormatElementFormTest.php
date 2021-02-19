@@ -45,11 +45,6 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
     $this->installSchema('system', ['sequences']);
     $this->installConfig(['filter', 'filter_test']);
 
-    // Create user 1 so that the user created later in the test has a different
-    // user ID.
-    // @todo Remove in https://www.drupal.org/node/540008.
-    User::create(['uid' => 1, 'name' => 'user1'])->save();
-
     /* @var \Drupal\Core\Render\ElementInfoManager $manager */
     $manager = \Drupal::service('plugin.manager.element_info');
     $manager->clearCachedDefinitions();

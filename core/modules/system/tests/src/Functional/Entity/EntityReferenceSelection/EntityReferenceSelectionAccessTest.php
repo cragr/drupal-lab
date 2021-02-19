@@ -74,12 +74,8 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
       'name' => '',
     ]);
     $anonymous_user->save();
-    $admin_user = User::create([
-      'uid' => 1,
-      'name' => 'admin',
-      'status' => 1,
-    ]);
-    $admin_user->save();
+    // Create an admin user with permission to see everything.
+    $admin_user = $this->createUser([], 'admin_user', TRUE);
   }
 
   /**

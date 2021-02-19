@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -48,6 +49,14 @@ class UserInstallTest extends KernelTestBase {
     $this->assertTrue($admin->isActive());
     // Test that the anonymous user is blocked.
     $this->assertTrue($anon->isBlocked());
+
+    // Verify that UID 1 gets the administrator role.
+    $rids = \Drupal::database()->select('user__roles', 'r')
+      ->fields('r', ['roles_target_id'])
+      ->condition('entity_id', 1)
+      ->execute()
+      ->fetchCol();
+    $this->assertEquals([AccountInterface::ADMINISTRATOR_ROLE], $rids, 'Admin user has administrator role');
   }
 
 }

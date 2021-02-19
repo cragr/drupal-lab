@@ -49,9 +49,9 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * subdirectory.
    */
   public function testLink() {
-    // Set up the current user as uid 1 so the test doesn't need to deal with
-    // permission.
-    $this->setUpCurrentUser(['uid' => 1]);
+    // Set up the current user as an administrator so the test doesn't need to
+    // deal with permission.
+    $this->setUpCurrentUser([], [], TRUE);
 
     $node = $this->createNode([
       'type' => 'article',

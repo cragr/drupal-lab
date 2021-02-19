@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the user module.
  */
 
+use Drupal\Core\Session\AccountInterface;
+
 /**
  * Implements hook_schema().
  */
@@ -87,6 +89,7 @@ function user_install() {
       'name' => 'placeholder-for-uid-1',
       'mail' => 'placeholder-for-uid-1',
       'status' => TRUE,
+      'roles' => [AccountInterface::ADMINISTRATOR_ROLE],
     ])
     ->save();
 }

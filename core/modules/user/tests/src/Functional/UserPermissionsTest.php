@@ -4,7 +4,6 @@ namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
-use Drupal\user\Entity\Role;
 
 /**
  * Verify that role permissions can be added and removed via the permissions
@@ -57,9 +56,6 @@ class UserPermissionsTest extends BrowserTestBase {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $storage = $this->container->get('entity_type.manager')->getStorage('user_role');
-
-    // Create an additional role and mark it as admin role.
-    Role::create(['is_admin' => TRUE, 'id' => 'administrator', 'label' => 'Administrator'])->save();
     $storage->resetCache();
 
     $this->drupalLogin($this->adminUser);
@@ -99,49 +95,6 @@ class UserPermissionsTest extends BrowserTestBase {
       $this->assertSession()->checkboxChecked('administrator[' . $permission . ']');
       $this->assertSession()->fieldDisabled('administrator[' . $permission . ']');
     }
-  }
-
-  /**
-   * Test assigning of permissions for the administrator role.
-   */
-  public function testAdministratorRole() {
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/config/people/accounts');
-
-    // Verify that the administration role is none by default.
-    $this->assertTrue($this->assertSession()->optionExists('edit-user-admin-role', '')->isSelected());
-
-    $this->assertFalse(Role::load($this->rid)->isAdmin());
-
-    // Set the user's role to be the administrator role.
-    $edit = [];
-    $edit['user_admin_role'] = $this->rid;
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
-
-    \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
-    $this->assertTrue(Role::load($this->rid)->isAdmin());
-
-    // Enable aggregator module and ensure the 'administer news feeds'
-    // permission is assigned by default.
-    \Drupal::service('module_installer')->install(['aggregator']);
-
-    $this->assertTrue($this->adminUser->hasPermission('administer news feeds'), 'The permission was automatically assigned to the administrator role');
-
-    // Ensure that selecting '- None -' removes the admin role.
-    $edit = [];
-    $edit['user_admin_role'] = '';
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
-
-    \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
-    \Drupal::configFactory()->reset();
-    $this->assertFalse(Role::load($this->rid)->isAdmin());
-
-    // Manually create two admin roles, in that case the single select should be
-    // hidden.
-    Role::create(['id' => 'admin_role_0', 'is_admin' => TRUE, 'label' => 'Admin role 0'])->save();
-    Role::create(['id' => 'admin_role_1', 'is_admin' => TRUE, 'label' => 'Admin role 1'])->save();
-    $this->drupalGet('admin/config/people/accounts');
-    $this->assertSession()->fieldNotExists('user_admin_role');
   }
 
   /**

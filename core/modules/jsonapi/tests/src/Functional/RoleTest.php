@@ -84,7 +84,7 @@ class RoleTest extends ResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'weight' => 2,
+          'weight' => 3,
           'langcode' => 'en',
           'status' => TRUE,
           'dependencies' => [],

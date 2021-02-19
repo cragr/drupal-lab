@@ -49,11 +49,6 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
 
     $this->installEntitySchema('entity_test_string_id');
 
-    // Create user 1 so that the user created later in the test has a different
-    // user ID.
-    // @todo Remove in https://www.drupal.org/node/540008.
-    User::create(['uid' => 1, 'name' => 'user1'])->save();
-
     Role::create([
       'id' => 'test_role',
       'label' => 'Can view test entities',

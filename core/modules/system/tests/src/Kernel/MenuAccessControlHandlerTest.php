@@ -53,18 +53,10 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
    * @dataProvider testAccessProvider
    */
   public function testAccess($which_user, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {
-    // We must always create user 1, so that a "normal" user has an ID >1.
-    $root_user = $this->drupalCreateUser();
-
-    if ($which_user === 'user1') {
-      $user = $root_user;
-    }
-    else {
-      $permissions = ($which_user === 'admin')
-        ? ['administer menu']
-        : [];
-      $user = $this->drupalCreateUser($permissions);
-    }
+    $permissions = ($which_user === 'admin')
+      ? ['administer menu']
+      : [];
+    $user = $this->drupalCreateUser($permissions);
 
     $entity_values = ($which_entity === 'unlocked')
       ? ['locked' => FALSE]
@@ -118,24 +110,6 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
       ],
       'admin + locked' => [
         'admin',
-        'locked',
-        AccessResult::allowed(),
-        AccessResult::allowed()->addCacheContexts(['user.permissions']),
-        AccessResult::allowed()->addCacheContexts(['user.permissions']),
-        AccessResult::forbidden()->addCacheTags(['config:system.menu.llama'])->setReason("The Menu config entity is locked."),
-        AccessResult::allowed()->addCacheContexts(['user.permissions']),
-      ],
-      'user1 + unlocked' => [
-        'user1',
-        'unlocked',
-        AccessResult::allowed(),
-        AccessResult::allowed()->addCacheContexts(['user.permissions']),
-        AccessResult::allowed()->addCacheContexts(['user.permissions']),
-        AccessResult::allowed()->addCacheContexts(['user.permissions'])->addCacheTags(['config:system.menu.llama']),
-        AccessResult::allowed()->addCacheContexts(['user.permissions']),
-      ],
-      'user1 + locked' => [
-        'user1',
         'locked',
         AccessResult::allowed(),
         AccessResult::allowed()->addCacheContexts(['user.permissions']),

@@ -7,9 +7,10 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\user\Entity\User;
-use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
+use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
@@ -72,6 +73,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     // First setup the needed entity types before installing the views.
     parent::setUp(FALSE);
 
+    $this->installConfig('user');
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_rev');
@@ -79,7 +81,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Bypass any field access.
-    $this->adminUser = User::create(['name' => $this->randomString()]);
+    $this->adminUser = User::create(['name' => $this->randomString(), 'roles' => [RoleInterface::ADMINISTRATOR_ID]]);
     $this->adminUser->save();
     $this->container->get('current_user')->setAccount($this->adminUser);
 
