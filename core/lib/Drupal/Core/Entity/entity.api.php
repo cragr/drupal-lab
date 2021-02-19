@@ -1648,13 +1648,10 @@ function hook_entity_prepare_view($entity_type_id, array $entities, array $displ
  *   The view_mode that is to be used to display the entity.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity that is being viewed.
- * @param array $context
- *   Array with additional context information, currently only contains the
- *   langcode the entity is viewed in.
  *
  * @ingroup entity_crud
  */
-function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInterface $entity, $context) {
+function hook_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\EntityInterface $entity) {
   // For nodes, change the view mode when it is teaser.
   if ($entity->getEntityTypeId() == 'node' && $view_mode == 'teaser') {
     $view_mode = 'my_custom_view_mode';
@@ -1817,6 +1814,23 @@ function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $enti
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
     $form_state->set('label_altered', TRUE);
+  }
+}
+
+/**
+ * Change the form mode used to build an entity form.
+ *
+ * @param string $form_mode
+ *   The form_mode that is to be used to build the entity form.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity for which the form is being built.
+ *
+ * @ingroup entity_crud
+ */
+function hook_entity_form_mode_alter(&$form_mode, Drupal\Core\Entity\EntityInterface $entity) {
+  // Change the form mode for users with Administrator role.
+  if ($entity->getEntityTypeId() == 'user' && $entity->hasRole('administrator')) {
+    $form_mode = 'my_custom_form_mode';
   }
 }
 

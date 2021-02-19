@@ -817,7 +817,7 @@ trait AssertContentTrait {
           '@expected' => var_export($title, TRUE),
         ]);
       }
-      return $this->assertEqual($actual, $title, $message, $group);
+      return $this->assertEqual($title, $actual, $message, $group);
     }
     return $this->fail('No title element found on the page.');
   }
@@ -849,7 +849,7 @@ trait AssertContentTrait {
         '@unexpected' => var_export($title, TRUE),
       ]);
     }
-    return $this->assertNotEqual($actual, $title, $message, $group);
+    return $this->assertNotEquals($title, $actual, $message, $group);
   }
 
   /**
@@ -885,16 +885,11 @@ trait AssertContentTrait {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($callback, $variables) {
       return \Drupal::theme()->render($callback, $variables);
     });
-    $this->verbose(
-      '<hr />' . 'Result:' . '<pre>' . Html::escape(var_export($output, TRUE)) . '</pre>'
-      . '<hr />' . 'Expected:' . '<pre>' . Html::escape(var_export($expected, TRUE)) . '</pre>'
-      . '<hr />' . $output
-    );
     if (!$message) {
       $message = '%callback rendered correctly.';
     }
     $message = new FormattableMarkup($message, ['%callback' => 'theme_' . $callback . '()']);
-    return $this->assertIdentical($output, $expected, $message, $group);
+    return $this->assertSame($expected, $output, $message, $group);
   }
 
   /**

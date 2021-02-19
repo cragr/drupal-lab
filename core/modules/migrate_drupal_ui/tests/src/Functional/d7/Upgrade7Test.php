@@ -85,8 +85,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 84,
-      'field_storage_config' => 63,
+      'field_config' => 87,
+      'field_storage_config' => 66,
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
@@ -110,7 +110,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'date_format' => 11,
       'entity_form_display' => 24,
       'entity_form_mode' => 1,
-      'entity_view_display' => 36,
+      'entity_view_display' => 37,
       'entity_view_mode' => 14,
       'base_field_override' => 4,
     ];
@@ -164,6 +164,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Menu',
       'Menu translation',
       'Node',
+      'Node Reference',
       'Number',
       'Options',
       'Path',
@@ -177,9 +178,11 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'System',
       'Taxonomy translation',
       'Taxonomy',
+      'Telephone',
       'Text',
       'Title',
       'User',
+      'User Reference',
       'Variable translation',
       // Include modules that do not have an upgrade path and are enabled in the
       // source database.
@@ -201,6 +204,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'References',
       'Translation sets',
       'Variable realm',
       'Variable store',

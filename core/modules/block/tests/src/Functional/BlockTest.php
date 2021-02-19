@@ -100,8 +100,8 @@ class BlockTest extends BlockTestBase {
     /** @var \Drupal\block\BlockInterface $block */
     $block = Block::load($block_id);
     $visibility_config = $block->getVisibilityConditions()->getConfiguration();
-    $this->assertIdentical([], $visibility_config);
-    $this->assertIdentical([], $block->get('visibility'));
+    $this->assertSame([], $visibility_config);
+    $this->assertSame([], $block->get('visibility'));
   }
 
   /**
@@ -210,7 +210,7 @@ class BlockTest extends BlockTestBase {
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
-    $this->assertEqual($instance->label(), $block['settings[label]'], 'Stored block title found.');
+    $this->assertEqual($block['settings[label]'], $instance->label(), 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -404,7 +404,7 @@ class BlockTest extends BlockTestBase {
     ];
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $expected_cache_tags = [
       'block_view',
@@ -412,7 +412,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
 
     // The "Powered by Drupal" block is modified; verify a cache miss.
     $block->setRegion('content');
@@ -445,7 +445,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertEqual($cache_entry->tags, $expected_cache_tags);
+    $this->assertEqual($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered',
@@ -454,7 +454,7 @@ class BlockTest extends BlockTestBase {
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered-2',
@@ -463,7 +463,7 @@ class BlockTest extends BlockTestBase {
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:' . implode(':', $keys));
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
 
     // Now we should have a cache hit again.
     $this->drupalGet('<front>');
@@ -551,17 +551,12 @@ class BlockTest extends BlockTestBase {
 
     $block->save();
 
-    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
-      $role1->id() => $role1->id(),
-      $role2->id() => $role2->id(),
-    ]);
+    $this->assertEqual([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
 
     $role1->delete();
 
     $block = Block::load($block->id());
-    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
-      $role2->id() => $role2->id(),
-    ]);
+    $this->assertEqual([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
   }
 
 }
