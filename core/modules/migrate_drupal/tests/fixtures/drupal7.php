@@ -788,13 +788,13 @@ $connection->insert('aggregator_feed')
   'title' => 'Know Your Meme',
   'url' => 'http://knowyourmeme.com/newsfeed.rss',
   'refresh' => '900',
-  'checked' => '1613704990',
+  'checked' => '1444944970',
   'queued' => '0',
-  'link' => 'https://knowyourmeme.com',
+  'link' => 'http://knowyourmeme.com',
   'description' => 'New items added to the News Feed',
   'image' => '',
-  'hash' => '69c99ee3366809bbb5697f61d574d762cdc93461a2e971f2b81a5bdc1325ed81',
-  'etag' => '"4c9cbfdf73a1a0c54615ffff41d58798"',
+  'hash' => 'e6295b3ba81b24db62b41515494a7e9fb87979ff45045a1c946de5fa5abc9c52',
+  'etag' => '"bad5e20e4993f31c869cffd22f1645b9"',
   'modified' => '0',
   'block' => '5',
 ))
@@ -48074,25 +48074,25 @@ $connection->insert('node_counter')
 ->values(array(
   'nid' => '4',
   'totalcount' => '1',
-  'daycount' => '0',
+  'daycount' => '1',
   'timestamp' => '1478755275',
 ))
 ->values(array(
   'nid' => '5',
-  'totalcount' => '2',
+  'totalcount' => '1',
   'daycount' => '1',
-  'timestamp' => '1613705255',
+  'timestamp' => '1478755314',
 ))
 ->values(array(
   'nid' => '6',
   'totalcount' => '2',
-  'daycount' => '0',
+  'daycount' => '2',
   'timestamp' => '1504715439',
 ))
 ->values(array(
   'nid' => '7',
   'totalcount' => '2',
-  'daycount' => '0',
+  'daycount' => '2',
   'timestamp' => '1504715438',
 ))
 ->execute();
