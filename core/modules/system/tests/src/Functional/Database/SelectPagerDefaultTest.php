@@ -151,6 +151,9 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->orderBy('age')
       ->limit(1);
     $this->assertSame(2, $query->getElement());
+    // BC for PagerSelectExtender::$maxElement.
+    // @todo remove the assertion below in D10.
+    $this->assertSame(2, PagerSelectExtender::$maxElement);
     $name = $query->execute()
       ->fetchField();
     $this->assertEqual('Paul', $name, 'Pager query #1 with a specified element ID returned the correct results.');
@@ -164,6 +167,9 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->orderBy('age')
       ->limit(1);
     $this->assertSame(1, $query->getElement());
+    // BC for PagerSelectExtender::$maxElement.
+    // @todo remove the assertion below in D10.
+    $this->assertSame(2, PagerSelectExtender::$maxElement);
     $name = $query->execute()
       ->fetchField();
     $this->assertEqual('George', $name, 'Pager query #2 with a specified element ID returned the correct results.');
@@ -174,21 +180,13 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->orderBy('age')
       ->limit(1);
     $this->assertSame(3, $query->getElement());
+    // BC for PagerSelectExtender::$maxElement.
+    // @todo remove the assertion below in D10.
+    $this->assertSame(3, PagerSelectExtender::$maxElement);
     $name = $query->execute()
       ->fetchField();
     $this->assertEqual('John', $name, 'Pager query #3 with a generated element ID returned the correct results.');
 
-  }
-
-  /**
-   * Tests deprecation of PagerSelectExtender::$maxElement.
-   *
-   * @group legacy
-   */
-  public function testMaxElementDeprecation() {
-    $this->testElementNumbers();
-    $this->expectDeprecation("PagerSelectExtender::\$maxElement should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. Use \Drupal::service('pager.manager')->getMaxPagerElementId() instead. See https://www.drupal.org/node/3194594");
-    $this->assertSame(3, PagerSelectExtender::$maxElement);
   }
 
 }

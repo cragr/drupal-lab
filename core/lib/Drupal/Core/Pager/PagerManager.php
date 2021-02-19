@@ -3,6 +3,7 @@
 namespace Drupal\Core\Pager;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 
 /**
  * Provides a manager for pagers.
@@ -48,6 +49,9 @@ class PagerManager implements PagerManagerInterface {
     $currentPage = $this->pagerParams->findPage($element);
     $pager = new Pager($total, $limit, $currentPage);
     $this->setPager($pager, $element);
+    // BC for PagerSelectExtender::$maxElement.
+    // @todo remove the line below in D10.
+    PagerSelectExtender::$maxElement = $this->getMaxPagerElementId();
     return $pager;
   }
 
