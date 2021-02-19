@@ -26,7 +26,6 @@ use Drupal\migrate\Row;
  *   higher value will be imported.
  * - constants: (optional) An array of constants that can be used in the process
  *   pipeline. To use the constant 'foo' as a source value use 'constants/foo'.
- *   It is also possible to use a property names other than 'constants'.
  *
  * The high_water_property and track_changes are mutually exclusive.
  *
@@ -74,7 +73,6 @@ use Drupal\migrate\Row;
  *
  * In this example, the constant 'foo' is defined with a value of 'bar'. It is
  * later used in the process pipeline to set the value of the field baz.
- *
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Annotation\MigrateSource
