@@ -99,7 +99,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertCount(1, $body, 'A body field exists.');
     $this->assertSession()->elementNotExists('css', 'select.js-filter-list');
     // Verify that a single text format hidden input does not exist on the page.
-    $this->assertSession()->elementsCount('xpath', '//input[@type="hidden" and contains(@class, "editor")]', 0);
+    $this->assertSession()->elementNotExists('xpath', '//input[@type="hidden" and contains(@class, "editor")]');
     // Verify that CKEditor glue JS is absent.
     $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
 
