@@ -5,7 +5,15 @@
  * Install, update and uninstall functions for the user module.
  */
 
+// cspell:ignore googleable
+
 use Drupal\Core\Session\AccountInterface;
+
+// Fallback name and label for auto-generated role in
+// user_post_update_user_1_with_admin_role(). These are picked to be especially
+// googleable.
+const USER_UPDATE_FALLBACK_ADMIN_ROLE_ID = 'admin_auto_generated_fallback_9_2_0';
+const USER_UPDATE_FALLBACK_ADMIN_ROLE_LABEL = 'Admin (introduced by update process)';
 
 /**
  * Implements hook_schema().
