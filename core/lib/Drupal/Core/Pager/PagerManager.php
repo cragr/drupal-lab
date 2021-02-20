@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Pager;
 
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Provides a manager for pagers.
@@ -33,6 +33,13 @@ class PagerManager implements PagerManagerInterface {
   protected $pagers;
 
   /**
+   * The highest pager ID created so far.
+   *
+   * @var int
+   */
+  protected $maxPagerElementId = -1;
+
+  /**
    * Construct a PagerManager object.
    *
    * @param \Drupal\Core\Pager\PagerParametersInterface $pager_params
@@ -49,9 +56,6 @@ class PagerManager implements PagerManagerInterface {
     $currentPage = $this->pagerParams->findPage($element);
     $pager = new Pager($total, $limit, $currentPage);
     $this->setPager($pager, $element);
-    // BC for PagerSelectExtender::$maxElement.
-    // @todo remove the line below in D10.
-    PagerSelectExtender::$maxElement = $this->getMaxPagerElementId();
     return $pager;
   }
 
@@ -97,7 +101,17 @@ class PagerManager implements PagerManagerInterface {
    * {@inheritdoc}
    */
   public function getMaxPagerElementId() {
-    return empty($this->pagers) ? -1 : max(array_keys($this->pagers));
+    return $this->maxPagerElementId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function reservePagerElementId(int $element): void {
+    $this->maxPagerElementId = max($element, $this->maxPagerElementId);
+    // BC for PagerSelectExtender::$maxElement.
+    // @todo remove the line below in D10.
+    PagerSelectExtender::$maxElement = $this->getMaxPagerElementId();
   }
 
   /**
@@ -109,6 +123,7 @@ class PagerManager implements PagerManagerInterface {
    *   The pager index.
    */
   protected function setPager(Pager $pager, $element = 0) {
+    $this->maxPagerElementId = max($element, $this->maxPagerElementId);
     $this->pagers[$element] = $pager;
   }
 

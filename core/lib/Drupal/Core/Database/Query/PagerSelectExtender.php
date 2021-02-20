@@ -102,6 +102,7 @@ class PagerSelectExtender extends SelectExtender {
   protected function ensureElement() {
     if (!isset($this->element)) {
       $this->element = $this->connection->getPagerManager()->getMaxPagerElementId() + 1;
+      $this->connection->getPagerManager()->reservePagerElementId($this->element);
     }
   }
 
@@ -169,6 +170,7 @@ class PagerSelectExtender extends SelectExtender {
    */
   public function element($element) {
     $this->element = $element;
+    $this->connection->getPagerManager()->reservePagerElementId($this->element);
     return $this;
   }
 

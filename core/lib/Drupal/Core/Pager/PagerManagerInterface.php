@@ -171,4 +171,18 @@ interface PagerManagerInterface {
    */
   public function getMaxPagerElementId();
 
+  /**
+   * Reserve a pager element ID.
+   *
+   * Calling code may need to reserve the ID of a pager before actually
+   * creating it. This methods allows to do so ensuring no collision occurs with
+   * ::getMaxPagerElementId().
+   *
+   * @param int $element
+   *   The ID of the pager to be reserved.
+   *
+   * @see \Drupal\Core\Database\Query\PagerSelectExtender::element()
+   */
+  public function reservePagerElementId(int $element): void;
+
 }
