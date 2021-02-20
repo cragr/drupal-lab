@@ -8,6 +8,7 @@
 // cspell:ignore googleable
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 
 // Fallback name and label for auto-generated role in
 // user_post_update_user_1_with_admin_role(). These are picked to be especially
@@ -100,6 +101,62 @@ function user_install() {
       'roles' => [AccountInterface::ADMINISTRATOR_ROLE],
     ])
     ->save();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function user_requirements($phase) {
+  $requirements = [];
+  if ($phase === 'runtime') {
+    // Check if uid 1 has the system-supported administrator role and whether
+    // the system contains the fallback administrator role introduced by
+    // user_post_update_user_1_with_admin_role().
+    $entityTypeManager = \Drupal::entityTypeManager();
+    /** @var \Drupal\user\Entity\User $user */
+    $user = $entityTypeManager->getStorage('user')->load(1);
+    /** @var \Drupal\user\Entity\Role[] $roles */
+    $roles = $entityTypeManager
+      ->getStorage('user_role')
+      ->loadMultiple($user->getRoles());
+
+    $rootIsAdmin = FALSE;
+    $hasFallbackAdminRole = FALSE;
+    foreach ($roles as $role) {
+      if ($role->isAdmin() && $user->hasRole($role->id()) ) {
+        $rootIsAdmin = TRUE;
+      }
+      if ($role->id() === USER_UPDATE_FALLBACK_ADMIN_ROLE_ID) {
+        $hasFallbackAdminRole = TRUE;
+      }
+    }
+
+    if (!$rootIsAdmin) {
+      $requirements['user_one_missing_role'] = [
+        'title' => t('User 1 administrator role'),
+        'value' => t('Missing'),
+        'description' => t(
+          'Since Drupal 9.2.0, relying on user 1 to automatically receive all permissions through their user ID is no longer supported. Instead, user 1 should have the administrator role. In Drupal 10, this restriction will be lifted and it will be possible to remove the role from the user. See the <a href=":change_record_url"change record about this change</a> for more information.',
+          [':rebuild' => Url::fromUserInput('https://www.drupal.org/node/2910500')]
+        ),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+
+    if ($hasFallbackAdminRole) {
+      $requirements['user_fallback_admin_role_present'] = [
+        'title' => t('Fallback administrator role'),
+        'value' => t('Present'),
+        'description' => t(
+          'Since Drupal 9.2.0, every Drupal install will have a dedicated administrator role. When updating this site, the update process introduced the role %fallback_role_label. The ID and label of this role were chosen to be unlikely to conflict with any existing roles. It is recommended to reconfigure the site by picking a role ID and label yourself. See the <a href=":change_record_url"change record about this change</a> for more information.',
+          [':rebuild' => Url::fromUserInput('https://www.drupal.org/node/2910500')]
+        ),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+  }
+
+  return $requirements;
 }
 
 /**
