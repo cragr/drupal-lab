@@ -741,7 +741,7 @@ class EntityViewsDataTest extends UnitTestCase {
           'numeric' => TRUE,
         ],
       ],
-    ], $data['entity_test_mul__string']['table']['join']['entity_test_mul']);
+    ], $data['entity_test_mul__string']['table']['join']['entity_test_mul_property_data']);
   }
 
   /**
