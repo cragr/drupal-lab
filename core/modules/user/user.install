@@ -136,8 +136,8 @@ function user_requirements($phase) {
         'title' => t('User 1 administrator role'),
         'value' => t('Missing'),
         'description' => t(
-          'Since Drupal 9.2.0, relying on user 1 to automatically receive all permissions through their user ID is no longer supported. Instead, user 1 should have the administrator role. In Drupal 10, this restriction will be lifted and it will be possible to remove the role from the user. See the <a href=":change_record_url"change record about this change</a> for more information.',
-          [':rebuild' => Url::fromUri('https://www.drupal.org/node/2910500')]
+          'Since Drupal 9.2.0, relying on user 1 to automatically receive all permissions through their user ID is no longer supported. Instead, user 1 should have the administrator role. In Drupal 10, this restriction will be lifted and it will be possible to remove the role from the user. See the <a href=":change_record_url">change record about this change</a> for more information.',
+          [':change_record_url' => Url::fromUri('https://www.drupal.org/node/2910500')->toUriString()]
         ),
         'severity' => REQUIREMENT_ERROR,
       ];
@@ -148,8 +148,11 @@ function user_requirements($phase) {
         'title' => t('Fallback administrator role'),
         'value' => t('Present'),
         'description' => t(
-          'Since Drupal 9.2.0, every Drupal install will have a dedicated administrator role. When updating this site, the update process introduced the role %fallback_role_label. The ID and label of this role were chosen to be unlikely to conflict with any existing roles. It is recommended to reconfigure the site by picking a role ID and label yourself. See the <a href=":change_record_url"change record about this change</a> for more information.',
-          [':rebuild' => Url::fromUri('https://www.drupal.org/node/2910500')]
+          'Since Drupal 9.2.0, every Drupal install will have a dedicated administrator role. When updating this site, the update process introduced the role %fallback_role_label. The ID and label of this role were chosen to be unlikely to conflict with any existing roles. It is recommended to reconfigure the site by picking a role ID and label yourself. See the <a href=":change_record_url">change record about this change</a> for more information.',
+          [
+            '%fallback_role_label' => USER_UPDATE_FALLBACK_ADMIN_ROLE_LABEL,
+            ':change_record_url' => Url::fromUri('https://www.drupal.org/node/2910500')->toUriString(),
+          ]
         ),
         'severity' => REQUIREMENT_WARNING,
       ];
