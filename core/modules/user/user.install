@@ -123,7 +123,7 @@ function user_requirements($phase) {
     $rootIsAdmin = FALSE;
     $hasFallbackAdminRole = FALSE;
     foreach ($roles as $role) {
-      if ($role->isAdmin() && $user->hasRole($role->id()) ) {
+      if ($role->isAdmin() && $user->hasRole($role->id())) {
         $rootIsAdmin = TRUE;
       }
       if ($role->id() === USER_UPDATE_FALLBACK_ADMIN_ROLE_ID) {
