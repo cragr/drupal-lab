@@ -221,12 +221,15 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         ->condition('is_admin', TRUE)
         ->execute();
 
-      // Force admin roles to be selected always.
+      // If the admin role is assigned, prevent it from being removed. Setting
+      // it to selected and disabled unconditionally would constitute a
+      // confusing situation with with the role being selected and disabled when
+      // the user was told by user_requirements() that their user 1 does not
+      // have an admin role.
       foreach ($admin_roles as $admin_role) {
-        $form['account']['roles'][$admin_role] = [
-          '#default_value' => TRUE,
-          '#disabled' => TRUE,
-        ];
+        if (in_array($admin_role, $form['account']['roles']['#default_value'])) {
+          $form['account']['roles'][$admin_role]['#disabled'] = TRUE;
+        }
       }
     }
 
