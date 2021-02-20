@@ -19,13 +19,9 @@ function user_removed_post_updates() {
 
 /**
  * Grant user 1 a role with the setting "is_admin" is true.
- *
- * After removing the special user status of user 1, we want to make sure that
- * the user 1 has a role with the setting "is_admin" is true.
- *
- * @see https://www.drupal.org/node/2910500
  */
 function user_post_update_user_1_with_admin_role() {
+  // @see https://www.drupal.org/node/2910500
   $user = User::load(1);
 
   $admin_roles_rids = \Drupal::entityQuery('user_role')->condition('is_admin', TRUE)->execute();
