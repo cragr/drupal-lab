@@ -28,8 +28,10 @@ function drupal_rebuild($class_loader, Request $request) {
   restore_error_handler();
   restore_exception_handler();
 
+  $site_path = DrupalKernel::findSitePath($request);
+
   // Force kernel to rebuild php cache.
-  PhpStorageFactory::get('twig')->deleteAll();
+  PhpStorageFactory::get('twig', $site_path)->deleteAll();
 
   // Bootstrap up to where caches exist and clear them.
   $kernel = new DrupalKernel('prod', $class_loader);

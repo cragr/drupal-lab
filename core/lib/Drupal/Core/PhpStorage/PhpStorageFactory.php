@@ -24,11 +24,13 @@ class PhpStorageFactory {
    *   The name for which the storage should be returned. Defaults to 'default'
    *   The name is also used as the storage bin if one is not specified in the
    *   configuration.
+   * @param string $site_path
+   *   The site directory.
    *
    * @return \Drupal\Component\PhpStorage\PhpStorageInterface
    *   An instantiated storage for the specified name.
    */
-  public static function get($name) {
+  public static function get($name, $site_path = NULL) {
     $configuration = [];
     $overrides = Settings::get('php_storage');
     if (isset($overrides[$name])) {
@@ -46,7 +48,7 @@ class PhpStorageFactory {
       $configuration['bin'] = $name;
     }
     if (!isset($configuration['directory'])) {
-      $configuration['directory'] = PublicStream::basePath() . '/php';
+      $configuration['directory'] = PublicStream::basePath($site_path) . '/php';
     }
     return new $class($configuration);
   }
