@@ -60,10 +60,10 @@ class CallableResolverTest extends UnitTestCase {
         },
       ],
       'Static function' => [
-        '\Drupal\Tests\Core\Utility\UninstantiableMockStaticCallable::staticMethod',
+        '\Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',
       ],
       'Static function, array notation' => [
-        [UninstantiableMockStaticCallable::class, 'staticMethod'],
+        [NoInstantiationMockStaticCallable::class, 'staticMethod'],
       ],
       'Static function, array notation, with object' => [
         [$this, 'staticMethod'],
@@ -211,7 +211,7 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
 }
 
-class UninstantiableMockStaticCallable {
+class NoInstantiationMockStaticCallable {
 
   public function __construct() {
     throw new \Exception(sprintf('The class %s should not require instantiation for the static method to be called.', __CLASS__));
