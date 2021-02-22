@@ -27,7 +27,7 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $container = new ContainerBuilder();
@@ -98,7 +98,8 @@ class CallableResolverTest extends UnitTestCase {
    * @covers ::invokeFromDefinition
    */
   public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message) {
-    $this->setExpectedException($exception_class, $exception_message);
+    $this->expectException($exception_class);
+    $this->expectExceptionMessage($exception_message);
     $this->resolver->invokeFromDefinition($definition);
   }
 
@@ -125,12 +126,12 @@ class CallableResolverTest extends UnitTestCase {
       'Missing method on class, static notation' => [
         static::class . '::method_not_exists',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. No method "method_not_exists" was not found on the class "Drupal\Tests\Core\Utility\CallableResolverTest".',
+        'The callable definition provided was invalid. Either class "Drupal\Tests\Core\Utility\CallableResolverTest" does not have a method "method_not_exists", or it is not callable.',
       ],
       'Missing class, static notation' => [
         '\NotARealClass::method',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. No method "method" was not found on the class "\NotARealClass".',
+        'The callable definition provided was invalid. Either class "\NotARealClass" does not have a method "method", or it is not callable.',
       ],
       'Service not in container' => [
         'bad_service:method',
