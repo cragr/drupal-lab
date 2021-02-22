@@ -69,7 +69,7 @@ class CallableResolver {
           return $definition;
         }
       }
-      catch(\ReflectionException $e) {
+      catch (\ReflectionException $e) {
         throw new \InvalidArgumentException(sprintf('The callable definition provided was invalid. Either class "%s" does not have a method "%s", or it is not callable.', $class, $method), 0, $e);
       }
 
@@ -116,7 +116,7 @@ class CallableResolver {
    *
    * @param mixed $definition
    *   A callable definition.
-   * @param mixed ...$arguments
+   * @param mixed $arguments
    *   Arguments passed to the invoked definition.
    *
    * @return mixed
