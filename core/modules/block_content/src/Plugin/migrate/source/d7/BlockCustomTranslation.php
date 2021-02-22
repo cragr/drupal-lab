@@ -9,6 +9,10 @@ use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
 /**
  * Gets Drupal 7 custom block translation from database.
  *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_block_custom_translation",
  *   source_module = "i18n_block"
