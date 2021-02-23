@@ -232,7 +232,7 @@ for FILE in $FILES; do
     else
       # If there is no .es6.js file then there should be unless the .js is
       # not really Drupal's.
-      if ! [[ "$FILE" =~ ^core/assets/vendor ]] && ! [[ "$FILE" =~ ^core/scripts/js ]] && ! [[ "$FILE" =~ ^core/scripts/css ]] && ! [[ "$FILE" =~ core/postcss.config.js ]] && ! [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]]; then
+      if ! [[ "$FILE" =~ ^core/assets/vendor ]] && ! [[ "$FILE" =~ ^core/scripts/js ]] && ! [[ "$FILE" =~ ^core/scripts/css ]] && ! [[ "$FILE" =~ core/postcss.config.js ]] && ! [[ "$FILE" =~ core/rollup.config.js ]] && ! [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]]; then
         printf "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.es6.js\n"
         STATUS=1
       fi
