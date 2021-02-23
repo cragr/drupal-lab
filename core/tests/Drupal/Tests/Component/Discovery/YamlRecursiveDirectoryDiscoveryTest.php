@@ -69,4 +69,52 @@ class YamlRecursiveDirectoryDiscoveryTest extends TestCase {
     $this->assertCount(3, $data['test_1']);
   }
 
+  /**
+   * Tests YAML directory discovery with provided exclude pattern.
+   *
+   * @covers ::findAll
+   */
+  public function testDiscoveryExcludePattern() {
+    vfsStream::setup('modules', NULL, [
+      'test_1' => [
+        'subdir1' => [
+          'item_1.test.yml' => "id: item1\nname: 'test1 item 1'",
+        ],
+        'subdir2' => [
+          'sub_subdir2' => [
+            'item_2.test.yml' => "id: item2\nname: 'test1 item 2'",
+            'item_3_excl.test.yml' => "id: item3\nname: 'test1 item 3'",
+          ],
+          'exclude' => [
+            'item_4.test.yml' => "id: item4\nname: 'test1 item 4'",
+          ],
+        ],
+      ],
+    ]);
+
+    // Set up the directories to search.
+    $directories = [
+      'test_1' => [
+        vfsStream::url('modules/test_1/subdir1'),
+        vfsStream::url('modules/test_1/subdir2'),
+      ],
+    ];
+
+    $discovery = new YamlRecursiveDirectoryDiscovery($directories, 'test');
+    $data = $discovery->findAll();
+    $this->assertCount(4, $data['test_1']);
+
+    // Exclude the directory.
+    $discovery = new YamlRecursiveDirectoryDiscovery($directories, 'test', 'id', '/exclude/');
+    $data = $discovery->findAll();
+    $this->assertCount(3, $data['test_1']);
+    $this->assertArrayNotHasKey('item4', $data['test_1']);
+
+    // Exclude the file.
+    $discovery = new YamlRecursiveDirectoryDiscovery($directories, 'test', 'id', '/_excl/');
+    $data = $discovery->findAll();
+    $this->assertCount(3, $data['test_1']);
+    $this->assertArrayNotHasKey('item3', $data['test_1']);
+  }
+
 }
