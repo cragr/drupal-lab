@@ -285,7 +285,7 @@ class TextFormat extends RenderElement {
   /**
    * Wraps the current user.
    *
-   * \Drupal\Core\Session\AccountInterface
+   * \Drupal\Core\Session\AccountProxyInterface
    */
   protected static function currentUser() {
     return \Drupal::currentUser();
