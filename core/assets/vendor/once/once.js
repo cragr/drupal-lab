@@ -1,10 +1,10 @@
-/*! once - v0.0.3 - 2021-02-19 */
+/*! once - v0.0.4 - 2021-02-22 */
 /**
  * Mark DOM elements as processed to prevent multiple initializations.
  *
  * @module @drupal/once
  *
- * @example <caption>Use as a module</caption>
+ * @example <!-- Use as a module -->
  * <script type="module">
  *   import once from 'https://unpkg.com/@drupal/once@latest/dist/once.esm.js';
  *   const elements = once('my-once-id', 'div');
@@ -12,18 +12,21 @@
  *   elements.forEach(el => el.innerHTML = 'processed');
  * </script>
  *
- * @example <caption>Use as a regular script</caption>
+ * @example <!-- Use as a regular script -->
  * <script src="https://unpkg.com/@drupal/once@latest/dist/once.min.js"></script>
  * <script>
  *   const elements = once('my-once-id', 'div');
  *   // Initialize elements.
  *   elements.forEach(el => el.innerHTML = 'processed');
  * </script>
- * @example <caption>Using a single element as input</caption>
- * // once methods always return an array, to simplify the use with a single
- * // element use destructuring or the shift method.
- * const [myElement] = once('my-once-id', document.body);
- * const myElement = once('my-once-id', document.body).shift();
+ * @example <!-- Using a single element as input-->
+ * <script src="https://unpkg.com/@drupal/once@latest/dist/once.min.js"></script>
+ * <script>
+ *   // once methods always return an array, to simplify the use with a single
+ *   // element use destructuring or the shift method.
+ *   const [myElement] = once('my-once-id', document.body);
+ *   const myElement = once('my-once-id', document.body).shift();
+ * </script>
  */
 
 /**

@@ -33,7 +33,7 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.7.7",
-    "@drupal/once": "^0.0.3",
+    "@drupal/once": "^0.0.4",
     "@popperjs/core": "^2.5.4",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-virtual": "^2.0.3",

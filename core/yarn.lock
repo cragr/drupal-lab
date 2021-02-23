@@ -848,10 +848,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@drupal/once@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@drupal/once/-/once-0.0.3.tgz#adf9a0a05033b22c785f50630b68988ad804032c"
-  integrity sha512-QYoGuLauhMcj8dbzzhUmZmoxY7kZ2mOnMw3VDcLUqkl0GeBLEXxFKZpelpjfjgsT8gFRd+OdfRBhaWJwVekjLQ==
+"@drupal/once@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@drupal/once/-/once-0.0.4.tgz#9a90ab7eafb4b5684457db9b1e38673f76708b96"
+  integrity sha512-tgYEW1h55uTNzbqOw8ztI8xOo9WvrpYZXA5s3jBqy8yzyqtql5aUeSUq2mdPHG/XXIV5TAKfBrsHDUA9T9Etaw==
 
 "@eslint/eslintrc@^0.1.3":
   version "0.1.3"
