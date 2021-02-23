@@ -45,7 +45,6 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
         $return += $this->librariesDependencies[$library];
       }
     }
-    $return += array_combine($libraries, $libraries);
     return array_values($return);
   }
 
