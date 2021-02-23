@@ -46,7 +46,7 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
       }
     }
     $return += array_combine($libraries, $libraries);
-    return $return;
+    return array_values($return);
   }
 
   /**
@@ -90,8 +90,7 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
     foreach ($libraries as $library) {
       $with_deps = $this->getLibrariesWithDependencies([$library]);
       // We don't need library itself listed in the dependencies.
-      unset($with_deps[$library]);
-      $all_dependencies += $with_deps;
+      $all_dependencies += array_diff($with_deps, [$library]);
     }
 
     return array_values(array_diff($libraries, array_intersect($all_dependencies, $libraries)));
