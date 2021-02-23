@@ -28,6 +28,7 @@
       "MAINTAINERS.txt",
       "package.json",
       "yarn.lock",
+      "rollup.config.js",
       "misc/cspell/dictionary.txt"
     ],
     "ignoreRegExpList": [
