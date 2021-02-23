@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Component\Discovery;
 
-use Drupal\Component\Discovery\YamlDirectoryDiscovery;
+use Drupal\Component\Discovery\YamlRecursiveDirectoryDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -60,12 +60,12 @@ class YamlRecursiveDirectoryDiscoveryTest extends TestCase {
       ],
     ];
 
-    $discovery = new YamlDirectoryDiscovery($directories, 'test');
+    $discovery = new YamlRecursiveDirectoryDiscovery($directories, 'test');
     $data = $discovery->findAll();
 
-    $this->assertSame(['id' => 'item1', 'name' => 'test1 item 1', YamlDirectoryDiscovery::FILE_KEY => 'vfs://modules/test_1/subdir1/item_1.test.yml'], $data['test_1']['item1']);
-    $this->assertSame(['id' => 'item2', 'name' => 'test1 item 2', YamlDirectoryDiscovery::FILE_KEY => 'vfs://modules/test_1/subdir2/sub_subdir2/item_2.test.yml'], $data['test_1']['item2']);
-    $this->assertSame(['id' => 'item3', 'name' => 'test1 item 3', YamlDirectoryDiscovery::FILE_KEY => 'vfs://modules/test_1/subdir3/sub_subdir3/sub_sub_subdir3/item_3.test.yml'], $data['test_1']['item3']);
+    $this->assertSame(['id' => 'item1', 'name' => 'test1 item 1', YamlRecursiveDirectoryDiscovery::FILE_KEY => 'vfs://modules/test_1/subdir1/item_1.test.yml'], $data['test_1']['item1']);
+    $this->assertSame(['id' => 'item2', 'name' => 'test1 item 2', YamlRecursiveDirectoryDiscovery::FILE_KEY => 'vfs://modules/test_1/subdir2/sub_subdir2/item_2.test.yml'], $data['test_1']['item2']);
+    $this->assertSame(['id' => 'item3', 'name' => 'test1 item 3', YamlRecursiveDirectoryDiscovery::FILE_KEY => 'vfs://modules/test_1/subdir3/sub_subdir3/sub_sub_subdir3/item_3.test.yml'], $data['test_1']['item3']);
     $this->assertCount(3, $data['test_1']);
   }
 
