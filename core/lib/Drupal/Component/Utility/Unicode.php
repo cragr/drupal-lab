@@ -398,10 +398,8 @@ EOD;
       // Set the maximum size of the string that can be expanded to the maximum
       // encoded line length of 75 characters or less. Base64 expands to 4/3
       // times the line size (in bytes), rounded up to a multiple of 4.
-      // The calculation is as follows:
-      // ceil($chunk_size / 3) * 4 <= 75 - strlen("=?UTF-8?B??=")
-      // ceil($chunk_size / 3) <= 63 / 4
-      // chunk_size <= floor(63 / 4) * 3.
+      //
+      // $chunk_size = floor((75 - strlen("=?UTF-8?B??=")) / 4) * 3;
       $chunk_size = 45;
       $len = strlen($string);
       $output = '';
