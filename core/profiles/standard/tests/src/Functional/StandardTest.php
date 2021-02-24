@@ -49,6 +49,7 @@ class StandardTest extends BrowserTestBase {
       'skip comment approval',
       'create article content',
       'create page content',
+      'administer menu',
     ]);
     $this->drupalLogin($this->adminUser);
     // Configure the block.
@@ -268,6 +269,14 @@ class StandardTest extends BrowserTestBase {
       }
 
     }
+
+    // Verify "Contact" link is created in footer menu.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/structure/menu/manage/footer');
+    $this->assertSession()->linkExists('Contact');
+    $this->clickLink(t('Contact'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalLogout();
   }
 
 }
