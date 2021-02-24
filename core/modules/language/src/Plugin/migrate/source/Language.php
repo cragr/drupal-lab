@@ -12,8 +12,9 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * - fetch_all: (optional) If not empty, all source languages are retrieved and
  *   available as "languages" source property. Each language is an array with
  *   the same structure as a source row.
- * - domain_negotiation: (optional) If not empty, the domain negotiation status
- *   is retrieved and available as "domain_negotiation_used" source property.
+ * - domain_negotiation: (optional) If not empty and domain negotiation is
+ *   enabled in the source database, the "domain_negotiation_used" source
+ *   property is set to TRUE.
  *
  * Example:
  *
