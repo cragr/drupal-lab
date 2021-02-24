@@ -1808,6 +1808,7 @@ function template_preprocess_field_multiple_value_without_order_form(&$variables
     $variables['items'] = $items;
 
     if (!empty($element['#description'])) {
+      $variables['description_display'] = $element['#description_display'];
       $description_id = $element['#attributes']['aria-describedby'];
       $description_attributes['id'] = $description_id;
       $variables['description']['attributes'] = new Attribute($description_attributes);
