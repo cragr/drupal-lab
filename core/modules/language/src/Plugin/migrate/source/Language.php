@@ -26,7 +26,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * In this example, available languages are retrieved from the source database.
  * Given that fetch_all and domain_negotiation are specified, each row also
- * contains all languages and domain negotiation settings.
+ * contains all languages and domain negotiation status (if enabled).
  *
  * For additional configuration keys, refer to the parent classes:
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
