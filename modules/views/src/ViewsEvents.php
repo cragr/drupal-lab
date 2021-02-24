@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Drupal\views;
-
 
 final class ViewsEvents {
 
