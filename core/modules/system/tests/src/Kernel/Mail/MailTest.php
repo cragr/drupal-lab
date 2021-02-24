@@ -147,9 +147,9 @@ class MailTest extends KernelTestBase {
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
     $sent_message = end($captured_emails);
     // From header is correctly encoded.
-    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCB0aGlzIGlzIGEgdmVyeSBsb25nIHRlc3Qgc2VudGVuY2UgdG8gdGU=?= <mailtest@example.com>', $sent_message['headers']['From']);
+    $this->assertEquals('=?UTF-8?B?RHLDqXBhbCB0aGlzIGlzIGEgdmVyeSBsb25nIHRlc3Qgc2VudGVuY2UgdG8g?= <mailtest@example.com>', $sent_message['headers']['From']);
     // From header is correctly encoded.
-    $this->assertEquals('Drépal this is a very long test sentence to te <mailtest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']));
+    $this->assertEquals('Drépal this is a very long test sentence to  <mailtest@example.com>', Unicode::mimeHeaderDecode($sent_message['headers']['From']));
     $this->assertFalse(isset($sent_message['headers']['Reply-to']), 'Message reply-to is not set if not specified.');
     // Errors-to header must not be set, it is deprecated.
     $this->assertFalse(isset($sent_message['headers']['Errors-To']));

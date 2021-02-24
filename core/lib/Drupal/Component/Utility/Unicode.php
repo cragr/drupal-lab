@@ -372,7 +372,7 @@ EOD;
   }
 
   /**
-   * Encodes MIME/HTTP headers that contain incorrectly encoded characters.
+   * Encodes MIME/HTTP headers.
    *
    * For example, Unicode::mimeHeaderEncode('tést.txt') returns
    * "=?UTF-8?B?dMOpc3QudHh0?=".
@@ -383,8 +383,7 @@ EOD;
    * - Only encode strings that contain non-ASCII characters.
    * - We progressively cut-off a chunk with self::truncateBytes(). This ensures
    *   each chunk starts and ends on a character boundary.
-   * - Using \n as the chunk separator may cause problems on some systems and
-   *   may have to be changed to \r\n or \r.
+   * - According to RFC 2047, long lines use CRLF SPACE and the separator.
    *
    * @param string $string
    *   The header to encode.
@@ -396,13 +395,19 @@ EOD;
    */
   public static function mimeHeaderEncode($string, $shorten = FALSE) {
     if (preg_match('/[^\x20-\x7E]/', $string)) {
-      // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
-      $chunk_size = 47;
+      // Set the maximum size of the string that can be expanded to the maximum
+      // encoded line length of 75 characters or less. Base64 expands to 4/3
+      // times the line size (in bytes), rounded up to a multiple of 4.
+      // The calculation is as follows:
+      // ceil($chunk_size / 3) * 4 <= 75 - strlen("=?UTF-8?B??=")
+      // ceil($chunk_size / 3) <= 63 / 4
+      // chunk_size <= floor(63 / 4) * 3.
+      $chunk_size = 45;
       $len = strlen($string);
       $output = '';
       while ($len > 0) {
         $chunk = static::truncateBytes($string, $chunk_size);
-        $output .= ' =?UTF-8?B?' . base64_encode($chunk) . "?=\n";
+        $output .= '=?UTF-8?B?' . base64_encode($chunk) . "?=\r\n ";
         if ($shorten) {
           break;
         }
@@ -410,6 +415,7 @@ EOD;
         $string = substr($string, $c);
         $len -= $c;
       }
+      // Remove CRLF from the end of the encoded string.
       return trim($output);
     }
     return $string;
