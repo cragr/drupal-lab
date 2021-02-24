@@ -293,6 +293,9 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $displays = $this->get('display');
 
+    $this->fixTableNames($displays);
+    $this->fixEmptyGroupColumn();
+
     // Sort the displays.
     ksort($displays);
     $this->set('display', ['default' => $displays['default']] + $displays);
@@ -302,6 +305,97 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     // configuration or installing modules.
     if (!$this->isSyncing() && !$this->hasTrustedData()) {
       $this->addCacheMetadata();
+    }
+  }
+
+  /**
+   * Fixes table names for revision metadata fields of revisionable entities.
+   *
+   * Views for revisionable entity types using revision metadata fields might
+   * be using the wrong table to retrieve the fields after system_update_8300
+   * has moved them correctly to the revision table. This method updates the
+   * views to use the correct tables.
+   *
+   * @param array &$displays
+   *   An array containing display handlers of a view.
+   *
+   * @todo Remove this method and its usage in Drupal 10. See
+   *   https://www.drupal.org/project/drupal/issues/3069405.
+   * @see https://www.drupal.org/node/2831499
+   */
+  private function fixTableNames(array &$displays) {
+    // Fix wrong table names for entity revision metadata fields.
+    foreach ($displays as $display => $display_data) {
+      if (isset($display_data['display_options']['fields'])) {
+        foreach ($display_data['display_options']['fields'] as $property_name => $property_data) {
+          if (isset($property_data['entity_type']) && isset($property_data['field']) && isset($property_data['table'])) {
+            $entity_type = $this->entityTypeManager()->getDefinition($property_data['entity_type']);
+            // We need to update the table name only for revisionable entity
+            // types, otherwise the view is already using the correct table.
+            if (($entity_type instanceof ContentEntityTypeInterface) && is_subclass_of($entity_type->getClass(), FieldableEntityInterface::class) && $entity_type->isRevisionable()) {
+              $revision_metadata_fields = $entity_type->getRevisionMetadataKeys();
+              // @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::initTableLayout()
+              $revision_table = $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
+
+              // Check if this is a revision metadata field and if it uses the
+              // wrong table.
+              if (in_array($property_data['field'], $revision_metadata_fields) && $property_data['table'] != $revision_table) {
+                @trigger_error('Support for revision table names in imported views is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Imported views must reference the correct tables. See https://www.drupal.org/node/2831499', E_USER_DEPRECATED);
+                $displays[$display]['display_options']['fields'][$property_name]['table'] = $revision_table;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Fixes empty group columns.
+   *
+   * Some fields could be saved without a group column, this assures that every
+   * field has a default group column.
+   *
+   * @deprecated in Drupal 9.0.0 and will be removed in Drupal 10.0.0.
+   *
+   * @see https://www.drupal.org/node/2831499
+   */
+  private function fixEmptyGroupColumn() {
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $displays = $this->get('display');
+    foreach ($displays as $display_name => &$display) {
+      if (isset($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => &$field) {
+          // Only update fields that have group_column set to an empty value.
+          if (!empty($field['plugin_id']) && $field['plugin_id'] == 'field' && isset($field['group_column']) && empty($field['group_column'])) {
+            @trigger_error($field_name . " has its 'group_column' set to an empty value. This is deprecated in Drupal 9.0.x, will be disallowed before Drupal 10.0.0.", E_USER_DEPRECATED);
+            // Attempt to load the field storage definition of the field.
+            $executable = $this->getExecutable();
+            $executable->setDisplay($display_name);
+            /** @var \Drupal\views\Plugin\views\field\FieldHandlerInterface $field_handler */
+            $field_handler = $executable->getDisplay()->getHandler('field', $field['id']);
+            if ($entity_type_id = $field_handler->getEntityType()) {
+              $field_storage_definitions = $entity_field_manager->getFieldStorageDefinitions($entity_type_id);
+
+              $field_storage = NULL;
+              if (isset($field['field']) && isset($field_storage_definitions[$field['field']])) {
+                $field_storage = $field_storage_definitions[$field['field']];
+              }
+              if (!empty($field_storage)) {
+                // Use the field's main property as default column. If the field item does
+                // not define a main property, use the first column as default column.
+                $default_column = $field_storage->getMainPropertyName();
+                if (empty($default_column)) {
+                  $column_names = array_keys($field_storage->getColumns());
+                  $default_column = $column_names[0];
+                }
+                $field['group_column'] = $default_column;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
