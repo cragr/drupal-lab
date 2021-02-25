@@ -65,7 +65,6 @@ abstract class DateFormatFormBase extends EntityForm {
   public function exists($entity_id, array $element) {
     return (bool) $this->dateFormatStorage
       ->getQuery()
-      ->accessCheck(TRUE)
       ->condition('id', $element['#field_prefix'] . $entity_id)
       ->execute();
   }

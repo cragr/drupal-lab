@@ -166,7 +166,6 @@ class ConfigTestForm extends EntityForm {
     $entity = $form_state->getFormObject()->getEntity();
     return (bool) $this->entityTypeManager->getStorage($entity->getEntityTypeId())
       ->getQuery()
-      ->accessCheck(TRUE)
       ->condition($entity->getEntityType()->getKey('id'), $entity_id)
       ->execute();
   }

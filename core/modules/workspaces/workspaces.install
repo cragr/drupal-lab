@@ -54,7 +54,6 @@ function workspaces_install() {
   // the 'administrator' role. This way we avoid hard coding user ID 1 for sites
   // that prefer to not give it any special meaning.
   $admin_roles = \Drupal::entityTypeManager()->getStorage('user_role')->getQuery()
-    ->accessCheck(TRUE)
     ->condition('is_admin', TRUE)
     ->execute();
   if (!empty($admin_roles)) {
