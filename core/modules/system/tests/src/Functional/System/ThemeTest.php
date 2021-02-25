@@ -69,8 +69,7 @@ class ThemeTest extends BrowserTestBase {
     $this->assertTrue(\Drupal::service('theme_installer')->install(['stable']));
     $this->drupalGet('admin/appearance/settings/stable');
     $this->assertSession()->statusCodeEquals(404);
-    // Place branding block to verify how logo display.
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
+
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
     $file_relative = strtr($file->uri, ['public:/' => PublicStream::basePath()]);
@@ -118,10 +117,12 @@ class ThemeTest extends BrowserTestBase {
         ':description' => 'description',
       ]);
       // Expected default values (if all else fails).
+      $implicit_public_file = 'logo.svg';
       $explicit_file = 'public://logo.svg';
       $local_file = $default_theme_path . '/logo.svg';
       // Adjust for fully qualified stream wrapper URI in public filesystem.
       if (StreamWrapperManager::getScheme($input) == 'public') {
+        $implicit_public_file = StreamWrapperManager::getTarget($input);
         $explicit_file = $input;
         $local_file = strtr($input, ['public:/' => PublicStream::basePath()]);
       }
@@ -131,14 +132,17 @@ class ThemeTest extends BrowserTestBase {
       }
       // Adjust for relative path within public filesystem.
       elseif ($input == StreamWrapperManager::getTarget($file->uri)) {
+        $implicit_public_file = $input;
         $explicit_file = 'public://' . $input;
         $local_file = PublicStream::basePath() . '/' . $input;
       }
-      $this->assertEquals($elements[2]->getText(), $explicit_file);
-      $this->assertEquals($elements[1]->getText(), $local_file);
+      $this->assertEqual($implicit_public_file, $elements[0]->getText());
+      $this->assertEqual($explicit_file, $elements[1]->getText());
+      $this->assertEqual($local_file, $elements[2]->getText());
 
       // Verify the actual 'src' attribute of the logo being output in a site
       // branding block.
+      $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
       $elements = $this->xpath('//header//a[@rel=:rel]/img', [
           ':rel' => 'home',
@@ -182,24 +186,23 @@ class ThemeTest extends BrowserTestBase {
     // Upload a file to use for the logo. Try both the test image we've been
     // using so far and an SVG file.
     $upload_uris = [$file->uri, 'core/themes/bartik/logo.svg'];
-
-    $file_system = \Drupal::service('file_system');
     foreach ($upload_uris as $upload_uri) {
       $edit = [
         'default_logo' => FALSE,
         'logo_path' => '',
-        'files[logo_upload]' => $file_system->realpath($upload_uri),
+        'files[logo_upload]' => \Drupal::service('file_system')->realpath($upload_uri),
       ];
-      $this->drupalGet('admin/appearance/settings');
-      $this->submitForm($edit, t('Save configuration'));
+      $this->drupalPostForm('admin/appearance/settings', $edit, 'Save configuration');
 
       $uploaded_filename = 'public://' . $this->getSession()->getPage()->findField('logo_path')->getValue();
 
+      $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
       $elements = $this->xpath('//header//a[@rel=:rel]/img', [
-        ':rel' => 'home',
-      ]);
-      $this->assertEquals($elements[0]->getAttribute('src'), file_url_transform_relative(file_create_url($uploaded_filename)));
+          ':rel' => 'home',
+        ]
+      );
+      $this->assertEqual(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
     }
 
     $this->container->get('theme_installer')->install(['bartik']);
