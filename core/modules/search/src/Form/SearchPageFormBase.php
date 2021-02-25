@@ -120,6 +120,7 @@ abstract class SearchPageFormBase extends EntityForm {
    */
   public function exists($id) {
     $entity = $this->entityTypeManager->getStorage('search_page')->getQuery()
+      ->accessCheck(TRUE)
       ->condition('id', $id)
       ->execute();
     return (bool) $entity;
@@ -133,6 +134,7 @@ abstract class SearchPageFormBase extends EntityForm {
 
     // Ensure each path is unique.
     $path = $this->entityTypeManager->getStorage('search_page')->getQuery()
+      ->accessCheck(TRUE)
       ->condition('path', $form_state->getValue('path'))
       ->condition('id', $form_state->getValue('id'), '<>')
       ->execute();

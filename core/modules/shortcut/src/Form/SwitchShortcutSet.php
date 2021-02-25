@@ -150,6 +150,7 @@ class SwitchShortcutSet extends FormBase {
    */
   public function exists($id) {
     return (bool) $this->shortcutSetStorage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('id', $id)
       ->execute();
   }

@@ -336,6 +336,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   protected function getEntityIds() {
     return $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->condition('theme', $this->getThemeName())
       ->sort($this->entityType->getKey('id'))
       ->execute();

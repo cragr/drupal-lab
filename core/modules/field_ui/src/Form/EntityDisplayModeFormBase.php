@@ -70,6 +70,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
     return (bool) $this->entityTypeManager
       ->getStorage($this->entity->getEntityTypeId())
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('id', $element['#field_prefix'] . $entity_id)
       ->execute();
   }

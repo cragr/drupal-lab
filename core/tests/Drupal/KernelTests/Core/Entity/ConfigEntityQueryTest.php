@@ -347,6 +347,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
 
     // Test the exists and notExists conditions.
     $this->queryResults = $this->entityStorage->getQuery()
+      ->accessCheck(TRUE)
       ->exists('id')
       ->execute();
     $this->assertResults(['1', '2', '3', '4', '5', '6', '7']);

@@ -58,6 +58,7 @@ class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
   public function titleQuery() {
     $storage = $this->entityTypeManager->getStorage('file');
     $fids = $storage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('fid', $this->value, 'IN')
       ->execute();
     $files = $storage->loadMultiple($fids);

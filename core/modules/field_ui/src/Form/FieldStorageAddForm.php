@@ -538,6 +538,7 @@ class FieldStorageAddForm extends FormBase {
     // Get all the fields corresponding to the given field storage names and
     // this entity type.
     $field_ids = $this->entityTypeManager->getStorage('field_config')->getQuery()
+      ->accessCheck(TRUE)
       ->condition('entity_type', $this->entityTypeId)
       ->condition('field_name', $field_names)
       ->execute();

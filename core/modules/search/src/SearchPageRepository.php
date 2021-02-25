@@ -116,7 +116,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    *   The query instance.
    */
   protected function getQuery() {
-    return $this->storage->getQuery();
+    return $this->storage->getQuery()->accessCheck(TRUE);
   }
 
 }

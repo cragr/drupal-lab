@@ -90,7 +90,10 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterWithRevisions() {
     // Execute a query that only deals with the 'node_revision' table.
     try {
-      $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
+      $query = \Drupal::entityTypeManager()
+        ->getStorage('node')
+        ->getQuery()
+        ->accessCheck(TRUE);
       $result = $query
         ->allRevisions()
         ->execute();

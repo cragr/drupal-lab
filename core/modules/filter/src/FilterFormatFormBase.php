@@ -164,6 +164,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     return (bool) $this->entityTypeManager
       ->getStorage('filter_format')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('format', $format_id)
       ->execute();
   }
@@ -185,6 +186,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     $format_exists = $this->entityTypeManager
       ->getStorage('filter_format')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->condition('format', $format_format, '<>')
       ->condition('name', $format_name)
       ->execute();

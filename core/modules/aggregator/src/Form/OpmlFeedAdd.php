@@ -150,6 +150,7 @@ class OpmlFeedAdd extends FormBase {
         ->condition('url', $feed['url']);
       $ids = $query
         ->condition($condition)
+        ->accessCheck(TRUE)
         ->execute();
       $result = $this->feedStorage->loadMultiple($ids);
       foreach ($result as $old) {

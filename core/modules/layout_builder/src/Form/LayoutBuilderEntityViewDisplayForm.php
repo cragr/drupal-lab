@@ -144,6 +144,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
     // The default mode is valid if the canonical mode is not enabled.
     if ($mode === 'default') {
       $query = $this->entityTypeManager->getStorage($this->entity->getEntityTypeId())->getQuery()
+        ->accessCheck(TRUE)
         ->condition('targetEntityType', $this->entity->getTargetEntityTypeId())
         ->condition('bundle', $this->entity->getTargetBundle())
         ->condition('status', TRUE)
@@ -170,6 +171,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
 
     $entity_type = $this->entityTypeManager->getDefinition($display->getTargetEntityTypeId());
     $query = $this->entityTypeManager->getStorage($display->getTargetEntityTypeId())->getQuery()
+      ->accessCheck(TRUE)
       ->exists(OverridesSectionStorage::FIELD_NAME);
     if ($bundle_key = $entity_type->getKey('bundle')) {
       $query->condition($bundle_key, $display->getTargetBundle());

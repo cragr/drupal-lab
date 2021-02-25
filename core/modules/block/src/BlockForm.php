@@ -397,6 +397,7 @@ class BlockForm extends EntityForm {
 
     // Get all the blocks which starts with the suggested machine name.
     $query = $this->storage->getQuery();
+    $query->accessCheck(TRUE);
     $query->condition('id', $suggestion, 'CONTAINS');
     $block_ids = $query->execute();
 

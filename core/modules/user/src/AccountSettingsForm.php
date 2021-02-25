@@ -113,6 +113,7 @@ class AccountSettingsForm extends ConfigFormBase {
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
 
     $admin_roles = $this->roleStorage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('is_admin', TRUE)
       ->execute();
     $default_value = reset($admin_roles);
@@ -465,6 +466,7 @@ class AccountSettingsForm extends ConfigFormBase {
     // Change the admin role.
     if ($form_state->hasValue('user_admin_role')) {
       $admin_roles = $this->roleStorage->getQuery()
+        ->accessCheck(TRUE)
         ->condition('is_admin', TRUE)
         ->execute();
 

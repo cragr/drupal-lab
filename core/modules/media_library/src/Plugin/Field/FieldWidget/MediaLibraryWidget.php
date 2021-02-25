@@ -147,7 +147,11 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     // When no target bundles are configured for the field, all are allowed.
     if ($allowed_media_type_ids === NULL) {
-      $allowed_media_type_ids = $this->entityTypeManager->getStorage('media_type')->getQuery()->execute();
+      $allowed_media_type_ids = $this->entityTypeManager
+        ->getStorage('media_type')
+        ->getQuery()
+        ->accessCheck(TRUE)
+        ->execute();
     }
 
     // When the user did not sort the media types, return the media type IDs

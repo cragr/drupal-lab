@@ -58,9 +58,11 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     // Ensure that the new default theme has the same blocks as the previous
     // default theme.
     $default_block_names = $block_storage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('theme', $default_theme)
       ->execute();
     $new_blocks = $block_storage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('theme', $new_theme)
       ->execute();
     $this->assertSame(count($default_block_names), count($new_blocks));
@@ -77,6 +79,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     $base_theme = 'test_basetheme';
     $theme_installer->install([$base_theme]);
     $new_blocks = $block_storage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('theme', $base_theme)
       ->execute();
     // Installing a hidden base theme does not copy the blocks from the default

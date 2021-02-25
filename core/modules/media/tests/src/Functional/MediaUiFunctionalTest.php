@@ -67,6 +67,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media_id = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->execute();
     $media_id = reset($media_id);
     /** @var \Drupal\media\MediaInterface $media */
@@ -444,6 +445,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media_id = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(TRUE)
       ->execute();
     $media_id = reset($media_id);
     $assert_session->addressEquals("media/$media_id/edit");

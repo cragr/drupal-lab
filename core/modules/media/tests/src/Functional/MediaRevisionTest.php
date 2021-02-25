@@ -198,6 +198,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
       ->get('entity_type.manager')
       ->getStorage($entity_type->id())
       ->getQuery()
+      ->accessCheck(TRUE)
       ->count()
       ->allRevisions()
       ->condition($entity_type->getKey('id'), $entity->id())
