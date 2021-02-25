@@ -184,7 +184,7 @@ class FileUpload {
     $file_resource_type = reset($relatable_resource_types);
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
-    $self_link = new Link(new CacheableMetadata(), Url::fromRoute('Routes::getRouteName($file_resource_type, 'individual'), ['entity' => $file->uuid()]), 'self');
+    $self_link = new Link(new CacheableMetadata(), Url::fromRoute(Routes::getRouteName($file_resource_type, 'individual'), ['entity' => $file->uuid()]), 'self');
     /* $self_link = new Link(new CacheableMetadata(), $this->entity->toUrl('jsonapi'), ['self']); */
     $links = new LinkCollection(['self' => $self_link]);
 
