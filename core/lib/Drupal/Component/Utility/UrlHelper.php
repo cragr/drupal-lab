@@ -285,7 +285,7 @@ class UrlHelper {
    * @return string
    *   Cleaned up and HTML-escaped version of $string.
    */
-  public static function filterBadProtocol($string, $attribute_name = null) {
+  public static function filterBadProtocol($string, $attribute_name = NULL) {
     // Get the plain text representation of the attribute value (i.e. its
     // meaning).
     $string = Html::decodeEntities($string);
@@ -354,7 +354,7 @@ class UrlHelper {
    * @see \Drupal\Core\Routing\UrlGeneratorTrait::url()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public static function stripDangerousProtocols($uri, $attribute_name = null) {
+  public static function stripDangerousProtocols($uri, $attribute_name = NULL) {
     $allowed_protocols = array_flip(static::$allowedProtocols);
 
     if (isset($attribute_name) && $attribute_name === 'class') {
