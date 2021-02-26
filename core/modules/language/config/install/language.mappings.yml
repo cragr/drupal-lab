@@ -4,3 +4,8 @@ map:
   no: 'nb' # Norwegian
   pt: 'pt-pt' # Portuguese
   zh: 'zh-cn' # Default Chinese to simplified script
+  zh-hk: 'zh-tw' # Hong Kong Chinese in traditional script
+  zh-mo: 'zh-tw' # Macao Chinese in traditional script
+  zh-cht: 'zh-tw' # traditional Chinese
+  zh-sg: 'zh-cn' # Singapore Chinese in simplified script
+  zh-chs: 'zh-cn' # simplified Chinese
