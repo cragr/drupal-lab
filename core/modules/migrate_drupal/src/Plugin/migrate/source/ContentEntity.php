@@ -228,8 +228,8 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     if (!$this->configuration['include_translations']) {
       return parent::count($refresh);
     }
-    // @TODO: Determine a better way to retrieve a valid count for translations.
-    // https://www.drupal.org/project/drupal/issues/2937166
+    // @todo Determine a better way to retrieve a valid count for translations.
+    // https://www.drupal.org/node/2942948
     // We have to "consume" the generator, so need a separate, local instance.
     return iterator_count($this->initializeIterator());
   }
