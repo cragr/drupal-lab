@@ -368,7 +368,6 @@ abstract class DatabaseConnection {
     if (!empty($this->statementClass)) {
       $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
     }
-    $this->connection = NULL;
     $this->schema = NULL;
   }
 
