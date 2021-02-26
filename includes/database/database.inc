@@ -350,7 +350,7 @@ abstract class DatabaseConnection {
    * PDO connection object.
    */
   public function __call($name, $arguments) {
-    return call_user_func_array([$this->connection, $name], $arguments);
+    return call_user_func_array(array($this->connection, $name), $arguments);
   }
 
   /**
