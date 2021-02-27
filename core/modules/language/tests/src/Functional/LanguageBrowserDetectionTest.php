@@ -37,7 +37,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
 
     // Check that defaults are loaded from language.mappings.yml.
     $this->drupalGet('admin/config/regional/language/detection/browser');
-    $this->assertSession()->fieldValueEquals('edit-mappings-zh-cn-browser-langcode', 'zh-cn');
+    $this->assertSession()->fieldValueEquals('edit-mappings-zh-browser-langcode', 'zh-cn');
     $this->assertSession()->fieldValueEquals('edit-mappings-zh-cn-drupal-langcode', 'zh-cn');
 
     // Delete zh-cn language code.
