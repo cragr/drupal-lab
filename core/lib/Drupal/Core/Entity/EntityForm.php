@@ -7,13 +7,14 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Base class for entity forms.
  *
  * @ingroup entity_api
  */
-class EntityForm extends FormBase implements EntityFormInterface {
+class EntityForm extends FormBase implements EntityFormInterface, TrustedCallbackInterface {
 
   /**
    * The name of the current operation.
@@ -420,6 +421,10 @@ class EntityForm extends FormBase implements EntityFormInterface {
   public function setEntityTypeManager(EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
     return $this;
+  }
+
+  public static function trustedCallbacks() {
+    return ['processForm', 'afterBuild'];
   }
 
 }
