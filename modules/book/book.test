@@ -144,7 +144,7 @@ class BookTestCase extends DrupalWebTestCase {
    * @param $next
    *   (optional) Next link node. Defaults to FALSE.
    * @param $breadcrumb
-   *   The nodes that should be displayed in the breadcrumb.
+   *   (optional) The nodes that should be displayed in the breadcrumb.
    */
   function checkBookNode($node, $nodes = NULL, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb = array()) {
     // $number does not use drupal_static as it should not be reset

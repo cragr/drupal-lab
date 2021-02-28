@@ -3256,7 +3256,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @param $callback
    *   The name of the theme function to invoke; e.g. 'links' for theme_links().
    * @param $variables
-   *   (optional) An array of variables to pass to the theme function.
+   *   An array of variables to pass to the theme function.
    * @param $expected
    *   The expected themed output string.
    * @param $message
