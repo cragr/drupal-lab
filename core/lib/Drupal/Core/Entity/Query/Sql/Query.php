@@ -139,7 +139,6 @@ class Query extends QueryBase implements QueryInterface {
     if (is_null($this->accessCheck)) {
       // Just for debugging, throw an exception to trace the call stack.
       throw new \Exception("access check not set");
-      //@trigger_error('Omitting to explicitly specify whether access should be checked on an entity query is deprecated in drupal:9.2.0. An error will be thrown from drupal:10.0.0. See %cr-link%', E_USER_DEPRECATED);
     }
     if ($this->accessCheck) {
       $this->sqlQuery->addTag($this->entityTypeId . '_access');
