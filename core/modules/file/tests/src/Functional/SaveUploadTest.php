@@ -74,6 +74,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->assertFileExists($this->phpfile->uri);
 
     $this->maxFidBefore = (int) \Drupal::entityQueryAggregate('file')
+      ->accessCheck(TRUE)
       ->aggregate('fid', 'max')
       ->execute()[0]['fid_max'];
 
