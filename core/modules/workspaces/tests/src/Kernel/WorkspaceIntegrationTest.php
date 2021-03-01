@@ -921,7 +921,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $result = (int) $storage->getQuery()->accessCheck(TRUE)->count()->execute();
     $this->assertSame(count($expected_default_revisions), $result);
 
-    $result = (int) $storage->getAggregateQuery()->count()->execute();
+    $result = (int) $storage->getAggregateQuery()->accessCheck(TRUE)->count()->execute();
     $this->assertSame(count($expected_default_revisions), $result);
 
     // Check entity queries with no conditions.

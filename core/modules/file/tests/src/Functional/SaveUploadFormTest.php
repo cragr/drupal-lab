@@ -76,7 +76,10 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->phpfile = current($this->drupalGetTestFiles('php'));
     $this->assertFileExists($this->phpfile->uri);
 
-    $this->maxFidBefore = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
+    $this->maxFidBefore = (int) \Drupal::entityQueryAggregate('file')
+      ->accessCheck(TRUE)
+      ->aggregate('fid', 'max')
+      ->execute()[0]['fid_max'];
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
@@ -99,7 +102,10 @@ class SaveUploadFormTest extends FileManagedTestBase {
    * Tests the _file_save_upload_from_form() function.
    */
   public function testNormal() {
-    $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
+    $max_fid_after = (int) \Drupal::entityQueryAggregate('file')
+      ->accessCheck(TRUE)
+      ->aggregate('fid', 'max')
+      ->execute()[0]['fid_max'];
     // Verify that a new file was created.
     $this->assertGreaterThan($this->maxFidBefore, $max_fid_after);
     $file1 = File::load($max_fid_after);

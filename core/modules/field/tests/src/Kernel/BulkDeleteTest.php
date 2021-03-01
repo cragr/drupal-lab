@@ -337,6 +337,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
 
       // There are $count deleted entities left.
       $found = \Drupal::entityQuery('entity_test')
+        ->accessCheck(TRUE)
         ->condition('type', $bundle)
         ->condition($field_name . '.deleted', 1)
         ->execute();

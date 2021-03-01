@@ -18,6 +18,7 @@ class ItemStorage extends SqlContentEntityStorage implements ItemStorageInterfac
    */
   public function getItemCount(FeedInterface $feed) {
     $query = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(TRUE)
       ->condition('fid', $feed->id())
       ->count();
 
@@ -28,7 +29,7 @@ class ItemStorage extends SqlContentEntityStorage implements ItemStorageInterfac
    * {@inheritdoc}
    */
   public function loadAll($limit = NULL) {
-    $query = \Drupal::entityQuery('aggregator_item');
+    $query = \Drupal::entityQuery('aggregator_item')->accessCheck(TRUE);
     return $this->executeFeedItemQuery($query, $limit);
   }
 
@@ -37,6 +38,7 @@ class ItemStorage extends SqlContentEntityStorage implements ItemStorageInterfac
    */
   public function loadByFeed($fid, $limit = NULL) {
     $query = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(TRUE)
       ->condition('fid', $fid);
     return $this->executeFeedItemQuery($query, $limit);
   }

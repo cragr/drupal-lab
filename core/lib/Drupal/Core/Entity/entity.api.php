@@ -564,9 +564,14 @@ use Drupal\node\Entity\NodeType;
  * if needed, and execute the query to return a list of entity IDs that match
  * the query.
  *
+ * You must specify using the accessCheck() method on the query whether
+ * the results should be restricted only to entities for which the current
+ * user has 'view' access.
+ *
  * Here is an example, using the core File entity:
  * @code
  * $fids = Drupal::entityQuery('file')
+ *   ->accessCheck(FALSE)
  *   ->condition('status', FILE_STATUS_PERMANENT, '<>')
  *   ->condition('changed', REQUEST_TIME - $age, '<')
  *   ->range(0, 100)

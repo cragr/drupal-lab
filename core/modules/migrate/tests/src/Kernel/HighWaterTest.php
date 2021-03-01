@@ -291,6 +291,7 @@ class HighWaterTest extends MigrateTestBase {
   protected function nodeExists($title) {
     $query = \Drupal::entityQuery('node');
     $result = $query
+      ->accessCheck(TRUE)
       ->condition('title', $title)
       ->range(0, 1)
       ->execute();

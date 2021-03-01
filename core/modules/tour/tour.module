@@ -84,6 +84,7 @@ function tour_page_bottom(array &$page_bottom) {
   $route_name = $route_match->getRouteName();
 
   $results = \Drupal::entityQuery('tour')
+    ->accessCheck(TRUE)
     ->condition('routes.*.route_name', $route_name)
     ->execute();
   if (!empty($results) && $tours = Tour::loadMultiple(array_keys($results))) {

@@ -23,7 +23,7 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     $entity_type_id = $entity->getEntityTypeId();
     $id_key = $entity->getEntityType()->getKey('id');
 
-    $query = \Drupal::entityQuery($entity_type_id);
+    $query = \Drupal::entityQuery($entity_type_id)->accessCheck(TRUE);
 
     $entity_id = $entity->id();
     // Using isset() instead of !empty() as 0 and '0' are valid ID values for
