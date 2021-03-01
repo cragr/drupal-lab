@@ -140,7 +140,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->clickLink('Delete');
     $assert_session->pageTextContains('This action cannot be undone');
     $page->pressButton('Delete');
-    $media_id = \Drupal::entityQuery('media')->execute();
+    $media_id = \Drupal::entityQuery('media')->accessCheck(TRUE)->execute();
     $this->assertEmpty($media_id);
   }
 

@@ -211,6 +211,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function getChildren(TermInterface $term) {
     $query = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(TRUE)
       ->condition('parent', $term->id());
     return static::loadMultiple($query->execute());
   }
