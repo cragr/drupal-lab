@@ -129,6 +129,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
 
     $query = $moderation_state_storage->getQuery();
     $results = $query->allRevisions()
+      ->accessCheck(TRUE)
       ->condition('content_entity_revision_id', $revision_id)
       ->condition('langcode', $langcode)
       ->execute();
