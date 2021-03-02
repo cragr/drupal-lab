@@ -352,10 +352,6 @@ class Merge extends Query implements ConditionInterface {
   }
 
   public function execute() {
-    // Default options for merge queries.
-    $this->queryOptions += [
-      'throw_exception' => TRUE,
-    ];
 
     try {
       if (!count($this->condition)) {
@@ -397,7 +393,8 @@ class Merge extends Query implements ConditionInterface {
       }
     }
     catch (\Exception $e) {
-      if ($this->queryOptions['throw_exception']) {
+      // @todo 'throw_exception' option is deprecated. Remove in D10.
+      if ($this->queryOptions['throw_exception'] ?? TRUE) {
         throw $e;
       }
       else {
