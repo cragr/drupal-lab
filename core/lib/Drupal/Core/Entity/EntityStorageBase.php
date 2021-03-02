@@ -494,7 +494,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     if ($id_exists && !isset($entity->original)) {
       // Check if the entity is not the default revision, loadUnchanged() will
       // not retrieve the entity in its original state if so.
-      if ($entity instanceof RevisionableInterface && $entity->getEntityType()->isRevisionable() && !$entity->isDefaultRevision()) {
+      if ($entity instanceof RevisionableInterface && $entity->getEntityType()->isRevisionable() && !$entity->isDefaultRevision() && NULL !== $entity->getRevisionId()) {
         $entity->original = $this->loadRevision($entity->getRevisionId());
       }
       else {
