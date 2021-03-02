@@ -553,7 +553,7 @@ class SelectTest extends DatabaseTestBase {
   /**
    * Tests deprecation of the 'throw_exception' option.
    *
-   * @legacy
+   * @group legacy
    */
   public function testLegacyThrowExceptionOption() {
     $this->expectDeprecation("Passing a 'throw_exception' option to Drupal\Core\Database\Driver\mysql\ExceptionHandler::handleExecutionException is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187");
