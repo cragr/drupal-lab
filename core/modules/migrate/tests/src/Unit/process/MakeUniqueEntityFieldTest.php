@@ -43,6 +43,10 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     $this->entityQuery = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryInterface')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->entityQuery->expects($this->any())
+      ->method('accessCheck')
+      ->willReturn($this->entityQuery);
+
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
     $storage = $this->createMock(EntityStorageInterface::class);
