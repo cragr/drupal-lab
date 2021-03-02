@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Database;
 
-@trigger_error('\Drupal\Core\Database\StatementEmpty is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. Use mocked StatementInterface classes in tests if needed. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+@trigger_error('\Drupal\Core\Database\StatementEmpty is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. Use mocked StatementInterface classes in tests if needed. See https://www.drupal.org/node/3201283', E_USER_DEPRECATED);
 
 /**
  * Empty implementation of a database statement.
