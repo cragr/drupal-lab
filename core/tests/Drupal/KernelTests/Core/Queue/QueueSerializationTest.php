@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -14,7 +15,7 @@ use Drupal\user\Entity\User;
  *
  * @group Queue
  */
-class QueueSerializationTest extends KernelTestBase implements FormInterface {
+class QueueSerializationTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
 
   use DependencySerializationTrait;
 
@@ -100,6 +101,13 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
     $form = $form_builder->retrieveForm($form_id, $form_state);
     $form_builder->prepareForm($form_id, $form, $form_state);
     $form_builder->processForm($form_id, $form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['process'];
   }
 
 }

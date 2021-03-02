@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\file\FileUsage\FileUsageInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Form classes are internal.
  */
-class FileUploadForm extends AddFormBase {
+class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
 
   /**
    * The element info manager.
@@ -371,6 +372,17 @@ class FileUploadForm extends AddFormBase {
     }
 
     parent::removeButtonSubmit($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return [
+      'hideExtraSourceFieldComponents',
+      'validateUploadElement',
+      'processUploadElement'
+      ];
   }
 
 }

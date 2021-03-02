@@ -5,13 +5,14 @@ namespace Drupal\form_test\Form;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Form builder for \Drupal\Core\Form\FormState::cleanValues() test.
  *
  * @internal
  */
-class FormTestFormStateValuesCleanForm extends FormBase {
+class FormTestFormStateValuesCleanForm extends FormBase implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -62,6 +63,13 @@ class FormTestFormStateValuesCleanForm extends FormBase {
     // anyway so this is fine until it's replaced with a JsonResponse.
     print Json::encode($form_state->getValues());
     exit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['cleanValue'];
   }
 
 }

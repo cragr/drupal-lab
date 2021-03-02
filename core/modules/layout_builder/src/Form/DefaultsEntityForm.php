@@ -214,4 +214,14 @@ class DefaultsEntityForm extends EntityForm {
     return $this->sectionStorage;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'layoutBuilderElementGetKeys';
+    return $callbacks;
+  }
+
+
 }
