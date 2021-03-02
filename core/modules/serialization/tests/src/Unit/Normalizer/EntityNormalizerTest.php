@@ -175,7 +175,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->will($this->returnValue($base_definitions));
 
     $entity_query_mock = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
-    $entity_query_mock->expects($this->once())
+    $entity_query_mock->expects($this->any())
       ->method('accessCheck')
       ->will($this->returnValue($entity_query_mock));
     $entity_query_mock->expects($this->once())
@@ -299,7 +299,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->will($this->returnValue($base_definitions));
 
     $entity_query_mock = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
-    $entity_query_mock->expects($this->once())
+    $entity_query_mock->expects($this->any())
       ->method('accessCheck')
       ->will($this->returnValue($entity_query_mock));
     $entity_query_mock->expects($this->once())
