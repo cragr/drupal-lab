@@ -193,6 +193,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
       $query = $this->prophesize(QueryInterface::class);
       $query->willBeConstructedWith([]);
       $query->execute()->willReturn($id === 'test_vocab1' ? [] : [$id]);
+      $query->accessCheck()->willReturn($query);
       $map[] = ['test_field', $id, NULL, NULL, $query->reveal()];
     }
     $this->entityQuery
