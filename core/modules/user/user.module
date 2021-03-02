@@ -1089,7 +1089,7 @@ function user_element_info_alter(array &$types) {
  * validation.
  *
  *
- * @deprecated in Drupal 9.2.0 and will be removed before Drupal 10.0.0. Use
+ * @deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use
  *   \Drupal\Core\Render\Element\PasswordConfirm::dynamicPasswordConfirm()
  *   instead.
  *

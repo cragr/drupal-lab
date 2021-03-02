@@ -43,12 +43,14 @@ function stable_preprocess_links(&$variables) {
  */
 function stable_element_info_alter(array &$info) {
   if (array_key_exists('text_format', $info)) {
-    $info['text_format']['#process'][] = [StableTrustedCallbacks::class, 'processTextFormat'];
+    $info['text_format']['#process'][] = [
+      StableTrustedCallbacks::class, 'processTextFormat',
+      ];
   }
 }
 
 /**
- * #process callback, for adding classes to filter components.
+ * Implements #process callback, for adding classes to filter components.
  *
  * @param array $element
  *   Render array for the text_format element.
@@ -56,7 +58,7 @@ function stable_element_info_alter(array &$info) {
  * @return array
  *   Text_format element with the filter classes added.
  *
- * @deprecated in Drupal 9.2.0 and will be removed before Drupal 10.0.0. Use
+ * @deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use
  *   \Drupal\Core\Render\Element\PasswordConfirm::dynamicPasswordConfirm()
  *   instead.
  *

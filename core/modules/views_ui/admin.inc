@@ -120,7 +120,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
 /**
  * Implements #process callback.
  *
- * @deprecated in Drupal 9.2.0 and will be removed before Drupal 10.0.0. Use
+ * @deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use
  *   Drupal\views_ui\Form\TrustedFormCallbacks::addLimitedValidation()
  *   instead.
  *
@@ -283,7 +283,7 @@ function views_ui_build_form_url(FormStateInterface $form_state) {
 /**
  * Implements #process callback.
  *
- * @deprecated in Drupal 9.2.0 and will be removed before Drupal 10.0.0. Use
+ * @deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use
  *   Drupal\views_ui\Form\TrustedFormCallbacks::formButtonClicked()
  *   instead.
  *

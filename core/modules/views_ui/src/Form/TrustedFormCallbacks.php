@@ -5,6 +5,11 @@ namespace Drupal\views_ui\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
+/**
+ * Implements trusted callbacks for views_ui.
+ *
+ * @package Drupal\views_ui\Form
+ */
 class TrustedFormCallbacks implements TrustedCallbackInterface {
 
   /**
@@ -13,8 +18,8 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
    * The Form API has logic to determine the form's triggering element based on
    * the data in POST. However, it only checks buttons based on a single #value
    * per button. This function may be added to a button's #process callbacks to
-   * extend button click detection to support multiple #values per button. If the
-   * data in POST matches any value in the button's #values array, then the
+   * extend button click detection to support multiple #values per button. If
+   * the data in POST matches any value in the button's #values array, then the
    * button is detected as having been clicked. This can be used when the value
    * (label) of the same logical button may be different based on context (e.g.,
    * "Apply" vs. "Apply and continue").
@@ -30,7 +35,8 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
 
   /** Implements #process callback for views_ui_add_ajax_trigger()
    *
-   * Processes a non-JavaScript fallback submit button to limit its validation errors.
+   * Processes a non-JavaScript fallback submit button to limit its
+   * validation errors.
    */
   public static function addLimitedValidation(array &$element, FormStateInterface $form_state, array &$form) {
     // Retrieve the AJAX triggering element so we can determine its parents. (We
@@ -48,11 +54,12 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
     $element['#limit_validation_errors'] = [$ajax_triggering_element['#parents']];
 
     // If we are in the process of a form submission and this is the button that
-    // was clicked, the form API workflow in \Drupal::formBuilder()->doBuildForm()
-    // will have already copied it to $form_state->getTriggeringElement() before
-    // our #process function is run. So we need to make the same modifications in
-    // $form_state as we did to the element itself, to ensure that
-    // #limit_validation_errors will actually be set in the correct place.
+    // was clicked, the form API workflow in
+    // \Drupal::formBuilder()->doBuildForm() will have already copied it to
+    // $form_state->getTriggeringElement() before our #process function is run.
+    // So we need to make the same modifications in $form_state as we did to
+    // the element itself, to ensure that #limit_validation_errors will
+    // actually be set in the correct place.
     $clicked_button = &$form_state->getTriggeringElement();
     if ($clicked_button && $clicked_button['#name'] == $element['#name'] && $clicked_button['#value'] == $element['#value']) {
       $clicked_button['#limit_validation_errors'] = $element['#limit_validation_errors'];

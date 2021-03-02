@@ -600,7 +600,7 @@ class FileWidget extends WidgetBase implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return['processMultiple', 'process'];
+    return ['processMultiple', 'process'];
   }
 
 }

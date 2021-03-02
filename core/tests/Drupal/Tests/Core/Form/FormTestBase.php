@@ -26,11 +26,15 @@ abstract class FormTestBase extends UnitTestCase {
   protected $formBuilder;
 
   /**
+   * The mocked form validator.
+   *
    * @var \Drupal\Core\Form\FormValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formValidator;
 
   /**
+   * The mocked form submitter.
+   *
    * @var \Drupal\Core\Form\FormSubmitterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $formSubmitter;
@@ -120,16 +124,22 @@ abstract class FormTestBase extends UnitTestCase {
   protected $eventDispatcher;
 
   /**
+   * The mocked translation manager.
+   *
    * @var \Drupal\Core\StringTranslation\TranslationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $translationManager;
 
   /**
+   * The mocked kernel.
+   *
    * @var \Drupal\Core\DrupalKernelInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $kernel;
 
   /**
+   * The mocked logger.
+   *
    * @var \PHPUnit\Framework\MockObject\MockObject|\Psr\Log\LoggerInterface
    */
   protected $logger;
@@ -181,7 +191,13 @@ abstract class FormTestBase extends UnitTestCase {
     $this->logger = $this->createMock('Drupal\Core\Logger\LoggerChannelInterface');
     $form_error_handler = $this->createMock('Drupal\Core\Form\FormErrorHandlerInterface');
     $this->formValidator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
-      ->setConstructorArgs([$this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler])
+      ->setConstructorArgs([
+        $this->requestStack,
+        $this->getStringTranslationStub(),
+        $this->csrfToken,
+        $this->logger,
+        $form_error_handler,
+        ])
       ->setMethods(NULL)
       ->getMock();
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
@@ -261,7 +277,7 @@ abstract class FormTestBase extends UnitTestCase {
   }
 
   /**
-   * Asserts that the expected form structure is found in a form for a given key.
+   * Asserts that the expected form structure is found for a given key.
    *
    * @param array $expected_form
    *   The expected form structure.

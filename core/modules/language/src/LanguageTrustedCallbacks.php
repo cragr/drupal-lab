@@ -12,7 +12,7 @@ class LanguageTrustedCallbacks implements TrustedCallbackInterface {
    *
    * Expands the language_configuration form element.
    */
-  public static function LanguageSelectProcess(array &$element, FormStateInterface $form_state, array &$form) {
+  public static function languageSelectProcess(array &$element, FormStateInterface $form_state, array &$form) {
     // Don't set the options if another module (translation for example) already
     // set the options.
     if (!isset($element['#options'])) {
@@ -28,7 +28,7 @@ class LanguageTrustedCallbacks implements TrustedCallbackInterface {
    * @inheritDoc
    */
   public static function trustedCallbacks() {
-    return ['LanguageSelectProcess'];
+    return ['languageSelectProcess'];
   }
 
 }

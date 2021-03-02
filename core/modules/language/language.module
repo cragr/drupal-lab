@@ -130,7 +130,7 @@ function language_element_info_alter(&$type) {
       $type['language_select']['#theme_wrappers'] = [];
     }
     $type['language_select']['#process'] = array_merge($type['language_select']['#process'], [
-      [LanguageTrustedCallbacks::class, 'LanguageSelectProcess'],
+      [LanguageTrustedCallbacks::class, 'languageSelectProcess'],
       ['Drupal\Core\Render\Element\Select', 'processSelect'],
       ['Drupal\Core\Render\Element\RenderElement', 'processAjaxForm'],
     ]);
@@ -144,15 +144,15 @@ function language_element_info_alter(&$type) {
 /**
  * Implements #process callback.
  *
- * @deprecated in Drupal 9.2.0 and will be removed before Drupal 10.0.0. Use
- *   Drupal\language\LanguageTrustedCallbacks::LanguageSelectProcess()
+ * @deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use
+ *   Drupal\language\LanguageTrustedCallbacks::languageSelectProcess()
  *   instead.
  *
  * @see replace_with_CR_url
  *
  */
 function language_process_language_select(array &$element, FormStateInterface $form_state, array &$form) {
-  return LanguageTrustedCallbacks::LanguageSelectProcess($element, $form_state, $form);
+  return LanguageTrustedCallbacks::languageSelectProcess($element, $form_state, $form);
 }
 
 /**

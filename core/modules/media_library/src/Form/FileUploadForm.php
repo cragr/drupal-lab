@@ -381,7 +381,7 @@ class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
     return [
       'hideExtraSourceFieldComponents',
       'validateUploadElement',
-      'processUploadElement'
+      'processUploadElement',
       ];
   }
 

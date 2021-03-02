@@ -44,12 +44,12 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface, Tr
    * Process callback.
    *
    * @param array $element
-   *   Form element
+   *   Form element.
    *
    * @return array
    *   Processed element.
    */
-  public function process($element) {
+  public function process(array $element) {
     return $element;
   }
 

@@ -3,22 +3,17 @@
 namespace Drupal\stable;
 
 use Drupal\Core\Form\FormStateInterface;
-use \Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
+/**
+ * Provides trusted callbacks to the Stable theme.
+ *
+ * @package Drupal\stable
+ */
 class StableTrustedCallbacks implements TrustedCallbackInterface {
 
   /**
-   * #process callback, for adding classes to filter components.
-   *
-   * @param array $element
-   *   Render array for the text_format element.
-   * @param \Drupal\Core\Form\FormStateInterface $formState
-   *   The current form state.
-   * @param array $form
-   *   The complete form.
-   *
-   * @return array
-   *   Text_format element with the filter classes added.
+   * Implements #process callback for stable_element_info_alter().
    */
   public static function processTextFormat(array &$element, FormStateInterface $formState, array &$form) {
     $element['format']['#attributes']['class'][] = 'filter-wrapper';

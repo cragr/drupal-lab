@@ -572,7 +572,7 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
 /**
  * Implements #process callback.
  *
- * @deprecated in Drupal 9.2.0 and will be removed before Drupal 10.0.0. Use
+ * @deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use
  *   ContentTranslationTrustedCallbacks::LanguageConfigurationElementProcess()
  *   instead.
  *
