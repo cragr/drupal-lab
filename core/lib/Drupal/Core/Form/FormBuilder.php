@@ -1280,7 +1280,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
           // Skip all value callbacks except safe ones like text if the CSRF
           // token was invalid.
           if (!$form_state->hasInvalidToken() || $this->valueCallableIsSafe($value_callable)) {
-            $element['#value'] = call_user_func_array($value_callable, [&$element, $input, &$form_state]);
+            $element['#value'] = $this->doCallback(
+              $form_state,
+              '#value_callback',
+              $value_callable,
+              [&$element, $input, &$form_state]
+            );
           }
           else {
             $input = NULL;
@@ -1299,7 +1304,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       if (!isset($element['#value'])) {
         // Call #type_value without a second argument to request default_value
         // handling.
-        $element['#value'] = call_user_func_array($value_callable, [&$element, FALSE, &$form_state]);
+        $element['#value'] = $this->doCallback(
+          $form_state,
+          '#value_callback',
+          $value_callable,
+          [&$element, FALSE, &$form_state]
+        );
 
         // Final catch. If we haven't set a value yet, use the explicit default
         // value. Avoid image buttons (which come with garbage value), so we

@@ -15,7 +15,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\Element\Textfield;
+use Drupal\color\ColorTrustedCallbacks;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\color\ColorSystemBrandingBlockAlter;
 
@@ -249,7 +249,7 @@ function color_scheme_form($complete_form, FormStateInterface $form_state, $them
       $form['palette'][$name] = [
         '#type' => 'textfield',
         '#title' => $names[$name],
-        '#value_callback' => 'color_palette_color_value',
+        '#value_callback' => [ColorTrustedCallbacks::class, 'paletteColorValue'],
         '#default_value' => $value,
         '#size' => 8,
         '#attributes' => ['dir' => LanguageInterface::DIRECTION_LTR],
@@ -306,21 +306,7 @@ function template_preprocess_color_scheme_form(&$variables) {
  *   element. Return nothing to use the default.
  */
 function color_palette_color_value($element, $input, FormStateInterface $form_state) {
-  // If we suspect a possible cross-site request forgery attack, only accept
-  // hexadecimal CSS color strings from user input, to avoid problems when this
-  // value is used in the JavaScript preview.
-  if ($input !== FALSE) {
-    // Start with the provided value for this textfield, and validate that if
-    // necessary, falling back on the default value.
-    $value = Textfield::valueCallback($element, $input, $form_state);
-    $complete_form = $form_state->getCompleteForm();
-    if (!$value || !isset($complete_form['#token']) || color_valid_hexadecimal_string($value) || \Drupal::csrfToken()->validate($form_state->getValue('form_token'), $complete_form['#token'])) {
-      return $value;
-    }
-    else {
-      return $element['#default_value'];
-    }
-  }
+  return ColorTrustedCallbacks::paletteColorValue($element, $input, $form_state);
 }
 
 /**

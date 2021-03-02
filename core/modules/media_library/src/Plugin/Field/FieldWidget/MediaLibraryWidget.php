@@ -568,6 +568,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   public static function trustedCallbacks() {
     $callbacks = parent::trustedCallbacks();
     $callbacks[] = 'preRenderWidget';
+    $callbacks[] = 'setMediaTypesValue';
     return $callbacks;
   }
 
