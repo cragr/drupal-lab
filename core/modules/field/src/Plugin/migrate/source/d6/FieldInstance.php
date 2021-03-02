@@ -11,8 +11,9 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Drupal 6 field instances source from database.
  *
  * Available configuration keys:
- * - node_type: (optional) The content type where retrieved field instances are
- *   in use. If not declared then all field instances are retrieved.
+ * - node_type: (optional) The content type (machine name) to filter field
+ *   instances retrieved from the source. If omitted, all field instances are
+ *   retrieved.
  *
  * Example:
  *
