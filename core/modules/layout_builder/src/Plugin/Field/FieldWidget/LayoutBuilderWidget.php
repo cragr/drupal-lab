@@ -81,7 +81,9 @@ class LayoutBuilderWidget extends WidgetBase implements TrustedCallbackInterface
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['layoutBuilderElementGetKeys'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'layoutBuilderElementGetKeys';
+    return $callbacks;
   }
 
 }

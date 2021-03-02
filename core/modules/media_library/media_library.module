@@ -23,6 +23,7 @@ use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Form\FileUploadForm;
 use Drupal\media_library\Form\OEmbedForm;
+use Drupal\media_library\Form\TrustedFormCallbacks;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
@@ -296,30 +297,16 @@ function media_library_form_alter(array &$form, FormStateInterface $form_state, 
   // Add a process callback to ensure that the media library view's exposed
   // filters submit button is not moved to the modal dialog's button area.
   if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
-    $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
+    $form['#after_build'][] = [
+      TrustedFormCallbacks::class,
+      'afterBuildViewsExposedForm',
+    ];
   }
 
   // Configures media_library displays when a type is submitted.
   if ($form_state->getFormObject() instanceof MediaTypeForm) {
     $form['actions']['submit']['#submit'][] = '_media_library_media_type_form_submit';
   }
-}
-
-/**
- * Form #after_build callback for media_library view's exposed filters form.
- */
-function _media_library_views_form_media_library_after_build(array $form, FormStateInterface $form_state) {
-  // Remove .form-actions from the view's exposed filter actions. This prevents
-  // the "Apply filters" submit button from being moved into the dialog's
-  // button area.
-  // @see \Drupal\Core\Render\Element\Actions::processActions
-  // @see Drupal.behaviors.dialog.prepareDialogButtons
-  // @todo Remove this after
-  //   https://www.drupal.org/project/drupal/issues/3089751 is fixed.
-  if (($key = array_search('form-actions', $form['actions']['#attributes']['class'])) !== FALSE) {
-    unset($form['actions']['#attributes']['class'][$key]);
-  }
-  return $form;
 }
 
 /**

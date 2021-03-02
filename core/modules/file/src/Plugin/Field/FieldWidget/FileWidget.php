@@ -600,7 +600,10 @@ class FileWidget extends WidgetBase implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['processMultiple', 'process'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'processMultiple';
+    $callbacks[] = 'process';
+    return $callbacks;
   }
 
 }

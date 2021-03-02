@@ -423,6 +423,9 @@ class EntityForm extends FormBase implements EntityFormInterface, TrustedCallbac
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function trustedCallbacks() {
     return ['processForm', 'afterBuild'];
   }

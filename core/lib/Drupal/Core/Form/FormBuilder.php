@@ -1019,7 +1019,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (isset($element['#process']) && !$element['#processed']) {
       foreach ($element['#process'] as $callback) {
         $complete_form = &$form_state->getCompleteForm();
-        $element = $this->doCallback($form_state, '#process', $callback, [&$element, &$form_state, &$complete_form]);
+        $element = $this->doCallback(
+          $form_state,
+          '#process',
+          $callback,
+          [&$element, &$form_state, &$complete_form]
+        );
       }
       $element['#processed'] = TRUE;
     }
@@ -1090,7 +1095,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // after normal input parsing has been completed.
     if (isset($element['#after_build']) && !isset($element['#after_build_done'])) {
       foreach ($element['#after_build'] as $callback) {
-        $element = call_user_func_array($form_state->prepareCallback($callback), [$element, &$form_state]);
+        $element = $this->doCallback(
+          $form_state,
+          '#after_build',
+          $callback,
+          [&$element, &$form_state, &$complete_form]
+        );
       }
       $element['#after_build_done'] = TRUE;
     }

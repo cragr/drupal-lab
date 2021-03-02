@@ -2,6 +2,7 @@
 
 namespace Drupal\views_ui\Form;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
@@ -69,10 +70,41 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
   }
 
   /**
-   * @inheritDoc
+   * Implements #after_build callback for views_ui_add_ajax_trigger()
+   */
+  public static function addAjaxWrapper(array &$element, FormStateInterface $form_state, array &$form) {
+    // Find the region of the complete form that needs to be refreshed by AJAX.
+    // This was earlier stored in a property on the element.
+    $complete_form = &$form_state->getCompleteForm();
+    $refresh_parents = $element['#views_ui_ajax_data']['refresh_parents'];
+    $refresh_element = NestedArray::getValue($complete_form, $refresh_parents);
+
+    // The HTML ID that AJAX expects was also stored in a property on the
+    // element, so use that information to insert the wrapper <div> here.
+    $id = $element['#views_ui_ajax_data']['wrapper'];
+    $refresh_element += [
+      '#prefix' => '',
+      '#suffix' => '',
+    ];
+    $refresh_element['#prefix'] = '<div id="' . $id . '" class="views-ui-ajax-wrapper">' . $refresh_element['#prefix'];
+    $refresh_element['#suffix'] .= '</div>';
+
+    // Copy the element that needs to be refreshed back into the form, with our
+    // modifications to it.
+    NestedArray::setValue($complete_form, $refresh_parents, $refresh_element);
+
+    return $element;
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public static function trustedCallbacks() {
-    return ['formButtonClicked', 'addLimitedValidation'];
+    return [
+      'formButtonClicked',
+      'addLimitedValidation',
+      'addAjaxWrapper',
+    ];
   }
 
 }
