@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Deletes the stored response from the advisories feed, if needed.
  */
-class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
+class qAdvisoriesConfigSubscriber implements EventSubscriberInterface {
 
   /**
    * The security advisory fetcher service.
@@ -35,7 +35,7 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The configuration event.
    */
-  public function onConfigSave(ConfigCrudEvent $event) {
+  public function onConfigSave(ConfigCrudEvent $event): void {
     $saved_config = $event->getConfig();
     if ($saved_config->getName() === 'system.advisories' && $event->isChanged('interval_hours')) {
       $original_interval = $saved_config->getOriginal('interval_hours');

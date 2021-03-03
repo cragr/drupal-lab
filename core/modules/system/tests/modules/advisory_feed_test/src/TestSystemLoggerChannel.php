@@ -44,7 +44,7 @@ final class TestSystemLoggerChannel extends LoggerChannel {
    *
    * @see \Drupal\Tests\system\Functional\SecurityAdvisories\SecurityAdvisoriesTestTrait::assertServiceAdvisoryLoggedErrors()
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     if ($level === LogLevel::ERROR) {
       $messages = $this->state->get('advisory_feed_test.error_messages', []);
       $messages[] = $message;

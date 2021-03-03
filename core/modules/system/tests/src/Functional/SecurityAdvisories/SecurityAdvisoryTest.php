@@ -105,7 +105,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function writeSettings(array $settings) {
+  protected function writeSettings(array $settings): void {
     // Unset 'system.advisories' to allow testing enabling and disabling this
     // setting.
     unset($settings['config']['system.advisories']);

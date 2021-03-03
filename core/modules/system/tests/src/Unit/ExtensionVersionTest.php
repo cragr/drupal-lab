@@ -22,7 +22,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param array $expected_version_info
    *   The expected version information.
    */
-  public function testGetMajorVersion($version, array $expected_version_info) {
+  public function testGetMajorVersion(string $version, array $expected_version_info): void {
     $version = ExtensionVersion::createFromVersionString($version);
     $this->assertSame($expected_version_info['major'], $version->getMajorVersion());
   }
@@ -37,7 +37,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param array $expected_version_info
    *   The expected version information.
    */
-  public function testGetMinorVersion($version, array $expected_version_info) {
+  public function testGetMinorVersion(string $version, array $expected_version_info): void {
     $version = ExtensionVersion::createFromVersionString($version);
     $this->assertSame($expected_version_info['minor'], $version->getMinorVersion());
   }
@@ -52,7 +52,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param array $expected_version_info
    *   The expected version information.
    */
-  public function testGetVersionExtra($version, array $expected_version_info) {
+  public function testGetVersionExtra(string $version, array $expected_version_info): void {
     $version = ExtensionVersion::createFromVersionString($version);
     $this->assertSame($expected_version_info['extra'], $version->getVersionExtra());
   }
@@ -60,10 +60,10 @@ class ExtensionVersionTest extends UnitTestCase {
   /**
    * Data provider for expected version information.
    *
-   * @return array
+   * @return mixed[][]
    *   Arrays of version information.
    */
-  public function providerVersionInfos() {
+  public function providerVersionInfos(): array {
     // Data provider values are:
     // - The version number to test.
     // - Array of expected version information with the following keys:
@@ -249,7 +249,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param string $version
    *   The version string to test.
    */
-  public function testInvalidVersionNumber($version) {
+  public function testInvalidVersionNumber(string $version): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->expectExceptionMessage("Unexpected version number in: $version");
     ExtensionVersion::createFromVersionString($version);
@@ -257,8 +257,11 @@ class ExtensionVersionTest extends UnitTestCase {
 
   /**
    * Data provider for testInvalidVersionNumber().
+   *
+   * @return string[]
+   *   The test cases for testInvalidVersionNumber().
    */
-  public function providerInvalidVersionNumber() {
+  public function providerInvalidVersionNumber(): array {
     return static::createKeyedTestCases([
       '',
       '8',
@@ -289,7 +292,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param string $version
    *   The version string to test.
    */
-  public function testInvalidVersionCorePrefix($version) {
+  public function testInvalidVersionCorePrefix(string $version): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->expectExceptionMessage("Unexpected version core prefix in $version. The only core prefix expected in \Drupal\system\ExtensionVersion is: 8.x-");
     ExtensionVersion::createFromVersionString($version);
@@ -297,8 +300,11 @@ class ExtensionVersionTest extends UnitTestCase {
 
   /**
    * Data provider for testInvalidVersionCorePrefix().
+   *
+   * @return string[]
+   *   The test cases for testInvalidVersionCorePrefix().
    */
-  public function providerInvalidVersionCorePrefix() {
+  public function providerInvalidVersionCorePrefix(): array {
     return static::createKeyedTestCases([
       '6.x-1.0',
       '7.x-1.x',
@@ -315,7 +321,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param string $branch
    *   The branch to test.
    */
-  public function testInvalidBranchCorePrefix($branch) {
+  public function testInvalidBranchCorePrefix(string $branch): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->expectExceptionMessage("Unexpected version core prefix in {$branch}0. The only core prefix expected in \Drupal\system\ExtensionVersion is: 8.x-");
     ExtensionVersion::createFromSupportBranch($branch);
@@ -323,8 +329,11 @@ class ExtensionVersionTest extends UnitTestCase {
 
   /**
    * Data provider for testInvalidBranchCorePrefix().
+   *
+   * @return string[]
+   *   The test cases for testInvalidBranchCorePrefix().
    */
-  public function providerInvalidBranchCorePrefix() {
+  public function providerInvalidBranchCorePrefix(): array {
     return static::createKeyedTestCases([
       '6.x-1.',
       '7.x-1.',
@@ -343,7 +352,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param string $expected_major
    *   The expected major version.
    */
-  public function testCreateFromSupportBranch($branch, $expected_major) {
+  public function testCreateFromSupportBranch(string $branch, string $expected_major): void {
     $version = ExtensionVersion::createFromSupportBranch($branch);
     $this->assertInstanceOf(ExtensionVersion::class, $version);
     $this->assertSame($expected_major, $version->getMajorVersion());
@@ -353,8 +362,11 @@ class ExtensionVersionTest extends UnitTestCase {
 
   /**
    * Data provider for testCreateFromSupportBranch().
+   *
+   * @return string[][]
+   *   The test cases for testCreateFromSupportBranch().
    */
-  public function providerCreateFromSupportBranch() {
+  public function providerCreateFromSupportBranch(): array {
     // Data provider values are:
     // - The version number to test.
     // - Array of expected version information with the following keys:
@@ -392,7 +404,7 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param string $branch
    *   The branch to test.
    */
-  public function testInvalidBranch($branch) {
+  public function testInvalidBranch(string $branch): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->expectExceptionMessage("Invalid support branch: $branch");
     ExtensionVersion::createFromSupportBranch($branch);
@@ -400,8 +412,11 @@ class ExtensionVersionTest extends UnitTestCase {
 
   /**
    * Data provider for testInvalidBranch().
+   *
+   * @return string[]
+   *   The test cases for testInvalidBranch().
    */
-  public function provideInvalidBranch() {
+  public function provideInvalidBranch(): array {
     return self::createKeyedTestCases([
       '8.x-1.0',
       '8.x-2.x',
@@ -420,11 +435,11 @@ class ExtensionVersionTest extends UnitTestCase {
    * @param string[] $test_arguments
    *   The test arguments.
    *
-   * @return array
+   * @return mixed[]
    *   An array with $test_arguments as keys and each element of $test_arguments
    *   as a single item array
    */
-  protected static function createKeyedTestCases(array $test_arguments) {
+  protected static function createKeyedTestCases(array $test_arguments): array {
     return array_combine(
       $test_arguments,
       array_map(function ($test_argument) {

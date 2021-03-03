@@ -3,6 +3,7 @@
 namespace Drupal\advisory_feed_test;
 
 use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Provides a decorator service for the 'http_client' service for testing.
@@ -26,7 +27,7 @@ class AdvisoriesTestHttpClient extends Client {
   /**
    * {@inheritdoc}
    */
-  public function get($uri, array $options = []) {
+  public function get($uri, array $options = []): ResponseInterface {
     $test_end_point = \Drupal::state()->get('advisories_test_endpoint');
     if ($test_end_point && $uri === 'https://updates.drupal.org/psa.json') {
       // Only override $uri if it matches the advisories JSON feed to avoid

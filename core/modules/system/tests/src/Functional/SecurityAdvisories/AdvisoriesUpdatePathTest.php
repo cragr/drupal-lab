@@ -14,7 +14,7 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       dirname(__DIR__, 3) . '/fixtures/update/drupal-8.8.0.filled.standard.php.gz',
     ];
