@@ -48,14 +48,10 @@ class FileUsageViewTest extends ViewTestBase {
 
     /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
     $file_usage = $this->container->get('file.usage');
-    $file_usage->add($file, 'file', 'user', $account->id());
     $file_usage->add($file, 'file', 'form', 'awesome_form');
 
     $expected_usage = [
       'file' => [
-        'user' => [
-          $account->id() => '1',
-        ],
         'form' => [
           'awesome_form' => '1',
         ],
@@ -71,11 +67,6 @@ class FileUsageViewTest extends ViewTestBase {
     $expected_result = [
       [
         'file_usage_module' => 'file',
-        'file_usage_type' => 'user',
-        'file_usage_id' => $file->id(),
-      ],
-      [
-        'file_usage_module' => 'file',
         'file_usage_type' => 'form',
         'file_usage_id' => 'awesome_form',
       ],
@@ -86,6 +77,12 @@ class FileUsageViewTest extends ViewTestBase {
       'file_usage_type' => 'file_usage_type',
     ];
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
+
+    // Call preview so the field handlers will be triggered. The 'label' field
+    // will try to load entity type 'file_usage_type' with id 'file_usage_id'.
+    // The form isn't entity type, so it throws Exception: 'The "form" entity
+    // type does not exist'.
+    $view->preview();
   }
 
 }
