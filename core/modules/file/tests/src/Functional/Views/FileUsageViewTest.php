@@ -67,7 +67,6 @@ class FileUsageViewTest extends ViewTestBase {
     $view = Views::getView('files');
     $view->setDisplay('page_2');
     $this->executeView($view, [$file->id()]);
-//    $this->assertCount(2, $view->result);
 
     $expected_result = [
       [
