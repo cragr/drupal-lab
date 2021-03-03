@@ -1349,7 +1349,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   /**
    * Test the accessCheck method is called.
-   * 
+   *
    * @group legacy
    */
   public function testAccessCheckSpecified() {
