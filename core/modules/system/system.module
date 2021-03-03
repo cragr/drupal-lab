@@ -252,7 +252,7 @@ function system_theme() {
       'file' => 'system.theme.inc',
       'variables' => ['error_message' => []],
     ],
-    ]);
+  ]);
 }
 
 /**
