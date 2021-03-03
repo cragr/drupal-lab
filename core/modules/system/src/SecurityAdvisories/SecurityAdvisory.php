@@ -182,7 +182,7 @@ final class SecurityAdvisory {
    *   TRUE if the advisory is for core, otherwise FALSE.
    */
   public function isCoreAdvisory(): bool {
-    return $this->type === 'core';
+    return $this->getProjectType() === 'core';
   }
 
   /**
