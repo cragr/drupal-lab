@@ -15,7 +15,7 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
   /**
    * Implements #after_build callback for media_library_form_alter().
    */
-  public static function afterBuildViewsExposedForm(array &$element, FormStateInterface $form_state, array &$form) {
+  public static function afterBuildViewsExposedForm(array &$element, FormStateInterface $form_state) {
     // Remove .form-actions from the view's exposed filter actions. This
     // prevents the "Apply filters" submit button from being moved into the
     // dialog's button area.

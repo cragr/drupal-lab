@@ -812,8 +812,8 @@ function system_preprocess_block(&$variables) {
  * @see https://www.drupal.org/project/drupal/issues/2966711
  * @todo correct [at]see to use change record url above.
  */
-function system_check_directory(array &$form_element, FormStateInterface $form_state, array &$form) {
-  return TrustedFormCallbacks::checkDirectory($form_element, $form_state, $form);
+function system_check_directory(array &$form_element, FormStateInterface $form_state) {
+  return TrustedFormCallbacks::checkDirectory($form_element, $form_state);
 }
 
 /**

@@ -18,7 +18,7 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
    *
    * - locale_form_system_file_system_settings_alter()
    */
-  public static function checkDirectory(array &$element, FormStateInterface $formState, array $complete_form) {
+  public static function checkDirectory(array &$element, FormStateInterface $formState) {
     $directory = $element['#value'];
     if (strlen($directory) == 0) {
       return $element;

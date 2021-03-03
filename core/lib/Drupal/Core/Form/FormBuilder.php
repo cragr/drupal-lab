@@ -1099,7 +1099,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
           $form_state,
           '#after_build',
           $callback,
-          [&$element, &$form_state, &$complete_form]
+          [&$element, &$form_state]
         );
       }
       $element['#after_build_done'] = TRUE;

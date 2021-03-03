@@ -55,7 +55,7 @@ class FormTestStoragePageCacheForm extends FormBase implements TrustedCallbackIn
   /**
    * Implements #after_build callback for ::buildForm().
    */
-  public static function formTestStoragePageCacheOldBuildId(array &$form, FormStateInterface $formState, array &$complete_form) {
+  public static function formTestStoragePageCacheOldBuildId(array &$form, FormStateInterface $formState) {
     if (isset($form['#build_id_old'])) {
       $form['test_build_id_old']['#plain_text'] = $form['#build_id_old'];
     }

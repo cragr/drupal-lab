@@ -73,7 +73,7 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
   /**
    * Implements #after_build callback for views_ui_add_ajax_trigger()
    */
-  public static function addAjaxWrapper(array &$element, FormStateInterface $form_state, array &$form) {
+  public static function addAjaxWrapper(array &$element, FormStateInterface $form_state) {
     // Find the region of the complete form that needs to be refreshed by AJAX.
     // This was earlier stored in a property on the element.
     $complete_form = &$form_state->getCompleteForm();
