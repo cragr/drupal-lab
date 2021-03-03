@@ -44,7 +44,8 @@ class GenerateTheme extends Command {
       ->addArgument('machine-name', InputArgument::REQUIRED, 'The machine name of the generated theme')
       ->addOption('name', NULL, InputOption::VALUE_OPTIONAL, 'A name for the theme.')
       ->addOption('description', NULL, InputOption::VALUE_OPTIONAL, 'A description of your theme.')
-      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, 'The path where your theme will be created. Defaults to: themes');
+      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, 'The path where your theme will be created. Defaults to: themes')
+      ->addUsage('custom_theme --name "Custom Theme" --description "Custom theme generated from a starterkit theme" --path themes');
   }
 
   /**
@@ -57,19 +58,16 @@ class GenerateTheme extends Command {
     chdir($this->root);
 
     // Path where the generated theme should be placed.
-    // @todo allow configuring this.
     $destination_theme = $input->getArgument('machine-name');
     $default_destination = 'themes';
     $destination = trim($input->getOption('path') ?: $default_destination, '/') . '/' . $destination_theme;
 
     if (is_dir($destination)) {
-      $io->getErrorStyle()->error('Theme could not be generated because the destination directory exists already.');
+      $io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
       return 1;
     }
 
     // Source directory for the theme.
-    // @todo allow configuring this.
-    // @todo create new theme specifically for this purpose.
     $source_theme_name = 'starterkit_theme';
     if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
       $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found .");
@@ -98,7 +96,7 @@ class GenerateTheme extends Command {
         }
 
         if (preg_match($file_pattern, $file, $matches)) {
-          if (!@rename($location, $tmp_dir . '/' . $destination_theme . '.' . $matches[1])) {
+          if (!rename($location, $tmp_dir . '/' . $destination_theme . '.' . $matches[1])) {
             $io->getErrorStyle()->error("The file $location could not be moved.");
             return 1;
           }
@@ -121,7 +119,6 @@ class GenerateTheme extends Command {
     $info['name'] = $input->getOption('name') ?: $destination_theme;
 
     // Unhide hidden themes.
-    // @todo find better way to hide the starterkit theme.
     unset($info['hidden']);
 
     $info['core_version_requirement'] = '^' . $this->getVersion();
@@ -150,7 +147,7 @@ class GenerateTheme extends Command {
       }
     }
 
-    if (!@file_put_contents($info_file, Yaml::encode($info))) {
+    if (!file_put_contents($info_file, Yaml::encode($info))) {
       $io->getErrorStyle()->error("The theme info file $info_file could not be written.");
       return 1;
     }
@@ -165,7 +162,7 @@ class GenerateTheme extends Command {
         }
       }
 
-      if (!@file_put_contents($libraries_file, Yaml::encode($libraries))) {
+      if (!file_put_contents($libraries_file, Yaml::encode($libraries))) {
         $io->getErrorStyle()->error("The libraries file $libraries_file could not be written.");
         return 1;
       }
@@ -174,7 +171,7 @@ class GenerateTheme extends Command {
     // Rename hooks.
     $theme_file = "$tmp_dir/$destination_theme.theme";
     if (file_exists($theme_file)) {
-      if (!@file_put_contents($theme_file, preg_replace("/(function )($source_theme_name)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
+      if (!file_put_contents($theme_file, preg_replace("/(function )($source_theme_name)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
         $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
         return 1;
       }
@@ -189,13 +186,13 @@ class GenerateTheme extends Command {
 
     foreach ($iterator as $template_file => $contents) {
       $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme_name(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
-      if (!@file_put_contents($template_file, $new_template_content)) {
+      if (!file_put_contents($template_file, $new_template_content)) {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
         return 1;
       }
     }
 
-    if (!@rename($tmp_dir, $destination)) {
+    if (!rename($tmp_dir, $destination)) {
       $io->getErrorStyle()->error("The theme could not be moved to the destination: $destination.");
       return 1;
     }
@@ -217,14 +214,12 @@ class GenerateTheme extends Command {
     // Copy all subdirectories and files.
     if (is_dir($src)) {
       if (!mkdir($dest, FileSystem::CHMOD_DIRECTORY, FALSE)) {
-        return FALSE;
+        throw new \RuntimeException("Directory $dest could not be created");
       }
-      $handle = @opendir($src);
+      $handle = opendir($src);
       while ($file = readdir($handle)) {
         if ($file != "." && $file != "..") {
-          if ($this->copyRecursive("$src/$file", "$dest/$file") !== TRUE) {
-            return FALSE;
-          }
+          $this->copyRecursive("$src/$file", "$dest/$file");
         }
       }
       closedir($handle);
@@ -232,8 +227,8 @@ class GenerateTheme extends Command {
     elseif (is_link($src)) {
       symlink(readlink($src), $dest);
     }
-    elseif (!@copy($src, $dest)) {
-      return FALSE;
+    elseif (!copy($src, $dest)) {
+      throw new \RuntimeException("File $src could not be copied to $dest");
     }
 
     // Set permissions for the directory or file.
@@ -245,7 +240,7 @@ class GenerateTheme extends Command {
         $mode = FileSystem::CHMOD_FILE;
       }
 
-      if (!@chmod($dest, $mode)) {
+      if (!chmod($dest, $mode)) {
         throw new \RuntimeException("The file permissions could not be set on $src");
       }
     }
