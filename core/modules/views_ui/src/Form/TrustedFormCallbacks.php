@@ -34,7 +34,8 @@ class TrustedFormCallbacks implements TrustedCallbackInterface {
     return $element;
   }
 
-  /** Implements #process callback for views_ui_add_ajax_trigger()
+  /**
+   * Implements #process callback for views_ui_add_ajax_trigger()
    *
    * Processes a non-JavaScript fallback submit button to limit its
    * validation errors.

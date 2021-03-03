@@ -15,7 +15,7 @@ class TestFormTrustedCallbacks implements TrustedCallbackInterface {
   /**
    * Implements #process callback.
    *
-   * @see page_cache_form_test_form_page_cache_form_test_alter().
+   * @see page_cache_form_test_form_page_cache_form_test_alter()
    */
   public static function pageCacheProcess(array &$element, FormStateInterface $form_state, array &$form) {
     if (isset($form_state->getBuildInfo()['immutable']) && $form_state->getBuildInfo()['immutable']) {

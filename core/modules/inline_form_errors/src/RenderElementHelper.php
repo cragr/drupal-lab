@@ -24,7 +24,7 @@ class RenderElementHelper implements TrustedCallbackInterface {
   }
 
   /**
-   * Implements #process callback for ::alterElementInfo
+   * Implements #process callback for ::alterElementInfo.
    */
   public static function processElement(array &$element, FormStateInterface $form_state, array &$complete_form) {
     // Prevent displaying inline form errors when disabled for the whole form.

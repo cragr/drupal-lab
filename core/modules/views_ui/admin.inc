@@ -123,8 +123,8 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   Drupal\views_ui\Form\TrustedFormCallbacks::addLimitedValidation()
  *   instead.
- *
- * @see replace_with_CR_url
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function views_ui_add_limited_validation(&$element, FormStateInterface $form_state, $form) {
   return TrustedFormCallbacks::addLimitedValidation($element, $form_state, $form);
@@ -136,8 +136,8 @@ function views_ui_add_limited_validation(&$element, FormStateInterface $form_sta
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
  *   Use Drupal\views_ui\Form\TrustedFormCallbacks::addAjaxWrapper()
  *   instead.
- *
- * @see replace_with_CR_url
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function views_ui_add_ajax_wrapper(array &$element, FormStateInterface $form_state, array &$complete_form) {
   return TrustedFormCallbacks::addAjaxWrapper($element, $form_state, $complete_form);
@@ -268,8 +268,8 @@ function views_ui_build_form_url(FormStateInterface $form_state) {
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   Drupal\views_ui\Form\TrustedFormCallbacks::formButtonClicked()
  *   instead.
- *
- * @see replace_with_CR_url
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function views_ui_form_button_was_clicked(&$element, FormStateInterface $form_state, &$form) {
   return TrustedFormCallbacks::formButtonClicked($element, $form_state, $form);

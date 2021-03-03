@@ -575,8 +575,8 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   ContentTranslationTrustedCallbacks::LanguageConfigurationElementProcess()
  *   instead.
- *
- * @see replace_with_CR_url
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {
   return ContentTranslationTrustedCallbacks::LanguageConfigurationElementProcess($element, $form_state, $form);

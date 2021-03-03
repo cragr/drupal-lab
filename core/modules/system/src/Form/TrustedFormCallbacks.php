@@ -14,7 +14,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 class TrustedFormCallbacks implements TrustedCallbackInterface {
 
   /**
-   * Implements #after_build callback for the following methods:
+   * Implements #after_build callback for the function listed below.
    *
    * - locale_form_system_file_system_settings_alter()
    */

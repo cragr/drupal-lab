@@ -269,7 +269,8 @@ interface FormBuilderInterface {
    * self::doValidateForm() and drupal_render(), appropriate for those
    * operations. These callables must be a closure or methods on objects that
    * implement TrustedCallbackInterface or RenderCallbackInterface.
-   * @see replace_with_CR_url
+   *
+   * @todo correct [at]see to use change record url above.
    *
    * Developers are strongly encouraged to integrate the functionality needed by
    * their form or module within one of these three pipelines, using the

@@ -14,7 +14,6 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Render\Element\PasswordConfirm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -1092,8 +1091,8 @@ function user_element_info_alter(array &$types) {
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Render\Element\PasswordConfirm::dynamicPasswordConfirm()
  *   instead.
- *
- * @see replace_with_CR_url
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function user_form_process_password_confirm($element, FormStateInterface $form_state, array $form) {
   return PasswordConfirm::dynamicPasswordConfirm($element, $form_state, $form);

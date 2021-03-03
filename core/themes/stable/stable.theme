@@ -61,8 +61,8 @@ function stable_element_info_alter(array &$info) {
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Render\Element\PasswordConfirm::dynamicPasswordConfirm()
  *   instead.
- *
- * @see replace_with_CR_url
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function stable_process_text_format(array $element, FormStateInterface $form_state, array &$form) {
   return StableTrustedCallbacks::processTextFormat($element, $form_state, $form);

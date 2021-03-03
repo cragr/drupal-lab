@@ -5,7 +5,6 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\UrlHelper;
@@ -810,9 +809,8 @@ function system_preprocess_block(&$variables) {
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\system\Form\TrustedFormCallbacks::checkDirectory()
  *   instead.
- *
- * @see replace_with_CR_url
- *
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
 function system_check_directory(array &$form_element, FormStateInterface $form_state, array &$form) {
   return TrustedFormCallbacks::checkDirectory($form_element, $form_state, $form);
