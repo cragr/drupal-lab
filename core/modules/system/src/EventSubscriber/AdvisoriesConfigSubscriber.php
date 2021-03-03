@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Deletes the stored response from the advisories feed, if needed.
  */
-class qAdvisoriesConfigSubscriber implements EventSubscriberInterface {
+class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
 
   /**
    * The security advisory fetcher service.
