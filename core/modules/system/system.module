@@ -250,7 +250,6 @@ function system_theme() {
     ],
     'system_security_advisories_fetch_error_message' => [
       'file' => 'system.theme.inc',
-      'render element' => 'element',
       'variables' => ['error_message' => []],
     ],
     ]);
