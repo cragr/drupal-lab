@@ -1349,10 +1349,11 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   /**
    * Test the accessCheck method is called.
+   * 
+   * @group legacy
    */
   public function testAccessCheckSpecified() {
     $this->expectDeprecation('Omitting to explicitly specify whether access should be checked on an entity query is deprecated in drupal:9.2.0. An error will be thrown from drupal:10.0.0. See https://www.drupal.org/node/3201242');
-    $this->expectError();
     $this->storage->getQuery()->execute();
   }
 
