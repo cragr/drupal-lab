@@ -176,17 +176,9 @@ class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
   }
 
   /**
-   * Validates the upload element.
-   *
-   * @param array $element
-   *   The upload element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   *
-   * @return array
-   *   The processed upload element.
+   * Implements #process callback for ::buildInputElement().
    */
-  public function validateUploadElement(array $element, FormStateInterface $form_state) {
+  public function validateUploadElement(array &$element, FormStateInterface $form_state, array &$form) {
     if ($form_state::hasAnyErrors()) {
       // When an error occurs during uploading files, remove all files so the
       // user can re-upload the files.
@@ -204,17 +196,9 @@ class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
   }
 
   /**
-   * Processes an upload (managed_file) element.
-   *
-   * @param array $element
-   *   The upload element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   *
-   * @return array
-   *   The processed upload element.
+   * Implements #process callback for ::buildInputElement().
    */
-  public function processUploadElement(array $element, FormStateInterface $form_state) {
+  public function processUploadElement(array &$element, FormStateInterface $form_state, array &$form) {
     $element['upload_button']['#submit'] = ['::uploadButtonSubmit'];
     // Limit the validation errors to make sure
     // FormValidator::handleErrorsWithLimitedValidation doesn't remove the
@@ -266,7 +250,7 @@ class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
    * @return array
    *   The processed form element.
    */
-  public static function hideExtraSourceFieldComponents($element, FormStateInterface $form_state, $form) {
+  public static function hideExtraSourceFieldComponents(array &$element, FormStateInterface $form_state, array &$form) {
     // Remove original button added by ManagedFile::processManagedFile().
     if (!empty($element['remove_button'])) {
       $element['remove_button']['#access'] = FALSE;
