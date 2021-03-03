@@ -61,11 +61,12 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       $result = AccessResult::allowed()->cachePerPermissions();
       return $return_as_object ? $result : $result->isAllowed();
     }
-    if (!$account->hasPermission('access content')) {
-      $result = AccessResult::forbidden("The 'access content' permission is required.")->cachePerPermissions();
-      return $return_as_object ? $result : $result->isAllowed();
-    }
-    $result = parent::access($entity, $operation, $account, TRUE)->cachePerPermissions();
+
+    $result = AccessResult::allowedIfHasPermission($account, 'access content')
+      ->setReason("The 'access content' permission is required.")
+      ->cachePerPermissions();
+
+    $result = $result->orIf(parent::access($entity, $operation, $account, TRUE));
 
     return $return_as_object ? $result : $result->isAllowed();
   }
