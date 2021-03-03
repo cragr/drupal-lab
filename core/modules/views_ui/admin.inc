@@ -78,7 +78,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     // it's a convenient place where we have automatic access to the complete
     // form array, but also to minimize the chance that the HTML we add will
     // get clobbered by code that runs after we have added it.
-    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', []), [TrustedFormCallbacks::class, 'addAjaxWrapper']),
+    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', []), [[TrustedFormCallbacks::class, 'addAjaxWrapper']]),
   ];
   // Copy #weight and #access from the triggering element to the button, so
   // that the two elements will be displayed together.
