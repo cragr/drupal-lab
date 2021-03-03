@@ -174,7 +174,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function removeSectionField($entity_type_id, $bundle, $field_name) {
     $query = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->getQuery()
-      ->accessCheck(TRUE)
       ->condition('targetEntityType', $this->getTargetEntityTypeId())
       ->condition('bundle', $this->getTargetBundle())
       ->condition('mode', $this->getMode(), '<>')

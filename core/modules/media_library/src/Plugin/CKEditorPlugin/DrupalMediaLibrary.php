@@ -116,7 +116,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
       return [];
     }
 
-    $media_type_ids = $this->mediaTypeStorage->getQuery()->accessCheck(TRUE)->execute();
+    $media_type_ids = $this->mediaTypeStorage->getQuery()->execute();
     if ($editor->hasAssociatedFilterFormat()) {
       if ($media_embed_filter = $editor->getFilterFormat()->filters()->get('media_embed')) {
         // Optionally limit the allowed media types based on the MediaEmbed
