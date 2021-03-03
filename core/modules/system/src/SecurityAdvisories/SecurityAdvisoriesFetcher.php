@@ -20,11 +20,6 @@ use Psr\Log\LoggerInterface;
 final class SecurityAdvisoriesFetcher {
 
   /**
-   * The advisories feed URL.
-   */
-  protected const ADVISORIES_FEED_URL = 'https://updates.drupal.org/psa.json';
-
-  /**
    * The key to use to store the advisories feed response.
    */
   protected const ADVISORIES_JSON_EXPIRABLE_KEY = 'advisories_response';
@@ -115,7 +110,7 @@ final class SecurityAdvisoriesFetcher {
       if (!$allow_http_request) {
         return NULL;
       }
-      $response = (string) $this->httpClient->get(self::ADVISORIES_FEED_URL, [RequestOptions::TIMEOUT => $timeout])->getBody();
+      $response = (string) $this->httpClient->get('https://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       $json_payload = Json::decode($response);
       if (is_array($json_payload)) {
