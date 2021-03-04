@@ -324,7 +324,6 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('user_form_test_cancel/' . $account->id(), [], 'Cancel account');
 
-
     // Confirm user's node has been unpublished, even though the admin user
     // does not have permission to access it.
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
