@@ -46,27 +46,24 @@ class TrackerNodeAccessTest extends BrowserTestBase {
    * Ensure that tracker_cron is not access sensitive.
    */
   public function testTrackerNodeAccessIndexing() {
-    // Create user with node test view permission.
-    $access_user = $this->drupalCreateUser([
-      'node test view',
-      'access user profiles',
-    ]);
-    $this->drupalLogin($access_user);
-
+    // The node is private and not authored by the anonymous user, so any entity
+    // queries run for the anonymous user will not find it.
+    $author = $this->drupalCreateUser();
     $private_node = $this->drupalCreateNode([
       'title' => t('Private node test'),
       'private' => TRUE,
+      'uid' => $author->id(),
     ]);
 
-    // Remove index entries.
+    // Remove index entries, and index as tracker_install() does.
     \Drupal::database()->delete('tracker_node')->execute();
-    $this->drupalGet('activity');
-    $this->assertNoText($private_node->getTitle());
-    // Index, as done by tracker_install().
-    $max_nid = \Drupal::database()->query('SELECT MAX([nid]) FROM {node}')->fetchField();
-    \Drupal::state()->set('tracker.index_nid', $max_nid);
+    \Drupal::state()->set('tracker.index_nid', $private_node->id());
     tracker_cron();
 
+    // Test that the private node has been indexed and so can be viewed by a
+    // user with node test view permission.
+    $user = $this->drupalCreateUser(['node test view']);
+    $this->drupalLogin($user);
     $this->drupalGet('activity');
     $this->assertText($private_node->getTitle());
   }
