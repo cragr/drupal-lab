@@ -24,7 +24,6 @@ class TrackerNodeAccessTest extends BrowserTestBase {
   protected static $modules = [
     'node',
     'comment',
-    'tracker',
     'node_access_test',
   ];
 
@@ -40,6 +39,10 @@ class TrackerNodeAccessTest extends BrowserTestBase {
     node_access_test_add_field(NodeType::load('page'));
     $this->addDefaultCommentField('node', 'page', 'comment', CommentItemInterface::OPEN);
     \Drupal::state()->set('node_access_test.private', TRUE);
+
+    // Install tracker after node access setup to test that tracker's initial indexing
+    // is not access sensitive.
+    \Drupal::service('module_installer')->install(['tracker']);
   }
 
   /**
