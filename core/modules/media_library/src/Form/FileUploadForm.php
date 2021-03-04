@@ -362,11 +362,11 @@ class FileUploadForm extends AddFormBase implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return [
-      'hideExtraSourceFieldComponents',
-      'validateUploadElement',
-      'processUploadElement',
-      ];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'hideExtraSourceFieldComponents';
+    $callbacks[] = 'validateUploadElement';
+    $callbacks[] = 'processUploadElement';
+    return $callbacks;
   }
 
 }
