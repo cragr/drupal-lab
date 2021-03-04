@@ -4,7 +4,6 @@ namespace Drupal\Tests\tour\FunctionalJavascript;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\tour\Entity\Tour;
 
 /**
  * Tests Tour's backwards compatible markup.
