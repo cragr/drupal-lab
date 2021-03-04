@@ -24,6 +24,7 @@ class TrackerNodeAccessTest extends BrowserTestBase {
   protected static $modules = [
     'node',
     'comment',
+    'tracker',
     'node_access_test',
   ];
 
@@ -39,10 +40,35 @@ class TrackerNodeAccessTest extends BrowserTestBase {
     node_access_test_add_field(NodeType::load('page'));
     $this->addDefaultCommentField('node', 'page', 'comment', CommentItemInterface::OPEN);
     \Drupal::state()->set('node_access_test.private', TRUE);
+  }
 
-    // Install tracker after node access setup to test that tracker's initial indexing
-    // is not access sensitive.
-    \Drupal::service('module_installer')->install(['tracker']);
+  /**
+   * Ensure that tracker_cron is not access sensitive.
+   */
+  public function testTrackerNodeAccessIndexing() {
+    // Create user with node test view permission.
+    $access_user = $this->drupalCreateUser([
+      'node test view',
+      'access user profiles',
+    ]);
+    $this->drupalLogin($access_user);
+
+    $private_node = $this->drupalCreateNode([
+      'title' => t('Private node test'),
+      'private' => TRUE,
+    ]);
+
+    // Remove index entries.
+    \Drupal::database()->delete('tracker_node')->execute();
+    $this->drupalGet('activity');
+    $this->assertNoText($private_node->getTitle());
+    // Index, as done by tracker_install().
+    $max_nid = \Drupal::database()->query('SELECT MAX([nid]) FROM {node}')->fetchField();
+    \Drupal::state()->set('tracker.index_nid', $max_nid);
+    tracker_cron();
+
+    $this->drupalGet('activity');
+    $this->assertText($private_node->getTitle());
   }
 
   /**

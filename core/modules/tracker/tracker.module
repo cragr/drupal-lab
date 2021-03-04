@@ -49,7 +49,6 @@ function tracker_cron() {
     $count = 0;
 
     $nids = \Drupal::entityQuery('node')
-      ->accessCheck(FALSE)
       ->condition('nid', $max_nid, '<=')
       ->sort('nid', 'DESC')
       ->range(0, \Drupal::config('tracker.settings')->get('cron_index_limit'))
