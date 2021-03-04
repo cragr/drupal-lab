@@ -91,7 +91,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Configuring the image toolkit') . '</dt>';
       $output .= '<dd>' . t('On the <a href=":toolkit">Image toolkit page</a>, you can select and configure the PHP toolkit used to manipulate images. Depending on which distribution or installation profile you choose when you install your site, the GD2 toolkit and possibly others are included; other toolkits may be provided by contributed modules.', [':toolkit' => Url::fromRoute('system.image_toolkit_settings')->toString()]) . '</dd>';
       if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
-        $output .= '<dt>' . t('Displaying critical security advisories') . '</dt>';
+        $output .= '<dt id="security-advisories">' . t('Displaying critical security advisories') . '</dt>';
         $output .= '<dd>' . t('The System module displays highly critical and time-sensitive security announcements to site administrators. Some security announcements will be displayed until a critical security update is installed. Announcements that are not associated with a specific release will appear for a fixed period of time.') . '</dd>';
         $output .= '<dd>' . t('Only the most highly critical security announcements will be shown within Drupal. To view all security announcements view the <a href=":advisory-list">complete list on Drupal.org.</a>', [':advisory-list' => 'https://www.drupal.org/security']) . '</dd>';
       }
@@ -1352,10 +1352,11 @@ function system_page_top() {
         foreach ($links as $link) {
           $display_as_errors ? $messenger->addError($link) : $messenger->addWarning($link);
         }
-        if (\Drupal::moduleHandler()->moduleExists('help') && !($route_name === 'help.page' && $route_match->getParameter('name') === 'system')) {
-          $help_link = t('(<a href=":system-help">What are critical security announcements?</a>)', [
-            ':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString(),
-          ]);
+        if (\Drupal::moduleHandler()->moduleExists('help')) {
+          $help_link = t(
+            '(<a href=":system-help">What are critical security announcements?</a>)',
+            [':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString() . '#security-advisories']
+          );
           $display_as_errors ? $messenger->addError($help_link) : $messenger->addWarning($help_link);
         }
       }
