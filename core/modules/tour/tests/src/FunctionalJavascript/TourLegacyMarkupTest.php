@@ -36,14 +36,15 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
   public function setUp(): void {
     parent::setUp();
 
+    // Manually install a tour using legacy properties. If this config is
+    // located in config/install there will be deprecation errors in
+    // DefaultConfigTest will re
     $config_path = drupal_get_path('module', 'tour') . '/tests/fixtures/legacy_config';
     $source = new FileStorage($config_path);
     $config_storage = \Drupal::service('config.storage');
     $this->assertTrue($source->exists('tour.tour.tour-test-legacy'));
     $config_storage->write('tour.tour.tour-test-legacy', $source->read('tour.tour.tour-test-legacy'));
     drupal_flush_all_caches();
-    //    $leg = $this->container->get('config.factory')->getEditable('tour.tour.tour-test-legacy');
-//    $this->assertEquals(1, 2, print_r($leg, 1));
 
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
@@ -80,25 +81,11 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->drupalGet($path);
-    // BAD
-    $routes = [];
-    $route_match = \Drupal::routeMatch();
-    $route_name = $route_match->getRouteName();
-    $results = \Drupal::entityQuery('tour')
-      //      ->condition('routes.*.route_name', 'tour_test.legacy')
-      ->execute();
-    if (!empty($results) && $tours = Tour::loadMultiple(array_keys($results))) {
-      foreach ($tours as $id => $tour) {
-        $routes[] = $tour->getRoutes();
-      }
-    }
-//    $this->assertEquals(1, 2, "reult:: " . count($tours) .  ' Route name:' . $route_name . ' Routes: '. print_r($routes, 1));
-//    $assert_session->waitForElementVisible('css', '.test-go', 500000000);
-    // BAD
+
+    // @todo, this button is not currently available, because the tour added in
+    //   setUp() is not loading. This means the test is failing at the moment.
     $assert_session->waitForElementVisible('css', '#toolbar-tab-tour button');
     $page->find('css', '#toolbar-tab-tour button')->press();
-//    $this->assertEquals(1, 2, "reult:: " . count($tours) .  ' Route name:' . $route_name . ' Routes: '. print_r($routes, 1));
-
     $this->assertToolTipMarkup(0, 'top');
     $page->find('css', '.joyride-tip-guide[data-index="0"]')->clickLink('Next');
     $this->assertToolTipMarkup(1, '', 'image');
