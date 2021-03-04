@@ -22,7 +22,7 @@ use Drupal\Core\Url;
  *      - url: Path to the admin section.
  *      - title: Short name of the section.
  *      - description: Description of the administrative menu item.
- *      - options: The array of options.
+ *      - options: URL options. See \Drupal\Core\Url::fromUri() for details.
  */
 function template_preprocess_admin_block_content(&$variables) {
   if (!empty($variables['content'])) {
