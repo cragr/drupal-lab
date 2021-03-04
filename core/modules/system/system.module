@@ -1353,10 +1353,9 @@ function system_page_top() {
           $display_as_errors ? $messenger->addError($link) : $messenger->addWarning($link);
         }
         if (\Drupal::moduleHandler()->moduleExists('help')) {
-          $help_link = t(
-            '(<a href=":system-help">What are critical security announcements?</a>)',
-            [':system-help' => Url::fromRoute('help.page', ['name' => 'system'])->toString() . '#security-advisories']
-          );
+          $help_link = t('(<a href=":system-help">What are critical security announcements?</a>)', [
+            ':system-help' => Url::fromRoute('help.page', ['name' => 'system'], ['fragment' => 'security-advisories'])->toString(),
+          ]);
           $display_as_errors ? $messenger->addError($help_link) : $messenger->addWarning($help_link);
         }
       }

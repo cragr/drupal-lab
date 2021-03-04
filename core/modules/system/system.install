@@ -1501,10 +1501,11 @@ function _system_advisories_requirements(array &$requirements): void {
       ],
     ];
     if (\Drupal::moduleHandler()->moduleExists('help')) {
-      $requirements['system_advisories']['description']['help_link']['#markup'] = t(
-        '<a href=":url">What are critical security announcements?</a>',
-        [':url' => (new Url('help.page', ['name' => 'system']))->toString() . '#security-advisories']
-      );
+      $requirements['system_advisories']['description']['help_link'] = Link::createFromRoute(
+        'What are critical security announcements?',
+        'help.page', ['name' => 'system'],
+        ['fragment' => 'security-advisories']
+      )->toRenderable();
     }
   }
 }
