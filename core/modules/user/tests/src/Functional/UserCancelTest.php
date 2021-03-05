@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
@@ -229,17 +230,11 @@ class UserCancelTest extends BrowserTestBase {
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
 
-    // Create a private node with two revisions.
-    $node = $this->drupalCreateNode([
-      'uid' => $account->id(),
-      'status' => 1,
-      'private' => TRUE,
-    ]);
+    // Create a node with two revisions.
+    $node = $this->drupalCreateNode(['uid' => $account->id()]);
     $settings = get_object_vars($node);
     $settings['revision'] = 1;
     $node = $this->drupalCreateNode($settings);
-    $this->assertTrue($node->isPublished(), "Node of the user is initially published");
-    $this->assertTrue(node_revision_load($node->getRevisionId())->isPublished(), "Node revision of the user is initially published");
 
     // Add a comment to the page.
     $comment_subject = $this->randomMachineName(8);
@@ -297,7 +292,6 @@ class UserCancelTest extends BrowserTestBase {
   public function testUserBlockUnpublishNodeAccess() {
     // Setup node access
     node_access_rebuild();
-    $this->drupalCreateContentType(['type' => 'page']);
     node_access_test_add_field(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);
 
@@ -318,12 +312,12 @@ class UserCancelTest extends BrowserTestBase {
       'private' => TRUE,
     ]);
 
-    // Delete regular user.
+    // Cancel node author.
     $admin_user = $this->drupalCreateUser(['cancel other accounts']);
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('user_form_test_cancel/' . $account->id(), [], 'Cancel account');
 
-    // Confirm user's node has been unpublished, even though the admin user
+    // Confirm node has been unpublished, even though the admin user
     // does not have permission to access it.
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
