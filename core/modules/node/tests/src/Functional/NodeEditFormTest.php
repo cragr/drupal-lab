@@ -4,6 +4,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Create a node and test node edit functionality.
