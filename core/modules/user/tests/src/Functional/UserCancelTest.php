@@ -212,11 +212,6 @@ class UserCancelTest extends BrowserTestBase {
    * Disable account and unpublish all content.
    */
   public function testUserBlockUnpublish() {
-    // Setup node access
-    node_access_rebuild();
-    node_access_test_add_field(NodeType::load('page'));
-    \Drupal::state()->set('node_access_test.private', TRUE);
-
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
     // Create comment field on page.
@@ -290,6 +285,8 @@ class UserCancelTest extends BrowserTestBase {
    * Tests nodes are unpublished even if inaccessible to cancelling user.
    */
   public function testUserBlockUnpublishNodeAccess() {
+    \Drupal::service('module_installer')->install(['user_form_test']);
+
     // Setup node access
     node_access_rebuild();
     node_access_test_add_field(NodeType::load('page'));
