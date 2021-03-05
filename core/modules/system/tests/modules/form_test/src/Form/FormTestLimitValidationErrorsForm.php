@@ -4,13 +4,14 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Builds a simple form with a button triggering partial validation.
  *
  * @internal
  */
-class FormTestLimitValidationErrorsForm extends FormBase {
+class FormTestLimitValidationErrorsForm extends FormBase implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -101,11 +102,18 @@ class FormTestLimitValidationErrorsForm extends FormBase {
    * {@inheritdoc}
    */
   public function partialSubmitForm(array &$form, FormStateInterface $form_state) {
-    // The title has not been validated, thus its value - in case of the test case
-    // an empty string - may not be set.
+    // The title has not been validated, thus its value - in case of the test
+    // case an empty string - may not be set.
     if (!$form_state->hasValue('title') && $form_state->hasValue('test')) {
       $this->messenger()->addStatus('Only validated values appear in the form values.');
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['elementValidateLimitValidationErrors'];
   }
 
 }

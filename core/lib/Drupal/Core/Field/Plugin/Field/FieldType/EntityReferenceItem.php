@@ -713,7 +713,11 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['formProcessMergeParent', 'fieldSettingsAjaxProcess'];
+    return [
+      'formProcessMergeParent',
+      'fieldSettingsAjaxProcess',
+      'fieldSettingsFormValidate',
+    ];
   }
 
 }

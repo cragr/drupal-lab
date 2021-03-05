@@ -372,4 +372,15 @@ class FileItem extends EntityReferenceItem {
     return [];
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateDirectory';
+    $callbacks[] = 'validateExtensions';
+    $callbacks[] = 'validateMaxFilesize';
+    return $callbacks;
+  }
+
 }

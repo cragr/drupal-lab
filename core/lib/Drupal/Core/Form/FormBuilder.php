@@ -1455,6 +1455,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * Performs a callback.
    *
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The current form state.
    * @param string $callback_type
    *   The type of the callback. For example, '#process'.
    * @param string|callable $callback

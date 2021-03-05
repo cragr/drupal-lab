@@ -24,12 +24,15 @@ class ContentTranslationTrustedCallbacks implements TrustedCallbackInterface {
         // For new bundle, we don't know the bundle name yet,
         // default to no translatability.
         '#default_value' => $context['bundle'] ? \Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) : FALSE,
-        '#element_validate' => ['content_translation_language_configuration_element_validate'],
+        '#element_validate' => [
+          [static::class, 'languageConfigurationElementValidate'],
+        ],
       ];
 
       $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-      // Only add the submit handler on the submit button if the #submit property
-      // is already available, otherwise this breaks the form submit function.
+      // Only add the submit handler on the submit button if the #submit
+      // property is already available, otherwise this breaks the form submit
+      // function.
       if (isset($form['actions'][$submit_name]['#submit'])) {
         $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
       }
@@ -41,10 +44,36 @@ class ContentTranslationTrustedCallbacks implements TrustedCallbackInterface {
   }
 
   /**
-   * @inheritDoc
+   * Implements #element_validate callback for the method shown below.
+   *
+   * - ::LanguageConfigurationElementProcess()
+   *
+   * Checks whether translation can be enabled: if language is set to one of the
+   * special languages and language selector is not hidden, translation cannot
+   * be enabled.
+   */
+  public static function languageConfigurationElementValidate(array &$element, FormStateInterface $form_state, array &$form) {
+    $key = $form_state->get(['content_translation', 'key']);
+    $values = $form_state->getValue($key);
+    if (!$values['language_alterable'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
+      foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
+        $locked_languages[] = $language->getName();
+      }
+      // @todo Set the correct form element name as soon as the element parents
+      //   are correctly set. We should be using NestedArray::getValue() but for
+      //   now we cannot.
+      $form_state->setErrorByName('', t('"Show language selector" is not compatible with translating content that has default language: %choice. Either do not hide the language selector or pick a specific language.', ['%choice' => $locked_languages[$values['langcode']]]));
+    }
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public static function trustedCallbacks() {
-    return ['LanguageConfigurationElementProcess'];
+    return [
+      'LanguageConfigurationElementProcess',
+      'languageConfigurationElementValidate',
+    ];
   }
 
 }

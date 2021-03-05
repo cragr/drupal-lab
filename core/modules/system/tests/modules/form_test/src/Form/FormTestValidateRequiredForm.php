@@ -4,13 +4,14 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Form constructor to test the #required property.
  *
  * @internal
  */
-class FormTestValidateRequiredForm extends FormBase {
+class FormTestValidateRequiredForm extends FormBase implements TrustedCallbackInterface {
 
   /**
    * {@inheritdoc}
@@ -85,6 +86,13 @@ class FormTestValidateRequiredForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus('The form_test_validate_required_form form was submitted successfully.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['elementValidateRequired'];
   }
 
 }

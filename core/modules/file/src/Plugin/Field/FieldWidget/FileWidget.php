@@ -604,6 +604,7 @@ class FileWidget extends WidgetBase implements TrustedCallbackInterface {
     $callbacks[] = 'processMultiple';
     $callbacks[] = 'process';
     $callbacks[] = 'value';
+    $callbacks[] = 'validateMultipleCount';
     return $callbacks;
   }
 

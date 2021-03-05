@@ -583,26 +583,18 @@ function content_translation_language_configuration_element_process(array $eleme
 }
 
 /**
- * Form validation handler for element added with content_translation_language_configuration_element_process().
+ * Form validation handler for element added.
  *
- * Checks whether translation can be enabled: if language is set to one of the
- * special languages and language selector is not hidden, translation cannot be
- * enabled.
+ * Supported content_translation_language_configuration_element_process().
  *
- * @see content_translation_language_configuration_element_submit()
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\system\Form\TrustedFormCallbacks::checkDirectory()
+ *   instead.
+ * @see https://www.drupal.org/project/drupal/issues/2966711
+ * @todo correct [at]see to use change record url above.
  */
-function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form) {
-  $key = $form_state->get(['content_translation', 'key']);
-  $values = $form_state->getValue($key);
-  if (!$values['language_alterable'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-    foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
-      $locked_languages[] = $language->getName();
-    }
-    // @todo Set the correct form element name as soon as the element parents
-    //   are correctly set. We should be using NestedArray::getValue() but for
-    //   now we cannot.
-    $form_state->setErrorByName('', t('"Show language selector" is not compatible with translating content that has default language: %choice. Either do not hide the language selector or pick a specific language.', ['%choice' => $locked_languages[$values['langcode']]]));
-  }
+function content_translation_language_configuration_element_validate(array &$element, FormStateInterface $form_state, array $form) {
+  ContentTranslationTrustedCallbacks::languageConfigurationElementValidate($element, $form_state, $form);
 }
 
 /**
