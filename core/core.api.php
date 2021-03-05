@@ -2275,7 +2275,7 @@ function hook_config_schema_info_alter(&$definitions) {
  * @see \Drupal\Core\Validation\Annotation\Constraint
  */
 function hook_validation_constraint_alter(array &$definitions) {
-  $definitions['Null']['class'] = '\Drupal\mymodule\Validator\Constraints\MyClass';
+  $definitions['Null']['class'] = '\Drupal\mymodule\Plugin\Validation\Constraints\MyClass';
 }
 
 /**
@@ -2501,7 +2501,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  *
  * @section sec_dispatch Dispatching events
  * To dispatch an event, call the
- * \Symfony\Component\EventDispatcher\EventDispatcherInterface::dispatch()
+ * \Symfony\Contracts\EventDispatcher\EventDispatcherInterface::dispatch()
  * method on the 'event_dispatcher' service (see the
  * @link container Services topic @endlink for more information about how to
  * interact with services). The first argument is the unique event name, which
