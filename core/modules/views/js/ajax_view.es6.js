@@ -105,7 +105,9 @@
         '-',
       )}-${settings.view_display_id.replace(/_/g, '-')}`,
     );
-    once('exposed-form', this.$exposed_form).forEach($.proxy(this.attachExposedFormAjax, this));
+    once('exposed-form', this.$exposed_form).forEach(
+      $.proxy(this.attachExposedFormAjax, this),
+    );
 
     // Add the ajax to pagers.
     once(

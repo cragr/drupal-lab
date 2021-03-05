@@ -64,7 +64,7 @@
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach(context, settings) {
-      const table = once('expand-updates', '#locale-translation-status-form')
+      const table = once('expand-updates', '#locale-translation-status-form');
       if (table.length) {
         const $table = $(table);
         const $tbodies = $table.find('tbody');
