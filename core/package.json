@@ -26,7 +26,9 @@
     "prettier": "prettier --write \"./**/*.es6.js\" \"./tests/Drupal/Nightwatch/**/*.js\"",
     "spellcheck": "cspell",
     "spellcheck:make-drupal-dict": "rm -f misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --wordsOnly | tr '[:upper:]' '[:lower:]' | tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
-    "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\""
+    "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\"",
+    "transform": "jscodeshift -t scripts/js/codemod/once.js **/*.es6.js",
+    "transform-test": "jscodeshift -p -d -t scripts/js/codemod/once.js scripts/js/codemod/once.sample.jquery.js"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -48,6 +50,7 @@
     "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-react-hooks": "^4.1.2",
     "glob": "^7.1.2",
+    "jscodeshift": "^0.11.0",
     "minimist": "^1.2.2",
     "mkdirp": "^1.0.4",
     "nightwatch": "^1.2.1",
