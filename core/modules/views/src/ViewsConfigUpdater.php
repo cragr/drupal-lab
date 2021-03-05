@@ -138,6 +138,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processMultivalueBaseFieldHandler($handler, $handler_type, $key, $display_id, $view)) {
         $changed = TRUE;
       }
+      if ($this->processTidFilterWithMultipleVocabulariesHandler($handler, $handler_type)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -475,6 +478,41 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       default:
         return $single_operator;
     }
+  }
+
+  /**
+   * Update taxonomy term ID filter handlers to allow multiple vocabularies.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsTidFilterWithMultipleVocabulariesUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type) use ($view): bool {
+      return $this->processTidFilterWithMultipleVocabulariesHandler($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes taxonomy term ID filter handlers to allow multiple vocabularies.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processTidFilterWithMultipleVocabulariesHandler(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'filter' && isset($handler['plugin_id']) && $handler['plugin_id'] === 'taxonomy_index_tid' && empty($handler['vids']) && !empty($handler['vid'])) {
+      $handler['vids'] = [$handler['vid']];
+      unset($handler['vid']);
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }
