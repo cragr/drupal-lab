@@ -101,6 +101,9 @@ final class SecurityAdvisoriesFetcher {
    *   The upstream security advisories, if any. NULL if there was a problem
    *   retrieving the JSON feed, or if there was no stored response and
    *   $allow_http_request was set to FALSE.
+   *
+   * @throws \GuzzleHttp\Exception\TransferException
+   *   Thrown if an error occurs while retrieving security advisories.
    */
   public function getSecurityAdvisories(bool $allow_http_request = TRUE, int $timeout = 0): ?array {
     $advisories = [];
