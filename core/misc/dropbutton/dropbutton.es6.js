@@ -113,7 +113,7 @@
       const dropbuttons = once('dropbutton', '.dropbutton-wrapper', context);
       if (dropbuttons.length) {
         // Adds the delegated handler that will toggle dropdowns on click.
-        const body = once('dropbutton-click', 'body');
+        const [body] = once('dropbutton-click', 'body');
         if (body.length) {
           $(body).on('click', '.dropbutton-toggle', dropbuttonClickHandler);
         }
