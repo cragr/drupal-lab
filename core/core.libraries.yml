@@ -277,7 +277,7 @@ drupal.dropbutton:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.element.matches:
   version: VERSION
