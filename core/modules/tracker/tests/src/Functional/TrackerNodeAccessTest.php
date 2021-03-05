@@ -47,7 +47,7 @@ class TrackerNodeAccessTest extends BrowserTestBase {
    */
   public function testTrackerNodeAccessIndexing() {
     // The node is private and not authored by the anonymous user, so any entity
-    // queries run for the anonymous user will not find it.
+    // queries run for the anonymous user will miss it.
     $author = $this->drupalCreateUser();
     $private_node = $this->drupalCreateNode([
       'title' => t('Private node test'),
