@@ -62,14 +62,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       return $return_as_object ? $result : $result->isAllowed();
     }
 
-    if ($operation === 'view') {
-      $result = AccessResult::allowedIfHasPermission($account, 'access content');
-    }
-    else {
-      $result = AccessResult::neutral();
-    }
-
-    $result = $result->orIf(parent::access($entity, $operation, $account, TRUE));
+    $result = parent::access($entity, $operation, $account, TRUE);
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -103,13 +96,19 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     $status = $node->isPublished();
     $uid = $node->getOwnerId();
 
+    $result = AccessResult::neutral();
     // Check if authors can view their own unpublished nodes.
-    if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
-      return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
+    if ($operation === 'view') {
+      if ($status) {
+        $result = AccessResult::allowedIfHasPermission($account, 'access content');
+      }
+      elseif ($account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
+        $result = AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
+      }
     }
 
     // Evaluate node grants.
-    $access_result = $this->grantStorage->access($node, $operation, $account);
+    $access_result = $result->orIf($this->grantStorage->access($node, $operation, $account));
     if ($operation === 'view' && $access_result instanceof RefinableCacheableDependencyInterface) {
       // Node variations can affect the access to the node. For instance, the
       // access result cache varies on the node's published status. Only the
