@@ -12,11 +12,13 @@
    */
   Drupal.behaviors.MediaLibrarySelectAll = {
     attach(context) {
-      const $view = $(once(
-        'media-library-select-all',
-        '.js-media-library-view[data-view-display-id="page"]',
-        context
-      ));
+      const $view = $(
+        once(
+          'media-library-select-all',
+          '.js-media-library-view[data-view-display-id="page"]',
+          context,
+        ),
+      );
       if ($view.length && $view.find('.js-media-library-item').length) {
         const $checkbox = $(Drupal.theme('checkbox')).on(
           'click',

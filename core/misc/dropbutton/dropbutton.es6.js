@@ -110,7 +110,9 @@
    */
   Drupal.behaviors.dropButton = {
     attach(context, settings) {
-      const $dropbuttons = $(once('dropbutton', '.dropbutton-wrapper', context));
+      const $dropbuttons = $(
+        once('dropbutton', '.dropbutton-wrapper', context),
+      );
       if ($dropbuttons.length) {
         // Adds the delegated handler that will toggle dropdowns on click.
         const $body = $(once('dropbutton-click', 'body'));

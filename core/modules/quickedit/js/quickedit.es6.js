@@ -516,17 +516,20 @@
       $(once('quickedit-init', 'body')).each(initQuickEdit);
 
       // Find all in-place editable fields, if any.
-      const $fields = $(once('quickedit', '[data-quickedit-field-id]', context));
+      const $fields = $(
+        once('quickedit', '[data-quickedit-field-id]', context),
+      );
       if ($fields.length === 0) {
         return;
       }
 
       // Process each entity element: identical entities that appear multiple
       // times will get a numeric identifier, starting at 0.
-      $(once('quickedit', '[data-quickedit-entity-id]', context))
-        .each((index, entityElement) => {
+      $(once('quickedit', '[data-quickedit-entity-id]', context)).each(
+        (index, entityElement) => {
           processEntity(entityElement);
-        });
+        },
+      );
 
       // Process each field element: queue to be used or to fetch metadata.
       // When a field is being rerendered after editing, it will be processed

@@ -95,12 +95,13 @@
       return false;
     }
 
-    $(once(
-      'big-pipe',
-      'script[data-big-pipe-replacement-for-placeholder-with-id]',
-      context
-    ))
-      .each(bigPipeProcessPlaceholderReplacement);
+    $(
+      once(
+        'big-pipe',
+        'script[data-big-pipe-replacement-for-placeholder-with-id]',
+        context,
+      ),
+    ).each(bigPipeProcessPlaceholderReplacement);
 
     // If we see the stop signal, clear the timeout: all placeholder
     // replacements are guaranteed to be received and processed.

@@ -157,28 +157,29 @@
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
       const nodeIDs = [];
-      const $placeholders = $(once('history', '[data-history-node-last-comment-timestamp]', context))
-        .filter(function () {
-          const $placeholder = $(this);
-          const lastCommentTimestamp = parseInt(
-            $placeholder.attr('data-history-node-last-comment-timestamp'),
-            10,
-          );
-          const nodeID = $placeholder
-            .closest('[data-history-node-id]')
-            .attr('data-history-node-id');
-          if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
-            nodeIDs.push(nodeID);
-            // Hide this placeholder link until it is certain we'll need it.
-            hide($placeholder);
-            return true;
-          }
+      const $placeholders = $(
+        once('history', '[data-history-node-last-comment-timestamp]', context),
+      ).filter(function () {
+        const $placeholder = $(this);
+        const lastCommentTimestamp = parseInt(
+          $placeholder.attr('data-history-node-last-comment-timestamp'),
+          10,
+        );
+        const nodeID = $placeholder
+          .closest('[data-history-node-id]')
+          .attr('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+          nodeIDs.push(nodeID);
+          // Hide this placeholder link until it is certain we'll need it.
+          hide($placeholder);
+          return true;
+        }
 
-          // Remove this placeholder link from the DOM because we won't need
-          // it.
-          remove($placeholder);
-          return false;
-        });
+        // Remove this placeholder link from the DOM because we won't need
+        // it.
+        remove($placeholder);
+        return false;
+      });
 
       if ($placeholders.length === 0) {
         return;

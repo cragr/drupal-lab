@@ -212,7 +212,9 @@
   Drupal.behaviors.autocomplete = {
     attach(context) {
       // Act on textfields with the "form-autocomplete" class.
-      const $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
+      const $autocomplete = $(
+        once('autocomplete', 'input.form-autocomplete', context),
+      );
       if ($autocomplete.length) {
         // Allow options to be overridden per instance.
         const blacklist = $autocomplete.attr(
@@ -238,8 +240,9 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $(once.remove('autocomplete', 'input.form-autocomplete', context))
-          .autocomplete('destroy');
+        $(
+          once.remove('autocomplete', 'input.form-autocomplete', context),
+        ).autocomplete('destroy');
       }
     },
   };

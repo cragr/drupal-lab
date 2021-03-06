@@ -370,7 +370,10 @@
 
     // Trigger an event to allow other scripts to react to this display change.
     // Force the extra parameter as a bool.
-    $(once.filter('tabledrag', 'table')).trigger('columnschange', !!displayWeight);
+    $(once.filter('tabledrag', 'table')).trigger(
+      'columnschange',
+      !!displayWeight,
+    );
   };
 
   /**

@@ -154,7 +154,9 @@
       const $context = $(context);
 
       // Find all contextual links placeholders, if any.
-      let $placeholders = $(once('contextual-render', '[data-contextual-id]', context));
+      let $placeholders = $(
+        once('contextual-render', '[data-contextual-id]', context),
+      );
       if ($placeholders.length === 0) {
         return;
       }
