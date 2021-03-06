@@ -84,7 +84,7 @@ drupal.ajax:
     - core/drupal
     - core/drupalSettings
     - core/drupal.progress
-    - core/jquery.once
+    - core/once
 
 drupal.announce:
   version: VERSION
@@ -152,7 +152,7 @@ drupal.batch:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.progress
-    - core/jquery.once
+    - core/once
 
 drupal.checkbox:
   version: VERSION
@@ -172,7 +172,7 @@ drupal.collapse:
     - core/modernizr
     - core/drupal
     - core/drupal.form
-    - core/jquery.once
+    - core/once
 
 drupal.date:
   version: VERSION
@@ -277,7 +277,7 @@ drupal.dropbutton:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.element.matches:
   version: VERSION
@@ -299,7 +299,7 @@ drupal.form:
     - core/jquery
     - core/drupal
     - core/drupal.debounce
-    - core/jquery.once
+    - core/once
 
 drupal.machine-name:
   version: VERSION
@@ -307,7 +307,7 @@ drupal.machine-name:
     misc/machine-name.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
@@ -347,7 +347,7 @@ drupal.states:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.tabbingmanager:
   version: VERSION
@@ -367,7 +367,7 @@ drupal.tabledrag:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.tableheader:
   version: VERSION
@@ -377,7 +377,7 @@ drupal.tableheader:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
     - core/drupal.displace
 
 drupal.tableresponsive:
@@ -387,7 +387,7 @@ drupal.tableresponsive:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
 
 drupal.tableselect:
   version: VERSION
@@ -397,7 +397,7 @@ drupal.tableselect:
     - core/drupal
     - core/drupal.checkbox
     - core/jquery
-    - core/jquery.once
+    - core/once
 
 drupal.timezone:
   version: VERSION
@@ -405,7 +405,7 @@ drupal.timezone:
     misc/timezone.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
 
 drupal.vertical-tabs:
@@ -418,7 +418,7 @@ drupal.vertical-tabs:
       misc/vertical-tabs.css: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
