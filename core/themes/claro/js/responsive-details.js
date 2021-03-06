@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.behaviors.responsiveDetails = {
     attach: function attach(context) {
-      var $details = $(context).find('details').once('responsive-details');
+      var $details = $(once('responsive-details', 'details', context));
 
       if (!$details.length) {
         return;

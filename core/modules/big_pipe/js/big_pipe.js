@@ -26,7 +26,7 @@
       var response = mapTextContentToAjaxResponse(content);
 
       if (response === false) {
-        $(this).removeOnce('big-pipe');
+        $(once.remove('big-pipe', $(this)));
       } else {
         var ajaxObject = Drupal.ajax({
           url: '',
@@ -47,7 +47,7 @@
       return false;
     }
 
-    $(context).find('script[data-big-pipe-replacement-for-placeholder-with-id]').once('big-pipe').each(bigPipeProcessPlaceholderReplacement);
+    $(once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context)).each(bigPipeProcessPlaceholderReplacement);
 
     if (context.querySelector('script[data-big-pipe-event="stop"]')) {
       if (timeoutID) {

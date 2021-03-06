@@ -60,7 +60,7 @@
   Drupal.behaviors.trackerHistory = {
     attach: function attach(context) {
       var nodeIDs = [];
-      var $nodeNewPlaceholders = $(context).find('[data-history-node-timestamp]').once('history').filter(function () {
+      var $nodeNewPlaceholders = $(once('history', '[data-history-node-timestamp]', context)).filter(function () {
         var nodeTimestamp = parseInt(this.getAttribute('data-history-node-timestamp'), 10);
         var nodeID = this.getAttribute('data-history-node-id');
 
@@ -71,7 +71,7 @@
 
         return false;
       });
-      var $newRepliesPlaceholders = $(context).find('[data-history-node-last-comment-timestamp]').once('history').filter(function () {
+      var $newRepliesPlaceholders = $(once('history', '[data-history-node-last-comment-timestamp]', context)).filter(function () {
         var lastCommentTimestamp = parseInt(this.getAttribute('data-history-node-last-comment-timestamp'), 10);
         var nodeTimestamp = parseInt(this.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
 

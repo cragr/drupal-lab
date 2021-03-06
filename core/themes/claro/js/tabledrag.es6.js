@@ -99,11 +99,14 @@
       // Find each row in a draggable table and process it with
       // createItemWrapBoundaries().
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        $(context)
-          .find(`#${base}`)
-          .find('> tr.draggable, > tbody > tr.draggable')
-          .once('claroTabledrag')
-          .each(createItemWrapBoundaries);
+        $(
+          once(
+            'claroTabledrag',
+            $(context)
+              .find(`#${base}`)
+              .find('> tr.draggable, > tbody > tr.draggable'),
+          ),
+        ).each(createItemWrapBoundaries);
       });
     },
   };

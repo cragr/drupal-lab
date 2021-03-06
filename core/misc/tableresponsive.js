@@ -19,7 +19,7 @@
 
   Drupal.behaviors.tableResponsive = {
     attach: function attach(context, settings) {
-      var $tables = $(context).find('table.responsive-enabled').once('tableresponsive');
+      var $tables = $(once('tableresponsive', 'table.responsive-enabled', context));
 
       if ($tables.length) {
         var il = $tables.length;

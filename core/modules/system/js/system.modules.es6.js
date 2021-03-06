@@ -18,7 +18,7 @@
    */
   Drupal.behaviors.tableFilterByText = {
     attach(context, settings) {
-      const $input = $('input.table-filter-text').once('table-filter-text');
+      const $input = $(once('table-filter-text', 'input.table-filter-text'));
       const $table = $($input.attr('data-table'));
       let $rowsAndDetails;
       let $rows;

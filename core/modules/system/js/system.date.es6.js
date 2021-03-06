@@ -17,12 +17,12 @@
   Drupal.behaviors.dateFormat = {
     attach(context) {
       const $context = $(context);
-      const $source = $context
-        .find('[data-drupal-date-formatter="source"]')
-        .once('dateFormat');
-      const $target = $context
-        .find('[data-drupal-date-formatter="preview"]')
-        .once('dateFormat');
+      const $source = $(
+        once('dateFormat', '[data-drupal-date-formatter="source"]', context),
+      );
+      const $target = $(
+        once('dateFormat', '[data-drupal-date-formatter="preview"]', context),
+      );
       const $preview = $target.find('em');
 
       // All elements have to exist.

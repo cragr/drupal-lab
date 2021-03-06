@@ -83,7 +83,7 @@
     }
 
     return this.each(function (selector) {
-      var $menu = $(this).once('toolbar-menu');
+      var $menu = $(once('toolbar-menu', $(this)));
 
       if ($menu.length) {
         $menu.on('click.toolbar', '.toolbar-box', toggleClickHandler).on('click.toolbar', '.toolbar-box a', linkClickHandler);

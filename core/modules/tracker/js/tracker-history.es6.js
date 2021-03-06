@@ -80,55 +80,53 @@
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
       const nodeIDs = [];
-      const $nodeNewPlaceholders = $(context)
-        .find('[data-history-node-timestamp]')
-        .once('history')
-        .filter(function () {
-          const nodeTimestamp = parseInt(
-            this.getAttribute('data-history-node-timestamp'),
-            10,
-          );
-          const nodeID = this.getAttribute('data-history-node-id');
-          if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
-            nodeIDs.push(nodeID);
-            return true;
-          }
+      const $nodeNewPlaceholders = $(
+        once('history', '[data-history-node-timestamp]', context),
+      ).filter(function () {
+        const nodeTimestamp = parseInt(
+          this.getAttribute('data-history-node-timestamp'),
+          10,
+        );
+        const nodeID = this.getAttribute('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
+          nodeIDs.push(nodeID);
+          return true;
+        }
 
-          return false;
-        });
+        return false;
+      });
 
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
-      const $newRepliesPlaceholders = $(context)
-        .find('[data-history-node-last-comment-timestamp]')
-        .once('history')
-        .filter(function () {
-          const lastCommentTimestamp = parseInt(
-            this.getAttribute('data-history-node-last-comment-timestamp'),
-            10,
-          );
-          const nodeTimestamp = parseInt(
-            this.previousSibling.previousSibling.getAttribute(
-              'data-history-node-timestamp',
-            ),
-            10,
-          );
-          // Discard placeholders that have zero comments.
-          if (lastCommentTimestamp === nodeTimestamp) {
-            return false;
-          }
-          const nodeID = this.previousSibling.previousSibling.getAttribute(
-            'data-history-node-id',
-          );
-          if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
-            if (nodeIDs.indexOf(nodeID) === -1) {
-              nodeIDs.push(nodeID);
-            }
-            return true;
-          }
-
+      const $newRepliesPlaceholders = $(
+        once('history', '[data-history-node-last-comment-timestamp]', context),
+      ).filter(function () {
+        const lastCommentTimestamp = parseInt(
+          this.getAttribute('data-history-node-last-comment-timestamp'),
+          10,
+        );
+        const nodeTimestamp = parseInt(
+          this.previousSibling.previousSibling.getAttribute(
+            'data-history-node-timestamp',
+          ),
+          10,
+        );
+        // Discard placeholders that have zero comments.
+        if (lastCommentTimestamp === nodeTimestamp) {
           return false;
-        });
+        }
+        const nodeID = this.previousSibling.previousSibling.getAttribute(
+          'data-history-node-id',
+        );
+        if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
+          if (nodeIDs.indexOf(nodeID) === -1) {
+            nodeIDs.push(nodeID);
+          }
+          return true;
+        }
+
+        return false;
+      });
 
       if (
         $nodeNewPlaceholders.length === 0 &&

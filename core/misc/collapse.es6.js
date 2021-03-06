@@ -117,10 +117,9 @@
       if (Modernizr.details) {
         return;
       }
-      const $collapsibleDetails = $(context)
-        .find('details')
-        .once('collapse')
-        .addClass('collapse-processed');
+      const $collapsibleDetails = $(
+        once('collapse', 'details', context),
+      ).addClass('collapse-processed');
       if ($collapsibleDetails.length) {
         for (let i = 0; i < $collapsibleDetails.length; i++) {
           CollapsibleDetails.instances.push(

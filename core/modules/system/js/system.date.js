@@ -10,8 +10,8 @@
   Drupal.behaviors.dateFormat = {
     attach: function attach(context) {
       var $context = $(context);
-      var $source = $context.find('[data-drupal-date-formatter="source"]').once('dateFormat');
-      var $target = $context.find('[data-drupal-date-formatter="preview"]').once('dateFormat');
+      var $source = $(once('dateFormat', '[data-drupal-date-formatter="source"]', context));
+      var $target = $(once('dateFormat', '[data-drupal-date-formatter="preview"]', context));
       var $preview = $target.find('em');
 
       if (!$source.length || !$target.length) {
