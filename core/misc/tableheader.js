@@ -39,7 +39,7 @@
   }
 
   function tableHeaderInitHandler(e) {
-    var $tables = $(e.data.context).find('table.sticky-enabled').once('tableheader');
+    var $tables = $(once('tableheader', $(e.data.context).find('table.sticky-enabled')));
     var il = $tables.length;
 
     for (var i = 0; i < il; i++) {

@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.responsiveDetails = {
     attach(context) {
-      const $details = $(context).find('details').once('responsive-details');
+      const $details = $(once('responsive-details', 'details', context));
 
       if (!$details.length) {
         return;

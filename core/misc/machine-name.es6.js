@@ -90,10 +90,9 @@
       Object.keys(settings.machineName).forEach((sourceId) => {
         const options = settings.machineName[sourceId];
 
-        const $source = $context
+        const $source = $(once('machine-name', $context
           .find(sourceId)
-          .addClass('machine-name-source')
-          .once('machine-name');
+          .addClass('machine-name-source')));
         const $target = $context
           .find(options.target)
           .addClass('machine-name-target');

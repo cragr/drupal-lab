@@ -43,7 +43,7 @@
         var notSmartPhone = window.matchMedia('(min-width: 300px)');
 
         if (notSmartPhone.matches) {
-          $tabs.once('nav-tabs').each(init);
+          $(once('nav-tabs', $tabs)).each(init);
         }
       }
     }

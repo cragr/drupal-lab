@@ -218,9 +218,7 @@
       };
 
       // Add the behavior to each region select list.
-      $(context)
-        .find('select.block-region-select')
-        .once('block-region-select')
+      $(once('block-region-select', 'select.block-region-select', context))
         .on('change', function (event) {
           // Make our new row and select field.
           const row = $(this).closest('tr');

@@ -22,7 +22,7 @@
    */
   Drupal.behaviors.blockFilterByText = {
     attach(context, settings) {
-      const $input = $('input.block-filter-text').once('block-filter-text');
+      const $input = $(once('block-filter-text', 'input.block-filter-text'));
       const $table = $($input.attr('data-element'));
       let $filterRows;
 
@@ -86,9 +86,7 @@
     attach(context, settings) {
       // Ensure that the block we are attempting to scroll to actually exists.
       if (settings.blockPlacement && $('.js-block-placed').length) {
-        $(context)
-          .find('[data-drupal-selector="edit-blocks"]')
-          .once('block-highlight')
+        $(once('block-highlight', '[data-drupal-selector="edit-blocks"]', context))
           .each(function () {
             const $container = $(this);
             // Just scrolling the document.body will not work in Firefox. The html

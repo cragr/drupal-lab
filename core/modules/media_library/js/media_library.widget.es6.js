@@ -44,8 +44,9 @@
         show: Drupal.t('Show media item weights'),
         hide: Drupal.t('Hide media item weights'),
       };
-      $('.js-media-library-widget-toggle-weight', context)
-        .once('media-library-toggle')
+      $(
+        once('media-library-toggle', '.js-media-library-widget-toggle-weight', context)
+      )
         .on('click', (e) => {
           e.preventDefault();
           $(e.currentTarget)
@@ -61,8 +62,7 @@
             .toggle();
         })
         .text(strings.show);
-      $('.js-media-library-item-weight', context)
-        .once('media-library-toggle')
+      $(once('media-library-toggle', '.js-media-library-item-weight', context))
         .parent()
         .hide();
     },
@@ -83,8 +83,11 @@
       // more items, the button needs to be disabled. Since we can't shift the
       // focus to disabled elements, the focus is set back to the open button
       // via JavaScript by adding the 'data-disabled-focus' attribute.
-      $('.js-media-library-open-button[data-disabled-focus="true"]', context)
-        .once('media-library-disable')
+      $(once(
+        'media-library-disable',
+        '.js-media-library-open-button[data-disabled-focus="true"]',
+        context
+      ))
         .each(function () {
           $(this).focus();
 

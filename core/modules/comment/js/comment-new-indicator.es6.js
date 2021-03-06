@@ -69,9 +69,7 @@
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
       const nodeIDs = [];
-      const $placeholders = $(context)
-        .find('[data-comment-timestamp]')
-        .once('history')
+      const $placeholders = $(once('history', '[data-comment-timestamp]', context))
         .filter(function () {
           const $placeholder = $(this);
           const commentTimestamp = parseInt(

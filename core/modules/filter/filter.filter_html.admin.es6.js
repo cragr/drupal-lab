@@ -68,9 +68,11 @@
 
     attach(context, settings) {
       const that = this;
-      $(context)
-        .find('[name="filters[filter_html][settings][allowed_html]"]')
-        .once('filter-filter_html-updating')
+      $(once(
+        'filter-filter_html-updating',
+        '[name="filters[filter_html][settings][allowed_html]"]',
+        context
+      ))
         .each(function () {
           that.$allowedHTMLFormItem = $(this);
           that.$allowedHTMLDescription = that.$allowedHTMLFormItem

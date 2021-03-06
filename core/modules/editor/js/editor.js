@@ -109,7 +109,7 @@
         return;
       }
 
-      $(context).find('[data-editor-for]').once('editor').each(function () {
+      $(once('editor', '[data-editor-for]', context)).each(function () {
         var $this = $(this);
         var field = findFieldForFormatSelector($this);
 
@@ -150,9 +150,9 @@
       var editors;
 
       if (trigger === 'serialize') {
-        editors = $(context).find('[data-editor-for]').findOnce('editor');
+        editors = $(once.filter('editor', '[data-editor-for]', context));
       } else {
-        editors = $(context).find('[data-editor-for]').removeOnce('editor');
+        editors = $(once.remove('editor', '[data-editor-for]', context));
       }
 
       editors.each(function () {

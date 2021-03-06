@@ -12,9 +12,11 @@
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach(context) {
-      const $form = $(context)
-        .find('[data-drupal-selector="field-ui-field-storage-add-form"]')
-        .once('field_ui_add');
+      const $form = $(once(
+        'field_ui_add',
+        '[data-drupal-selector="field-ui-field-storage-add-form"]',
+        context
+      ));
       if ($form.length) {
         // Add a few 'js-form-required' and 'form-required' css classes here.
         // We can not use the Form API '#required' property because both label
@@ -80,9 +82,7 @@
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach(context, settings) {
-      $(context)
-        .find('table#field-display-overview')
-        .once('field-display-overview')
+      $(once('field-display-overview', 'table#field-display-overview', context))
         .each(function () {
           Drupal.fieldUIOverview.attach(
             this,

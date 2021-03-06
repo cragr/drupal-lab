@@ -15,9 +15,9 @@
   Drupal.behaviors.filterStatus = {
     attach(context, settings) {
       const $context = $(context);
-      $context
-        .find('#filters-status-wrapper input.form-checkbox')
-        .once('filter-status')
+      $(
+        once('filter-status', '#filters-status-wrapper input.form-checkbox', context)
+      )
         .each(function () {
           const $checkbox = $(this);
           // Retrieve the tabledrag row belonging to this filter.

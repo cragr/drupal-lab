@@ -12,8 +12,7 @@
    */
   Drupal.behaviors.tableDragTest = {
     attach(context) {
-      $('.tabledrag-handle', context)
-        .once('tabledrag-test')
+      $(once('tabledrag-test', '.tabledrag-handle', context))
         .on('keydown.tabledrag-test', (event) => {
           $(event.currentTarget).removeClass('tabledrag-test-dragging');
         });

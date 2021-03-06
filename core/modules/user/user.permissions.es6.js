@@ -15,8 +15,7 @@
   Drupal.behaviors.permissions = {
     attach(context) {
       const self = this;
-      $('table#permissions')
-        .once('permissions')
+      $(once('permissions', 'table#permissions'))
         .each(function () {
           // On a site with many roles and permissions, this behavior initially
           // has to perform thousands of DOM manipulations to inject checkboxes

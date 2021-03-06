@@ -80,9 +80,7 @@
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
       const nodeIDs = [];
-      const $nodeNewPlaceholders = $(context)
-        .find('[data-history-node-timestamp]')
-        .once('history')
+      const $nodeNewPlaceholders = $(once('history', '[data-history-node-timestamp]', context))
         .filter(function () {
           const nodeTimestamp = parseInt(
             this.getAttribute('data-history-node-timestamp'),
@@ -99,9 +97,7 @@
 
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
-      const $newRepliesPlaceholders = $(context)
-        .find('[data-history-node-last-comment-timestamp]')
-        .once('history')
+      const $newRepliesPlaceholders = $(once('history', '[data-history-node-last-comment-timestamp]', context))
         .filter(function () {
           const lastCommentTimestamp = parseInt(
             this.getAttribute('data-history-node-last-comment-timestamp'),

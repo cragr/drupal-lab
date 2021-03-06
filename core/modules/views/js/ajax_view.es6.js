@@ -105,16 +105,14 @@
         '-',
       )}-${settings.view_display_id.replace(/_/g, '-')}`,
     );
-    this.$exposed_form
-      .once('exposed-form')
+    $(once('exposed-form', this.$exposed_form))
       .each($.proxy(this.attachExposedFormAjax, this));
 
     // Add the ajax to pagers.
-    this.$view
+    $(once('ajax-pager', this.$view
       // Don't attach to nested views. Doing so would attach multiple behaviors
       // to a given element.
-      .filter($.proxy(this.filterNestedViews, this))
-      .once('ajax-pager')
+      .filter($.proxy(this.filterNestedViews, this))))
       .each($.proxy(this.attachPagerAjax, this));
 
     // Add a trigger to update this view specifically. In order to trigger a

@@ -7,8 +7,7 @@
 (function ($, window, Drupal) {
   Drupal.behaviors.insertTest = {
     attach(context) {
-      $('.ajax-insert')
-        .once('ajax-insert')
+      $(once('ajax-insert', '.ajax-insert'))
         .on('click', (event) => {
           event.preventDefault();
           const ajaxSettings = {
@@ -23,8 +22,7 @@
           myAjaxObject.execute();
         });
 
-      $('.ajax-insert-inline')
-        .once('ajax-insert')
+      $(once('ajax-insert', '.ajax-insert-inline'))
         .on('click', (event) => {
           event.preventDefault();
           const ajaxSettings = {
