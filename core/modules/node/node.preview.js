@@ -29,28 +29,28 @@
         }
       }
 
-      var $preview = $(once('node-preview', $(context)));
+      if (!context.querySelector('.node-preview-container')) {
+        return;
+      }
 
-      if ($(context).find('.node-preview-container').length) {
-        $preview.on('click.preview', 'a:not([href^="#"], .node-preview-container a)', clickPreviewModal);
+      if (once('node-preview', 'html').length) {
+        $(document).on('click.preview', 'a:not([href^="#"], .node-preview-container a)', clickPreviewModal);
       }
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        var $preview = $(once.remove('node-preview', '.content', context));
-
-        if ($preview.length) {
-          $preview.off('click.preview');
+        if (context.querySelector('.node-preview-container') && once.remove('node-preview', 'html').length) {
+          $(document).off('click.preview');
         }
       }
     }
   };
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach: function attach(context) {
-      var $autosubmit = $(once('autosubmit', '[data-drupal-autosubmit]', context));
+      var autosubmit = once('autosubmit', '[data-drupal-autosubmit]', context);
 
-      if ($autosubmit.length) {
-        $autosubmit.on('formUpdated.preview', function () {
+      if (autosubmit.length) {
+        $(autosubmit).on('formUpdated.preview', function () {
           $(this.form).trigger('submit');
         });
       }

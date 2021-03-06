@@ -19,7 +19,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach: function attach(context) {
       var $menu = $('.js-media-library-menu');
-      $(once('media-library-menu-item', 'a', context)).on('keypress', function (e) {
+      $(once('media-library-menu-item', $menu.find('a'))).on('keypress', function (e) {
         if (e.which === 32) {
           e.preventDefault();
           e.stopPropagation();
@@ -168,7 +168,7 @@
         $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
         $('.js-media-library-add-form-current-selection').val(currentSelection.join());
       });
-      $(once('media-library-selection-change', $('#media-library-modal-selection', $form))).on('change', function (e) {
+      $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {
@@ -181,7 +181,12 @@
       currentSelection.forEach(function (value) {
         $form.find("input[type=\"checkbox\"][value=\"".concat(value, "\"]")).prop('checked', true).trigger('change');
       });
-      $(window).once('media-library-selection-info').on('dialog:aftercreate', function () {
+
+      if (!once('media-library-selection-info', 'html').length) {
+        return;
+      }
+
+      $(window).on('dialog:aftercreate', function () {
         var $buttonPane = $('.media-library-widget-modal .ui-dialog-buttonpane');
 
         if (!$buttonPane.length) {
@@ -195,7 +200,11 @@
   };
   Drupal.behaviors.MediaLibraryModalClearSelection = {
     attach: function attach() {
-      $(window).once('media-library-clear-selection').on('dialog:afterclose', function () {
+      if (!once('media-library-clear-selection', 'html').length) {
+        return;
+      }
+
+      $(window).on('dialog:afterclose', function () {
         Drupal.MediaLibrary.currentSelection = [];
       });
     }

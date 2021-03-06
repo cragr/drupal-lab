@@ -15,14 +15,12 @@
   Drupal.behaviors.filterStatus = {
     attach(context, settings) {
       const $context = $(context);
-      $(
-        once(
-          'filter-status',
-          '#filters-status-wrapper input.form-checkbox',
-          context,
-        ),
-      ).each(function () {
-        const $checkbox = $(this);
+      once(
+        'filter-status',
+        '#filters-status-wrapper input.form-checkbox',
+        context,
+      ).forEach((checkbox) => {
+        const $checkbox = $(checkbox);
         // Retrieve the tabledrag row belonging to this filter.
         const $row = $context
           .find(`#${$checkbox.attr('id').replace(/-status$/, '-weight')}`)

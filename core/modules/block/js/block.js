@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, window, Drupal) {
+(function ($, window, Drupal, once) {
   Drupal.behaviors.blockSettingsSummary = {
     attach: function attach() {
       if (typeof $.fn.drupalSetSummary === 'undefined') {
@@ -138,4 +138,4 @@
       });
     }
   };
-})(jQuery, window, Drupal);
+})(jQuery, window, Drupal, once);

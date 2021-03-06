@@ -115,7 +115,7 @@
 
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     prepareAjaxLinks();
-    $(once('settings_tray.edit_mode_init', 'body')).each(function () {
+    once('settings_tray.edit_mode_init', 'body').forEach(function () {
       var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
 
       if (editMode) {
@@ -138,7 +138,7 @@
   });
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
-      $(once('settingstray', $(toggleEditSelector))).on('click.settingstray', toggleEditMode);
+      $(once('settingstray', toggleEditSelector)).on('click.settingstray', toggleEditMode);
     }
   };
   $(window).on({

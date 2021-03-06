@@ -55,7 +55,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach(context) {
       const $menu = $('.js-media-library-menu');
-      $(once('media-library-menu-item', 'a', context))
+      $(once('media-library-menu-item', $menu.find('a')))
         .on('keypress', (e) => {
           // The AJAX link has the button role, so we need to make sure the link
           // is also triggered when pressing the spacebar.
@@ -352,7 +352,7 @@
       $(
         once(
           'media-library-selection-change',
-          $('#media-library-modal-selection', $form),
+          $form.find('#media-library-modal-selection'),
         ),
       ).on('change', (e) => {
         updateSelectionCount(settings.media_library.selection_remaining);
@@ -380,20 +380,21 @@
 
       // Add the selection count to the button pane when a media library dialog
       // is created.
-      $(window)
-        .once('media-library-selection-info')
-        .on('dialog:aftercreate', () => {
-          // Since the dialog HTML is not part of the context, we can't use
-          // context here.
-          const $buttonPane = $(
-            '.media-library-widget-modal .ui-dialog-buttonpane',
-          );
-          if (!$buttonPane.length) {
-            return;
-          }
-          $buttonPane.append(Drupal.theme('mediaLibrarySelectionCount'));
-          updateSelectionCount(settings.media_library.selection_remaining);
-        });
+      if (!once('media-library-selection-info', 'html').length) {
+        return;
+      }
+      $(window).on('dialog:aftercreate', () => {
+        // Since the dialog HTML is not part of the context, we can't use
+        // context here.
+        const $buttonPane = $(
+          '.media-library-widget-modal .ui-dialog-buttonpane',
+        );
+        if (!$buttonPane.length) {
+          return;
+        }
+        $buttonPane.append(Drupal.theme('mediaLibrarySelectionCount'));
+        updateSelectionCount(settings.media_library.selection_remaining);
+      });
     },
   };
 
@@ -407,11 +408,12 @@
    */
   Drupal.behaviors.MediaLibraryModalClearSelection = {
     attach() {
-      $(window)
-        .once('media-library-clear-selection')
-        .on('dialog:afterclose', () => {
-          Drupal.MediaLibrary.currentSelection = [];
-        });
+      if (!once('media-library-clear-selection', 'html').length) {
+        return;
+      }
+      $(window).on('dialog:afterclose', () => {
+        Drupal.MediaLibrary.currentSelection = [];
+      });
     },
   };
 

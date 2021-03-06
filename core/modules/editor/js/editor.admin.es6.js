@@ -1010,16 +1010,12 @@
    */
   Drupal.behaviors.initializeFilterConfiguration = {
     attach(context, settings) {
-      const $context = $(context);
-
-      $(
-        once(
-          'filter-editor-status',
-          '#filters-status-wrapper input.form-checkbox',
-          context,
-        ),
-      ).each(function () {
-        const $checkbox = $(this);
+      once(
+        'filter-editor-status',
+        '#filters-status-wrapper input.form-checkbox',
+        context,
+      ).forEach((checkbox) => {
+        const $checkbox = $(checkbox);
         const nameAttribute = $checkbox.attr('name');
 
         // The filter's checkbox has a name attribute of the form

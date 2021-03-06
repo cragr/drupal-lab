@@ -52,8 +52,8 @@
   };
   Drupal.behaviors.contentTranslation = {
     attach: function attach(context) {
-      $(once('translation-entity-admin-hide', $(context).find('table .bundle-settings .translatable :input'))).each(function () {
-        var $input = $(this);
+      once('translation-entity-admin-hide', $(context).find('table .bundle-settings .translatable :input')).forEach(function (input) {
+        var $input = $(input);
         var $bundleSettings = $input.closest('.bundle-settings');
 
         if (!$input.is(':checked')) {

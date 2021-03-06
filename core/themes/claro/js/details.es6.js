@@ -15,11 +15,16 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
-      $(once('claroDetails', $(context))).on('click', (event) => {
-        if (event.target.nodeName === 'SUMMARY') {
-          $(event.target).trigger('focus');
-        }
-      });
+      // The second argument of once() needs to be an instance of Element, but
+      // document is an instance of Document, replace it with the html Element.
+      $(once('claroDetails', context === document ? 'html' : context)).on(
+        'click',
+        (event) => {
+          if (event.target.nodeName === 'SUMMARY') {
+            $(event.target).trigger('focus');
+          }
+        },
+      );
     },
   };
 

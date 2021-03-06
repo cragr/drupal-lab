@@ -8,12 +8,13 @@
 (function ($, Drupal) {
   Drupal.behaviors.responsiveDetails = {
     attach: function attach(context) {
-      var $details = $(once('responsive-details', 'details', context));
+      var details = once('responsive-details', 'details', context);
 
-      if (!$details.length) {
+      if (!details.length) {
         return;
       }
 
+      var $details = $(details);
       var $summaries = $details.find('> summary');
 
       function detailsToggle(matches) {

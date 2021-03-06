@@ -16,10 +16,9 @@
    */
   Drupal.behaviors.localeTranslateDirty = {
     attach() {
-      const $form = $(
-        once('localetranslatedirty', '#locale-translate-edit-form'),
-      );
-      if ($form.length) {
+      const form = once('localetranslatedirty', '#locale-translate-edit-form');
+      if (form.length) {
+        const $form = $(form);
         // Display a notice if any row changed.
         $form.one('formUpdated.localeTranslateDirty', 'table', function () {
           const $marker = $(
@@ -31,24 +30,25 @@
         // Highlight changed row.
         $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
           const $row = $(this);
-          const $rowToMark = $(once('localemark', $row));
+          const rowToMark = once('localemark', $row);
           const marker = Drupal.theme('localeTranslateChangedMarker');
 
           $row.addClass('changed');
           // Add an asterisk only once if row changed.
-          if ($rowToMark.length) {
-            $rowToMark.find('td:first-child .js-form-item').append(marker);
+          if (rowToMark.length) {
+            $(rowToMark).find('td:first-child .js-form-item').append(marker);
           }
         });
       }
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const $form = $(
-          once.remove('localetranslatedirty', '#locale-translate-edit-form'),
+        const form = once.remove(
+          'localetranslatedirty',
+          '#locale-translate-edit-form',
         );
-        if ($form.length) {
-          $form.off('formUpdated.localeTranslateDirty');
+        if (form.length) {
+          $(form).off('formUpdated.localeTranslateDirty');
         }
       }
     },
@@ -64,10 +64,9 @@
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach(context, settings) {
-      const $table = $(
-        once('expand-updates', '#locale-translation-status-form'),
-      );
-      if ($table.length) {
+      const table = once('expand-updates', '#locale-translation-status-form');
+      if (table.length) {
+        const $table = $(table);
         const $tbodies = $table.find('tbody');
 
         // Open/close the description details by toggling a tr class.

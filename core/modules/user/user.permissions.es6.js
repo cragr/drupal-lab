@@ -14,14 +14,14 @@
    */
   Drupal.behaviors.permissions = {
     attach(context) {
-      const self = this;
-      $(once('permissions', 'table#permissions')).each(function () {
+      // @todo fix selector
+      once('permissions', 'table#permissions').forEach((table) => {
         // On a site with many roles and permissions, this behavior initially
         // has to perform thousands of DOM manipulations to inject checkboxes
         // and hide them. By detaching the table from the DOM, all operations
         // can be performed without triggering internal layout and re-rendering
         // processes in the browser.
-        const $table = $(this);
+        const $table = $(table);
         let $ancestor;
         let method;
         if ($table.prev().length) {
@@ -60,10 +60,10 @@
         // Initialize the authenticated user checkbox.
         $table
           .find('input[type=checkbox].js-rid-authenticated')
-          .on('click.permissions', self.toggle)
+          .on('click.permissions', this.toggle)
           // .triggerHandler() cannot be used here, as it only affects the first
           // element.
-          .each(self.toggle);
+          .each(this.toggle);
 
         // Re-insert the table into the DOM.
         $ancestor[method]($table);

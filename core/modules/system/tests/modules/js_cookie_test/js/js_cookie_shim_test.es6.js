@@ -5,7 +5,7 @@
 (({ behaviors }, $) => {
   behaviors.jqueryCookie = {
     attach: () => {
-      if ($(once('js_cookie_test-init', 'body')).length) {
+      if (once('js_cookie_test-init', 'body').length) {
         $('.js_cookie_test_add_button').on('click', () => {
           $.cookie('js_cookie_test', 'red panda');
         });

@@ -54,9 +54,11 @@
         }
       }
 
-      const $preview = $(once('node-preview', $(context)));
-      if ($(context).find('.node-preview-container').length) {
-        $preview.on(
+      if (!context.querySelector('.node-preview-container')) {
+        return;
+      }
+      if (once('node-preview', 'html').length) {
+        $(document).on(
           'click.preview',
           'a:not([href^="#"], .node-preview-container a)',
           clickPreviewModal,
@@ -65,9 +67,11 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const $preview = $(once.remove('node-preview', '.content', context));
-        if ($preview.length) {
-          $preview.off('click.preview');
+        if (
+          context.querySelector('.node-preview-container') &&
+          once.remove('node-preview', 'html').length
+        ) {
+          $(document).off('click.preview');
         }
       }
     },
@@ -83,11 +87,13 @@
    */
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach(context) {
-      const $autosubmit = $(
-        once('autosubmit', '[data-drupal-autosubmit]', context),
+      const autosubmit = once(
+        'autosubmit',
+        '[data-drupal-autosubmit]',
+        context,
       );
-      if ($autosubmit.length) {
-        $autosubmit.on('formUpdated.preview', function () {
+      if (autosubmit.length) {
+        $(autosubmit).on('formUpdated.preview', function () {
           $(this.form).trigger('submit');
         });
       }
