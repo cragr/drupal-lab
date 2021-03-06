@@ -3,7 +3,7 @@
  * Block admin behaviors.
  */
 
-(function ($, Drupal, debounce) {
+(function ($, Drupal, debounce, once) {
   /**
    * Filters the block list by a text input search string.
    *
@@ -107,4 +107,4 @@
       }
     },
   };
-})(jQuery, Drupal, Drupal.debounce);
+})(jQuery, Drupal, Drupal.debounce, once);

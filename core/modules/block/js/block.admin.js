@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, debounce) {
+(function ($, Drupal, debounce, once) {
   Drupal.behaviors.blockFilterByText = {
     attach: function attach(context, settings) {
       var $input = $(once('block-filter-text', 'input.block-filter-text'));
@@ -50,4 +50,4 @@
       }
     }
   };
-})(jQuery, Drupal, Drupal.debounce);
+})(jQuery, Drupal, Drupal.debounce, once);

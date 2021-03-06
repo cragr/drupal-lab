@@ -3,7 +3,7 @@
  * Block behaviors.
  */
 
-(function ($, window, Drupal) {
+(function ($, window, Drupal, once) {
   /**
    * Provide the summary information for the block settings vertical tabs.
    *
@@ -259,4 +259,4 @@
       );
     },
   };
-})(jQuery, window, Drupal);
+})(jQuery, window, Drupal, once);
