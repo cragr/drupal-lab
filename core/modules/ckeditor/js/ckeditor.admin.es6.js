@@ -19,9 +19,7 @@
   Drupal.behaviors.ckeditorAdmin = {
     attach(context) {
       // Process the CKEditor configuration fragment once.
-      const $configurationForm = $(context)
-        .find('.ckeditor-toolbar-configuration')
-        .once('ckeditor-configuration');
+      const $configurationForm = $(once('ckeditor-configuration', '.ckeditor-toolbar-configuration', context));
       if ($configurationForm.length) {
         const $textarea = $configurationForm
           // Hide the textarea that contains the serialized representation of the
@@ -66,9 +64,9 @@
       // really means that all CKEditor toolbar buttons have been removed.
       // Hence,all editor features will be removed, so any reactions from
       // filters will be undone.
-      const $configurationForm = $(context)
-        .find('.ckeditor-toolbar-configuration')
-        .findOnce('ckeditor-configuration');
+      const $configurationForm = $(
+        once.filter('ckeditor-configuration', '.ckeditor-toolbar-configuration', context)
+      );
       if (
         $configurationForm.length &&
         Drupal.ckeditor.models &&
@@ -417,9 +415,7 @@
   Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
     attach(context) {
       const $context = $(context);
-      const $ckeditorPluginSettings = $context
-        .find('#ckeditor-plugin-settings')
-        .once('ckeditor-plugin-settings');
+      const $ckeditorPluginSettings = $(once('ckeditor-plugin-settings', '#ckeditor-plugin-settings', context));
       if ($ckeditorPluginSettings.length) {
         // Hide all button-dependent plugin settings initially.
         $ckeditorPluginSettings

@@ -15,8 +15,7 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
-      $(context)
-        .once('claroDetails')
+      $(once('claroDetails', $(context)))
         .on('click', (event) => {
           if (event.target.nodeName === 'SUMMARY') {
             $(event.target).trigger('focus');
@@ -41,9 +40,7 @@
         return;
       }
 
-      $(context)
-        .find('details .details-title')
-        .once('claroDetailsToggleShim')
+      $(once('claroDetailsToggleShim', 'details .details-title', context))
         .on('keypress', (event) => {
           const keyCode = event.keyCode || event.charCode;
           if (keyCode === 32) {

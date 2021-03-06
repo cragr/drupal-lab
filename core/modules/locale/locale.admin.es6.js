@@ -16,9 +16,7 @@
    */
   Drupal.behaviors.localeTranslateDirty = {
     attach() {
-      const $form = $('#locale-translate-edit-form').once(
-        'localetranslatedirty',
-      );
+      const $form = $(once('localetranslatedirty', '#locale-translate-edit-form'));
       if ($form.length) {
         // Display a notice if any row changed.
         $form.one('formUpdated.localeTranslateDirty', 'table', function () {
@@ -31,7 +29,7 @@
         // Highlight changed row.
         $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
           const $row = $(this);
-          const $rowToMark = $row.once('localemark');
+          const $rowToMark = $(once('localemark', $row));
           const marker = Drupal.theme('localeTranslateChangedMarker');
 
           $row.addClass('changed');
@@ -44,9 +42,7 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const $form = $('#locale-translate-edit-form').removeOnce(
-          'localetranslatedirty',
-        );
+        const $form = $(once.remove('localetranslatedirty', '#locale-translate-edit-form'));
         if ($form.length) {
           $form.off('formUpdated.localeTranslateDirty');
         }
@@ -64,9 +60,7 @@
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach(context, settings) {
-      const $table = $('#locale-translation-status-form').once(
-        'expand-updates',
-      );
+      const $table = $(once('expand-updates', '#locale-translation-status-form'));
       if ($table.length) {
         const $tbodies = $table.find('tbody');
 

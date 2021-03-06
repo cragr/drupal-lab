@@ -24,7 +24,7 @@
         return;
       }
 
-      $(context).find('#toolbar-administration').once('toolbar').each(function () {
+      $(once('toolbar', '#toolbar-administration', context)).each(function () {
         var model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),

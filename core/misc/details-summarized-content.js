@@ -26,7 +26,7 @@
   });
   Drupal.behaviors.detailsSummary = {
     attach: function attach(context) {
-      var $detailsElements = $(context).find('details').once('details');
+      var $detailsElements = $(once('details', 'details', context));
       DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat($detailsElements.map(function (index, details) {
         return new DetailsSummarizedContent(details);
       }).get());

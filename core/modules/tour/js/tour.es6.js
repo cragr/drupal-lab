@@ -25,8 +25,7 @@
    */
   Drupal.behaviors.tour = {
     attach(context) {
-      $('body')
-        .once('tour')
+      $(once('tour', 'body'))
         .each(() => {
           const model = new Drupal.tour.models.StateModel();
           new Drupal.tour.views.ToggleTourView({

@@ -53,7 +53,7 @@
          * Mark as unprocessed so this will be retried later.
          * @see bigPipeProcessDocument()
          */
-        $(this).removeOnce('big-pipe');
+        $(once.remove('big-pipe', $(this)));
       } else {
         // Create a Drupal.Ajax object without associating an element, a
         // progress indicator or a URL.
@@ -95,9 +95,11 @@
       return false;
     }
 
-    $(context)
-      .find('script[data-big-pipe-replacement-for-placeholder-with-id]')
-      .once('big-pipe')
+    $(once(
+      'big-pipe',
+      'script[data-big-pipe-replacement-for-placeholder-with-id]',
+      context
+    ))
       .each(bigPipeProcessPlaceholderReplacement);
 
     // If we see the stop signal, clear the timeout: all placeholder

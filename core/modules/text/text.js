@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.behaviors.textSummary = {
     attach: function attach(context, settings) {
-      $(context).find('.js-text-summary').once('text-summary').each(function () {
+      $(once('text-summary', '.js-text-summary', context)).each(function () {
         var $widget = $(this).closest('.js-text-format-wrapper');
         var $summary = $widget.find('.js-text-summary-wrapper');
         var $summaryLabel = $summary.find('label').eq(0);

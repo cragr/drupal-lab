@@ -56,7 +56,7 @@
         return;
       }
 
-      var $collapsibleDetails = $(context).find('details').once('collapse').addClass('collapse-processed');
+      var $collapsibleDetails = $(once('collapse', 'details', context)).addClass('collapse-processed');
 
       if ($collapsibleDetails.length) {
         for (var i = 0; i < $collapsibleDetails.length; i++) {

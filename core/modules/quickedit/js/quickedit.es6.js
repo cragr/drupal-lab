@@ -513,21 +513,17 @@
   Drupal.behaviors.quickedit = {
     attach(context) {
       // Initialize the Quick Edit app once per page load.
-      $('body').once('quickedit-init').each(initQuickEdit);
+      $(once('quickedit-init', 'body')).each(initQuickEdit);
 
       // Find all in-place editable fields, if any.
-      const $fields = $(context)
-        .find('[data-quickedit-field-id]')
-        .once('quickedit');
+      const $fields = $(once('quickedit', '[data-quickedit-field-id]', context));
       if ($fields.length === 0) {
         return;
       }
 
       // Process each entity element: identical entities that appear multiple
       // times will get a numeric identifier, starting at 0.
-      $(context)
-        .find('[data-quickedit-entity-id]')
-        .once('quickedit')
+      $(once('quickedit', '[data-quickedit-entity-id]', context))
         .each((index, entityElement) => {
           processEntity(entityElement);
         });
@@ -736,7 +732,7 @@
       // If the contextual link is cached on the client side, an entity instance
       // will not yet have been assigned. So assign one.
       if (!data.$region.is('[data-quickedit-entity-instance-id]')) {
-        data.$region.once('quickedit');
+        $(once('quickedit', data.$region));
         processEntity(data.$region.get(0));
       }
       const contextualLink = {

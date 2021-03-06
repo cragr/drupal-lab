@@ -29,7 +29,7 @@
         }
       }
 
-      var $preview = $(context).once('node-preview');
+      var $preview = $(once('node-preview', $(context)));
 
       if ($(context).find('.node-preview-container').length) {
         $preview.on('click.preview', 'a:not([href^="#"], .node-preview-container a)', clickPreviewModal);
@@ -37,7 +37,7 @@
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        var $preview = $(context).find('.content').removeOnce('node-preview');
+        var $preview = $(once.remove('node-preview', '.content', context));
 
         if ($preview.length) {
           $preview.off('click.preview');
@@ -47,7 +47,7 @@
   };
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach: function attach(context) {
-      var $autosubmit = $(context).find('[data-drupal-autosubmit]').once('autosubmit');
+      var $autosubmit = $(once('autosubmit', '[data-drupal-autosubmit]', context));
 
       if ($autosubmit.length) {
         $autosubmit.on('formUpdated.preview', function () {

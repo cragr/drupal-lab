@@ -44,13 +44,12 @@
     // Identify the button that was clicked so that .ajaxSubmit() can use it.
     // We need to do this for both .click() and .mousedown() since JavaScript
     // code might trigger either behavior.
-    const $submitButtons = $form
-      .find('input[type=submit].js-form-submit, button.js-form-submit')
-      .once('views-ajax-submit');
+    const $submitButtons = $(once('views-ajax-submit', $form
+      .find('input[type=submit].js-form-submit, button.js-form-submit')));
     $submitButtons.on('click mousedown', function () {
       this.form.clk = this;
     });
-    $form.once('views-ajax-submit').each(function () {
+    $(once('views-ajax-submit', $form)).each(function () {
       const $form = $(this);
       const elementSettings = {
         url: response.url,
@@ -166,8 +165,7 @@
    */
   Drupal.behaviors.livePreview = {
     attach(context) {
-      $('input#edit-displays-live-preview', context)
-        .once('views-ajax')
+      $(once('views-ajax', 'input#edit-displays-live-preview', context))
         .on('click', function () {
           if ($(this).is(':checked')) {
             $('#preview-submit').trigger('click');
@@ -186,8 +184,7 @@
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach(context) {
-      $('#views-tabset a')
-        .once('views-ajax')
+      $(once('views-ajax', '#views-tabset a'))
         .on('click', function () {
           const href = $(this).attr('href');
           // Cut of #views-tabset.
@@ -214,8 +211,7 @@
         progress: { type: 'fullscreen' },
       };
       // Bind AJAX behaviors to all items showing the class.
-      $('a.views-ajax-link', context)
-        .once('views-ajax')
+      $(once('views-ajax', 'a.views-ajax-link', context))
         .each(function () {
           const elementSettings = baseElementSettings;
           elementSettings.base = $(this).attr('id');
@@ -227,8 +223,7 @@
           Drupal.ajax(elementSettings);
         });
 
-      $('div#views-live-preview a')
-        .once('views-ajax')
+      $(once('views-ajax', 'div#views-live-preview a'))
         .each(function () {
           // We don't bind to links without a URL.
           if (!$(this).attr('href')) {
@@ -256,8 +251,7 @@
       // Preview button.
       // @todo Revisit this after fixing Views UI to display a Preview outside
       //   of the main Edit form.
-      $('div#views-live-preview input[type=submit]')
-        .once('views-ajax')
+      $(once('views-ajax', 'div#views-live-preview input[type=submit]'))
         .each(function (event) {
           $(this).on('click', function () {
             this.form.clk = this;

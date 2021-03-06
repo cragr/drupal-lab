@@ -1012,9 +1012,11 @@
     attach(context, settings) {
       const $context = $(context);
 
-      $context
-        .find('#filters-status-wrapper input.form-checkbox')
-        .once('filter-editor-status')
+      $(once(
+        'filter-editor-status',
+        '#filters-status-wrapper input.form-checkbox',
+        context
+      ))
         .each(function () {
           const $checkbox = $(this);
           const nameAttribute = $checkbox.attr('name');

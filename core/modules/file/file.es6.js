@@ -24,9 +24,8 @@
       let elements;
 
       function initFileValidation(selector) {
-        $context
-          .find(selector)
-          .once('fileValidate')
+        $(once('fileValidate', $context
+          .find(selector)))
           .on(
             'change.fileValidate',
             { extensions: elements[selector] },
@@ -44,9 +43,8 @@
       let elements;
 
       function removeFileValidation(selector) {
-        $context
-          .find(selector)
-          .removeOnce('fileValidate')
+        $(once.remove('fileValidate', $context
+          .find(selector)))
           .off('change.fileValidate', Drupal.file.validateExtension);
       }
 
@@ -69,16 +67,12 @@
    */
   Drupal.behaviors.fileAutoUpload = {
     attach(context) {
-      $(context)
-        .find('input[type="file"]')
-        .once('auto-file-upload')
+      $(once('auto-file-upload', 'input[type="file"]', context))
         .on('change.autoFileUpload', Drupal.file.triggerUploadButton);
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $(context)
-          .find('input[type="file"]')
-          .removeOnce('auto-file-upload')
+        $(once.remove('auto-file-upload', 'input[type="file"]', context))
           .off('.autoFileUpload');
       }
     },

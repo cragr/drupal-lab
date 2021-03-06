@@ -55,9 +55,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach(context) {
       const $menu = $('.js-media-library-menu');
-      $menu
-        .find('a', context)
-        .once('media-library-menu-item')
+      $(once('media-library-menu-item', 'a', context))
         .on('keypress', (e) => {
           // The AJAX link has the button role, so we need to make sure the link
           // is also triggered when pressing the spacebar.
@@ -170,8 +168,11 @@
       // @todo Add media library specific classes and data attributes to the
       //    media library display links when we can alter display links.
       //    https://www.drupal.org/project/drupal/issues/3036694
-      $('.views-display-link-widget, .views-display-link-widget_table', context)
-        .once('media-library-views-display-link')
+      $(once(
+        'media-library-views-display-link',
+        '.views-display-link-widget, .views-display-link-widget_table',
+        context
+      ))
         .on('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -317,7 +318,7 @@
 
       // Update the selection array and the hidden form field when a media item
       // is selected.
-      $mediaItems.once('media-item-change').on('change', (e) => {
+      $(once('media-item-change', $mediaItems)).on('change', (e) => {
         const id = e.currentTarget.value;
 
         // Update the selection.
@@ -347,8 +348,10 @@
       });
 
       // The hidden selection form field changes when the selection is updated.
-      $('#media-library-modal-selection', $form)
-        .once('media-library-selection-change')
+      $(once(
+        'media-library-selection-change',
+        $('#media-library-modal-selection', $form)
+      ))
         .on('change', (e) => {
           updateSelectionCount(settings.media_library.selection_remaining);
 

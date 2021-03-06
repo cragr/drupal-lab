@@ -9,7 +9,7 @@
   Drupal.behaviors.permissions = {
     attach: function attach(context) {
       var self = this;
-      $('table#permissions').once('permissions').each(function () {
+      $(once('permissions', 'table#permissions')).each(function () {
         var $table = $(this);
         var $ancestor;
         var method;

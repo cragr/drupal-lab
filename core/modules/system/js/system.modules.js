@@ -8,7 +8,7 @@
 (function ($, Drupal, debounce) {
   Drupal.behaviors.tableFilterByText = {
     attach: function attach(context, settings) {
-      var $input = $('input.table-filter-text').once('table-filter-text');
+      var $input = $(once('table-filter-text', 'input.table-filter-text'));
       var $table = $($input.attr('data-table'));
       var $rowsAndDetails;
       var $rows;

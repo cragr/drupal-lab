@@ -13,8 +13,9 @@
    */
   Drupal.behaviors.ClickToSelect = {
     attach(context) {
-      $('.js-click-to-select-trigger', context)
-        .once('media-library-click-to-select')
+      $(
+        once('media-library-click-to-select', '.js-click-to-select-trigger', context)
+      )
         .on('click', (event) => {
           // Links inside the trigger should not be click-able.
           event.preventDefault();
@@ -25,9 +26,11 @@
           $input.prop('checked', !$input.prop('checked')).trigger('change');
         });
 
-      $('.js-click-to-select-checkbox input', context)
-        .once('media-library-click-to-select')
-        // Adds checked class to the click-to-select element.
+      $(once(
+        'media-library-click-to-select',
+        '.js-click-to-select-checkbox input',
+        context
+      ))
         .on('change', ({ currentTarget }) => {
           $(currentTarget)
             .closest('.js-click-to-select')
@@ -41,8 +44,11 @@
         });
 
       // Adds hover class to the click-to-select element.
-      $('.js-click-to-select-trigger, .js-click-to-select-checkbox', context)
-        .once('media-library-click-to-select-hover')
+      $(once(
+        'media-library-click-to-select-hover',
+        '.js-click-to-select-trigger, .js-click-to-select-checkbox',
+        context
+      ))
         .on('mouseover mouseout', ({ currentTarget, type }) => {
           $(currentTarget)
             .closest('.js-click-to-select')

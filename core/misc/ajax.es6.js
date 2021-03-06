@@ -32,8 +32,7 @@
         if (typeof elementSettings.selector === 'undefined') {
           elementSettings.selector = `#${base}`;
         }
-        $(elementSettings.selector)
-          .once('drupal-ajax')
+        $(once('drupal-ajax', $(elementSettings.selector)))
           .each(function () {
             elementSettings.element = this;
             elementSettings.base = base;
@@ -49,8 +48,7 @@
       Drupal.ajax.bindAjaxLinks(document.body);
 
       // This class means to submit the form to the action using Ajax.
-      $('.use-ajax-submit')
-        .once('ajax')
+      $(once('ajax', '.use-ajax-submit'))
         .each(function () {
           const elementSettings = {};
 
@@ -289,9 +287,8 @@
    */
   Drupal.ajax.bindAjaxLinks = (element) => {
     // Bind Ajax behaviors to all items showing the class.
-    $(element)
-      .find('.use-ajax')
-      .once('ajax')
+    $(once('ajax', $(element)
+      .find('.use-ajax')))
       .each((i, ajaxLink) => {
         const $linkElement = $(ajaxLink);
 

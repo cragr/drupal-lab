@@ -28,8 +28,7 @@
       }
 
       // Bind hide/show and rearrange customization checkboxes.
-      $configForm
-        .once('negotiation-language-admin-bind')
+      $(once('negotiation-language-admin-bind', $configForm))
         .on('change', inputSelector, (event) => {
           toggleTable(event.target);
         });

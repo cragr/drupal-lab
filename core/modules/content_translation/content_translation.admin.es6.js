@@ -82,9 +82,8 @@
     attach(context) {
       // Initially hide all field rows for non translatable bundles and all
       // column rows for non translatable fields.
-      $(context)
-        .find('table .bundle-settings .translatable :input')
-        .once('translation-entity-admin-hide')
+      $(once('translation-entity-admin-hide', $(context)
+        .find('table .bundle-settings .translatable :input')))
         .each(function () {
           const $input = $(this);
           const $bundleSettings = $input.closest('.bundle-settings');
@@ -103,8 +102,7 @@
       // When a bundle is made translatable all of its fields should inherit
       // this setting. Instead when it is made non translatable its fields are
       // hidden, since their translatability no longer matters.
-      $('body')
-        .once('translation-entity-admin-bind')
+      $(once('translation-entity-admin-bind', 'body'))
         .on('click', 'table .bundle-settings .translatable :input', (e) => {
           const $target = $(e.target);
           const $bundleSettings = $target.closest('.bundle-settings');

@@ -18,7 +18,7 @@
    */
   Drupal.behaviors.viewTableFilterByText = {
     attach(context, settings) {
-      const $input = $('input.views-filter-text').once('views-filter-text');
+      const $input = $(once('views-filter-text', 'input.views-filter-text'));
       const $table = $($input.attr('data-table'));
       let $rows;
 

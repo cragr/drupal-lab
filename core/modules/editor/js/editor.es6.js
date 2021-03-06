@@ -204,9 +204,7 @@
         return;
       }
 
-      $(context)
-        .find('[data-editor-for]')
-        .once('editor')
+      $(once('editor', '[data-editor-for]', context))
         .each(function () {
           const $this = $(this);
           const field = findFieldForFormatSelector($this);
@@ -264,9 +262,9 @@
       if (trigger === 'serialize') {
         // Removing the editor-processed class guarantees that the editor will
         // be reattached. Only do this if we're planning to destroy the editor.
-        editors = $(context).find('[data-editor-for]').findOnce('editor');
+        editors = $(once.filter('editor', '[data-editor-for]', context));
       } else {
-        editors = $(context).find('[data-editor-for]').removeOnce('editor');
+        editors = $(once.remove('editor', '[data-editor-for]', context));
       }
 
       editors.each(function () {
