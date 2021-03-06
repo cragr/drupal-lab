@@ -383,7 +383,7 @@ EOD;
    * - Only encode strings that contain non-ASCII characters.
    * - We progressively cut-off a chunk with self::truncateBytes(). This ensures
    *   each chunk starts and ends on a character boundary.
-   * - According to RFC 2047, long lines use CRLF SPACE and the separator.
+   * - According to RFC 2047, long lines use CRLF SPACE as the separator.
    *
    * @param string $string
    *   The header to encode.
@@ -413,7 +413,7 @@ EOD;
         $string = substr($string, $c);
         $len -= $c;
       }
-      // Remove CRLF from the end of the encoded string.
+      // Remove CRLF + SPACE from the end of the encoded string.
       return trim($output);
     }
     return $string;
