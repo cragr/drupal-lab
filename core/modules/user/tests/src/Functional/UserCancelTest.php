@@ -24,7 +24,7 @@ class UserCancelTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'comment', 'node_access_test'];
+  protected static $modules = ['node', 'comment'];
 
   /**
    * {@inheritdoc}
@@ -285,6 +285,7 @@ class UserCancelTest extends BrowserTestBase {
    * Tests nodes are unpublished even if inaccessible to cancelling user.
    */
   public function testUserBlockUnpublishNodeAccess() {
+    \Drupal::service('module_installer')->install(['node_access_test']);
     \Drupal::service('module_installer')->install(['user_form_test']);
 
     // Setup node access
