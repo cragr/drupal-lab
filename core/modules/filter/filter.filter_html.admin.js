@@ -30,7 +30,7 @@
     newFeatures: {},
     attach: function attach(context, settings) {
       var that = this;
-      $(context).find('[name="filters[filter_html][settings][allowed_html]"]').once('filter-filter_html-updating').each(function () {
+      $(once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context)).each(function () {
         that.$allowedHTMLFormItem = $(this);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('.description');
         that.userTags = that._parseSetting(this.value);

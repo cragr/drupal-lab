@@ -69,25 +69,24 @@
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
       const nodeIDs = [];
-      const $placeholders = $(context)
-        .find('[data-comment-timestamp]')
-        .once('history')
-        .filter(function () {
-          const $placeholder = $(this);
-          const commentTimestamp = parseInt(
-            $placeholder.attr('data-comment-timestamp'),
-            10,
-          );
-          const nodeID = $placeholder
-            .closest('[data-history-node-id]')
-            .attr('data-history-node-id');
-          if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
-            nodeIDs.push(nodeID);
-            return true;
-          }
+      const $placeholders = $(
+        once('history', '[data-comment-timestamp]', context),
+      ).filter(function () {
+        const $placeholder = $(this);
+        const commentTimestamp = parseInt(
+          $placeholder.attr('data-comment-timestamp'),
+          10,
+        );
+        const nodeID = $placeholder
+          .closest('[data-history-node-id]')
+          .attr('data-history-node-id');
+        if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
+          nodeIDs.push(nodeID);
+          return true;
+        }
 
-          return false;
-        });
+        return false;
+      });
 
       if ($placeholders.length === 0) {
         return;

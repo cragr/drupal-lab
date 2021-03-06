@@ -9,7 +9,7 @@
   Drupal.ckeditor = Drupal.ckeditor || {};
   Drupal.behaviors.ckeditorAdmin = {
     attach: function attach(context) {
-      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').once('ckeditor-configuration');
+      var $configurationForm = $(once('ckeditor-configuration', '.ckeditor-toolbar-configuration', context));
 
       if ($configurationForm.length) {
         var $textarea = $configurationForm.find('.js-form-item-editor-settings-toolbar-button-groups').hide().find('textarea');
@@ -36,7 +36,7 @@
         return;
       }
 
-      var $configurationForm = $(context).find('.ckeditor-toolbar-configuration').findOnce('ckeditor-configuration');
+      var $configurationForm = $(once.filter('ckeditor-configuration', '.ckeditor-toolbar-configuration', context));
 
       if ($configurationForm.length && Drupal.ckeditor.models && Drupal.ckeditor.models.Model) {
         var config = Drupal.ckeditor.models.Model.toJSON().activeEditorConfig;
@@ -194,7 +194,7 @@
   Drupal.behaviors.ckeditorAdminButtonPluginSettings = {
     attach: function attach(context) {
       var $context = $(context);
-      var $ckeditorPluginSettings = $context.find('#ckeditor-plugin-settings').once('ckeditor-plugin-settings');
+      var $ckeditorPluginSettings = $(once('ckeditor-plugin-settings', '#ckeditor-plugin-settings', context));
 
       if ($ckeditorPluginSettings.length) {
         $ckeditorPluginSettings.find('[data-ckeditor-buttons]').each(function () {

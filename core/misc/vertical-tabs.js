@@ -21,8 +21,8 @@
         return;
       }
 
-      $('body').once('vertical-tabs-fragments').on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
-      $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function () {
+      $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
+      $(once('vertical-tabs', '[data-vertical-tabs-panes]', context)).each(function () {
         var $this = $(this).addClass('vertical-tabs__panes');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
         var tabFocus;

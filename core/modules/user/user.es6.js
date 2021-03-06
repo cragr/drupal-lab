@@ -63,10 +63,8 @@
   Drupal.behaviors.password = {
     attach(context, settings) {
       const cssClasses = Drupal.user.password.css;
-      $(context)
-        .find('input.js-password-field')
-        .once('password')
-        .each((index, value) => {
+      $(once('password', 'input.js-password-field', context)).each(
+        (index, value) => {
           const $mainInput = $(value);
           const $mainInputParent = $mainInput
             .parent()
@@ -280,7 +278,8 @@
           // Monitor input events.
           $mainInput.on('input', passwordCheck);
           $confirmInput.on('input', passwordCheck);
-        });
+        },
+      );
     },
   };
 

@@ -66,7 +66,7 @@
 
   Drupal.behaviors.navTabs = {
     attach: function attach(context) {
-      $(context).find('[data-drupal-nav-tabs].is-collapsible').once('nav-tabs').each(function (i, value) {
+      $(once('nav-tabs', '[data-drupal-nav-tabs].is-collapsible', context)).each(function (i, value) {
         $(value).each(init);
       });
     }
