@@ -16,19 +16,23 @@
    */
   Drupal.behaviors.dateFormat = {
     attach(context) {
-      const $context = $(context);
-      const $source = $(
-        once('dateFormat', '[data-drupal-date-formatter="source"]', context),
+      const source = once(
+        'dateFormat',
+        '[data-drupal-date-formatter="source"]',
+        context,
       );
-      const $target = $(
-        once('dateFormat', '[data-drupal-date-formatter="preview"]', context),
+      const target = once(
+        'dateFormat',
+        '[data-drupal-date-formatter="preview"]',
+        context,
       );
-      const $preview = $target.find('em');
 
       // All elements have to exist.
-      if (!$source.length || !$target.length) {
+      if (!source.length || !target.length) {
         return;
       }
+
+      const $preview = $(target).find('em');
 
       /**
        * Event handler that replaces date characters with value.
@@ -43,13 +47,14 @@
         );
 
         $preview.text(dateString);
-        $target.toggleClass('js-hide', !dateString.length);
+        // @todo makes sure it works on IE11
+        target.classList.toggle('js-hide', !dateString.length);
       }
 
       /**
        * On given event triggers the date character replacement.
        */
-      $source
+      $(source)
         .on(
           'keyup.dateFormat change.dateFormat input.dateFormat',
           dateFormatHandler,

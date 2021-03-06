@@ -89,14 +89,10 @@
       var contextIsForm = $context.is('form');
 
       if (trigger === 'unload') {
-        var $forms = $(once.remove('form-updated', contextIsForm ? $context : $context.find('form')));
-
-        if ($forms.length) {
-          $.makeArray($forms).forEach(function (form) {
-            form.removeAttribute('data-drupal-form-fields');
-            $(form).off('.formUpdated');
-          });
-        }
+        once.remove('form-updated', contextIsForm ? $context : $context.find('form')).forEach(function (form) {
+          form.removeAttribute('data-drupal-form-fields');
+          $(form).off('.formUpdated');
+        });
       }
     }
   };

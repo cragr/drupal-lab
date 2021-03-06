@@ -66,15 +66,15 @@
   /**
    * Processes new comment links and adds appropriate text in relevant cases.
    *
-   * @param {jQuery} $placeholders
+   * @param {Array.<Element>} placeholders
    *   The placeholder elements of the current page.
    */
-  function processNodeNewCommentLinks($placeholders) {
+  function processNodeNewCommentLinks(placeholders) {
     // Figure out which placeholders need the "x new comments" links.
     const $placeholdersToUpdate = {};
     let fieldName = 'comment';
     let $placeholder;
-    $placeholders.each((index, placeholder) => {
+    placeholders.forEach((placeholder) => {
       $placeholder = $(placeholder);
       const timestamp = parseInt(
         $placeholder.attr('data-history-node-last-comment-timestamp'),
@@ -157,10 +157,12 @@
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
       const nodeIDs = [];
-      const $placeholders = $(
-        once('history', '[data-history-node-last-comment-timestamp]', context),
-      ).filter(function () {
-        const $placeholder = $(this);
+      const placeholders = once(
+        'history',
+        '[data-history-node-last-comment-timestamp]',
+        context,
+      ).filter((placeholder) => {
+        const $placeholder = $(placeholder);
         const lastCommentTimestamp = parseInt(
           $placeholder.attr('data-history-node-last-comment-timestamp'),
           10,
@@ -181,13 +183,13 @@
         return false;
       });
 
-      if ($placeholders.length === 0) {
+      if (placeholders.length === 0) {
         return;
       }
 
       // Perform an AJAX request to retrieve node read timestamps.
       Drupal.history.fetchTimestamps(nodeIDs, () => {
-        processNodeNewCommentLinks($placeholders);
+        processNodeNewCommentLinks(placeholders);
       });
     },
   };

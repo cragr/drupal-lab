@@ -8,7 +8,7 @@
 (function ($, Modernizr, Drupal) {
   Drupal.behaviors.claroDetails = {
     attach: function attach(context) {
-      $(once('claroDetails', $(context))).on('click', function (event) {
+      $(once('claroDetails', context === document ? 'html' : context)).on('click', function (event) {
         if (event.target.nodeName === 'SUMMARY') {
           $(event.target).trigger('focus');
         }

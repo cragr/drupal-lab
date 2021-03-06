@@ -86,14 +86,12 @@
     attach(context, settings) {
       // Ensure that the block we are attempting to scroll to actually exists.
       if (settings.blockPlacement && $('.js-block-placed').length) {
-        $(
-          once(
-            'block-highlight',
-            '[data-drupal-selector="edit-blocks"]',
-            context,
-          ),
-        ).each(function () {
-          const $container = $(this);
+        once(
+          'block-highlight',
+          '[data-drupal-selector="edit-blocks"]',
+          context,
+        ).forEach((container) => {
+          const $container = $(container);
           // Just scrolling the document.body will not work in Firefox. The html
           // element is needed as well.
           $('html, body').animate(

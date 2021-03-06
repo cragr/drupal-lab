@@ -82,13 +82,12 @@
     attach(context) {
       // Initially hide all field rows for non translatable bundles and all
       // column rows for non translatable fields.
-      $(
-        once(
-          'translation-entity-admin-hide',
-          $(context).find('table .bundle-settings .translatable :input'),
-        ),
-      ).each(function () {
-        const $input = $(this);
+      once(
+        'translation-entity-admin-hide',
+        // Keep jQuery because of the use of `:input`.
+        $(context).find('table .bundle-settings .translatable :input'),
+      ).forEach((input) => {
+        const $input = $(input);
         const $bundleSettings = $input.closest('.bundle-settings');
         if (!$input.is(':checked')) {
           $bundleSettings.nextUntil('.bundle-settings').hide();

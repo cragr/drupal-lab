@@ -37,12 +37,10 @@
   };
   Drupal.behaviors.MediaLibraryWidgetDisableButton = {
     attach: function attach(context) {
-      $(once('media-library-disable', '.js-media-library-open-button[data-disabled-focus="true"]', context)).each(function () {
-        var _this = this;
-
-        $(this).focus();
+      once('media-library-disable', '.js-media-library-open-button[data-disabled-focus="true"]', context).forEach(function (button) {
+        $(button).focus();
         setTimeout(function () {
-          $(_this).attr('disabled', 'disabled');
+          $(button).attr('disabled', 'disabled');
         }, 50);
       });
     }

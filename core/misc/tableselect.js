@@ -8,7 +8,9 @@
 (function ($, Drupal) {
   Drupal.behaviors.tableSelect = {
     attach: function attach(context, settings) {
-      $(once('table-select', $(context).find('th.select-all').closest('table'))).each(Drupal.tableSelect);
+      once('table-select', $(context).find('th.select-all').closest('table')).forEach(function (table) {
+        return Drupal.tableSelect.call(table);
+      });
     }
   };
 

@@ -265,7 +265,7 @@
       if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
-      if ($(once('views-ui-add-handler-form', $form)).length) {
+      if (once('views-ui-add-handler-form', $form).length) {
         // If we we have an unprocessed views-ui-add-handler-form, let's
         // instantiate.
         new Drupal.viewsUi.AddItemForm($form);
@@ -361,16 +361,15 @@
   Drupal.behaviors.viewsUiRenderAddViewButton = {
     attach(context) {
       // Build the add display menu and pull the display input buttons into it.
-      const $menu = $(
-        once(
-          'views-ui-render-add-view-button',
-          '#views-display-menu-tabs',
-          context,
-        ),
+      const menu = once(
+        'views-ui-render-add-view-button',
+        '#views-display-menu-tabs',
+        context,
       );
-      if (!$menu.length) {
+      if (!menu.length) {
         return;
       }
+      const $menu = $(menu);
 
       const $addDisplayDropdown = $(
         `<li class="add"><a href="#"><span class="icon add"></span>${Drupal.t(
@@ -455,7 +454,7 @@
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
       // Make sure we don't add more than one event handler to the same form.
-      if ($(once('views-ui-filter-options', $form)).length) {
+      if (once('views-ui-filter-options', $form).length) {
         new Drupal.viewsUi.OptionsSearch($form);
       }
     },
@@ -824,8 +823,9 @@
         let newRow;
         let titleRow;
 
-        const titleRows = $(
-          once('duplicateGroupsOperator', 'tr.views-group-title'),
+        const titleRows = once(
+          'duplicateGroupsOperator',
+          'tr.views-group-title',
         );
 
         if (!titleRows.length) {
@@ -1091,23 +1091,20 @@
    */
   Drupal.behaviors.viewsFilterConfigSelectAll = {
     attach(context) {
-      const $context = $(context);
-
-      const $selectAll = $(
-        once(
-          'filterConfigSelectAll',
-          '.js-form-item-options-value-all',
-          context,
-        ),
+      const selectAll = once(
+        'filterConfigSelectAll',
+        '.js-form-item-options-value-all',
+        context,
       );
-      const $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
-      const $checkboxes = $selectAll
-        .closest('.form-checkboxes')
-        .find(
-          '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
-        );
 
-      if ($selectAll.length) {
+      if (selectAll.length) {
+        const $selectAll = $(selectAll);
+        const $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
+        const $checkboxes = $selectAll
+          .closest('.form-checkboxes')
+          .find(
+            '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
+          );
         // Show the select all checkbox.
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
@@ -1151,17 +1148,10 @@
    */
   Drupal.behaviors.viewsUiCheckboxify = {
     attach(context, settings) {
-      const $buttons = $(
-        once(
-          'views-ui-checkboxify',
-          '[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]',
-        ),
-      );
-      const length = $buttons.length;
-      let i;
-      for (i = 0; i < length; i++) {
-        new Drupal.viewsUi.Checkboxifier($buttons[i]);
-      }
+      const buttons = once(
+        'views-ui-checkboxify',
+        '[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]',
+      ).forEach((button) => new Drupal.viewsUi.Checkboxifier(button));
     },
   };
 
@@ -1204,7 +1194,7 @@
    *
    * @constructor
    *
-   * @param {HTMLElement} button
+   * @param {Element} button
    *   The DOM object representing the button to be checkboxified.
    */
   Drupal.viewsUi.Checkboxifier = function (button) {
@@ -1239,13 +1229,11 @@
    */
   Drupal.behaviors.viewsUiOverrideSelect = {
     attach(context) {
-      $(
-        once(
-          'views-ui-override-button-text',
-          '[data-drupal-selector="edit-override-dropdown"]',
-          context,
-        ),
-      ).each(function () {
+      once(
+        'views-ui-override-button-text',
+        '[data-drupal-selector="edit-override-dropdown"]',
+        context,
+      ).forEach((dropdown) => {
         // Closures! :(
         const $context = $(context);
         const $submit = $context.find('[id^=edit-submit]');
@@ -1259,7 +1247,7 @@
           },
         );
 
-        $(this)
+        $(dropdown)
           .on('change', function () {
             const $this = $(this);
             if ($this.val() === 'default') {
@@ -1332,19 +1320,18 @@
       ) {
         return;
       }
-      const $context = $(context);
-      const $table = $(
-        once('views-rearrange-filters', '#views-rearrange-filters', context),
+      const table = once(
+        'views-rearrange-filters',
+        '#views-rearrange-filters',
+        context,
       );
-      const $operator = $(
-        once(
-          'views-rearrange-filters',
-          '.js-form-item-filter-groups-operator',
-          context,
-        ),
+      const operator = once(
+        'views-rearrange-filters',
+        '.js-form-item-filter-groups-operator',
+        context,
       );
-      if ($table.length) {
-        new Drupal.viewsUi.RearrangeFilterHandler($table, $operator);
+      if (table.length) {
+        new Drupal.viewsUi.RearrangeFilterHandler($(table), $(operator));
       }
     },
   };

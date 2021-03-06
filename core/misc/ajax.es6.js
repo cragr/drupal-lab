@@ -32,8 +32,10 @@
         if (typeof elementSettings.selector === 'undefined') {
           elementSettings.selector = `#${base}`;
         }
-        $(once('drupal-ajax', $(elementSettings.selector))).each(function () {
-          elementSettings.element = this;
+        // Keep the jQuery selector because we can't be sure that this is a
+        // native selector.
+        once('drupal-ajax', $(elementSettings.selector)).forEach((el) => {
+          elementSettings.element = el;
           elementSettings.base = base;
           Drupal.ajax(elementSettings);
         });
@@ -47,12 +49,12 @@
       Drupal.ajax.bindAjaxLinks(document.body);
 
       // This class means to submit the form to the action using Ajax.
-      $(once('ajax', '.use-ajax-submit')).each(function () {
+      once('ajax', '.use-ajax-submit').forEach((el) => {
         const elementSettings = {};
 
         // Ajax submits specified in this manner automatically submit to the
         // normal form action.
-        elementSettings.url = $(this.form).attr('action');
+        elementSettings.url = $(el.form).attr('action');
         // Form submit button clicks need to tell the form what was clicked so
         // it gets passed in the POST request.
         elementSettings.setClick = true;
@@ -61,8 +63,8 @@
         // Clicked form buttons look better with the throbber than the progress
         // bar.
         elementSettings.progress = { type: 'throbber' };
-        elementSettings.base = $(this).attr('id');
-        elementSettings.element = this;
+        elementSettings.base = el.id;
+        elementSettings.element = el;
 
         Drupal.ajax(elementSettings);
       });
@@ -285,7 +287,7 @@
    */
   Drupal.ajax.bindAjaxLinks = (element) => {
     // Bind Ajax behaviors to all items showing the class.
-    $(once('ajax', $(element).find('.use-ajax'))).each((i, ajaxLink) => {
+    once('ajax', '.use-ajax', element).forEach((ajaxLink) => {
       const $linkElement = $(ajaxLink);
 
       const elementSettings = {

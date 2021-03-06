@@ -204,8 +204,8 @@
         return;
       }
 
-      $(once('editor', '[data-editor-for]', context)).each(function () {
-        const $this = $(this);
+      once('editor', '[data-editor-for]', context).forEach((editor) => {
+        const $this = $(editor);
         const field = findFieldForFormatSelector($this);
 
         // Opt-out if no supported text area was found.
@@ -261,13 +261,13 @@
       if (trigger === 'serialize') {
         // Removing the editor-processed class guarantees that the editor will
         // be reattached. Only do this if we're planning to destroy the editor.
-        editors = $(once.filter('editor', '[data-editor-for]', context));
+        editors = once.filter('editor', '[data-editor-for]', context);
       } else {
-        editors = $(once.remove('editor', '[data-editor-for]', context));
+        editors = once.remove('editor', '[data-editor-for]', context);
       }
 
-      editors.each(function () {
-        const $this = $(this);
+      editors.forEach((editor) => {
+        const $this = $(editor);
         const activeFormatID = $this.val();
         const field = findFieldForFormatSelector($this);
         if (field && activeFormatID in settings.editor.formats) {

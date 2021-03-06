@@ -4,11 +4,11 @@
  * May only be loaded for authenticated users, with the History module enabled.
  */
 (function ($, Drupal, window) {
-  function processNodeNewIndicators($placeholders) {
+  function processNodeNewIndicators(placeholders) {
     const newNodeString = Drupal.t('new');
     const updatedNodeString = Drupal.t('updated');
 
-    $placeholders.each((index, placeholder) => {
+    placeholders.forEach((placeholder) => {
       const timestamp = parseInt(
         placeholder.getAttribute('data-history-node-timestamp'),
         10,
@@ -24,10 +24,10 @@
     });
   }
 
-  function processNewRepliesIndicators($placeholders) {
+  function processNewRepliesIndicators(placeholders) {
     // Figure out which placeholders need the "x new" replies links.
     const placeholdersToUpdate = {};
-    $placeholders.each((index, placeholder) => {
+    placeholders.forEach((placeholder) => {
       const timestamp = parseInt(
         placeholder.getAttribute('data-history-node-last-comment-timestamp'),
         10,
@@ -80,14 +80,16 @@
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
       const nodeIDs = [];
-      const $nodeNewPlaceholders = $(
-        once('history', '[data-history-node-timestamp]', context),
-      ).filter(function () {
+      const nodeNewPlaceholders = once(
+        'history',
+        '[data-history-node-timestamp]',
+        context,
+      ).filter((placeholder) => {
         const nodeTimestamp = parseInt(
-          this.getAttribute('data-history-node-timestamp'),
+          placeholder.getAttribute('data-history-node-timestamp'),
           10,
         );
-        const nodeID = this.getAttribute('data-history-node-id');
+        const nodeID = placeholder.getAttribute('data-history-node-id');
         if (Drupal.history.needsServerCheck(nodeID, nodeTimestamp)) {
           nodeIDs.push(nodeID);
           return true;
@@ -98,15 +100,17 @@
 
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
-      const $newRepliesPlaceholders = $(
-        once('history', '[data-history-node-last-comment-timestamp]', context),
-      ).filter(function () {
+      const newRepliesPlaceholders = once(
+        'history',
+        '[data-history-node-last-comment-timestamp]',
+        context,
+      ).filter((placeholder) => {
         const lastCommentTimestamp = parseInt(
-          this.getAttribute('data-history-node-last-comment-timestamp'),
+          placeholder.getAttribute('data-history-node-last-comment-timestamp'),
           10,
         );
         const nodeTimestamp = parseInt(
-          this.previousSibling.previousSibling.getAttribute(
+          placeholder.previousSibling.previousSibling.getAttribute(
             'data-history-node-timestamp',
           ),
           10,
@@ -115,7 +119,7 @@
         if (lastCommentTimestamp === nodeTimestamp) {
           return false;
         }
-        const nodeID = this.previousSibling.previousSibling.getAttribute(
+        const nodeID = placeholder.previousSibling.previousSibling.getAttribute(
           'data-history-node-id',
         );
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
@@ -129,16 +133,16 @@
       });
 
       if (
-        $nodeNewPlaceholders.length === 0 &&
-        $newRepliesPlaceholders.length === 0
+        nodeNewPlaceholders.length === 0 &&
+        newRepliesPlaceholders.length === 0
       ) {
         return;
       }
 
       // Fetch the node read timestamps from the server.
       Drupal.history.fetchTimestamps(nodeIDs, () => {
-        processNodeNewIndicators($nodeNewPlaceholders);
-        processNewRepliesIndicators($newRepliesPlaceholders);
+        processNodeNewIndicators(nodeNewPlaceholders);
+        processNewRepliesIndicators(newRepliesPlaceholders);
       });
     },
   };
