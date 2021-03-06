@@ -18,15 +18,15 @@
     }
   }
 
-  function bigPipeProcessPlaceholderReplacement(index, placeholderReplacement) {
+  function bigPipeProcessPlaceholderReplacement(placeholderReplacement) {
     var placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
-    var content = this.textContent.trim();
+    var content = placeholderReplacement.textContent.trim();
 
     if (typeof drupalSettings.bigPipePlaceholderIds[placeholderId] !== 'undefined') {
       var response = mapTextContentToAjaxResponse(content);
 
       if (response === false) {
-        $(once.remove('big-pipe', $(this)));
+        once.remove('big-pipe', placeholderReplacement);
       } else {
         var ajaxObject = Drupal.ajax({
           url: '',
@@ -47,7 +47,7 @@
       return false;
     }
 
-    $(once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context)).each(bigPipeProcessPlaceholderReplacement);
+    once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context).forEach(bigPipeProcessPlaceholderReplacement);
 
     if (context.querySelector('script[data-big-pipe-event="stop"]')) {
       if (timeoutID) {

@@ -221,7 +221,7 @@
     prepareAjaxLinks();
 
     // When the first contextual link is added to the page set Edit Mode.
-    $(once('settings_tray.edit_mode_init', 'body')).each(() => {
+    once('settings_tray.edit_mode_init', 'body').forEach(() => {
       const editMode =
         localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {

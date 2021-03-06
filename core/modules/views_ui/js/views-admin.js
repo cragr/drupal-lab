@@ -113,7 +113,7 @@
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
-      if ($(once('views-ui-add-handler-form', $form)).length) {
+      if (once('views-ui-add-handler-form', $form).length) {
         new Drupal.viewsUi.AddItemForm($form);
       }
     }
@@ -159,12 +159,13 @@
 
   Drupal.behaviors.viewsUiRenderAddViewButton = {
     attach: function attach(context) {
-      var $menu = $(once('views-ui-render-add-view-button', '#views-display-menu-tabs', context));
+      var menu = once('views-ui-render-add-view-button', '#views-display-menu-tabs', context);
 
-      if (!$menu.length) {
+      if (!menu.length) {
         return;
       }
 
+      var $menu = $(menu);
       var $addDisplayDropdown = $("<li class=\"add\"><a href=\"#\"><span class=\"icon add\"></span>".concat(Drupal.t('Add'), "</a><ul class=\"action-list\" style=\"display:none;\"></ul></li>"));
       var $displayButtons = $menu.nextAll('input.add-display').detach();
       $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>').parent().eq(0).addClass('first').end().eq(-1).addClass('last');
@@ -206,7 +207,7 @@
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
-      if ($(once('views-ui-filter-options', $form)).length) {
+      if (once('views-ui-filter-options', $form).length) {
         new Drupal.viewsUi.OptionsSearch($form);
       }
     }
@@ -342,7 +343,7 @@
     duplicateGroupsOperator: function duplicateGroupsOperator() {
       var newRow;
       var titleRow;
-      var titleRows = $(once('duplicateGroupsOperator', 'tr.views-group-title'));
+      var titleRows = once('duplicateGroupsOperator', 'tr.views-group-title');
 
       if (!titleRows.length) {
         return this.operator;
@@ -476,12 +477,12 @@
   });
   Drupal.behaviors.viewsFilterConfigSelectAll = {
     attach: function attach(context) {
-      var $context = $(context);
-      var $selectAll = $(once('filterConfigSelectAll', '.js-form-item-options-value-all', context));
-      var $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
-      var $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]');
+      var selectAll = once('filterConfigSelectAll', '.js-form-item-options-value-all', context);
 
-      if ($selectAll.length) {
+      if (selectAll.length) {
+        var $selectAll = $(selectAll);
+        var $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
+        var $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]');
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
           $checkboxes.prop('checked', $(this).is(':checked'));
@@ -501,13 +502,9 @@
   };
   Drupal.behaviors.viewsUiCheckboxify = {
     attach: function attach(context, settings) {
-      var $buttons = $(once('views-ui-checkboxify', '[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]'));
-      var length = $buttons.length;
-      var i;
-
-      for (i = 0; i < length; i++) {
-        new Drupal.viewsUi.Checkboxifier($buttons[i]);
-      }
+      var buttons = once('views-ui-checkboxify', '[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]').forEach(function (button) {
+        return new Drupal.viewsUi.Checkboxifier(button);
+      });
     }
   };
   Drupal.behaviors.viewsUiChangeDefaultWidget = {
@@ -545,7 +542,7 @@
 
   Drupal.behaviors.viewsUiOverrideSelect = {
     attach: function attach(context) {
-      $(once('views-ui-override-button-text', '[data-drupal-selector="edit-override-dropdown"]', context)).each(function () {
+      once('views-ui-override-button-text', '[data-drupal-selector="edit-override-dropdown"]', context).forEach(function (dropdown) {
         var $context = $(context);
         var $submit = $context.find('[id^=edit-submit]');
         var oldValue = $submit.val();
@@ -553,7 +550,7 @@
           $(this).val(oldValue);
           return true;
         });
-        $(this).on('change', function () {
+        $(dropdown).on('change', function () {
           var $this = $(this);
 
           if ($this.val() === 'default') {
@@ -593,12 +590,11 @@
         return;
       }
 
-      var $context = $(context);
-      var $table = $(once('views-rearrange-filters', '#views-rearrange-filters', context));
-      var $operator = $(once('views-rearrange-filters', '.js-form-item-filter-groups-operator', context));
+      var table = once('views-rearrange-filters', '#views-rearrange-filters', context);
+      var operator = once('views-rearrange-filters', '.js-form-item-filter-groups-operator', context);
 
-      if ($table.length) {
-        new Drupal.viewsUi.RearrangeFilterHandler($table, $operator);
+      if (table.length) {
+        new Drupal.viewsUi.RearrangeFilterHandler($(table), $(operator));
       }
     }
   };

@@ -64,7 +64,7 @@
   /**
    * Initialize the Quick Edit app.
    *
-   * @param {HTMLElement} bodyElement
+   * @param {Element} bodyElement
    *   This document's body element.
    */
   function initQuickEdit(bodyElement) {
@@ -513,22 +513,18 @@
   Drupal.behaviors.quickedit = {
     attach(context) {
       // Initialize the Quick Edit app once per page load.
-      $(once('quickedit-init', 'body')).each(initQuickEdit);
+      once('quickedit-init', 'body').forEach(initQuickEdit);
 
       // Find all in-place editable fields, if any.
-      const $fields = $(
-        once('quickedit', '[data-quickedit-field-id]', context),
-      );
-      if ($fields.length === 0) {
+      const fields = once('quickedit', '[data-quickedit-field-id]', context);
+      if (fields.length === 0) {
         return;
       }
 
       // Process each entity element: identical entities that appear multiple
       // times will get a numeric identifier, starting at 0.
-      $(once('quickedit', '[data-quickedit-entity-id]', context)).each(
-        (index, entityElement) => {
-          processEntity(entityElement);
-        },
+      once('quickedit', '[data-quickedit-entity-id]', context).forEach(
+        processEntity,
       );
 
       // Process each field element: queue to be used or to fetch metadata.
@@ -536,9 +532,7 @@
       // immediately. New fields will be unable to be processed immediately,
       // but will instead be queued to have their metadata fetched, which occurs
       // below in fetchMissingMetaData().
-      $fields.each((index, fieldElement) => {
-        processField(fieldElement);
-      });
+      fields.forEach(processField);
 
       // Entities and fields on the page have been detected, try to set up the
       // contextual links for those entities that already have the necessary
@@ -735,7 +729,7 @@
       // If the contextual link is cached on the client side, an entity instance
       // will not yet have been assigned. So assign one.
       if (!data.$region.is('[data-quickedit-entity-instance-id]')) {
-        $(once('quickedit', data.$region));
+        once('quickedit', data.$region);
         processEntity(data.$region.get(0));
       }
       const contextualLink = {

@@ -25,7 +25,7 @@
    */
   Drupal.behaviors.tour = {
     attach(context) {
-      $(once('tour', 'body')).each(() => {
+      once('tour', 'body').forEach(() => {
         const model = new Drupal.tour.models.StateModel();
         new Drupal.tour.views.ToggleTourView({
           el: $(context).find('#toolbar-tab-tour'),

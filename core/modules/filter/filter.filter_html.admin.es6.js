@@ -68,18 +68,16 @@
 
     attach(context, settings) {
       const that = this;
-      $(
-        once(
-          'filter-filter_html-updating',
-          '[name="filters[filter_html][settings][allowed_html]"]',
-          context,
-        ),
-      ).each(function () {
-        that.$allowedHTMLFormItem = $(this);
+      once(
+        'filter-filter_html-updating',
+        '[name="filters[filter_html][settings][allowed_html]"]',
+        context,
+      ).forEach((formItem) => {
+        that.$allowedHTMLFormItem = $(formItem);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem
           .closest('.js-form-item')
           .find('.description');
-        that.userTags = that._parseSetting(this.value);
+        that.userTags = that._parseSetting(formItem.value);
 
         // Update the new allowed tags based on added text editor features.
         $(document)

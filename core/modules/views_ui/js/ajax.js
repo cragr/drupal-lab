@@ -17,13 +17,13 @@
     $submitButtons.on('click mousedown', function () {
       this.form.clk = this;
     });
-    $(once('views-ajax-submit', $form)).each(function () {
-      var $form = $(this);
+    once('views-ajax-submit', $form).forEach(function (form) {
+      var $form = $(form);
       var elementSettings = {
         url: response.url,
         event: 'submit',
         base: $form.attr('id'),
-        element: this
+        element: form
       };
       var ajaxForm = Drupal.ajax(elementSettings);
       ajaxForm.$form = $form;
@@ -84,24 +84,27 @@
           type: 'fullscreen'
         }
       };
-      $(once('views-ajax', 'a.views-ajax-link', context)).each(function () {
+      once('views-ajax', 'a.views-ajax-link', context).forEach(function (link) {
+        var $link = $(link);
         var elementSettings = baseElementSettings;
-        elementSettings.base = $(this).attr('id');
-        elementSettings.element = this;
+        elementSettings.base = $link.attr('id');
+        elementSettings.element = link;
 
-        if ($(this).attr('href')) {
-          elementSettings.url = $(this).attr('href');
+        if ($link.attr('href')) {
+          elementSettings.url = $link.attr('href');
         }
 
         Drupal.ajax(elementSettings);
       });
-      $(once('views-ajax', 'div#views-live-preview a')).each(function () {
-        if (!$(this).attr('href')) {
+      once('views-ajax', 'div#views-live-preview a').forEach(function (link) {
+        var $link = $(link);
+
+        if (!$link.attr('href')) {
           return true;
         }
 
         var elementSettings = baseElementSettings;
-        elementSettings.url = $(this).attr('href');
+        elementSettings.url = $link.attr('href');
 
         if (Drupal.Views.getPath(elementSettings.url).substring(0, 21) !== 'admin/structure/views') {
           return true;
@@ -109,17 +112,18 @@
 
         elementSettings.wrapper = 'views-preview-wrapper';
         elementSettings.method = 'replaceWith';
-        elementSettings.base = $(this).attr('id');
-        elementSettings.element = this;
+        elementSettings.base = link.id;
+        elementSettings.element = link;
         Drupal.ajax(elementSettings);
       });
-      $(once('views-ajax', 'div#views-live-preview input[type=submit]')).each(function (event) {
-        $(this).on('click', function () {
+      once('views-ajax', 'div#views-live-preview input[type=submit]').forEach(function (submit) {
+        var $submit = $(submit);
+        $submit.on('click', function () {
           this.form.clk = this;
           return true;
         });
         var elementSettings = baseElementSettings;
-        elementSettings.url = $(this.form).attr('action');
+        elementSettings.url = $(submit.form).attr('action');
 
         if (Drupal.Views.getPath(elementSettings.url).substring(0, 21) !== 'admin/structure/views') {
           return true;
@@ -128,8 +132,8 @@
         elementSettings.wrapper = 'views-preview-wrapper';
         elementSettings.method = 'replaceWith';
         elementSettings.event = 'click';
-        elementSettings.base = $(this).attr('id');
-        elementSettings.element = this;
+        elementSettings.base = submit.id;
+        elementSettings.element = submit;
         Drupal.ajax(elementSettings);
       });
     }

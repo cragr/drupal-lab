@@ -44,7 +44,7 @@
         return;
       }
       // Process the administrative toolbar.
-      $(once('toolbar', '#toolbar-administration', context)).each(function () {
+      once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
         // Establish the toolbar models and views.
         const model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(
@@ -76,21 +76,21 @@
 
         Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView(
           {
-            el: this,
+            el: toolbar,
             model,
             strings: options.strings,
           },
         );
         Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView(
           {
-            el: this,
+            el: toolbar,
             model,
             strings: options.strings,
           },
         );
         Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView(
           {
-            el: this,
+            el: toolbar,
             model,
           },
         );
@@ -105,7 +105,7 @@
         Drupal.toolbar.models.menuModel = menuModel;
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView(
           {
-            el: $(this).find('.toolbar-menu-administration').get(0),
+            el: $(toolbar).find('.toolbar-menu-administration').get(0),
             model: menuModel,
             strings: options.strings,
           },

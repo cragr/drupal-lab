@@ -280,6 +280,10 @@ media_library.ui:
       css/components/media-library.ui.css : {}
   js:
     js/media-library.ui.js: { weight: -1 }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
 
 progress:
   version: VERSION
