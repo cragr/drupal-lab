@@ -112,7 +112,7 @@
         updateBlockWeights(table, regionName);
       };
 
-      $(context).find('select.block-region-select').once('block-region-select').on('change', function (event) {
+      $(once('block-region-select', 'select.block-region-select', context)).on('change', function (event) {
         var row = $(this).closest('tr');
         var select = $(this);
         tableDrag.rowObject = new tableDrag.row(row[0]);

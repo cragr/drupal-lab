@@ -411,6 +411,7 @@ deserialization
 deserializes
 destid
 destructable
+destructure
 destructured
 desynchronized
 deutsch
@@ -1869,6 +1870,7 @@ vocabs
 volgende
 vorige
 vous
+vtab
 vxezb
 vxfbk
 waitfor
