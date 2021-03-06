@@ -86,21 +86,26 @@
     attach(context, settings) {
       // Ensure that the block we are attempting to scroll to actually exists.
       if (settings.blockPlacement && $('.js-block-placed').length) {
-        $(once('block-highlight', '[data-drupal-selector="edit-blocks"]', context))
-          .each(function () {
-            const $container = $(this);
-            // Just scrolling the document.body will not work in Firefox. The html
-            // element is needed as well.
-            $('html, body').animate(
-              {
-                scrollTop:
-                  $('.js-block-placed').offset().top -
-                  $container.offset().top +
-                  $container.scrollTop(),
-              },
-              500,
-            );
-          });
+        $(
+          once(
+            'block-highlight',
+            '[data-drupal-selector="edit-blocks"]',
+            context,
+          ),
+        ).each(function () {
+          const $container = $(this);
+          // Just scrolling the document.body will not work in Firefox. The html
+          // element is needed as well.
+          $('html, body').animate(
+            {
+              scrollTop:
+                $('.js-block-placed').offset().top -
+                $container.offset().top +
+                $container.scrollTop(),
+            },
+            500,
+          );
+        });
       }
     },
   };

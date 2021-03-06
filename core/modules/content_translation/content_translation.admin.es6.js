@@ -82,22 +82,25 @@
     attach(context) {
       // Initially hide all field rows for non translatable bundles and all
       // column rows for non translatable fields.
-      $(once('translation-entity-admin-hide', $(context)
-        .find('table .bundle-settings .translatable :input')))
-        .each(function () {
-          const $input = $(this);
-          const $bundleSettings = $input.closest('.bundle-settings');
-          if (!$input.is(':checked')) {
-            $bundleSettings.nextUntil('.bundle-settings').hide();
-          } else {
-            $bundleSettings
-              .nextUntil('.bundle-settings', '.field-settings')
-              .find('.translatable :input:not(:checked)')
-              .closest('.field-settings')
-              .nextUntil(':not(.column-settings)')
-              .hide();
-          }
-        });
+      $(
+        once(
+          'translation-entity-admin-hide',
+          $(context).find('table .bundle-settings .translatable :input'),
+        ),
+      ).each(function () {
+        const $input = $(this);
+        const $bundleSettings = $input.closest('.bundle-settings');
+        if (!$input.is(':checked')) {
+          $bundleSettings.nextUntil('.bundle-settings').hide();
+        } else {
+          $bundleSettings
+            .nextUntil('.bundle-settings', '.field-settings')
+            .find('.translatable :input:not(:checked)')
+            .closest('.field-settings')
+            .nextUntil(':not(.column-settings)')
+            .hide();
+        }
+      });
 
       // When a bundle is made translatable all of its fields should inherit
       // this setting. Instead when it is made non translatable its fields are

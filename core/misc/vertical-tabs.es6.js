@@ -56,14 +56,13 @@
       /**
        * Binds a listener to handle fragment link clicks and URL hash changes.
        */
-      $(once('vertical-tabs-fragments', 'body'))
-        .on(
-          'formFragmentLinkClickOrHashChange.verticalTabs',
-          handleFragmentLinkClickOrHashChange,
-        );
+      $(once('vertical-tabs-fragments', 'body')).on(
+        'formFragmentLinkClickOrHashChange.verticalTabs',
+        handleFragmentLinkClickOrHashChange,
+      );
 
-      $(once('vertical-tabs', '[data-vertical-tabs-panes]', context))
-        .each(function () {
+      $(once('vertical-tabs', '[data-vertical-tabs-panes]', context)).each(
+        function () {
           const $this = $(this).addClass('vertical-tabs__panes');
           const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
           let tabFocus;
@@ -117,7 +116,8 @@
           if (tabFocus.length) {
             tabFocus.data('verticalTab').focus();
           }
-        });
+        },
+      );
     },
   };
 

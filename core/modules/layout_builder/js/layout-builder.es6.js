@@ -88,8 +88,9 @@
         }
       };
 
-      $(once('block-filter-text', 'input.js-layout-builder-filter', context))
-        .on('keyup', debounce(filterBlockList, 200));
+      $(
+        once('block-filter-text', 'input.js-layout-builder-filter', context),
+      ).on('keyup', debounce(filterBlockList, 200));
     },
   };
 

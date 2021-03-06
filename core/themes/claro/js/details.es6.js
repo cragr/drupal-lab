@@ -15,12 +15,11 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
-      $(once('claroDetails', $(context)))
-        .on('click', (event) => {
-          if (event.target.nodeName === 'SUMMARY') {
-            $(event.target).trigger('focus');
-          }
-        });
+      $(once('claroDetails', $(context))).on('click', (event) => {
+        if (event.target.nodeName === 'SUMMARY') {
+          $(event.target).trigger('focus');
+        }
+      });
     },
   };
 
@@ -40,14 +39,16 @@
         return;
       }
 
-      $(once('claroDetailsToggleShim', 'details .details-title', context))
-        .on('keypress', (event) => {
+      $(once('claroDetailsToggleShim', 'details .details-title', context)).on(
+        'keypress',
+        (event) => {
           const keyCode = event.keyCode || event.charCode;
           if (keyCode === 32) {
             $(event.target).closest('summary').trigger('click');
             event.preventDefault();
           }
-        });
+        },
+      );
     },
   };
 

@@ -16,7 +16,9 @@
    */
   Drupal.behaviors.localeTranslateDirty = {
     attach() {
-      const $form = $(once('localetranslatedirty', '#locale-translate-edit-form'));
+      const $form = $(
+        once('localetranslatedirty', '#locale-translate-edit-form'),
+      );
       if ($form.length) {
         // Display a notice if any row changed.
         $form.one('formUpdated.localeTranslateDirty', 'table', function () {
@@ -42,7 +44,9 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const $form = $(once.remove('localetranslatedirty', '#locale-translate-edit-form'));
+        const $form = $(
+          once.remove('localetranslatedirty', '#locale-translate-edit-form'),
+        );
         if ($form.length) {
           $form.off('formUpdated.localeTranslateDirty');
         }
@@ -60,7 +64,9 @@
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach(context, settings) {
-      const $table = $(once('expand-updates', '#locale-translation-status-form'));
+      const $table = $(
+        once('expand-updates', '#locale-translation-status-form'),
+      );
       if ($table.length) {
         const $tbodies = $table.find('tbody');
 

@@ -127,8 +127,11 @@
         }
       }
 
-      $(once('form-single-submit', 'body'))
-        .on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
+      $(once('form-single-submit', 'body')).on(
+        'submit.singleSubmit',
+        'form:not([method~="GET"])',
+        onFormSubmit,
+      );
     },
   };
 
@@ -181,7 +184,9 @@
     attach(context) {
       const $context = $(context);
       const contextIsForm = $context.is('form');
-      const $forms = $(once('form-updated', contextIsForm ? $context : $context.find('form')));
+      const $forms = $(
+        once('form-updated', contextIsForm ? $context : $context.find('form')),
+      );
       let formFields;
 
       if ($forms.length) {
@@ -215,9 +220,12 @@
       const $context = $(context);
       const contextIsForm = $context.is('form');
       if (trigger === 'unload') {
-        const $forms = $(once.remove('form-updated', contextIsForm
-          ? $context
-          : $context.find('form')));
+        const $forms = $(
+          once.remove(
+            'form-updated',
+            contextIsForm ? $context : $context.find('form'),
+          ),
+        );
         if ($forms.length) {
           $.makeArray($forms).forEach((form) => {
             form.removeAttribute('data-drupal-form-fields');
@@ -239,7 +247,9 @@
   Drupal.behaviors.fillUserInfoFromBrowser = {
     attach(context, settings) {
       const userInfo = ['name', 'mail', 'homepage'];
-      const $forms = $(once('user-info-from-browser', '[data-user-info-from-browser]'));
+      const $forms = $(
+        once('user-info-from-browser', '[data-user-info-from-browser]'),
+      );
       if ($forms.length) {
         userInfo.forEach((info) => {
           const $element = $forms.find(`[name=${info}]`);

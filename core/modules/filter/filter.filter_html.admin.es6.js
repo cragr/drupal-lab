@@ -68,45 +68,46 @@
 
     attach(context, settings) {
       const that = this;
-      $(once(
-        'filter-filter_html-updating',
-        '[name="filters[filter_html][settings][allowed_html]"]',
-        context
-      ))
-        .each(function () {
-          that.$allowedHTMLFormItem = $(this);
-          that.$allowedHTMLDescription = that.$allowedHTMLFormItem
-            .closest('.js-form-item')
-            .find('.description');
-          that.userTags = that._parseSetting(this.value);
+      $(
+        once(
+          'filter-filter_html-updating',
+          '[name="filters[filter_html][settings][allowed_html]"]',
+          context,
+        ),
+      ).each(function () {
+        that.$allowedHTMLFormItem = $(this);
+        that.$allowedHTMLDescription = that.$allowedHTMLFormItem
+          .closest('.js-form-item')
+          .find('.description');
+        that.userTags = that._parseSetting(this.value);
 
-          // Update the new allowed tags based on added text editor features.
-          $(document)
-            .on('drupalEditorFeatureAdded', (e, feature) => {
+        // Update the new allowed tags based on added text editor features.
+        $(document)
+          .on('drupalEditorFeatureAdded', (e, feature) => {
+            that.newFeatures[feature.name] = feature.rules;
+            that._updateAllowedTags();
+          })
+          .on('drupalEditorFeatureModified', (e, feature) => {
+            if (that.newFeatures.hasOwnProperty(feature.name)) {
               that.newFeatures[feature.name] = feature.rules;
               that._updateAllowedTags();
-            })
-            .on('drupalEditorFeatureModified', (e, feature) => {
-              if (that.newFeatures.hasOwnProperty(feature.name)) {
-                that.newFeatures[feature.name] = feature.rules;
-                that._updateAllowedTags();
-              }
-            })
-            .on('drupalEditorFeatureRemoved', (e, feature) => {
-              if (that.newFeatures.hasOwnProperty(feature.name)) {
-                delete that.newFeatures[feature.name];
-                that._updateAllowedTags();
-              }
-            });
-
-          // When the allowed tags list is manually changed, update userTags.
-          that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-            that.userTags = _.difference(
-              that._parseSetting(this.value),
-              that.autoTags,
-            );
+            }
+          })
+          .on('drupalEditorFeatureRemoved', (e, feature) => {
+            if (that.newFeatures.hasOwnProperty(feature.name)) {
+              delete that.newFeatures[feature.name];
+              that._updateAllowedTags();
+            }
           });
+
+        // When the allowed tags list is manually changed, update userTags.
+        that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
+          that.userTags = _.difference(
+            that._parseSetting(this.value),
+            that.autoTags,
+          );
         });
+      });
     },
 
     /**
