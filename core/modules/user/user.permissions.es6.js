@@ -14,6 +14,7 @@
    */
   Drupal.behaviors.permissions = {
     attach(context) {
+      // @todo fix selector
       once('permissions', 'table#permissions').forEach((table) => {
         // On a site with many roles and permissions, this behavior initially
         // has to perform thousands of DOM manipulations to inject checkboxes
