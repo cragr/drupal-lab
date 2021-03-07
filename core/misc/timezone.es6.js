@@ -17,7 +17,7 @@
         const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
         // Ensure that the timezone value returned by the browser is supported
         // by the server.
-        if (tz && timezone.querySelector(`option[value="${tz}"]`)) {
+        if (tz && $timezone.find(`option[value="${tz}"]`).length) {
           $timezone.val(tz);
           return;
         }
