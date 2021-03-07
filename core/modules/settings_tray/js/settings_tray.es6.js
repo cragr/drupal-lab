@@ -264,7 +264,7 @@
    */
   Drupal.behaviors.toggleEditMode = {
     attach() {
-      $(once('settingstray', $(toggleEditSelector))).on(
+      $(once('settingstray', toggleEditSelector)).on(
         'click.settingstray',
         toggleEditMode,
       );

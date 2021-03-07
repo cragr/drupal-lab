@@ -138,7 +138,7 @@
   });
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
-      $(once('settingstray', $(toggleEditSelector))).on('click.settingstray', toggleEditMode);
+      $(once('settingstray', toggleEditSelector)).on('click.settingstray', toggleEditMode);
     }
   };
   $(window).on({
