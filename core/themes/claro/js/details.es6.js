@@ -15,6 +15,8 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
+      // The second argument of once() needs to be an instance of Element, but
+      // document is an instance of Document, replace it with the html Element.
       $(once('claroDetails', context === document ? 'html' : context)).on(
         'click',
         (event) => {
