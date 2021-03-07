@@ -16,7 +16,8 @@
         return;
       }
 
-      var $preview = $(target).find('em');
+      var $target = $(target);
+      var $preview = $target.find('em');
 
       function dateFormatHandler(e) {
         var baseValue = $(e.target).val() || '';
@@ -24,7 +25,7 @@
           return dateFormats[key] ? dateFormats[key] : value;
         });
         $preview.text(dateString);
-        target.classList.toggle('js-hide', !dateString.length);
+        $target.toggleClass('js-hide', !dateString.length);
       }
 
       $(source).on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');

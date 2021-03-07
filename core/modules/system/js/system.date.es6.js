@@ -32,7 +32,8 @@
         return;
       }
 
-      const $preview = $(target).find('em');
+      const $target = $(target);
+      const $preview = $target.find('em');
 
       /**
        * Event handler that replaces date characters with value.
@@ -47,8 +48,7 @@
         );
 
         $preview.text(dateString);
-        // @todo makes sure it works on IE11
-        target.classList.toggle('js-hide', !dateString.length);
+        $target.toggleClass('js-hide', !dateString.length);
       }
 
       /**
