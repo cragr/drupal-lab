@@ -352,7 +352,7 @@
       $(
         once(
           'media-library-selection-change',
-          $('#media-library-modal-selection', $form),
+          $form.find('#media-library-modal-selection'),
         ),
       ).on('change', (e) => {
         updateSelectionCount(settings.media_library.selection_remaining);

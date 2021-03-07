@@ -168,7 +168,7 @@
         $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
         $('.js-media-library-add-form-current-selection').val(currentSelection.join());
       });
-      $(once('media-library-selection-change', $('#media-library-modal-selection', $form))).on('change', function (e) {
+      $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {

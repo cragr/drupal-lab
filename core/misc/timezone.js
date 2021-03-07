@@ -14,7 +14,7 @@
         var $timezone = $(timezone);
         var tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        if (tz && timezone.querySelector("option[value=\"".concat(tz, "\"]"))) {
+        if (tz && $timezone.find("option[value=\"".concat(tz, "\"]")).length) {
           $timezone.val(tz);
           return;
         }
