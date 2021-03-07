@@ -160,10 +160,11 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'type' => $type_name,
     ];
     $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
+    $field_label = $this->randomString();
     $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
-      'label' => $field_label = $this->randomString(),
+      'label' => $field_label,
     ];
     $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, 'Save and continue');
     $this->submitForm([], 'Save field settings');
