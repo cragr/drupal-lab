@@ -8,11 +8,11 @@ use Symfony\Component\Validator\Constraint;
  * Constrains the existence of a file description if it has been configured.
  *
  * @Constraint(
- *   id = "FileRequiredDescription",
+ *   id = "FileDescriptionRequired",
  *   label = @Translation("File required description", context = "Validation"),
  * )
  */
-class FileRequiredDescription extends Constraint {
+class FileDescriptionRequired extends Constraint {
 
   /**
    * Constraint violation message template.

@@ -28,7 +28,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   constraints = {
  *    "ReferenceAccess" = {},
  *    "FileValidation" = {},
- *    "FileRequiredDescription" = {},
+ *    "FileDescriptionRequired" = {},
  *   },
  * )
  */

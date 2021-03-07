@@ -6,9 +6,9 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Provides a validator for the 'FileRequiredDescription' constraint.
+ * Provides a validator for the 'FileDescriptionRequired' constraint.
  */
-class FileRequiredDescriptionValidator extends ConstraintValidator {
+class FileDescriptionRequiredValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}

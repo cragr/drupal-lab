@@ -594,12 +594,12 @@ class FileWidget extends WidgetBase {
   public function flagErrors(FieldItemListInterface $items, ConstraintViolationListInterface $violations, array $form, FormStateInterface $form_state) {
     $clicked_button = end($form_state->getTriggeringElement()['#parents']);
 
-    // Don't account potential 'FileRequiredDescription' constraint violations
+    // Don't account potential 'FileDescriptionRequired' constraint violations
     // when the form is posted via 'Upload' button and the file description is
     // enforced in field settings.
-    // @see \Drupal\file\Plugin\Validation\Constraint\FileRequiredDescription
+    // @see \Drupal\file\Plugin\Validation\Constraint\FileDescriptionRequired
     if ($clicked_button === 'upload_button' && $this->getFieldSetting('description_field_required')) {
-      $required_description_definition = $this->getConstraintManager()->getDefinition('FileRequiredDescription');
+      $required_description_definition = $this->getConstraintManager()->getDefinition('FileDescriptionRequired');
       /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
       foreach ($violations as $offset => $violation) {
         // Constraint plugins are Symfony classes so they don't implement the

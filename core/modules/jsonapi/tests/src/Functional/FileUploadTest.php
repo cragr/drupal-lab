@@ -263,8 +263,8 @@ class FileUploadTest extends ResourceTestBase {
       ],
     ], EntityTest::load(2)->get('field_rest_file_test')->getValue());
 
-    // Test the 'FileRequiredDescription' constraint.
-    // @see \Drupal\file\Plugin\Validation\Constraint\FileRequiredDescription
+    // Test the 'FileDescriptionRequired' constraint.
+    // @see \Drupal\file\Plugin\Validation\Constraint\FileDescriptionRequired
     $this->field->setSetting('description_field_required', TRUE)->save();
     $post_document = $this->getPostDocument();
     $post_document['data']['relationships']['field_rest_file_test']['data']['meta']['description'] = '';
