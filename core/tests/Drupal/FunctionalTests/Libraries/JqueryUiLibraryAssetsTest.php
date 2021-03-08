@@ -64,7 +64,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       'jquery.ui.dialog',
       'jquery.ui.menu',
       'jquery.ui.mouse',
-      'jquery.ui.position',
       'jquery.ui.resizable',
       'jquery.ui.widget',
     ];
@@ -603,31 +602,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widgets/mouse-min.js',
         ],
       ],
-      'jquery.ui.position' => [
-        'library' => 'jquery.ui.position',
-        'expected_css' => [
-          'core/assets/vendor/jquery.ui/themes/base/core.css',
-          'core/assets/vendor/jquery.ui/themes/base/theme.css',
-        ],
-        'expected_js' => [
-          'core/assets/vendor/jquery.ui/ui/data-min.js',
-          'core/assets/vendor/jquery.ui/ui/disable-selection-min.js',
-          'core/assets/vendor/jquery.ui/ui/form-min.js',
-          'core/assets/vendor/jquery.ui/ui/labels-min.js',
-          'core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js',
-          'core/assets/vendor/jquery.ui/ui/scroll-parent-min.js',
-          'core/assets/vendor/jquery.ui/ui/unique-id-min.js',
-          'core/assets/vendor/jquery.ui/ui/version-min.js',
-          'core/assets/vendor/jquery.ui/ui/escape-selector-min.js',
-          'core/assets/vendor/jquery.ui/ui/focusable-min.js',
-          'core/assets/vendor/jquery.ui/ui/ie-min.js',
-          'core/assets/vendor/jquery.ui/ui/keycode-min.js',
-          'core/assets/vendor/jquery.ui/ui/plugin-min.js',
-          'core/assets/vendor/jquery.ui/ui/safe-active-element-min.js',
-          'core/assets/vendor/jquery.ui/ui/safe-blur-min.js',
-          'core/assets/vendor/jquery.ui/ui/position-min.js',
-        ],
-      ],
       'jquery.ui.resizable' => [
         'library' => 'jquery.ui.resizable',
         'expected_css' => [
@@ -752,8 +726,8 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js',
         ],
       ],
-      'jquery.ui.widget|jquery.ui.resizable|jquery.ui.position|jquery.ui.mouse|jquery.ui.menu|jquery.ui.dialog|jquery.ui.button|jquery.ui.autocomplete|jquery.ui|drupal.dialog|drupal.autocomplete' => [
-        'library' => 'jquery.ui.widget|jquery.ui.resizable|jquery.ui.position|jquery.ui.mouse|jquery.ui.menu|jquery.ui.dialog|jquery.ui.button|jquery.ui.autocomplete|jquery.ui|drupal.dialog|drupal.autocomplete',
+      'jquery.ui.widget|jquery.ui.resizable|jquery.ui.mouse|jquery.ui.menu|jquery.ui.dialog|jquery.ui.button|jquery.ui.autocomplete|jquery.ui|drupal.dialog|drupal.autocomplete' => [
+        'library' => 'jquery.ui.widget|jquery.ui.resizable|jquery.ui.mouse|jquery.ui.menu|jquery.ui.dialog|jquery.ui.button|jquery.ui.autocomplete|jquery.ui|drupal.dialog|drupal.autocomplete',
         'expected_css' => [
           'core/assets/vendor/jquery.ui/themes/base/core.css',
           'core/assets/vendor/jquery.ui/themes/base/resizable.css',

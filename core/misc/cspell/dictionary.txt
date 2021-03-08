@@ -411,6 +411,7 @@ deserialization
 deserializes
 destid
 destructable
+destructure
 destructured
 desynchronized
 deutsch
@@ -1357,10 +1358,12 @@ revisionid
 revisioning
 revlog
 revpub
+rhorizontal
 ribisi
 ritchie
 robloach
 robo
+roffset
 rolename
 roly
 routable
@@ -1368,12 +1371,15 @@ routeable
 routename
 rowspans
 rowtest
+rpercent
 rpos
+rposition
 rrggbb
 rsyslog
 rtsp
 ruleset
 rulesets
+rvertical
 rxpq
 répét
 répété
