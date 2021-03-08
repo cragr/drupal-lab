@@ -104,18 +104,18 @@ class TourViewBuilder extends EntityViewBuilder {
 
         if ($output) {
           $items[] = [
-            'id' => $tip->id(),
-            'selector' => $selector,
-            'location' => $location,
-            'module' => $tourEntity->getModule(),
-            'type' => $tip->getPluginId(),
-            'counter' => t('@tour_item of @total', [
-              '@tour_item' => $index + 1,
-              '@total' => $totalTips,
-            ]),
-            'classes' => implode(' ', $classes),
-            'joyride_content_container_name' => $output['joyride_content_container_name'] ?? NULL,
-          ] + $output;
+              'id' => $tip->id(),
+              'selector' => $selector,
+              'location' => $location,
+              'module' => $tourEntity->getModule(),
+              'type' => $tip->getPluginId(),
+              'counter' => t('@tour_item of @total', [
+                '@tour_item' => $index + 1,
+                '@total' => $totalTips,
+              ]),
+              'classes' => implode(' ', $classes),
+              'joyride_content_container_name' => $output['joyride_content_container_name'] ?? NULL,
+            ] + $output;
         }
       }
     }

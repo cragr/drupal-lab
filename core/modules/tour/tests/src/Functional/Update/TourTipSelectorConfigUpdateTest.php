@@ -10,7 +10,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group Update
  * @group legacy
  *
-
  * @see tour_update_9200()
  */
 class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
@@ -60,7 +59,6 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
     $this->assertFalse(isset($tips['location-test-right']['position']));
     $this->assertEquals('left', $tips['location-test-left']['location']);
     $this->assertFalse(isset($tips['location-test-left']['position']));
-
 
     $this->runUpdates();
 
