@@ -186,7 +186,7 @@
                 //   theme is removed from core. This only exists to provide Joyride
                 //   backwards compatibility.
                 joyride_content_container_name:
-                step.joyride_content_container_name,
+                  step.joyride_content_container_name,
                 index,
               };
 
