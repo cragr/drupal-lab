@@ -2,7 +2,6 @@
 
 namespace Drupal\content_translation;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityChangedInterface;
