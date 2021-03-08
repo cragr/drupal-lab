@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Implements hook_entity_base_field_info_alter().
@@ -15,4 +16,18 @@ function unique_field_constraint_test_entity_base_field_info_alter(&$fields, Ent
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields['name']->addConstraint('UniqueField');
   }
+  if ($entity_type->id() === 'entity_test') {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+    $fields['name']->addConstraint('UniqueField');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for entity type "entity_test".
+ */
+function unique_field_constraint_test_entity_test_access(EntityTest $entity, $operation, $account) {
+  if ($operation == "view") {
+    return AccessResult::forbidden();
+  }
+  return AccessResult::neutral();
 }
