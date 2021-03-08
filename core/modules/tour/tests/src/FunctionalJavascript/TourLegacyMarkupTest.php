@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\tour\FunctionalJavascript;
 
-use Drupal\Core\Config\FileStorage;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
