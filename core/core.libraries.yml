@@ -114,7 +114,6 @@ drupal.autocomplete:
     assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
@@ -136,6 +135,8 @@ drupal.autocomplete:
     - core/drupalSettings
     - core/drupal.ajax
     - core/tabbable.jquery.shim
+    - core/jquery.ui.position.popper.adapter
+
 
 drupal.array.find:
   version: VERSION
@@ -221,7 +222,6 @@ drupal.dialog:
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
@@ -245,6 +245,7 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
+    - core/jquery.ui.position.popper.adapter
 
 drupal.dialog.ajax:
   version: VERSION
@@ -596,7 +597,6 @@ jquery.ui.dialog:
     assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
@@ -616,6 +616,7 @@ jquery.ui.dialog:
   dependencies:
     - core/jquery
     - core/tabbable.jquery.shim
+    - core/jquery.ui.position.popper.adapter
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
@@ -653,13 +654,19 @@ jquery.ui.mouse:
     - core/jquery.ui.widget
   deprecated: *jquery_ui_unused_deprecated
 
+jquery.ui.position.popper.adapter:
+  version: VERSION
+  js:
+    misc/jqueryui.position.popper.adapter.js: {}
+  dependencies:
+    - core/popperjs
+    - core/jquery.ui
+
 jquery.ui.position:
   version: *jquery_ui_version
   license: *jquery_ui_license
-  js:
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
   dependencies:
-    - core/jquery.ui
+    - core/jquery.ui.position.popper.adapter
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.resizable:

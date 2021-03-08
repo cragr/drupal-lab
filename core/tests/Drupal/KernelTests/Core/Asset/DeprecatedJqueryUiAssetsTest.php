@@ -27,7 +27,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
       'jquery.ui.draggable' => 'af0f2bdc8aa4ade1e3de8042f31a9312',
       'jquery.ui.menu' => '7d0c4d57f43d2f881d2cd5e5b79effbb',
       'jquery.ui.mouse' => '626bb203807fa2cdc62510412685df4a',
-      'jquery.ui.position' => '6d1759c7d3eb94accbed78416487469b',
+      'jquery.ui.position' => '63a2517aac8b454eaa7a32bc4a366b4a',
       'jquery.ui.resizable' => 'a2448fa87071a17a9756f39c9becb70d',
       'jquery.ui.widget' => 'eacd675de09572383b58e52309ba2245',
     ];
@@ -41,7 +41,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
 
       // Confirm that the libraries extending jQuery UI functionality depend on
       // core/jquery.ui directly or via a dependency on core/jquery.ui.widget.
-      if ($library !== 'jquery.ui' && $library !== 'jquery.ui.dialog') {
+      if (!in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.position'])) {
         $has_main_or_widget = (in_array('core/jquery.ui', $library_definition['dependencies']) || in_array('core/jquery.ui.widget', $library_definition['dependencies']));
         $this->assertTrue($has_main_or_widget, "$library must depend on core/jquery.ui or core/jquery.ui.widget");
       }
