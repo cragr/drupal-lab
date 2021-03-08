@@ -35,16 +35,6 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
   public function setUp(): void {
     parent::setUp();
 
-    // Manually install a tour using legacy properties. If this config is
-    // located in config/install there will be deprecation errors in
-    // DefaultConfigTest will re
-    $config_path = drupal_get_path('module', 'tour') . '/tests/fixtures/legacy_config';
-    $source = new FileStorage($config_path);
-    $config_storage = \Drupal::service('config.storage');
-    $this->assertTrue($source->exists('tour.tour.tour-test-legacy'));
-    $config_storage->write('tour.tour.tour-test-legacy', $source->read('tour.tour.tour-test-legacy'));
-    drupal_flush_all_caches();
-
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
       'access tour',
@@ -81,8 +71,6 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $this->drupalGet($path);
 
-    // @todo, this button is not currently available, because the tour added in
-    //   setUp() is not loading. This means the test is failing at the moment.
     $assert_session->waitForElementVisible('css', '#toolbar-tab-tour button');
     $page->find('css', '#toolbar-tab-tour button')->press();
     $this->assertToolTipMarkup(0, 'top');
