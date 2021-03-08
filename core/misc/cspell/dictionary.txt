@@ -572,6 +572,7 @@ fieldblock
 fieldbody
 fieldgroups
 fielditem
+fieldlayout
 fieldlinks
 fieldnames
 fieldsets
@@ -648,6 +649,7 @@ getfile
 gethttpclient
 getlist
 getmachine
+getoutput
 getview
 gids
 gifs

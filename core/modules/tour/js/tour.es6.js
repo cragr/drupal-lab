@@ -3,7 +3,7 @@
  * Attaches behaviors for the Tour module's toolbar tab.
  */
 
-(function ($, Backbone, Drupal, document) {
+(($, Backbone, Drupal, settings, document, Shepherd) => {
   const queryString = decodeURI(window.location.search);
 
   /**
@@ -29,6 +29,7 @@
         .once('tour')
         .each(() => {
           const model = new Drupal.tour.models.StateModel();
+          // eslint-disable-next-line no-new
           new Drupal.tour.views.ToggleTourView({
             el: $(context).find('#toolbar-tab-tour'),
             model,
@@ -36,14 +37,16 @@
 
           model
             // Allow other scripts to respond to tour events.
-            .on('change:isActive', (model, isActive) => {
+            .on('change:isActive', (tourModel, isActive) => {
               $(document).trigger(
                 isActive ? 'drupalTourStarted' : 'drupalTourStopped',
               );
-            })
-            // Initialization: check whether a tour is available on the current
-            // page.
-            .set('tour', $(context).find('ol#tour'));
+            });
+          // Initialization: check whether a tour is available on the current
+          // page.
+          if (settings.tour) {
+            model.set('tour', settings.tour);
+          }
 
           // Start the tour immediately if toggled via query string.
           if (/tour=?/i.test(queryString)) {
@@ -138,7 +141,7 @@
         this.$el
           .find('button')
           .toggleClass('is-active', isActive)
-          .prop('aria-pressed', isActive);
+          .attr('aria-pressed', isActive);
         return this;
       },
 
@@ -147,27 +150,65 @@
        */
       toggleTour() {
         if (this.model.get('isActive')) {
-          const $tour = this._getTour();
-          this._removeIrrelevantTourItems($tour, this._getDocument());
+          this._removeIrrelevantTourItems(this._getTour());
+          const tourItems = this.model.get('tour');
           const that = this;
-          const close = Drupal.t('Close');
-          if ($tour.find('li').length) {
-            $tour.joyride({
-              autoStart: true,
-              postRideCallback() {
-                that.model.set('isActive', false);
-              },
-              // HTML segments for tip layout.
-              template: {
-                link: `<a href="#close" class="joyride-close-tip" aria-label="${close}">&times;</a>`,
-                button:
-                  '<a href="#" class="button button--primary joyride-next-tip"></a>',
-              },
+
+          if (tourItems.length) {
+            const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
+            shepherdTour.on('cancel', () => {
+              that.model.set('isActive', false);
             });
-            this.model.set({ isActive: true, activeTour: $tour });
+            shepherdTour.on('complete', () => {
+              that.model.set('isActive', false);
+            });
+
+            tourItems.forEach((step, index) => {
+              const tourItemOptions = {
+                title: step.title ? Drupal.checkPlain(step.title) : null,
+                text: () =>
+                  `<p>${step.body}</p><div class="tour-progress">${step.counter}</div>`,
+                attachTo: {
+                  element: step.selector,
+                  on: step.location ? step.location : 'bottom',
+                },
+                buttons: [
+                  {
+                    classes: 'button button--primary',
+                    text: step.cancelText ? step.cancelText : Drupal.t('Next'),
+                    action: step.cancelText
+                      ? shepherdTour.cancel
+                      : shepherdTour.next,
+                  },
+                ],
+                classes: step.classes,
+                // @todo joyride_content_container_name  can be removed when the Stable9
+                //   theme is removed from core. This only exists to provide Joyride
+                //   backwards compatibility.
+                joyride_content_container_name:
+                  step.joyride_content_container_name,
+                index,
+              };
+
+              // When Stable or Stable 9 are part of the active theme, the
+              // Drupal.tour.convertToJoyrideMarkup() function is available.
+              // This function converts Shepherd markup to Joyride markup,
+              // facilitating the use of the Shepherd library that is backwards
+              // compatible with customizations intended for Joyride.
+              if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
+                tourItemOptions.when = {
+                  show() {
+                    Drupal.tour.convertToJoyrideMarkup(shepherdTour);
+                  },
+                };
+              }
+              shepherdTour.addStep(tourItemOptions);
+            });
+            shepherdTour.start();
+            this.model.set({ isActive: true, activeTour: shepherdTour });
           }
         } else {
-          this.model.get('activeTour').joyride('destroy');
+          this.model.get('activeTour').cancel();
           this.model.set({ isActive: false, activeTour: [] });
         }
       },
@@ -187,22 +228,11 @@
       /**
        * Gets the tour.
        *
-       * @return {jQuery}
-       *   A jQuery element pointing to an `<ol>` containing tour items.
+       * @return {array}
+       *   An array of Shepherd tour item objects.
        */
       _getTour() {
         return this.model.get('tour');
-      },
-
-      /**
-       * Gets the relevant document as a jQuery element.
-       *
-       * @return {jQuery}
-       *   A jQuery element pointing to the document within which a tour would be
-       *   started given the current state.
-       */
-      _getDocument() {
-        return $(document);
       },
 
       /**
@@ -215,62 +245,45 @@
        * page element or don't have the "bar" class.</caption>
        * http://example.com/foo?tips=bar
        *
-       * @param {jQuery} $tour
-       *   A jQuery element pointing to an `<ol>` containing tour items.
-       * @param {jQuery} $document
-       *   A jQuery element pointing to the document within which the elements
-       *   should be sought.
-       *
-       * @see Drupal.tour.views.ToggleTourView#_getDocument
+       * @param {array} tourItems
+       *   An array containing tour item objects.
        */
-      _removeIrrelevantTourItems($tour, $document) {
-        let removals = false;
+      _removeIrrelevantTourItems(tourItems) {
         const tips = /tips=([^&]+)/.exec(queryString);
-        $tour.find('li').each(function () {
-          const $this = $(this);
-          const itemId = $this.attr('data-id');
-          const itemClass = $this.attr('data-class');
+        const filteredTour = tourItems.filter((tourItem) => {
           // If the query parameter 'tips' is set, remove all tips that don't
           // have the matching class.
-          if (tips && !$(this).hasClass(tips[1])) {
-            removals = true;
-            $this.remove();
-            return;
+          if (tips && tourItem.class.indexOf(tips[1]) === -1) {
+            return false;
           }
-          // Remove tip from the DOM if there is no corresponding page element.
-          if (
-            (!itemId && !itemClass) ||
-            (itemId && $document.find(`#${itemId}`).length) ||
-            (itemClass && $document.find(`.${itemClass}`).length)
-          ) {
-            return;
-          }
-          removals = true;
-          $this.remove();
+
+          // If a selector is configured but there isn't a matching element,
+          // return false.
+          return !(
+            tourItem.selector && !document.querySelector(tourItem.selector)
+          );
         });
 
-        // If there were removals, we'll have to do some clean-up.
-        if (removals) {
-          const total = $tour.find('li').length;
-          if (!total) {
-            this.model.set({ tour: [] });
-          }
+        // If there tours filtered, we'll have to update model.
+        if (tourItems.length !== filteredTour.length) {
+          filteredTour.forEach((filteredTourItem, filteredTourItemId) => {
+            filteredTour[filteredTourItemId].counter = Drupal.t(
+              '!tour_item of !total',
+              {
+                '!tour_item': filteredTourItemId + 1,
+                '!total': filteredTour.length,
+              },
+            );
 
-          $tour
-            .find('li')
-            // Rebuild the progress data.
-            .each(function (index) {
-              const progress = Drupal.t('!tour_item of !total', {
-                '!tour_item': index + 1,
-                '!total': total,
-              });
-              $(this).find('.tour-progress').text(progress);
-            })
-            // Update the last item to have "End tour" as the button.
-            .eq(-1)
-            .attr('data-text', Drupal.t('End tour'));
+            if (filteredTourItemId === filteredTour.length - 1) {
+              filteredTour[filteredTourItemId].cancelText = Drupal.t(
+                'End tour',
+              );
+            }
+          });
+          this.model.set('tour', filteredTour);
         }
       },
     },
   );
-})(jQuery, Backbone, Drupal, document);
+})(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);

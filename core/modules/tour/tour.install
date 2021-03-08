@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Update functions for the tour module.
+ */
+
+/**
+ * Add convert Joyride selectors to `selector` property.
+ */
+function tour_update_9200() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('tour.tour') as $tip_config_name) {
+    $tour = $config_factory->getEditable($tip_config_name);
+    $save = FALSE;
+    $tips = $tour->get('tips');
+    foreach ($tips as &$tip) {
+      if (isset($tip['attributes']['data-class']) || isset($tip['attributes']['data-id'])) {
+        $save = TRUE;
+        $selector = isset($tip['attributes']['data-class']) ? ".{$tip['attributes']['data-class']}" : NULL;
+        $selector = isset($tip['attributes']['data-id']) ? "#{$tip['attributes']['data-id']}" : $selector;
+        $tip['selector'] = $selector;
+        unset($tip['attributes']['data-class']);
+        unset($tip['attributes']['data-id']);
+      }
+      if (isset($tip['location'])) {
+        $save = TRUE;
+        $location_swap = [
+          'top' => 'bottom',
+          'bottom' => 'top',
+          'left' => 'right',
+          'right' => 'left',
+        ];
+        $tip['position'] = $location_swap[$tip['location']];
+        unset($tip['location']);
+      }
+    }
+
+    if ($save) {
+      $tour->set('tips', $tips);
+      $tour->save();
+    }
+  }
+}
