@@ -17,6 +17,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\language\ContentLanguageSettingsInterface;
 
@@ -372,12 +373,43 @@ function content_translation_menu_links_discovered_alter(array &$links) {
  *   The access result.
  */
 function content_translation_translate_access(EntityInterface $entity) {
-  $account = \Drupal::currentUser();
   $condition = $entity instanceof ContentEntityInterface && $entity->access('view') &&
     !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
-    ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations') ||
-    ($account->hasPermission('translate editable entities') && $entity->access('update')));
+    ($entity->access('create translation') || $entity->access('update translation') || $entity->access('delete translation'));
   return AccessResult::allowedIf($condition)->cachePerPermissions()->addCacheableDependency($entity);
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function content_translation_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $operation_to_permission_map = [
+    'create translation' => 'create content translations',
+    'update translation' => 'update content translations',
+    'delete translation' => 'delete content translations',
+  ];
+
+  if (!in_array($operation, array_keys($operation_to_permission_map), TRUE)) {
+    return AccessResult::neutral();
+  }
+
+  $entity_type = $entity->getEntityType();
+  $entity_type_id = $entity->getEntityTypeId();
+
+  $has_entity_type_access = $account->hasPermission('translate any entity');
+  if (!$has_entity_type_access) {
+    $entity_type_access_permission = $entity_type->getPermissionGranularity() == 'bundle'
+      ? "translate {$entity->bundle()} $entity_type_id"
+      : "translate $entity_type_id";
+    $has_entity_type_access = $account->hasPermission($entity_type_access_permission);
+  }
+
+  $access = AccessResult::allowedIf($has_entity_type_access && $account->hasPermission($operation_to_permission_map[$operation]))->cachePerPermissions();
+  if (!$access->isAllowed()) {
+    return AccessResult::allowedIfHasPermission($account, 'translate editable entities')->andIf($entity->access('update', $account, TRUE));
+  }
+
+  return $access;
 }
 
 /**
