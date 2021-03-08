@@ -20,7 +20,6 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
-      __DIR__ . '/../../../../../tour/tests/fixtures/addTourLegacyConfig.php',
     ];
   }
 
