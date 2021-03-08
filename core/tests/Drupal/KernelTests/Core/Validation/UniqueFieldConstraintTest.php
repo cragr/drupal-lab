@@ -121,16 +121,16 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @covers ::validate
    */
-  public function testEntityWithViolationDespiteAccess() {
+  public function testViolationDespiteNoAccess() {
     $this->installEntitySchema('entity_test');
 
     $value = $this->randomString();
 
-    EntityTestStringId::create([
+    EntityTest::create([
       'name' => $value,
     ])->save();
 
-    $entity = EntityTestStringId::create([
+    $entity = EntityTest::create([
       'name' => $value,
     ]);
     /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
