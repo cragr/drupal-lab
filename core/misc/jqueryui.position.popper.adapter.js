@@ -110,26 +110,29 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       top: 'bottom',
       bottom: 'top'
     };
-    var placement = null;
+    var placement;
     var primaryOffset = 0;
     var secondaryOffset = 0;
     var hAxis = false;
 
-    if (referenceItemSettings.horizontal !== 'center') {
+    if (referenceItemSettings.horizontal === 'center' && referenceItemSettings.vertical === 'center') {
+      placement = 'top';
+      secondaryOffset -= Math.ceil($(reference).outerHeight() / 2);
+
+      if (positionedItemSettings.vertical !== 'bottom') {
+        secondaryOffset -= positionedItemSettings.vertical === 'center' ? Math.ceil(itemBeingPositioned.outerHeight() / 2) : itemBeingPositioned.outerHeight();
+      }
+
+      if (positionedItemSettings.horizontal !== 'center') {
+        var width = Math.ceil(itemBeingPositioned.outerWidth() / 2);
+        primaryOffset += positionedItemSettings.horizontal === 'left' ? width : -width;
+      }
+    } else if (referenceItemSettings.horizontal !== 'center') {
       hAxis = true;
       placement = referenceItemSettings.horizontal;
 
-      if (referenceItemSettings.vertical !== 'center') {
+      if (referenceItemSettings.vertical === 'top' || referenceItemSettings.vertical === 'bottom') {
         placement += referenceItemSettings.vertical === 'top' ? '-start' : '-end';
-      }
-
-      if (referenceItemSettings.horizontal !== opposites[positionedItemSettings.horizontal]) {
-        var width = itemBeingPositioned.width() / 2;
-        secondaryOffset += referenceItemSettings.horizontal !== 'left' ? -width : -width;
-
-        if (positionedItemSettings.horizontal !== 'center' && positionedItemSettings) {
-          secondaryOffset *= 2;
-        }
       }
 
       if (referenceItemSettings.vertical !== positionedItemSettings.vertical) {
@@ -146,10 +149,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         }
       }
 
-      primaryOffset += referenceItemSettings.verticalOffset;
-      primaryOffset += positionedItemSettings.verticalOffset;
-      secondaryOffset += referenceItemSettings.horizontal === 'right' ? referenceItemSettings.horizontalOffset : -referenceItemSettings.horizontalOffset;
-      secondaryOffset += referenceItemSettings.horizontal === 'right' ? positionedItemSettings.horizontalOffset : -positionedItemSettings.horizontalOffset;
+      if (referenceItemSettings.horizontal !== opposites[positionedItemSettings.horizontal]) {
+        secondaryOffset -= positionedItemSettings.horizontal === 'center' ? itemBeingPositioned.width() / 2 : itemBeingPositioned.width();
+      }
     } else if (referenceItemSettings.vertical !== 'center') {
       placement = referenceItemSettings.vertical;
 
@@ -160,30 +162,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
 
       if (referenceItemSettings.vertical !== opposites[positionedItemSettings.vertical]) {
-        var _height = itemBeingPositioned.outerHeight() / 2;
-
-        secondaryOffset += -_height;
-
-        if (positionedItemSettings.vertical !== 'center') {
-          secondaryOffset *= 2;
-        }
-      }
-    } else {
-      placement = 'top';
-      secondaryOffset -= Math.ceil($(reference).outerHeight() / 2);
-
-      if (positionedItemSettings.vertical !== 'bottom') {
-        secondaryOffset -= positionedItemSettings.vertical === 'center' ? Math.ceil(itemBeingPositioned.outerHeight() / 2) : itemBeingPositioned.outerHeight();
-      }
-
-      if (positionedItemSettings.horizontal !== 'center') {
-        var _width2 = Math.ceil(itemBeingPositioned.outerWidth() / 2);
-
-        primaryOffset += positionedItemSettings.horizontal === 'left' ? _width2 : -_width2;
+        secondaryOffset -= positionedItemSettings.vertical === 'center' ? itemBeingPositioned.outerHeight() / 2 : itemBeingPositioned.outerHeight();
       }
     }
 
-    if (!hAxis) {
+    if (hAxis) {
+      primaryOffset += referenceItemSettings.verticalOffset;
+      primaryOffset += positionedItemSettings.verticalOffset;
+      secondaryOffset += referenceItemSettings.horizontal === 'right' ? referenceItemSettings.horizontalOffset : -referenceItemSettings.horizontalOffset;
+      secondaryOffset += referenceItemSettings.horizontal === 'right' ? positionedItemSettings.horizontalOffset : -positionedItemSettings.horizontalOffset;
+    } else {
       secondaryOffset += placement === 'top' ? -referenceItemSettings.verticalOffset : referenceItemSettings.verticalOffset;
       secondaryOffset += placement === 'top' ? -positionedItemSettings.verticalOffset : positionedItemSettings.verticalOffset;
       primaryOffset += referenceItemSettings.horizontalOffset;

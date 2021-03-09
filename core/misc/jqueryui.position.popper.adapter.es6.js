@@ -233,43 +233,50 @@
       top: 'bottom',
       bottom: 'top',
     };
-    let placement = null;
+    let placement;
     let primaryOffset = 0;
     let secondaryOffset = 0;
     let hAxis = false;
-    if (referenceItemSettings.horizontal !== 'center') {
+    if (
+      referenceItemSettings.horizontal === 'center' &&
+      referenceItemSettings.vertical === 'center'
+    ) {
+      placement = 'top';
+
+      // Additional vertical offsets.
+      secondaryOffset -= Math.ceil($(reference).outerHeight() / 2);
+      if (positionedItemSettings.vertical !== 'bottom') {
+        secondaryOffset -=
+          positionedItemSettings.vertical === 'center'
+            ? Math.ceil(itemBeingPositioned.outerHeight() / 2)
+            : itemBeingPositioned.outerHeight();
+      }
+
+      // Additional horizontal offsets.
+      if (positionedItemSettings.horizontal !== 'center') {
+        const width = Math.ceil(itemBeingPositioned.outerWidth() / 2);
+        primaryOffset +=
+          positionedItemSettings.horizontal === 'left' ? width : -width;
+      }
+    } else if (referenceItemSettings.horizontal !== 'center') {
       // This condition is when the reference position is:
       // `{x: any, y: NOT-center}`
+
+      // Indicates the the popper strategy uses the horizontal axis.
       hAxis = true;
 
-      // If the reference horizontal placement is right or left, the popper
-      // position should be 'right' or 'left'.
+      // Within this condition, the reference horizontal placement is right or
+      // left. That value can become the Popper positioning strategy.
       placement = referenceItemSettings.horizontal;
 
       // If the reference vertical placement is top or bottom, the popper
-      // position needs to have a '-start' or '-end' appended to it.
-      if (referenceItemSettings.vertical !== 'center') {
+      // positioning strategy needs  a '-start' or '-end' appended to it.
+      if (
+        referenceItemSettings.vertical === 'top' ||
+        referenceItemSettings.vertical === 'bottom'
+      ) {
         placement +=
           referenceItemSettings.vertical === 'top' ? '-start' : '-end';
-      }
-
-      // If the reference and tip positions are not opposites of each other,
-      // horizontal offsets need to be set.
-      if (
-        referenceItemSettings.horizontal !==
-        opposites[positionedItemSettings.horizontal]
-      ) {
-        const width = itemBeingPositioned.width() / 2;
-        // secondaryOffset = -width;
-        secondaryOffset +=
-          referenceItemSettings.horizontal !== 'left' ? -width : -width;
-        // The default is already centered.
-        if (
-          positionedItemSettings.horizontal !== 'center' &&
-          positionedItemSettings
-        ) {
-          secondaryOffset *= 2;
-        }
       }
 
       if (referenceItemSettings.vertical !== positionedItemSettings.vertical) {
@@ -299,16 +306,19 @@
         }
       }
 
-      primaryOffset += referenceItemSettings.verticalOffset;
-      primaryOffset += positionedItemSettings.verticalOffset;
-      secondaryOffset +=
-        referenceItemSettings.horizontal === 'right'
-          ? referenceItemSettings.horizontalOffset
-          : -referenceItemSettings.horizontalOffset;
-      secondaryOffset +=
-        referenceItemSettings.horizontal === 'right'
-          ? positionedItemSettings.horizontalOffset
-          : -positionedItemSettings.horizontalOffset;
+      // If the reference and tip positions are not opposites of each other,
+      // horizontal offsets need to be set.
+      if (
+        referenceItemSettings.horizontal !==
+        opposites[positionedItemSettings.horizontal]
+      ) {
+        // When the positioned item axis is centered, it is offset half of its
+        // width, otherwise the offset is its full width.
+        secondaryOffset -=
+          positionedItemSettings.horizontal === 'center'
+            ? itemBeingPositioned.width() / 2
+            : itemBeingPositioned.width();
+      }
     } else if (referenceItemSettings.vertical !== 'center') {
       // This condition is when the reference position is:
       // `{x: NOT-center, y: center}`
@@ -316,6 +326,10 @@
       // If the reference horizontal placement is center, and the vertical
       // is not, then the popper position will be 'top' or 'bottom';
       placement = referenceItemSettings.vertical;
+
+      // If the positioned item axis is 'left' or 'right', and the reference
+      // item position is not the opposite value, additional horizontal offset
+      // is needed.
       if (
         referenceItemSettings.horizontal !==
           opposites[positionedItemSettings.horizontal] &&
@@ -326,37 +340,33 @@
           positionedItemSettings.horizontal !== 'left' ? -width : width;
       }
 
+      // If the reference item vertical position is not opposite value of the
+      // positioned item axis, additional vertical offset is needed.
       if (
         referenceItemSettings.vertical !==
         opposites[positionedItemSettings.vertical]
       ) {
-        const height = itemBeingPositioned.outerHeight() / 2;
-        secondaryOffset += -height;
-        if (positionedItemSettings.vertical !== 'center') {
-          secondaryOffset *= 2;
-        }
-      }
-    } else {
-      // This condition is when the reference position is:
-      // `{x: center, y: center}`
-      placement = 'top';
-      secondaryOffset -= Math.ceil($(reference).outerHeight() / 2);
-      if (positionedItemSettings.vertical !== 'bottom') {
         secondaryOffset -=
           positionedItemSettings.vertical === 'center'
-            ? Math.ceil(itemBeingPositioned.outerHeight() / 2)
+            ? itemBeingPositioned.outerHeight() / 2
             : itemBeingPositioned.outerHeight();
-      }
-      if (positionedItemSettings.horizontal !== 'center') {
-        const width = Math.ceil(itemBeingPositioned.outerWidth() / 2);
-        primaryOffset +=
-          positionedItemSettings.horizontal === 'left' ? width : -width;
       }
     }
 
-    // Poppers not positioned on their horizontal axis have primary and
-    // secondary offsets swapped.
-    if (!hAxis) {
+    // Include additional offsets configured via options. These are calculated
+    // differently if the Popper position strategy is horizontal axis based.
+    if (hAxis) {
+      primaryOffset += referenceItemSettings.verticalOffset;
+      primaryOffset += positionedItemSettings.verticalOffset;
+      secondaryOffset +=
+        referenceItemSettings.horizontal === 'right'
+          ? referenceItemSettings.horizontalOffset
+          : -referenceItemSettings.horizontalOffset;
+      secondaryOffset +=
+        referenceItemSettings.horizontal === 'right'
+          ? positionedItemSettings.horizontalOffset
+          : -positionedItemSettings.horizontalOffset;
+    } else {
       secondaryOffset +=
         placement === 'top'
           ? -referenceItemSettings.verticalOffset
@@ -373,6 +383,9 @@
       placement = 'auto';
     }
 
+    // If the options explicitly use one of the available 'none' collision
+    // options, disable Popper's `flip` functionality, which automatically
+    // repositions a Popper to keep it visible.
     if (
       options.hasOwnProperty('collision') &&
       options.collision.indexOf('none') !== -1
