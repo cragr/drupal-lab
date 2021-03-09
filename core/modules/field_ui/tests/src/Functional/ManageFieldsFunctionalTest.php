@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
@@ -341,6 +342,47 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+
+    // Ensure that cardinality validation is access insensitive.
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('article'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
+
+    // Create a node that is private, and not owned by the current user, which the current user therefore does
+    // not have 'view' access to.
+    $this->drupalCreateNode([
+      'body' => [
+        ['value' => 'Body 1'],
+        ['value' => 'Body 2'],
+        ['value' => 'Body 3'],
+        ['value' => 'Body 4'],
+        ],
+      'private' => TRUE,
+      'uid' => 0,
+    ]);
+
+    // Assert that you can't set the cardinality to a lower number then the
+    // highest delta of this field (including inaccessible entities) but can
+    // set it to the same.
+    $this->drupalGet($field_edit_path);
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 2,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 3]));
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 3,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 4]));
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 4,
     ];
     $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
   }
