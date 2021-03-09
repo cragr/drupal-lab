@@ -2184,16 +2184,24 @@ function install_check_requirements($install_state) {
       }
       // If the $file is not writable, throw an error.
       if (!$writable) {
-        $requirements["$file file writeable"] = [
-          'title' => $default_file_info['title'],
-          'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
+        if ($install_state['settings_verified'] && $install_state['config_verified']) {
+          $requirements["$file file"] = [
+            'title' => $default_file_info['title'],
+            'value' => t('The @file does not need a rewrite.', ['@file' => $default_file_info['title']]),
+          ];
+        }
+        else {
+          $requirements["$file file writeable"] = [
+            'title' => $default_file_info['title'],
+            'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
+            'severity' => REQUIREMENT_ERROR,
+            'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
               ':handbook_url' => 'https://www.drupal.org/server-permissions',
             ]),
-        ];
+          ];
+        }
       }
       else {
         $requirements["$file file"] = [
