@@ -416,7 +416,16 @@ function content_translation_entity_access(EntityInterface $entity, $operation, 
 
   $access = AccessResult::allowedIf($has_entity_type_access && $account->hasPermission($operation_to_permission_map[$operation]))->cachePerPermissions();
   if (!$access->isAllowed()) {
-    return AccessResult::allowedIfHasPermission($account, 'translate editable entities')->andIf($entity->access('update', $account, TRUE));
+    $update_access = $entity->access('update', $account, TRUE);
+
+    // Check for allowed update access. If not, we risk returning Forbidden
+    // rather than Neutral simply because our fallback checking for update
+    // access resulted in a Forbidden (to update) result.
+    if ($update_access->isAllowed()) {
+      $access = AccessResult::allowedIfHasPermission($account, 'translate editable entities');
+    }
+
+    $access->addCacheableDependency($update_access);
   }
 
   return $access;
