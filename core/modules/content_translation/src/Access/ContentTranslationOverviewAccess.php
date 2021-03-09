@@ -47,6 +47,17 @@ class ContentTranslationOverviewAccess implements AccessInterface {
     /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
     if ($entity && $entity->isTranslatable()) {
+      // @todo BC layer, to be properly marked for removal in final patch.
+      if ($account->hasPermission('translate any entity')) {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+      $entity_type_access_permission = $entity->getEntityType()->getPermissionGranularity() == 'bundle'
+        ? "translate {$entity->bundle()} $entity_type_id"
+        : "translate $entity_type_id";
+      if ($account->hasPermission($entity_type_access_permission)) {
+        return AccessResult::allowed()->cachePerPermissions();
+      }
+
       // Get entity access callback.
       $definition = $this->entityTypeManager->getDefinition($entity_type_id);
       $translation = $definition->get('translation');
