@@ -2209,11 +2209,11 @@ function install_check_requirements($install_state) {
             'title' => $default_file_info['title'],
             'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
             'severity' => REQUIREMENT_ERROR,
-            'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.'
-              . ' ' . t('Items needed are: @items', [implode(', ', $items)]), [
+            'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics. Items needed are: @items', [
               '@drupal' => drupal_install_profile_distribution_name(),
               '%file' => $file,
               ':handbook_url' => 'https://www.drupal.org/server-permissions',
+              '@items' => implode(', ', $items),
             ]),
           ];
         }
