@@ -65,10 +65,7 @@
       positionCss[referenceItemSettings.vertical] = `${verticalPosition}px`;
     }
 
-    return {
-      positionCss,
-      topComp,
-    };
+    return positionCss;
   };
 
   /**
@@ -154,10 +151,7 @@
       positionCss.right = 'auto';
     }
 
-    return {
-      positionCss,
-      leftComp,
-    };
+    return positionCss;
   };
 
   /**
@@ -175,31 +169,22 @@
     positionedItemSettings,
     referenceItemSettings,
   ) => {
-    // CSS styles that will be passed to `$(itemBeingPositioned).css()`.
-    let positionCss = {
-      position: 'fixed',
-    };
-
-    // These are compensations that will be added to offsets based on how an
-    // element is positioned.
-    let leftComp = 0;
-    let topComp = 0;
-
-    ({ positionCss, topComp } = calculateVerticalFixedPositioning(
+    let positionCss = calculateVerticalFixedPositioning(
+      itemBeingPositioned,
+      positionedItemSettings,
+      referenceItemSettings,
+      {
+        position: 'fixed',
+      },
+      0,
+    );
+    positionCss = calculateHorizontalFixedPositioning(
       itemBeingPositioned,
       positionedItemSettings,
       referenceItemSettings,
       positionCss,
-      topComp,
-    ));
-
-    ({ positionCss, leftComp } = calculateHorizontalFixedPositioning(
-      itemBeingPositioned,
-      positionedItemSettings,
-      referenceItemSettings,
-      positionCss,
-      leftComp,
-    ));
+      0,
+    );
 
     itemBeingPositioned.css(positionCss);
   };
