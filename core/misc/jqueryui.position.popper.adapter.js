@@ -31,16 +31,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     if (positionedItemSettings.vertical === 'center') {
       topComp = -itemBeingPositioned.outerHeight() / 2;
-    } else if (positionedItemSettings.vertical !== referenceItemSettings.vertical && !(referenceItemSettings.vertical === 'center' && positionedItemSettings.vertical === 'top')) {
+    } else if (positionedItemSettings.vertical === 'top' && referenceItemSettings.vertical === 'bottom' || positionedItemSettings.vertical === 'bottom' && referenceItemSettings.vertical !== 'bottom') {
       topComp = -itemBeingPositioned.outerHeight();
     }
 
+    var totalVerticalOffset = referenceItemSettings.verticalOffset + positionedItemSettings.verticalOffset;
+
     if (referenceItemSettings.vertical === 'center') {
-      var top = document.documentElement.clientHeight / 2 + topComp;
-      var offsets = parseInt(referenceItemSettings.verticalOffset, 10) + parseInt(positionedItemSettings.verticalOffset, 10);
-      positionCss.top = "".concat(top + offsets, "px");
-    } else {
-      var totalVerticalOffset = referenceItemSettings.verticalOffset + positionedItemSettings.verticalOffset;
+      var top = document.documentElement.clientHeight / 2 + topComp + totalVerticalOffset;
+      positionCss.top = "".concat(top, "px");
+    } else if (referenceItemSettings.vertical === 'top' || referenceItemSettings.vertical === 'bottom') {
       var verticalPosition = referenceItemSettings.vertical === 'bottom' ? topComp - totalVerticalOffset : topComp + totalVerticalOffset;
       positionCss[referenceItemSettings.vertical] = "".concat(verticalPosition, "px");
     }
@@ -102,11 +102,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       placement = 'top';
       secondaryOffset -= Math.ceil($(reference).outerHeight() / 2);
 
-      if (positionedItemSettings.vertical !== 'bottom') {
-        secondaryOffset -= positionedItemSettings.vertical === 'center' ? Math.ceil(itemBeingPositioned.outerHeight() / 2) : itemBeingPositioned.outerHeight();
+      if (positionedItemSettings.vertical === 'center') {
+        secondaryOffset -= Math.ceil(itemBeingPositioned.outerHeight() / 2);
       }
 
-      if (positionedItemSettings.horizontal !== 'center') {
+      if (positionedItemSettings.vertical === 'top') {
+        secondaryOffset -= itemBeingPositioned.outerHeight();
+      }
+
+      if (positionedItemSettings.horizontal === 'right' || positionedItemSettings.horizontal === 'left') {
         var width = Math.ceil(itemBeingPositioned.outerWidth() / 2);
         primaryOffset += positionedItemSettings.horizontal === 'left' ? width : -width;
       }
@@ -121,14 +125,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       if (referenceItemSettings.vertical !== positionedItemSettings.vertical) {
         var height = itemBeingPositioned.height() / 2;
 
-        if (referenceItemSettings.vertical === 'center' && positionedItemSettings !== 'center') {
+        if (referenceItemSettings.vertical === 'center') {
           primaryOffset += positionedItemSettings.vertical !== 'bottom' ? height : -height;
-        } else {
-          primaryOffset += referenceItemSettings.vertical === 'bottom' ? height : -height;
-        }
+        } else if (referenceItemSettings.vertical === 'bottom' || referenceItemSettings.vertical === 'top') {
+          primaryOffset += referenceItemSettings.vertical !== 'bottom' ? -height : height;
 
-        if (opposites[positionedItemSettings.vertical] === referenceItemSettings.vertical) {
-          primaryOffset *= 2;
+          if (opposites[positionedItemSettings.vertical] === referenceItemSettings.vertical) {
+            primaryOffset *= 2;
+          }
         }
       }
 
