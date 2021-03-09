@@ -43,6 +43,9 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     $this->entityQuery = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryInterface')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->entityQuery->expects($this->any())
+      ->method('accessCheck')
+      ->willReturn($this->entityQuery);
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
     $storage = $this->createMock(EntityStorageInterface::class);
@@ -157,6 +160,9 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
    *   The number of unique values to be set up.
    */
   protected function entityQueryExpects($count) {
+    $this->entityQuery->expects($this->any())
+      ->method('accessCheck')
+      ->will($this->returnValue($this->entityQuery));
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('condition')
       ->will($this->returnValue($this->entityQuery));
@@ -189,6 +195,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     foreach (['forums', 'test_vocab', 'test_vocab1'] as $id) {
       $query = $this->prophesize(QueryInterface::class);
       $query->willBeConstructedWith([]);
+      $query->accessCheck()->willReturn($query);
       $query->execute()->willReturn($id === 'test_vocab1' ? [] : [$id]);
       $map[] = ['test_field', $id, NULL, NULL, $query->reveal()];
     }
