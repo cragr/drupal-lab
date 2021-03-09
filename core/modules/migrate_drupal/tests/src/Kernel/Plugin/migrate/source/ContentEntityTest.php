@@ -278,6 +278,7 @@ class ContentEntityTest extends KernelTestBase {
       ->createStubMigration($this->migrationDefinition('content_entity:user', $configuration));
     $user_source = $migration->getSourcePlugin();
     $this->assertSame('users', $user_source->__toString());
+    // Confirm that the query does not return a row for the anonymous user.
     if (!$configuration['include_translations']) {
       $this->assertEquals(1, $user_source->count());
     }
