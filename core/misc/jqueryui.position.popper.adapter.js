@@ -43,10 +43,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       positionCss[referenceItemSettings.vertical] = "".concat(verticalPosition, "px");
     }
 
-    return {
-      positionCss: positionCss,
-      topComp: topComp
-    };
+    return positionCss;
   };
 
   var calculateHorizontalFixedPositioning = function calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, leftComp) {
@@ -76,28 +73,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       positionCss.right = 'auto';
     }
 
-    return {
-      positionCss: positionCss,
-      leftComp: leftComp
-    };
+    return positionCss;
   };
 
   var applyFixedPositioning = function applyFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings) {
-    var positionCss = {
+    var positionCss = calculateVerticalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, {
       position: 'fixed'
-    };
-    var leftComp = 0;
-    var topComp = 0;
-
-    var _calculateVerticalFix = calculateVerticalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, topComp);
-
-    positionCss = _calculateVerticalFix.positionCss;
-    topComp = _calculateVerticalFix.topComp;
-
-    var _calculateHorizontalF = calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, leftComp);
-
-    positionCss = _calculateHorizontalF.positionCss;
-    leftComp = _calculateHorizontalF.leftComp;
+    }, 0);
+    positionCss = calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, 0);
     itemBeingPositioned.css(positionCss);
   };
 
