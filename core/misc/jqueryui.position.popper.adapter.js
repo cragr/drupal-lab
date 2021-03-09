@@ -62,13 +62,18 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
     }
 
-    if (referenceItemSettings.horizontal === 'right') {
-      positionCss[referenceItemSettings.horizontal] = "".concat(0 - referenceItemSettings.horizontalOffset - positionedItemSettings.horizontalOffset - leftComp, "px");
-    } else if (referenceItemSettings.horizontal === 'left') {
-      positionCss[referenceItemSettings.horizontal] = "".concat(referenceItemSettings.horizontalOffset + positionedItemSettings.horizontalOffset - leftComp, "px");
-    } else if (referenceItemSettings.horizontal === 'center') {
-      var leftAmount = $(window).outerWidth() / 2 - itemBeingPositioned.outerWidth() / 2 - leftComp + referenceItemSettings.horizontalOffset + positionedItemSettings.horizontalOffset;
+    var totalHorizontalOffsets = referenceItemSettings.horizontalOffset + positionedItemSettings.horizontalOffset;
+
+    if (referenceItemSettings.horizontal === 'center') {
+      var leftAmount = $(window).outerWidth() / 2 - itemBeingPositioned.outerWidth() / 2 - leftComp + totalHorizontalOffsets;
       positionCss.left = "".concat(leftAmount, "px");
+      positionCss.right = 'auto';
+    } else if (referenceItemSettings.horizontal === 'right') {
+      positionCss.right = "".concat(0 - totalHorizontalOffsets - leftComp, "px");
+      positionCss.left = 'auto';
+    } else if (referenceItemSettings.horizontal === 'left') {
+      positionCss.left = "".concat(totalHorizontalOffsets - leftComp, "px");
+      positionCss.right = 'auto';
     }
 
     return {
