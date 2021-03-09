@@ -340,28 +340,22 @@
 
     // Include additional offsets configured via options. These are calculated
     // differently if the Popper position strategy is horizontal axis based.
+    const verticalOffsets =
+      referenceItemSettings.verticalOffset +
+      positionedItemSettings.verticalOffset;
+    const horizontalOffsets =
+      referenceItemSettings.horizontalOffset +
+      positionedItemSettings.horizontalOffset;
     if (hAxis) {
-      primaryOffset += referenceItemSettings.verticalOffset;
-      primaryOffset += positionedItemSettings.verticalOffset;
+      primaryOffset += verticalOffsets;
       secondaryOffset +=
         referenceItemSettings.horizontal === 'right'
-          ? referenceItemSettings.horizontalOffset
-          : -referenceItemSettings.horizontalOffset;
-      secondaryOffset +=
-        referenceItemSettings.horizontal === 'right'
-          ? positionedItemSettings.horizontalOffset
-          : -positionedItemSettings.horizontalOffset;
+          ? horizontalOffsets
+          : -horizontalOffsets;
     } else {
+      primaryOffset += horizontalOffsets;
       secondaryOffset +=
-        placement === 'top'
-          ? -referenceItemSettings.verticalOffset
-          : referenceItemSettings.verticalOffset;
-      secondaryOffset +=
-        placement === 'top'
-          ? -positionedItemSettings.verticalOffset
-          : positionedItemSettings.verticalOffset;
-      primaryOffset += referenceItemSettings.horizontalOffset;
-      primaryOffset += positionedItemSettings.horizontalOffset;
+        placement === 'top' ? -verticalOffsets : verticalOffsets;
     }
 
     if (!placement) {
