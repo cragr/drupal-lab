@@ -870,12 +870,11 @@ module.exports = {
            *   Default resolve after all but the final iteration, which returns
            *   a Nightwatch test completion promise.
            */
-          const checkPosition = (tip, options, attachToKey, idKey, key) =>
+          const checkPosition = (tip, options, attachToKey, idKey) =>
             new Promise((resolve) => {
               setTimeout(() => {
                 const box = tip[0].getBoundingClientRect();
                 let { x, y } = box;
-                const originalX = x;
                 // If the tip is attaching to the window, X and Y are measured
                 // based on their distance from the closest window boundary.
                 if (attachToKey === 'window') {
@@ -959,14 +958,13 @@ module.exports = {
                   });
                 });
                 // eslint-disable-next-line no-await-in-loop
-                await checkPosition(tip, options, attachToKey, idKey, key);
+                await checkPosition(tip, options, attachToKey, idKey);
               }
             }
           })();
         },
         [testScenarios],
         (result) => {
-          console.log(result);
           Object.keys(result.value).forEach((item) => {
             browser.assert.equal(
               result.value[item],

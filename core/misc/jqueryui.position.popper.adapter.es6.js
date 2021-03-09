@@ -25,38 +25,35 @@
     // Compensation that will be applied to top positioning.
     let topComp = 0;
 
+    // Calculate compensation.
     if (positionedItemSettings.vertical === 'center') {
-      // A vertically centered tip will have an offset half of its height.
+      // When the positioned item's positioning is on the center axis, the
+      // offset is half of its height.
       topComp = -itemBeingPositioned.outerHeight() / 2;
     } else if (
-      positionedItemSettings.vertical !== referenceItemSettings.vertical &&
-      !(
-        referenceItemSettings.vertical === 'center' &&
-        positionedItemSettings.vertical === 'top'
-      )
+      (positionedItemSettings.vertical === 'top' &&
+        referenceItemSettings.vertical === 'bottom') ||
+      (positionedItemSettings.vertical === 'bottom' &&
+        referenceItemSettings.vertical !== 'bottom')
     ) {
-      // The offset will be the tip's full height if:
-      // - The tip vertical positioning isn't center
-      // - The tip vertical positioning does not match the reference
-      //   vertical positioning.
-      // - If the tips vertical position isn't top when the reference
-      //   position is center.
       topComp = -itemBeingPositioned.outerHeight();
     }
 
-    if (referenceItemSettings.vertical === 'center') {
-      // If vertical positioning is centered, use top offset and
-      // base it on halved client height.
-      const top = document.documentElement.clientHeight / 2 + topComp;
-      const offsets =
-        parseInt(referenceItemSettings.verticalOffset, 10) +
-        parseInt(positionedItemSettings.verticalOffset, 10);
+    const totalVerticalOffset =
+      referenceItemSettings.verticalOffset +
+      positionedItemSettings.verticalOffset;
 
-      positionCss.top = `${top + offsets}px`;
-    } else {
-      const totalVerticalOffset =
-        referenceItemSettings.verticalOffset +
-        positionedItemSettings.verticalOffset;
+    // Apply vertical positioning.
+    if (referenceItemSettings.vertical === 'center') {
+      const top =
+        document.documentElement.clientHeight / 2 +
+        topComp +
+        totalVerticalOffset;
+      positionCss.top = `${top}px`;
+    } else if (
+      referenceItemSettings.vertical === 'top' ||
+      referenceItemSettings.vertical === 'bottom'
+    ) {
       const verticalPosition =
         referenceItemSettings.vertical === 'bottom'
           ? topComp - totalVerticalOffset
@@ -201,23 +198,35 @@
     let primaryOffset = 0;
     let secondaryOffset = 0;
     let hAxis = false;
+
+    // If the reference position is centered on both axes.
     if (
       referenceItemSettings.horizontal === 'center' &&
       referenceItemSettings.vertical === 'center'
     ) {
       placement = 'top';
 
-      // Additional vertical offsets.
+      // Begin vertical offset by subtracting half the reference item's height.
       secondaryOffset -= Math.ceil($(reference).outerHeight() / 2);
-      if (positionedItemSettings.vertical !== 'bottom') {
-        secondaryOffset -=
-          positionedItemSettings.vertical === 'center'
-            ? Math.ceil(itemBeingPositioned.outerHeight() / 2)
-            : itemBeingPositioned.outerHeight();
+
+      // Items positioned on their center axis need additional offset of half
+      // their height.
+      if (positionedItemSettings.vertical === 'center') {
+        secondaryOffset -= Math.ceil(itemBeingPositioned.outerHeight() / 2);
       }
 
-      // Additional horizontal offsets.
-      if (positionedItemSettings.horizontal !== 'center') {
+      // Items positioned on their top axis need additional offset of their full
+      // height.
+      if (positionedItemSettings.vertical === 'top') {
+        secondaryOffset -= itemBeingPositioned.outerHeight();
+      }
+
+      // If the positioned item is not positioned on its center axis, additional
+      // horizontal offset must be added.
+      if (
+        positionedItemSettings.horizontal === 'right' ||
+        positionedItemSettings.horizontal === 'left'
+      ) {
         const width = Math.ceil(itemBeingPositioned.outerWidth() / 2);
         primaryOffset +=
           positionedItemSettings.horizontal === 'left' ? width : -width;
@@ -246,32 +255,30 @@
       if (referenceItemSettings.vertical !== positionedItemSettings.vertical) {
         const height = itemBeingPositioned.height() / 2;
 
-        // If the reference axis is center, and the tip position is not
-        // center.
-        if (
-          referenceItemSettings.vertical === 'center' &&
-          positionedItemSettings !== 'center'
-        ) {
+        if (referenceItemSettings.vertical === 'center') {
           primaryOffset +=
             positionedItemSettings.vertical !== 'bottom' ? height : -height;
-        } else {
-          // If the reference axis is top of bottom.
-          primaryOffset +=
-            referenceItemSettings.vertical === 'bottom' ? height : -height;
-        }
-
-        // If the tip position is the opposite direction of the reference
-        // axis, the offset is the full height of the tip.
-        if (
-          opposites[positionedItemSettings.vertical] ===
-          referenceItemSettings.vertical
+        } else if (
+          referenceItemSettings.vertical === 'bottom' ||
+          referenceItemSettings.vertical === 'top'
         ) {
-          primaryOffset *= 2;
+          primaryOffset +=
+            referenceItemSettings.vertical !== 'bottom' ? -height : height;
+
+          // If the positioned and reference element vertical settings are
+          // opposites, the vertical offset is the full height of the positioned
+          // item.
+          if (
+            opposites[positionedItemSettings.vertical] ===
+            referenceItemSettings.vertical
+          ) {
+            primaryOffset *= 2;
+          }
         }
       }
 
-      // If the reference and tip positions are not opposites of each other,
-      // horizontal offsets need to be set.
+      // If the reference and positioned item horizontal positions are not
+      // opposites of each other, additional horizontal offsets are needed.
       if (
         referenceItemSettings.horizontal !==
         opposites[positionedItemSettings.horizontal]
@@ -317,14 +324,16 @@
       }
     }
 
-    // Include additional offsets configured via options. These are calculated
-    // differently if the Popper position strategy is horizontal axis based.
+    // Consolidate offsets that were added via options.
     const verticalOffsets =
       referenceItemSettings.verticalOffset +
       positionedItemSettings.verticalOffset;
     const horizontalOffsets =
       referenceItemSettings.horizontalOffset +
       positionedItemSettings.horizontalOffset;
+
+    // Include additional offsets configured via options. These are calculated
+    // differently if the Popper position strategy is horizontal axis based.
     if (hAxis) {
       primaryOffset += verticalOffsets;
       secondaryOffset +=
@@ -361,7 +370,10 @@
       },
     });
 
+    // If the item being positioned does not have an existing Popper instance.
     if (!itemBeingPositioned[0].hasAttribute('data-drupal-popper-instance')) {
+      // If creating a new popper instance, add it to a global array keyed
+      // by a unique id. This makes it possible to update existing Poppers.
       const uniqueId = Math.random().toString(36).substring(7) + Date.now();
       Drupal.PopperInstances[uniqueId] = Popper.createPopper(
         reference,
@@ -372,8 +384,8 @@
         },
       );
     } else {
-      // If creating a new popper instance, add it to a global array keyed
-      // by a unique id. This makes it possible to update existing Poppers.
+      // Update the existing Popper instance used by the element being
+      // positioned.
       const uniqueId = itemBeingPositioned[0].getAttribute(
         'data-drupal-popper-instance',
       );
@@ -440,7 +452,8 @@
         };
       };
 
-      // This is the reference element for the one being positioned.
+      // The `of:` option defines the reference item. Check its type and convert
+      // to and Element if needed.
       const { of } = options;
       if (typeof of === 'string') {
         reference = document.querySelector(of);
@@ -486,8 +499,8 @@
         };
       }
 
-      // When the tip is configured to be positioned inside the document body,
-      // use CSS positioning instead of Popper.
+      // When an item is positioned inside the document body use CSS positioning
+      // instead of Popper.
       if (reference === document.body) {
         applyFixedPositioning(
           itemBeingPositioned,
