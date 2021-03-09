@@ -149,16 +149,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
     }
 
+    var verticalOffsets = referenceItemSettings.verticalOffset + positionedItemSettings.verticalOffset;
+    var horizontalOffsets = referenceItemSettings.horizontalOffset + positionedItemSettings.horizontalOffset;
+
     if (hAxis) {
-      primaryOffset += referenceItemSettings.verticalOffset;
-      primaryOffset += positionedItemSettings.verticalOffset;
-      secondaryOffset += referenceItemSettings.horizontal === 'right' ? referenceItemSettings.horizontalOffset : -referenceItemSettings.horizontalOffset;
-      secondaryOffset += referenceItemSettings.horizontal === 'right' ? positionedItemSettings.horizontalOffset : -positionedItemSettings.horizontalOffset;
+      primaryOffset += verticalOffsets;
+      secondaryOffset += referenceItemSettings.horizontal === 'right' ? horizontalOffsets : -horizontalOffsets;
     } else {
-      secondaryOffset += placement === 'top' ? -referenceItemSettings.verticalOffset : referenceItemSettings.verticalOffset;
-      secondaryOffset += placement === 'top' ? -positionedItemSettings.verticalOffset : positionedItemSettings.verticalOffset;
-      primaryOffset += referenceItemSettings.horizontalOffset;
-      primaryOffset += positionedItemSettings.horizontalOffset;
+      primaryOffset += horizontalOffsets;
+      secondaryOffset += placement === 'top' ? -verticalOffsets : verticalOffsets;
     }
 
     if (!placement) {
