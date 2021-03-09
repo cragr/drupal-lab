@@ -660,7 +660,7 @@ jquery.ui.position.popper.adapter:
     misc/jqueryui.position.popper.adapter.js: {}
   dependencies:
     - core/popperjs
-    - core/jquery.ui
+    - core/jquery
 
 jquery.ui.position:
   version: *jquery_ui_version
