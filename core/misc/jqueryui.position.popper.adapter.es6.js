@@ -12,8 +12,6 @@
    *   Offset and position settings for the reference item.
    * @param {object} positionCss
    *   An object of CSS styles that will be applied to the positioned item.
-   * @param {number} topComp
-   *   Compensation to be applied to the top offset.
    *
    * @return {{topComp: number, positionCss: object}}
    *   Object with top compensation and position css.
@@ -23,8 +21,10 @@
     positionedItemSettings,
     referenceItemSettings,
     positionCss,
-    topComp,
   ) => {
+    // Compensation that will be applied to top positioning.
+    let topComp = 0;
+
     if (positionedItemSettings.vertical === 'center') {
       // A vertically centered tip will have an offset half of its height.
       topComp = -itemBeingPositioned.outerHeight() / 2;
@@ -79,8 +79,6 @@
    *   Offset and position settings for the reference item.
    * @param {object} positionCss
    *   An object of CSS styles that will be applied to the positioned item.
-   * @param {number} leftComp
-   *   Compensation to be applied to the left offset.
    *
    * @return {{topComp: number, positionCss: object}}
    *   Object with top compensation and position css.
@@ -90,43 +88,26 @@
     positionedItemSettings,
     referenceItemSettings,
     positionCss,
-    leftComp,
   ) => {
+    // Compensation that will be applied to left positioning.
+    let leftComp = 0;
+
     // Compensation is only needed if the reference and positioned item's
     // horizontal position do not match.
     if (
       referenceItemSettings.horizontal !== positionedItemSettings.horizontal
     ) {
-      if (positionedItemSettings.horizontal === 'center') {
-        // If
-        // - Horizontal tip alignment and reference alignment do not match.
-        // - Horizontal tip alignment is center
-        // Left compensation should be half the tip width.
-        leftComp = itemBeingPositioned.outerWidth() / 2;
-      } else {
-        // If
-        // - Horizontal tip alignment and reference alignment do not match.
-        // - Horizontal tip alignment is right or left.
-        leftComp =
-          positionedItemSettings.horizontal !== 'left'
-            ? itemBeingPositioned.outerWidth() / 2
-            : -itemBeingPositioned.outerWidth() / 2;
-        if (
-          referenceItemSettings.horizontal !== 'center' &&
-          !(
-            referenceItemSettings.horizontal === 'center' &&
-            positionedItemSettings.horizontal === 'left'
-          )
-        ) {
-          // If
-          // - Horizontal tip alignment and reference alignment do not match.
-          // - Horizontal reference alignment is right or left.
-          // - Horizontal tip alignment is not left when reference alignment
-          //   is center.
-          // In these instances the left compensation needs to be the entire
-          // width of the tip.
-          leftComp = itemBeingPositioned.outerWidth();
-        }
+      leftComp =
+        positionedItemSettings.horizontal === 'left'
+          ? -itemBeingPositioned.outerWidth() / 2
+          : itemBeingPositioned.outerWidth() / 2;
+      if (
+        positionedItemSettings.horizontal !== 'center' &&
+        referenceItemSettings.horizontal !== 'center'
+      ) {
+        // If neither item is centered, then compensate the full width of the
+        // item being positioned.
+        leftComp = itemBeingPositioned.outerWidth();
       }
     }
 
@@ -176,14 +157,12 @@
       {
         position: 'fixed',
       },
-      0,
     );
     positionCss = calculateHorizontalFixedPositioning(
       itemBeingPositioned,
       positionedItemSettings,
       referenceItemSettings,
       positionCss,
-      0,
     );
 
     itemBeingPositioned.css(positionCss);

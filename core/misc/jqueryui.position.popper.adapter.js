@@ -26,7 +26,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 (function ($, Drupal, Popper) {
   Drupal.PopperInstances = {};
 
-  var calculateVerticalFixedPositioning = function calculateVerticalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, topComp) {
+  var calculateVerticalFixedPositioning = function calculateVerticalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss) {
+    var topComp = 0;
+
     if (positionedItemSettings.vertical === 'center') {
       topComp = -itemBeingPositioned.outerHeight() / 2;
     } else if (positionedItemSettings.vertical !== referenceItemSettings.vertical && !(referenceItemSettings.vertical === 'center' && positionedItemSettings.vertical === 'top')) {
@@ -46,16 +48,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     return positionCss;
   };
 
-  var calculateHorizontalFixedPositioning = function calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, leftComp) {
-    if (referenceItemSettings.horizontal !== positionedItemSettings.horizontal) {
-      if (positionedItemSettings.horizontal === 'center') {
-        leftComp = itemBeingPositioned.outerWidth() / 2;
-      } else {
-        leftComp = positionedItemSettings.horizontal !== 'left' ? itemBeingPositioned.outerWidth() / 2 : -itemBeingPositioned.outerWidth() / 2;
+  var calculateHorizontalFixedPositioning = function calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss) {
+    var leftComp = 0;
 
-        if (referenceItemSettings.horizontal !== 'center' && !(referenceItemSettings.horizontal === 'center' && positionedItemSettings.horizontal === 'left')) {
-          leftComp = itemBeingPositioned.outerWidth();
-        }
+    if (referenceItemSettings.horizontal !== positionedItemSettings.horizontal) {
+      leftComp = positionedItemSettings.horizontal === 'left' ? -itemBeingPositioned.outerWidth() / 2 : itemBeingPositioned.outerWidth() / 2;
+
+      if (positionedItemSettings.horizontal !== 'center' && referenceItemSettings.horizontal !== 'center') {
+        leftComp = itemBeingPositioned.outerWidth();
       }
     }
 
@@ -79,8 +79,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   var applyFixedPositioning = function applyFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings) {
     var positionCss = calculateVerticalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, {
       position: 'fixed'
-    }, 0);
-    positionCss = calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss, 0);
+    });
+    positionCss = calculateHorizontalFixedPositioning(itemBeingPositioned, positionedItemSettings, referenceItemSettings, positionCss);
     itemBeingPositioned.css(positionCss);
   };
 
