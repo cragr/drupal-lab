@@ -16,6 +16,7 @@
    *   Compensation to be applied to the top offset.
    *
    * @return {{topComp: number, positionCss: object}}
+   *   Object with top compensation and position css.
    */
   const calculateVerticalFixedPositioning = (
     itemBeingPositioned,
@@ -85,6 +86,7 @@
    *   Compensation to be applied to the left offset.
    *
    * @return {{topComp: number, positionCss: object}}
+   *   Object with top compensation and position css.
    */
   const calculateHorizontalFixedPositioning = (
     itemBeingPositioned,
@@ -93,7 +95,8 @@
     positionCss,
     leftComp,
   ) => {
-    // Determine left (horizontal) compensation.
+    // Compensation is only needed if the reference and positioned item's
+    // horizontal position do not match.
     if (
       referenceItemSettings.horizontal !== positionedItemSettings.horizontal
     ) {
@@ -130,28 +133,25 @@
       }
     }
 
-    // Apply horizontal offsets
-    if (referenceItemSettings.horizontal === 'right') {
-      positionCss[referenceItemSettings.horizontal] = `${
-        0 -
-        referenceItemSettings.horizontalOffset -
-        positionedItemSettings.horizontalOffset -
-        leftComp
-      }px`;
-    } else if (referenceItemSettings.horizontal === 'left') {
-      positionCss[referenceItemSettings.horizontal] = `${
-        referenceItemSettings.horizontalOffset +
-        positionedItemSettings.horizontalOffset -
-        leftComp
-      }px`;
-    } else if (referenceItemSettings.horizontal === 'center') {
+    const totalHorizontalOffsets =
+      referenceItemSettings.horizontalOffset +
+      positionedItemSettings.horizontalOffset;
+
+    // Apply offsets.
+    if (referenceItemSettings.horizontal === 'center') {
       const leftAmount =
         $(window).outerWidth() / 2 -
         itemBeingPositioned.outerWidth() / 2 -
         leftComp +
-        referenceItemSettings.horizontalOffset +
-        positionedItemSettings.horizontalOffset;
+        totalHorizontalOffsets;
       positionCss.left = `${leftAmount}px`;
+      positionCss.right = 'auto';
+    } else if (referenceItemSettings.horizontal === 'right') {
+      positionCss.right = `${0 - totalHorizontalOffsets - leftComp}px`;
+      positionCss.left = 'auto';
+    } else if (referenceItemSettings.horizontal === 'left') {
+      positionCss.left = `${totalHorizontalOffsets - leftComp}px`;
+      positionCss.right = 'auto';
     }
 
     return {
@@ -175,8 +175,7 @@
     positionedItemSettings,
     referenceItemSettings,
   ) => {
-    // This object will have position styles added to it and ultimately added
-    // via a call to `$(itemBeingPositioned).css()`.
+    // CSS styles that will be passed to `$(itemBeingPositioned).css()`.
     let positionCss = {
       position: 'fixed',
     };
