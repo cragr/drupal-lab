@@ -19,6 +19,9 @@ class AdvisoriesTestHttpClient extends Client {
 
   /**
    * Constructs an AdvisoriesTestHttpClient object.
+   *
+   * @param \GuzzleHttp\Client $client
+   *   The decorated http_client service.
    */
   public function __construct(Client $client) {
     $this->innerClient = $client;
@@ -29,7 +32,7 @@ class AdvisoriesTestHttpClient extends Client {
    */
   public function get($uri, array $options = []): ResponseInterface {
     $test_end_point = \Drupal::state()->get('advisories_test_endpoint');
-    if ($test_end_point && $uri === 'https://updates.drupal.org/psa.json') {
+    if ($test_end_point && strpos($uri, '://updates.drupal.org/psa.json') !== FALSE) {
       // Only override $uri if it matches the advisories JSON feed to avoid
       // changing any other uses of the 'http_client' service during tests with
       // this module installed.

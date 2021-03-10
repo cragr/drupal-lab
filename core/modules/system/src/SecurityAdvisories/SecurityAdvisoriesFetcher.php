@@ -8,9 +8,11 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\system\ExtensionVersion;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
 
@@ -60,6 +62,13 @@ final class SecurityAdvisoriesFetcher {
   protected $logger;
 
   /**
+   * Whether to use HTTP fallback if HTTPS fails.
+   *
+   * @var bool
+   */
+  protected $withHttpFallback;
+
+  /**
    * Constructs a new SecurityAdvisoriesFetcher object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -76,8 +85,10 @@ final class SecurityAdvisoriesFetcher {
    *   The profile extension list.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The settings instance.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, Client $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger) {
+  public function __construct(ConfigFactoryInterface $config_factory, KeyValueExpirableFactoryInterface $key_value_factory, Client $client, ModuleExtensionList $module_list, ThemeExtensionList $theme_list, ProfileExtensionList $profile_list, LoggerInterface $logger, Settings $settings) {
     $this->config = $config_factory->get('system.advisories');
     $this->keyValueExpirable = $key_value_factory->get('system');
     $this->httpClient = $client;
@@ -85,6 +96,7 @@ final class SecurityAdvisoriesFetcher {
     $this->extensionLists['theme'] = $theme_list;
     $this->extensionLists['profile'] = $profile_list;
     $this->logger = $logger;
+    $this->withHttpFallback = $settings->get('update_fetch_with_http_fallback', FALSE);
   }
 
   /**
@@ -113,7 +125,7 @@ final class SecurityAdvisoriesFetcher {
       if (!$allow_http_request) {
         return NULL;
       }
-      $response = (string) $this->httpClient->get('https://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
+      $response = $this->doRequest($timeout, $this->withHttpFallback);
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       $json_payload = Json::decode($response);
       if (is_array($json_payload)) {
@@ -277,6 +289,39 @@ final class SecurityAdvisoriesFetcher {
       return $sa->isPsa() || $this->matchesExistingVersion($sa);
     }
     return FALSE;
+  }
+
+  /**
+   * Applies a GET request with a possible HTTP fallback.
+   *
+   * This method falls back to HTTP in case there was some certificate
+   * problem.
+   *
+   * @param int $timeout
+   *   The timeout in seconds for the request.
+   * @param bool $with_http_fallback
+   *   Should the function fall back to HTTP.
+   * @param bool $use_https
+   *   (optional) Whether to use HTTPS. Defaults to TRUE.
+   *
+   * @return string
+   *   The response.
+   */
+  protected function doRequest(int $timeout, bool $with_http_fallback, bool $use_https = TRUE): string {
+    $url = ($use_https ? 'https' : 'http') . '://updates.drupal.org/psa.json';
+    try {
+      $response = (string) $this->httpClient->get($url, [RequestOptions::TIMEOUT => $timeout])->getBody();
+    }
+    catch (TransferException $exception) {
+      watchdog_exception('system', $exception);
+      if ($with_http_fallback && $use_https) {
+        $response = $this->doRequest($timeout, FALSE, FALSE);
+      }
+      else {
+        throw $exception;
+      }
+    }
+    return $response;
   }
 
 }
