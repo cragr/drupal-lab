@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\filter\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
 

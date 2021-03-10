@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\Language;
