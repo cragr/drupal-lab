@@ -357,7 +357,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
-      'type' => 'article'
+      'type' => 'article',
     ]);
     $node->body->appendItem('body 1');
     $node->body->appendItem('body 2');
