@@ -34,6 +34,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     'taxonomy',
     'image',
     'block',
+    'node_access_test'
   ];
 
   /**
@@ -130,6 +131,12 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->getFormDisplay('node', 'article')
       ->setComponent('field_' . $vocabulary->id())
       ->save();
+
+    // Setup node access testing.
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('article'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
+
   }
 
   /**
@@ -347,22 +354,18 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Ensure that cardinality validation is access insensitive.
     \Drupal::service('module_installer')->install(['node_access_test']);
-    node_access_rebuild();
-    node_access_test_add_field(NodeType::load('article'));
-    \Drupal::state()->set('node_access_test.private', TRUE);
 
     // Create a node that is private, and not owned by the current user, which the current user therefore does
     // not have 'view' access to.
-    $this->drupalCreateNode([
-      'body' => [
-        ['value' => 'Body 1'],
-        ['value' => 'Body 2'],
-        ['value' => 'Body 3'],
-        ['value' => 'Body 4'],
-        ],
+    $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
     ]);
+    $node->body->appendItem('body 1');
+    $node->body->appendItem('body 2');
+    $node->body->appendItem('body 3');
+    $node->body->appendItem('body 4');
+    $node->save();
 
     // Assert that you can't set the cardinality to a lower number then the
     // highest delta of this field (including inaccessible entities) but can
