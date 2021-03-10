@@ -352,14 +352,12 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
 
-    // Ensure that cardinality validation is access insensitive.
-    \Drupal::service('module_installer')->install(['node_access_test']);
-
     // Create a node that is private, and not owned by the current user, which the current user therefore does
     // not have 'view' access to.
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
+      'type' => 'article'
     ]);
     $node->body->appendItem('body 1');
     $node->body->appendItem('body 2');
