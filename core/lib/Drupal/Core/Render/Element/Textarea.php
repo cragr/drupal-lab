@@ -61,7 +61,7 @@ class Textarea extends FormElement {
       // This should be a string, but allow other scalars since they might be
       // valid input in programmatic form submissions.
       $value = is_scalar($input) ? (string) $input : '';
-      if (!empty($element['#normalize_newlines'])) {
+      if ($element['#normalize_newlines']) {
         $value = preg_replace('~\r\n?~u', "\n", $value);
       }
       return $value;
