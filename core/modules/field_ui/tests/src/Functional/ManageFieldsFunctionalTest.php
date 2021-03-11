@@ -352,8 +352,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
 
-    // Create a node that is private, and not owned by the current user, which the current user therefore does
-    // not have 'view' access to.
+    // Test the cardinality validation is not access sensitive.
+
+    // Increase the cardinality to 4 so we can add a node the user doesn't have access to.
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 4,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
