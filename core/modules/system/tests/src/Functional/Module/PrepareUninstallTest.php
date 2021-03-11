@@ -38,7 +38,7 @@ class PrepareUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'taxonomy', 'entity_test'];
+  protected static $modules = ['node', 'taxonomy', 'entity_test', 'node_access_test'];
 
   /**
    * {@inheritdoc}
@@ -49,10 +49,15 @@ class PrepareUninstallTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($admin_user);
 
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('article'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
+
     // Create 10 nodes.
     for ($i = 1; $i <= 5; $i++) {
       $this->nodes[] = $this->drupalCreateNode(['type' => 'page']);
-      $this->nodes[] = $this->drupalCreateNode(['type' => 'article']);
+      // These 5 articles are inaccessible to the admin user doing the uninstalling.
+      $this->nodes[] = $this->drupalCreateNode(['type' => 'article', 'uid' => 0, 'private' => TRUE]);
     }
 
     // Create 3 top-level taxonomy terms, each with 11 children.
