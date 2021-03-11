@@ -115,7 +115,19 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Delete Node data.
     $this->drupalGet('admin/modules/uninstall/entity/node');
-    // All 10 nodes should be listed.
+    // Only the 5 pages should be listed as the 5 articles are initially inaccessible.
+    foreach ($this->nodes as $node) {
+      if ($node->bundle() === 'page') {
+        $this->assertText($node->label());
+      }
+      else {
+        $node->set('private', FALSE)->save();
+      }
+    }
+    $this->assertText('And 5 more content items.');
+
+    // All 10 nodes should now be listed as none are still inaccessible.
+    $this->drupalGet('admin/modules/uninstall/entity/node');
     foreach ($this->nodes as $node) {
       $this->assertText($node->label());
     }
@@ -132,11 +144,9 @@ class PrepareUninstallTest extends BrowserTestBase {
     // the first 10's labels.
     $this->assertText('And 1 more content item.');
 
-    // Create another node so we have 12.
-    $this->nodes[] = $this->drupalCreateNode(['type' => 'article']);
+    // Create another node so we have 12, with one private.
+    $this->nodes[] = $this->drupalCreateNode(['type' => 'article', 'private' => TRUE]);
     $this->drupalGet('admin/modules/uninstall/entity/node');
-    // Ensures singular case is used when a single entity is left after listing
-    // the first 10's labels.
     $this->assertText('And 2 more content items.');
 
     $this->submitForm([], 'Delete all content items');
