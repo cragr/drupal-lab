@@ -102,7 +102,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
 
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $count = $storage->getQuery()->accessCheck(FALSE)->count()->execute();
-    $accessibleCount = $storage->getQuery()->accessCheck(TRUE)->count()->execute();
+    $accessible_count = $storage->getQuery()->accessCheck(TRUE)->count()->execute();
 
     $form['entity_type_id'] = [
       '#type' => 'value',
@@ -119,7 +119,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
         ),
       ];
     }
-    elseif ($accessibleCount > 0 && $entity_type->hasKey('label')) {
+    elseif ($accessible_count > 0 && $entity_type->hasKey('label')) {
       $recent_entity_ids = $storage->getQuery()
         ->accessCheck(TRUE)
         ->sort($entity_type->getKey('id'), 'DESC')
