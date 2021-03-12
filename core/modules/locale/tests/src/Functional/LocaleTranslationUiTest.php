@@ -347,7 +347,8 @@ class LocaleTranslationUiTest extends BrowserTestBase {
         $lid => $translation,
       ];
       $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
-      // Check for a form error on the textarea.
+      // Check for a form error on the textarea, which means the string was
+      // rejected as unsafe.
       $this->assertSession()->elementAttributeContains('xpath', '//form[@id="locale-translate-edit-form"]//textarea', 'class', 'error');
       $this->assertNoText('The string has been saved.');
     }

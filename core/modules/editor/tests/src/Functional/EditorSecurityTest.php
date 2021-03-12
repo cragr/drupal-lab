@@ -283,6 +283,7 @@ class EditorSecurityTest extends BrowserTestBase {
       foreach ($case['users'] as $account) {
         $this->drupalLogin($account);
         $this->drupalGet('node/' . $case['node_id'] . '/edit');
+        // Verify that the value is correctly filtered for XSS attack vectors.
         $this->assertSession()->fieldValueEquals('edit-body-0-value', $case['value']);
       }
     }
