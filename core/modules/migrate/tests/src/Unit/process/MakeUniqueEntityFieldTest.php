@@ -45,7 +45,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
       ->getMock();
     $this->entityQuery->expects($this->any())
       ->method('accessCheck')
-      ->willReturn($this->entityQuery);
+      ->will($this->returnSelf());
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
     $storage = $this->createMock(EntityStorageInterface::class);
@@ -160,9 +160,6 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
    *   The number of unique values to be set up.
    */
   protected function entityQueryExpects($count) {
-    $this->entityQuery->expects($this->any())
-      ->method('accessCheck')
-      ->will($this->returnValue($this->entityQuery));
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('condition')
       ->will($this->returnValue($this->entityQuery));
