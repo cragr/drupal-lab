@@ -823,3 +823,11 @@ js-cookie:
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
+
+modelview:
+  version: VERSION
+  js:
+    misc/modelview.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings

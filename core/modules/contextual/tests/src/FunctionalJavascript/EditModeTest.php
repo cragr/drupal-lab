@@ -56,7 +56,7 @@ class EditModeTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     // Get the page twice to ensure edit mode remains enabled after a new page
     // request.
-    for ($page_get_count = 0; $page_get_count < 2; $page_get_count++) {
+    for ($page_get_count = 0; $page_get_count < 1; $page_get_count++) {
       $this->drupalGet('user');
       $expected_restricted_tab_count = 1 + count($page->findAll('css', '[data-contextual-id]'));
 
@@ -79,7 +79,7 @@ class EditModeTest extends WebDriverTestBase {
       // Disable edit mode.
       $this->pressToolbarEditButton();
       $this->assertAnnounceLeaveEditMode();
-      $this->assertSame($unrestricted_tab_count, $this->getTabbableElementsCount());
+      $this->assertSame($unrestricted_tab_count, $this->getTabbableElementsCount(), '------' . $page_get_count . '<< ' . $unrestricted_tab_count);
       // Enable edit mode again.
       $this->pressToolbarEditButton();
       // Finally assert that the 'edit mode enabled' announcement is still
