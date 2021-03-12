@@ -5,8 +5,8 @@ namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Logger\RfcLoggerTrait;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\system\Traits\SecurityAdvisoriesTestTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Handler\MockHandler;
@@ -23,7 +23,20 @@ use Psr\Log\LoggerInterface;
 class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInterface {
 
   use RfcLoggerTrait;
-  use SecurityAdvisoriesTestTrait;
+
+  /**
+   * The log messages from watchdog_exception.
+   *
+   * @var string[]
+   */
+  protected $watchdogExceptionMessages = [];
+
+  /**
+   * The log error log messages.
+   *
+   * @var string[]
+   */
+  protected $logErrorMessages = [];
 
   /**
    * {@inheritdoc}
@@ -41,18 +54,12 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   protected $history = [];
 
   /**
-   * The log from watchdog_exception.
-   *
-   * @var string[]
-   */
-  protected $watchdogExceptionMessages = [];
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig('system');
+    $this->container->get('logger.factory')->addLogger($this);
   }
 
   /**
@@ -719,11 +726,25 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   }
 
   /**
+   * Asserts the expected error messages were logged.
+   *
+   * @param string[] $expected_messages
+   *   The expected error messages.
+   */
+  protected function assertServiceAdvisoryLoggedErrors(array $expected_messages): void {
+    $this->assertSame($expected_messages, $this->logErrorMessages);
+    $this->logErrorMessages = [];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function log($level, $message, array $context = []): void {
     if (isset($context['@message'])) {
       $this->watchdogExceptionMessages[] = $context['@message'];
+    }
+    if ($level === RfcLogLevel::ERROR) {
+      $this->logErrorMessages[] = $message;
     }
   }
 
