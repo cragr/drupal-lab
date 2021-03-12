@@ -4,21 +4,25 @@ namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\system\Traits\SecurityAdvisoriesTestTrait;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use Psr\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
  *
  * @group system
  */
-class SecurityAdvisoriesFetcherTest extends KernelTestBase {
+class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInterface {
 
+  use RfcLoggerTrait;
   use SecurityAdvisoriesTestTrait;
 
   /**
@@ -35,6 +39,13 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
    * @var array
    */
   protected $history = [];
+
+  /**
+   * The log from watchdog_exception.
+   *
+   * @var string[]
+   */
+  protected $watchdogExceptionMessages = [];
 
   /**
    * {@inheritdoc}
@@ -601,6 +612,77 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::doRequest
+   * @covers ::getSecurityAdvisories
+   */
+  public function testHttpFallback(): void {
+    $this->setSetting('update_fetch_with_http_fallback', TRUE);
+    $feed_item = [
+      'is_psa' => 1,
+      'type' => 'core',
+      'project' => 'drupal',
+      'insecure' => [\Drupal::VERSION],
+      'title' => 'SA title',
+      'link' => 'http://example.com',
+    ];
+    $this->setTestFeedResponses([
+      new Response('500', [], 'HTTPS failed'),
+      new Response('200', [], json_encode([$feed_item])),
+    ]);
+    $advisories = $this->getAdvisories();
+
+    // There should be two request / response pairs.
+    $this->assertCount(2, $this->history);
+
+    // The first request should have been HTTPS and should have failed.
+    $first_try = $this->history[0];
+    $this->assertNotEmpty($first_try);
+    $this->assertEquals('https', $first_try['request']->getUri()->getScheme());
+    $this->assertEquals(500, $first_try['response']->getStatusCode());
+
+    // The second request should have been the HTTP fallback and should have
+    // worked.
+    $second_try = $this->history[1];
+    $this->assertNotEmpty($second_try);
+    $this->assertEquals('http', $second_try['request']->getUri()->getScheme());
+    $this->assertEquals(200, $second_try['response']->getStatusCode());
+
+    $this->assertCount(1, $advisories);
+    $this->assertSame('http://example.com', $advisories[0]->getUrl());
+    $this->assertSame('SA title', $advisories[0]->getTitle());
+    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->watchdogExceptionMessages);
+  }
+
+  /**
+   * @covers ::doRequest
+   * @covers ::getSecurityAdvisories
+   */
+  public function testNoHttpFallback(): void {
+    $this->setTestFeedResponses([
+      new Response('500', [], 'HTTPS failed'),
+    ]);
+
+    $exception_thrown = FALSE;
+    try {
+      $this->getAdvisories();
+    }
+    catch (ServerException $exception) {
+      $this->assertSame("Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n", $exception->getMessage());
+      $exception_thrown = TRUE;
+    }
+    $this->assertTrue($exception_thrown);
+    // There should only be one request / response pair.
+    $this->assertCount(1, $this->history);
+    $request = $this->history[0]['request'];
+    $this->assertNotEmpty($request);
+    // It should have only been an HTTPS request.
+    $this->assertEquals('https', $request->getUri()->getScheme());
+    // And it should have failed.
+    $response = $this->history[0]['response'];
+    $this->assertEquals(500, $response->getStatusCode());
+  }
+
+  /**
    * Gets the advisories from the 'system.sa_fetcher' service.
    *
    * @param bool $allow_http_request
@@ -632,7 +714,17 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     // service without these changes.
     $this->container->get('kernel')->rebuildContainer();
     $this->container = $this->container->get('kernel')->getContainer();
+    $this->container->get('logger.factory')->addLogger($this);
     $this->container->set('http_client', new Client(['handler' => $handler_stack]));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function log($level, $message, array $context = []): void {
+    if (isset($context['@message'])) {
+      $this->watchdogExceptionMessages[] = $context['@message'];
+    }
   }
 
 }
