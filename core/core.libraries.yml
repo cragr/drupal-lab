@@ -657,7 +657,7 @@ jquery.ui.mouse:
 jquery.ui.position.popper.adapter:
   version: VERSION
   js:
-    misc/jqueryui.position.popper.adapter.js: {}
+    misc/position.js: {}
   dependencies:
     - core/popperjs
     - core/jquery
