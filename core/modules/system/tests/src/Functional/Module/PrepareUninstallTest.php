@@ -50,6 +50,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($admin_user);
 
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     node_access_rebuild();
     node_access_test_add_field(NodeType::load('article'));
     \Drupal::state()->set('node_access_test.private', TRUE);
