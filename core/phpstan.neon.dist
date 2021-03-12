@@ -25,6 +25,8 @@ parameters:
     - lib/Drupal/Core/Cache
     - lib/Drupal/Core/CacheDecorator
     - lib/Drupal/Core/Command
+  excludePaths:
+    - *.api.php
   bootstrapFiles:
     # Scan constants in legacy include files.
     - includes/common.inc
