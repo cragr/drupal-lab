@@ -94,7 +94,6 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'administer users',
       'administer account settings',
       'administer user display',
-      'bypass node access',
     ]);
     $this->drupalLogin($admin_user);
 
@@ -354,10 +353,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Test the cardinality validation is not access sensitive.
 
-    // Increase the cardinality to 4 so we can add a node the user doesn't have access to.
+    // Remove the cardinality limit 4 so we can add a node the user doesn't have access to.
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 4,
+      'cardinality' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
     $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $node = $this->drupalCreateNode([
