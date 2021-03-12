@@ -193,7 +193,7 @@ for FILE in $FILES; do
   ### PHPSTAN
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme)$ ]]; then
-    vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon" "$TOP_LEVEL/$FILE"
+    vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist" "$TOP_LEVEL/$FILE"
     if [ "$?" -ne "0" ]; then
       # If there are failures set the status to a number other than 0.
       STATUS=1
