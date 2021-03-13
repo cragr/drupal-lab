@@ -102,7 +102,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, 'Search');
     $actual_title = $this->xpath('//title')[0]->getText();
-    $this->assertEqual($actual_title, Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), 'Search page title is correct');
+    $this->assertEqual(Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), $actual_title, 'Search page title is correct');
 
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalPostForm('search/user', $edit, 'Search');
@@ -117,8 +117,7 @@ class SearchPageTextTest extends BrowserTestBase {
     // from the GET params and displayed in the search form.
     $arg = $this->randomMachineName() . '/' . $this->randomMachineName();
     $this->drupalGet('search/node', ['query' => ['keys' => $arg]]);
-    $input = $this->xpath("//input[@id='edit-keys' and @value='{$arg}']");
-    $this->assertFalse(empty($input), 'Search keys with a / are correctly set as the default value in the search box.');
+    $this->assertSession()->elementExists('xpath', "//input[@id='edit-keys' and @value='{$arg}']");
 
     // Test a search input exceeding the limit of AND/OR combinations to test
     // the Denial-of-Service protection.

@@ -40,9 +40,9 @@ class InstallUninstallTest extends ModuleTestBase {
     // Install and uninstall module_test to ensure hook_preinstall_module and
     // hook_preuninstall_module are fired as expected.
     $this->container->get('module_installer')->install(['module_test']);
-    $this->assertEqual($this->container->get('state')->get('system_test_preinstall_module'), 'module_test');
+    $this->assertEqual('module_test', $this->container->get('state')->get('system_test_preinstall_module'));
     $this->container->get('module_installer')->uninstall(['module_test']);
-    $this->assertEqual($this->container->get('state')->get('system_test_preuninstall_module'), 'module_test');
+    $this->assertEqual('module_test', $this->container->get('state')->get('system_test_preuninstall_module'));
     $this->resetAll();
 
     $all_modules = $this->container->get('extension.list.module')->getList();
@@ -174,11 +174,8 @@ class InstallUninstallTest extends ModuleTestBase {
           // See if we can currently uninstall this module (if its dependencies
           // have been uninstalled), and do so if we can.
           $this->drupalGet('admin/modules/uninstall');
-          $field_name = "uninstall[$to_uninstall]";
-          $has_checkbox = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '"]');
-          $disabled = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '" and @disabled="disabled"]');
-
-          if (!empty($has_checkbox) && empty($disabled)) {
+          $checkbox = $this->assertSession()->fieldExists("uninstall[$to_uninstall]");
+          if (!$checkbox->hasAttribute('disabled')) {
             // This one is eligible for being uninstalled.
             $package = $all_modules[$to_uninstall]->info['package'];
             $this->assertSuccessfulUninstall($to_uninstall, $package);

@@ -147,7 +147,7 @@ class ExposedFormTest extends ViewTestBase {
       'default' => ['This identifier has illegal characters.'],
       'page_1' => ['This identifier has illegal characters.'],
     ];
-    $this->assertEqual($errors, $expected);
+    $this->assertEqual($expected, $errors);
   }
 
   /**
@@ -345,7 +345,7 @@ class ExposedFormTest extends ViewTestBase {
     $view->save();
 
     $this->drupalGet('test_exposed_form_sort_items_per_page');
-    $options = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-sort-by']);
+    $options = $this->assertSession()->selectExists('edit-sort-by')->findAll('css', 'option');
     $this->assertCount(1, $options);
     $this->assertSession()->optionExists('edit-sort-by', $expected_label);
     $escape_1 = Html::escape($expected_label);
@@ -374,7 +374,7 @@ class ExposedFormTest extends ViewTestBase {
       $actual_ids[] = (int) $element->getText();
     }
 
-    return $this->assertIdentical($ids, $actual_ids);
+    return $this->assertSame($ids, $actual_ids);
   }
 
   /**

@@ -57,7 +57,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     // Verify some properties of the node that was created.
     $this->assertSame('page', $this->node->getType(), 'Node type is Basic page.');
     $dummy_title = 'Lorem ipsum';
-    $this->assertNotEqual($dummy_title, $this->node->label(), "Dummy title doesn't equal node title.");
+    $this->assertNotEquals($dummy_title, $this->node->label(), "Dummy title doesn't equal node title.");
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $dummy_title]]);
@@ -116,8 +116,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $this->assertText('Search for cat dog OR gerbil -fish -snake');
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {
-        $elements = $this->xpath('//input[@name=:name]', [':name' => $key]);
-        $this->assertFalse(isset($elements[0]) && $elements[0]->getValue() == $value, "Field $key is not set to $value");
+        $this->assertSession()->fieldValueNotEquals($key, $value);
       }
     }
   }
