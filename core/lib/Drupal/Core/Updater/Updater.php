@@ -7,6 +7,11 @@ use Drupal\Core\FileTransfer\FileTransfer;
 
 /**
  * Defines the base class for Updaters used in Drupal.
+ *
+ * This class should have been abstract, but we don't want to change that now.
+ * Define missing methods that child classes have here to make PHPStan happy.
+ *
+ * @method string getInstallDirectory()
  */
 class Updater {
 
@@ -23,6 +28,20 @@ class Updater {
    * @var string
    */
   protected $root;
+
+  /**
+   * Name of the project directory.
+   *
+   * @var string
+   */
+  protected $name;
+
+  /**
+   * Project name form the info file.
+   *
+   * @var string
+   */
+  protected $title;
 
   /**
    * Constructs a new updater.

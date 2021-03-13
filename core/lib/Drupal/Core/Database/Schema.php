@@ -6,6 +6,12 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
 
 /**
  * Provides a base implementation for Database Schema.
+ *
+ * All child classes in core have the createTableSql() method, but we don't want
+ * to define it as real abstract method because we want to avoid API breaks for
+ * contrib modules. Define it here to make PHPStan happy.
+ *
+ * @method string[] createTableSql(string $name, array $table)
  */
 abstract class Schema implements PlaceholderInterface {
 

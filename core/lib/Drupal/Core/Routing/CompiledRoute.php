@@ -123,6 +123,7 @@ class CompiledRoute extends SymfonyCompiledRoute {
    */
   public function getOptions() {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706', E_USER_DEPRECATED);
+    // @phpstan-ignore-next-line
     return $this->route->getOptions();
   }
 
@@ -139,6 +140,7 @@ class CompiledRoute extends SymfonyCompiledRoute {
    */
   public function getDefaults() {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706', E_USER_DEPRECATED);
+    // @phpstan-ignore-next-line
     return $this->route->getDefaults();
   }
 
@@ -155,6 +157,7 @@ class CompiledRoute extends SymfonyCompiledRoute {
    */
   public function getRequirements() {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706', E_USER_DEPRECATED);
+    // @phpstan-ignore-next-line
     return $this->route->getRequirements();
   }
 

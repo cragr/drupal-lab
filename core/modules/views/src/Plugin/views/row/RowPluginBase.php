@@ -50,6 +50,13 @@ abstract class RowPluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
+   * The field alias created when the field is added to the query.
+   *
+   * @var string
+   */
+  protected $field_alias;
+
+  /**
    * Returns the usesFields property.
    *
    * @return bool

@@ -75,9 +75,9 @@ function callback_batch_operation($multiple_params, &$context) {
     // Here we actually perform our processing on the current node.
     $node_storage->resetCache([$row['nid']]);
     $node = $node_storage->load($row['nid']);
-    $node->value1 = $options1;
-    $node->value2 = $options2;
-    node_save($node);
+    $node->value1 = 'option1';
+    $node->value2 = 'option2';
+    $node->save();
 
     // Store some result for post-processing in the finished callback.
     $context['results'][] = $node->title;

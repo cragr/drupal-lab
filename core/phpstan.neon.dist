@@ -10,23 +10,10 @@ parameters:
     - profile
     - theme
   paths:
-    # Just this part is enabled for checking for now, expand later.
-    - lib/Drupal/Component
-    - lib/Drupal/Core/Access
-    - lib/Drupal/Core/Action
-    - lib/Drupal/Core/Ajax
-    - lib/Drupal/Core/Annotation
-    - lib/Drupal/Core/Archiver
-    - lib/Drupal/Core/Asset
-    - lib/Drupal/Core/Authentication
-    - lib/Drupal/Core/Batch
-    - lib/Drupal/Core/Block
-    - lib/Drupal/Core/Breadcrumb
-    - lib/Drupal/Core/Cache
-    - lib/Drupal/Core/CacheDecorator
-    - lib/Drupal/Core/Command
+    - lib
   excludePaths:
-    - *.api.php
+    # Uncaught PHPStan\Broker\ClassAutoloadingException: Class Drupal\system\ModuleDependencyMessageTrait not found.
+    - lib/Drupal/Core/Extension/ThemeInstaller.php
   bootstrapFiles:
     # Scan constants in legacy include files.
     - includes/common.inc

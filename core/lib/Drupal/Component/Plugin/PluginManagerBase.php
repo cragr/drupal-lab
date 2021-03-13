@@ -71,16 +71,16 @@ abstract class PluginManagerBase implements PluginManagerInterface {
   public function createInstance($plugin_id, array $configuration = []) {
     // If this PluginManager has fallback capabilities catch
     // PluginNotFoundExceptions.
-    if ($this instanceof FallbackPluginManagerInterface) {
-      try {
-        return $this->getFactory()->createInstance($plugin_id, $configuration);
-      }
-      catch (PluginNotFoundException $e) {
-        return $this->handlePluginNotFound($plugin_id, $configuration);
-      }
-    }
-    else {
+    try {
       return $this->getFactory()->createInstance($plugin_id, $configuration);
+    }
+    catch (PluginNotFoundException $e) {
+      $default = $this->handlePluginNotFound($plugin_id, $configuration);
+      if ($default) {
+        return $default;
+      }
+      // If there is no default plugin either: rethrow the exception.
+      throw $e;
     }
   }
 
@@ -92,12 +92,15 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * @param array $configuration
    *   An array of configuration relevant to the plugin instance.
    *
-   * @return object
-   *   A fallback plugin instance.
+   * @return object|null
+   *   A fallback plugin instance if this manager is capable, NULL otherwise.
    */
   protected function handlePluginNotFound($plugin_id, array $configuration) {
-    $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
-    return $this->getFactory()->createInstance($fallback_id, $configuration);
+    if ($this instanceof FallbackPluginManagerInterface) {
+      $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
+      return $this->getFactory()->createInstance($fallback_id, $configuration);
+    }
+    return NULL;
   }
 
   /**
