@@ -39,7 +39,7 @@ class CacheContextsManager {
   /**
    * Internal cache for validating context tokens, keyed by context ID.
    *
-   * @var bool|int[]
+   * @var int[]
    */
   protected $validContextTokens;
 
