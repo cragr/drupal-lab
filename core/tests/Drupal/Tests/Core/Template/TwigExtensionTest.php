@@ -17,6 +17,9 @@ use Twig\Loader\FilesystemLoader;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Source;
 
+// cspell:ignore kangchenjunga nanga parbat manaslu gasherbrum gyachung kang
+// cspell:ignore shishapangma gyachung nuptse himalchuli rakaposhi
+
 /**
  * Tests the twig extension.
  *
