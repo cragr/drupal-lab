@@ -65,7 +65,7 @@ class TrackerNodeAccessTest extends BrowserTestBase {
     $user = $this->drupalCreateUser(['node test view']);
     $this->drupalLogin($user);
     $this->drupalGet('activity');
-    $this->assertText($private_node->getTitle());
+    $this->assertSession()->pageTextContains($private_node->getTitle());
   }
 
   /**
