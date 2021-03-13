@@ -14,6 +14,8 @@ parameters:
   excludePaths:
     # Uncaught PHPStan\Broker\ClassAutoloadingException: Class Drupal\system\ModuleDependencyMessageTrait not found.
     - lib/Drupal/Core/Extension/ThemeInstaller.php
+    # Third party code that does not follow our standards.
+    - lib/Drupal/Component/Diff/Engine/*.php
   bootstrapFiles:
     # Scan constants in legacy include files.
     - includes/common.inc
@@ -28,29 +30,3 @@ parameters:
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static\\(\\)\\.$#"
-    # Local variables created from including a PHP file, we cannot fix that.
-    -
-      message: "#^Undefined variable\\: \\$overrides$#"
-      count: 1
-      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-    -
-      message: "#^Undefined variable\\: \\$base$#"
-      count: 1
-      path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
-    # Usage of getFallbackPluginId() is ok here and guarded by an interface
-    # check in the related method.
-    -
-      message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerBase\\:\\:getFallbackPluginId\\(\\)\\.$#"
-      count: 1
-      path: lib/Drupal/Component/Plugin/PluginManagerBase.php
-    # DiffEngine is third party legacy code where we want to ignore some
-    # undefined variable/property errors.
-    -
-      message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:#"
-      path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-    # The Broken Block plugin might call undefined methods, but we don't care
-    # because the block is broken anyway.
-    -
-      message: "#^Call to an undefined method Drupal\\\\Core\\\\Block\\\\Plugin\\\\Block\\\\Broken\\:\\:addContextAssignmentElement\\(\\)\\.$#"
-      count: 1
-      path: lib/Drupal/Core/Block/Plugin/Block/Broken.php
