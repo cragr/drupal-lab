@@ -5,8 +5,18 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 
 /**
- * Provides an Iterator class for dealing with large amounts of entities
- * but not loading them all into memory.
+ * Provides an Iterator class for dealing with large amounts of entities.
+ *
+ * Common usecases for this iterator is in a hook_post_update() hook if you need
+ * to load all entities of a type, or in some command line utility.
+ *
+ * Example:
+ * @code
+ * $iterator = new ChunkedIterator($entity_storage, \Drupal::service('entity.memory_cache'), $all_ids);
+ * foreach ($iterator as $entity) {
+ *   // Process the entity
+ * }
+ * @endcode
  */
 class ChunkedIterator implements \IteratorAggregate, \Countable {
 
