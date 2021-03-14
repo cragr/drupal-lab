@@ -67,7 +67,7 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
   public function getIterator() {
     foreach (array_chunk($this->entityIds, $this->chunkSize) as $ids_chunk) {
       yield from $this->entityStorage->loadMultiple($ids_chunk);
-      // We clear all memory cache as we want to remove all referenced entites
+      // We clear all memory cache as we want to remove all referenced entities
       // as well, like for example the owner of an entity.
       $this->memoryCache->deleteAll();
     }
