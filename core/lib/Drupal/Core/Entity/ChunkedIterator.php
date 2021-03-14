@@ -28,9 +28,9 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
   protected $entityStorage;
 
   /**
-   * An array of entity IDs to iterate over.
+   * An iterable of entity IDs to iterate over.
    *
-   * @var array
+   * @var iterable
    */
   protected $entityIds;
 
@@ -52,15 +52,20 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
    * Constructs an entity iterator object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
+   *   The entity storage.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
-   * @param array $ids
+   *   The memory cache service.
+   * @param iterable $ids
+   *   An iterable of entity IDs. Common examples would be an array or a
+   *   generator.
    * @param int $chunk_size
+   *   The size per chunk we want to load in parallel.
    */
-  public function __construct(EntityStorageInterface $entity_storage, MemoryCacheInterface $memory_cache, array $ids, $chunk_size = 50) {
+  public function __construct(EntityStorageInterface $entity_storage, MemoryCacheInterface $memory_cache, iterable $ids, $chunk_size = 50) {
     $this->entityStorage = $entity_storage;
     $this->memoryCache = $memory_cache;
     // Make sure we don't use a keyed array.
-    $this->entityIds = array_values($ids);
+    $this->entityIds = $ids;
     $this->chunkSize = (int) $chunk_size;
   }
 
@@ -75,12 +80,41 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
    * @inheritdoc
    */
   public function getIterator() {
-    foreach (array_chunk($this->entityIds, $this->chunkSize) as $ids_chunk) {
+    foreach ($this->chunkIds() as $ids_chunk) {
       yield from $this->entityStorage->loadMultiple($ids_chunk);
       // We clear all memory cache as we want to remove all referenced entities
       // as well, like for example the owner of an entity.
       $this->memoryCache->deleteAll();
     }
+  }
+
+  /**
+   * Chunks the entity IDs, whether its an array of an iterable.
+   *
+   * @return iterable
+   */
+  protected function chunkIds() : iterable {
+    // Optimize for the entity IDs be in the form of an array already.
+    if (is_array($this->entityIds)) {
+      foreach (array_chunk(array_values($this->entityIds), $this->chunkSize) as $chunk) {
+        yield $chunk;
+      }
+      return;
+    }
+
+    $chunk = [];
+    foreach ($this->entityIds as $id) {
+      $chunk[] = $id;
+      if (count($chunk) == $this->chunkSize) {
+        yield $chunk;
+        $chunk = [];
+      }
+    }
+
+    if (count($chunk)) {
+      yield $chunk;
+    }
+
   }
 
 }

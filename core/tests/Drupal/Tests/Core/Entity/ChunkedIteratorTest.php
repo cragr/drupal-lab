@@ -160,6 +160,78 @@ class ChunkedIteratorTest extends UnitTestCase {
   /**
    * @covers ::getIterator
    */
+  public function testIteratorWithGenerator() {
+    $return_1 = [
+      1 => $this->entity->reveal(),
+      2 => $this->entity->reveal(),
+      3 => $this->entity->reveal(),
+    ];
+
+    $return_2 = [
+      4 => $this->entity->reveal(),
+      5 => $this->entity->reveal(),
+      6 => $this->entity->reveal(),
+    ];
+
+    $this->memoryCache->deleteAll()
+      ->shouldBeCalledTimes(2);
+    $this->entityStorage->loadMultiple([1, 2, 3])
+      ->willReturn($return_1)
+      ->shouldBeCalled();
+    $this->entityStorage->loadMultiple([4, 5, 6])
+      ->willReturn($return_2)
+      ->shouldBeCalled();
+
+    $ids = function () {
+      for ($i = 1; $i <= 6; $i++) {
+        yield $i;
+      }
+    };
+
+    // Create a new iterator but set the cache limit to 3. Two chunks should be
+    // loaded.
+    $iterator = new ChunkedIterator($this->entityStorage->reveal(), $this->memoryCache->reveal(), $ids(), 3);
+
+    $this->assertSame($return_1 + $return_2, iterator_to_array($iterator));
+  }
+
+  /**
+   * @covers ::getIterator
+   */
+  public function testIteratorWithArrayIterator() {
+    $return_1 = [
+      1 => $this->entity->reveal(),
+      2 => $this->entity->reveal(),
+      3 => $this->entity->reveal(),
+    ];
+
+    $return_2 = [
+      4 => $this->entity->reveal(),
+      5 => $this->entity->reveal(),
+      6 => $this->entity->reveal(),
+    ];
+
+    $this->memoryCache->deleteAll()
+      ->shouldBeCalledTimes(2);
+    $this->entityStorage->loadMultiple([1, 2, 3])
+      ->willReturn($return_1)
+      ->shouldBeCalled();
+    $this->entityStorage->loadMultiple([4, 5, 6])
+      ->willReturn($return_2)
+      ->shouldBeCalled();
+
+    $ids = new \ArrayIterator([1, 2, 3, 4, 5, 6]);
+
+    // Create a new iterator but set the cache limit to 3. Two chunks should be
+    // loaded.
+    $iterator = new ChunkedIterator($this->entityStorage->reveal(), $this->memoryCache->reveal(), $ids, 3);
+
+    $this->assertSame($return_1 + $return_2, iterator_to_array($iterator));
+  }
+
+  /**
+   * @covers ::getIterator
+   */
   public function testIteratorWithMultipleChunkInvalidItems() {
     $return_1 = [
       2 => $this->entity->reveal(),
