@@ -99,20 +99,20 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
       foreach (array_chunk(array_values($this->entityIds), $this->chunkSize) as $chunk) {
         yield $chunk;
       }
-      return;
     }
-
-    $chunk = [];
-    foreach ($this->entityIds as $id) {
-      $chunk[] = $id;
-      if (count($chunk) == $this->chunkSize) {
-        yield $chunk;
-        $chunk = [];
+    else {
+      $chunk = [];
+      foreach ($this->entityIds as $id) {
+        $chunk[] = $id;
+        if (count($chunk) == $this->chunkSize) {
+          yield $chunk;
+          $chunk = [];
+        }
       }
-    }
 
-    if (count($chunk)) {
-      yield $chunk;
+      if (count($chunk)) {
+        yield $chunk;
+      }
     }
 
   }
