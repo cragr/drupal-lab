@@ -65,14 +65,14 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
   }
 
   /**
-   * Implements \Countable::count().
+   * @inheritdoc
    */
   public function count() {
     return count($this->entityIds);
   }
 
   /**
-   * Implements \IteratorAggregate::GetIterator()
+   * @inheritdoc
    */
   public function getIterator() {
     foreach (array_chunk($this->entityIds, $this->chunkSize) as $ids_chunk) {
