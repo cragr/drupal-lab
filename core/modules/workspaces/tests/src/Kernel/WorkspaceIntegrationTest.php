@@ -68,6 +68,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     'language',
     'content_translation',
     'path_alias',
+    'node_access_test',
   ];
 
   /**
@@ -93,6 +94,11 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $language->save();
 
     $this->createContentType(['type' => 'page']);
+
+    // Setup node access testing.
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('page'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
 
     $this->setCurrentUser($this->createUser(['administer nodes']));
 
@@ -350,6 +356,15 @@ class WorkspaceIntegrationTest extends KernelTestBase {
         7 => 4,
       ],
     ];
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
+
+    // Check publishing is not sensitive to node access.
+    foreach ($expected['node'] as $rid => $nid) {
+      $node = $this->entityTypeManager->getStorage('node')->load($nid);
+      $node->set('private', TRUE);
+      $node->set('uid', 0);
+      $node->save();
+    }
     $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
 
     $this->workspaces['stage']->publish();
