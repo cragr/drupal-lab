@@ -135,7 +135,7 @@ drupal.autocomplete:
     - core/drupalSettings
     - core/drupal.ajax
     - core/tabbable.jquery.shim
-    - core/drupal.jquery.ui.position
+    - core/drupal.jquery.position
 
 
 drupal.array.find:
@@ -245,7 +245,7 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
-    - core/drupal.jquery.ui.position
+    - core/drupal.jquery.position
 
 drupal.dialog.ajax:
   version: VERSION
@@ -616,7 +616,7 @@ jquery.ui.dialog:
   dependencies:
     - core/jquery
     - core/tabbable.jquery.shim
-    - core/drupal.jquery.ui.position
+    - core/drupal.jquery.position
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
@@ -654,7 +654,7 @@ jquery.ui.mouse:
     - core/jquery.ui.widget
   deprecated: *jquery_ui_unused_deprecated
 
-drupal.jquery.ui.position:
+drupal.jquery.position:
   # This is a modified version of jQuery UI position for that does not require any
   # jQuery UI assets, only core jQuery. Per the terms of jQuery UI's public
   # domain license, that license is still referenced here.
@@ -669,7 +669,7 @@ jquery.ui.position:
   version: *jquery_ui_version
   license: *jquery_ui_license
   dependencies:
-    - core/drupal.jquery.ui.position
+    - core/drupal.jquery.position
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.resizable:
