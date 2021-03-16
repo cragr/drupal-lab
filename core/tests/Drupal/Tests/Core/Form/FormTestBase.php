@@ -197,7 +197,8 @@ abstract class FormTestBase extends UnitTestCase {
         $this->csrfToken,
         $this->logger,
         $form_error_handler,
-        ])
+        $this->controllerResolver,
+      ])
       ->setMethods(NULL)
       ->getMock();
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
