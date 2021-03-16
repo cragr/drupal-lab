@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\Form;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
