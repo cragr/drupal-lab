@@ -1,0 +1,102 @@
+<?php
+
+namespace Drupal\ajax_test\Form;
+
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\FocusFirstCommand;
+use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Form for testing AJAX FocusFirstCommand.
+ *
+ * @internal
+ */
+class AjaxTestFocusFirstForm implements FormInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'ajax_test_focus_first_command_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['first_input'] = [
+      '#type' => 'textfield',
+    ];
+    $form['second_input'] = [
+      '#type' => 'textfield',
+    ];
+    $form['a_container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'a-container',
+      ],
+    ];
+    $form['a_container']['first_container_input'] = [
+      '#type' => 'textfield',
+    ];
+    $form['a_container']['second_container_input'] = [
+      '#type' => 'textfield',
+    ];
+    $form['focus_first_in_container'] = [
+      '#type' => 'submit',
+      '#value' => 'Focus the first item in a container',
+      '#name' => 'focusfirstcontainer',
+      '#ajax' => [
+        'callback' => '::focusFirstInContainer',
+      ],
+    ];
+    $form['focus_first_in_form'] = [
+      '#type' => 'submit',
+      '#value' => 'Focus the first item in the form',
+      '#name' => 'focusfirstform',
+      '#ajax' => [
+        'callback' => '::focusFirstInForm',
+      ],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * Callback for testing FocusFirstCommand on a container.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function focusFirstInContainer() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new FocusFirstCommand('#a-container'));
+  }
+
+  /**
+   * Callback for testing FocusFirstCommand on a form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function focusFirstInForm() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new FocusFirstCommand('#ajax-test-focus-first-command-form'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+
+  }
+
+}

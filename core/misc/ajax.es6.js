@@ -11,7 +11,7 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings) {
+(function ($, window, Drupal, drupalSettings, { tabbable }) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -999,8 +999,9 @@
       if (response[i].command && this.commands[response[i].command]) {
         this.commands[response[i].command](this, response[i], status);
         if (
-          response[i].command === 'invoke' &&
-          response[i].method === 'focus'
+          (response[i].command === 'invoke' &&
+            response[i].method === 'focus') ||
+          response[i].command === 'focusFirst'
         ) {
           focusChanged = true;
         }
@@ -1472,6 +1473,23 @@
     },
 
     /**
+     * Command to focus the first focusable element within a container.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {string} response.selector
+     *   A query selector string of the container to focus within.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     */
+    focusFirst(ajax, response, status) {
+      const element = document.querySelector(response.selector);
+      tabbable(element)[0].focus();
+    },
+
+    /**
      * Command to apply a jQuery method.
      *
      * @param {Drupal.Ajax} [ajax]
@@ -1580,4 +1598,4 @@
       messages.add(response.message, response.messageOptions);
     },
   };
-})(jQuery, window, Drupal, drupalSettings);
+})(jQuery, window, Drupal, drupalSettings, window.tabbable);
