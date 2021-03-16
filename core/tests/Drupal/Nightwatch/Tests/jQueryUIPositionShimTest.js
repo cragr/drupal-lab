@@ -1443,7 +1443,7 @@ module.exports = {
         const originalPosition = elems
           .position({
             my: 'right bottom',
-            at: 'rigt bottom',
+            at: 'right bottom',
             of: '#parentx',
             collision: 'none',
           })
@@ -2218,7 +2218,7 @@ module.exports = {
             collision: 'none',
           })
           .offset();
-        toReturn['offsets consistient'] = {
+        toReturn['offsets consistent'] = {
           actual: offset1,
           expected: offset2,
         };

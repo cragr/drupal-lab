@@ -596,6 +596,7 @@ fixnull
 flexbox
 flexslider
 flickr
+flipfit
 floatingspace
 foaf
 foat
@@ -624,6 +625,8 @@ fourcol
 fourthcolumn
 fozzie
 fqcn
+fractionselement
+fractionsparent
 francais
 français
 fraîche
@@ -703,6 +706,7 @@ highwater
 hijklmn
 hilfetestmodul
 hilited
+hindex
 hinode
 hippopotamidae
 hisu
@@ -831,6 +835,7 @@ langcode
 langcodes
 langname
 languageswitcher
+largebox
 larowlan
 latn
 layouted
@@ -1143,6 +1148,7 @@ paragonie
 paramconverter
 parens
 parentlist
+parentx
 parseable
 parsererror
 pastafazoul
@@ -1404,6 +1410,7 @@ screenreaders
 scriptable
 scrollable
 scrollbars
+scrollx
 sdeeeee
 searchdirs
 searchfield
@@ -1869,6 +1876,7 @@ viewmode
 viewport's
 viewports
 viewsviewfiles
+vindex
 vivamus
 vmov
 vocabs
@@ -1907,6 +1915,8 @@ widthx
 wimoids
 windir
 winnt
+withinbugger
+withinsmaller
 wmlscript
 woff
 wonkiness

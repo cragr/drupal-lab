@@ -13,30 +13,6 @@ class PositionShimTestPortedJqueryTestsController extends ControllerBase {
    *   The render array.
    */
   public function build() {
-    /**
-     * <div id="el1" style="position: absolute; width: 6px; height: 6px;"></div>
-    <div id="el2" style="position: absolute; width: 6px; height: 6px;"></div>
-    <div id="parent" style="position: absolute; width: 6px; height: 6px; top: 4px; left: 4px;"></div>
-    <div id="within" style="position: absolute; width: 12px; height: 12px; top: 2px; left: 0px;"></div>
-
-    <div id="scrollx" style="position: absolute; top: 0px; left: 0px">
-    <div id="elx" style="position: absolute; width: 10px; height: 10px;"></div>
-    <div id="parentx" style="position: absolute; width: 20px; height: 20px; top: 40px; left: 40px;"></div>
-    </div>
-
-    <div style="position: absolute; height: 5000px; width: 5000px;"></div>
-
-    <div id="fractions-parent" style="position: absolute; left: 10.7432222px; top: 10.532325px; height: 30px; width: 201px;">
-    <div id="fractions-element"></div>
-    </div>
-
-    <div id="bug-5280" style="height: 30px; width: 201px;">
-    <div style="width: 50px; height: 10px;"></div>
-    </div>
-
-    <div id="bug-8710-within-smaller" style="position: absolute; width: 100px; height: 99px; top: 0px; left: 0px;"></div>
-    <div id="bug-8710-within-bigger" style="position: absolute; width: 100px; height: 101px; top: 0px; left: 0px;"></div>
-     */
     return [
       'el1' => [
         '#type' => 'container',
@@ -49,21 +25,21 @@ class PositionShimTestPortedJqueryTestsController extends ControllerBase {
         '#type' => 'container',
         '#attributes' => [
           'id' => 'el2',
-          'style' => 'position: absolute; width: 6px; height: 6px;'
+          'style' => 'position: absolute; width: 6px; height: 6px;',
         ],
       ],
       'parent' => [
         '#type' => 'container',
         '#attributes' => [
           'id' => 'parent',
-          'style' => 'position: absolute; width: 6px; height: 6px; top: 4px; left: 4px;'
+          'style' => 'position: absolute; width: 6px; height: 6px; top: 4px; left: 4px;',
         ],
       ],
       'within' => [
         '#type' => 'container',
         '#attributes' => [
           'id' => 'within',
-          'style' => 'position: absolute; width: 12px; height: 12px; top: 2px; left: 0px;'
+          'style' => 'position: absolute; width: 12px; height: 12px; top: 2px; left: 0px;',
         ],
       ],
       'scrollx' => [
@@ -76,14 +52,14 @@ class PositionShimTestPortedJqueryTestsController extends ControllerBase {
           '#type' => 'container',
           '#attributes' => [
             'id' => 'elx',
-            'style' => 'position: absolute; width: 10px; height: 10px;'
+            'style' => 'position: absolute; width: 10px; height: 10px;',
           ],
         ],
         'parentx' => [
           '#type' => 'container',
           '#attributes' => [
             'id' => 'parentx',
-            'style' => 'position: absolute; width: 20px; height: 20px; top: 40px; left: 40px;'
+            'style' => 'position: absolute; width: 20px; height: 20px; top: 40px; left: 40px;',
           ],
         ],
       ],
