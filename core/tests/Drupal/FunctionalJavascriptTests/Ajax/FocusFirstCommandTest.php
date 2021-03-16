@@ -73,7 +73,7 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     // Confirm that if a container has no focusable children, but is itself
     // focusable, then that container receives focus.
     $page->pressButton('focusablecontainernofocusablechildren');
-    $this->assertNotNull( $assert_session->waitForElementVisible('css', '#focusable-container-without-focusable-children[data-has-focus]'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '#focusable-container-without-focusable-children[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('focusable-container-without-focusable-children', $has_focus_id);
   }
