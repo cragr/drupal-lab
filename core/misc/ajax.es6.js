@@ -11,7 +11,7 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings, { tabbable }) {
+(function ($, window, Drupal, drupalSettings, { focusable }) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -1486,19 +1486,20 @@
      */
     focusFirst(ajax, response, status) {
       const container = document.querySelector(response.selector);
+      if (container) {
+        // Find all focusable elements within the container.
+        let focusableElements = focusable(container);
 
-      // Find all tabbable elements within the container matching the selector.
-      let tabbableElements = tabbable(container);
+        // If no focusable elements are found, add the container to the
+        // focusable elements search.
+        if (!focusableElements.length) {
+          focusableElements = focusable(container, { includeContainer: true });
+        }
 
-      // If no tabbable elements are found, add the container to the tabbable
-      // elements search.
-      if (!tabbableElements.length) {
-        tabbableElements = tabbable(container, { includeContainer: true });
-      }
-
-      // Move focus to the first tabbable item found.
-      if (tabbableElements.length) {
-        tabbableElements[0].focus();
+        // Move focus to the first focusable item found.
+        if (focusableElements.length) {
+          focusableElements[0].focus();
+        }
       }
     },
 

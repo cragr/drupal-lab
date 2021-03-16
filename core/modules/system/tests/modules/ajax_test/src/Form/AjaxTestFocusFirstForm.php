@@ -76,6 +76,19 @@ class AjaxTestFocusFirstForm implements FormInterface {
       '#type' => 'textfield',
     ];
 
+    $form['nothing_focusable'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'nothing-focusable',
+      ],
+      '#markup' => 'nothing focusable',
+    ];
+
+    $form['nothing_focusable']['nested'] = [
+      '#type' => 'container',
+      '#markup' => 'There are divs in here, but nothing focusable',
+    ];
+
     $form['focus_first_in_container'] = [
       '#type' => 'submit',
       '#value' => 'Focus the first item in a container',
@@ -92,8 +105,88 @@ class AjaxTestFocusFirstForm implements FormInterface {
         'callback' => '::focusFirstInForm',
       ],
     ];
+    $form['uses_selector_with_multiple_matches'] = [
+      '#type' => 'submit',
+      '#value' => 'Uses selector with multiple matches',
+      '#name' => 'selectormultiplematches',
+      '#ajax' => [
+        'callback' => '::focusFirstSelectorMultipleMatch',
+      ],
+    ];
+    $form['focusable_container_no_focusable_children'] = [
+      '#type' => 'submit',
+      '#value' => 'Focusable container, no focusable children',
+      '#name' => 'focusablecontainernofocusablechildren',
+      '#ajax' => [
+        'callback' => '::focusableContainerNoFocusableChildren',
+      ],
+    ];
+
+    $form['selector_has_nothing_focusable'] = [
+      '#type' => 'submit',
+      '#value' => 'Try to focus container with nothing focusable',
+      '#name' => 'selectornothingfocusable',
+      '#ajax' => [
+        'callback' => '::selectorHasNothingFocusable',
+      ],
+    ];
+
+    $form['selector_does_not_exist'] = [
+      '#type' => 'submit',
+      '#value' => 'Call focusfirst on selector that does not exist.',
+      '#name' => 'selectornotexist',
+      '#ajax' => [
+        'callback' => '::selectorDoesNotExist',
+      ],
+    ];
+
+    $form['#attached']['library'][] = 'ajax_test/focusfirst';
 
     return $form;
+  }
+
+  /**
+   * Callback for testing FocusFirstCommand on a container.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function selectorDoesNotExist() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new FocusFirstCommand('#selector-does-not-exist'));
+  }
+
+  /**
+   * Callback for testing FocusFirstCommand on a container.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function selectorHasNothingFocusable() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new FocusFirstCommand('#nothing-focusable'));
+  }
+
+  /**
+   * Callback for testing FocusFirstCommand on a container.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function focusableContainerNoFocusableChildren() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new FocusFirstCommand('#focusable-container-without-focusable-children'));
+  }
+
+  /**
+   * Callback for testing FocusFirstCommand on a container.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function focusFirstSelectorMultipleMatch() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new FocusFirstCommand('.multiple-of-same-selector'));
   }
 
   /**
