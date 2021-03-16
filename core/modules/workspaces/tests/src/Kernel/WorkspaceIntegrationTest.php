@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\NodeType;
 use Drupal\system\Form\SiteInformationForm;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
