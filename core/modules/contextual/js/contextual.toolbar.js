@@ -13,23 +13,16 @@
   };
 
   function initContextualToolbar(context) {
-    if (!Drupal.contextual || !Drupal.contextual.collection) {
+    if (!Drupal.contextual || !Drupal.contextual.instances) {
       return;
     }
 
     var contextualToolbar = Drupal.contextualToolbar;
-    contextualToolbar.model = new contextualToolbar.StateModel({
-      isViewing: localStorage.getItem('Drupal.contextualToolbar.isViewing') !== 'false'
-    }, {
-      contextualCollection: Drupal.contextual.collection
-    });
     var viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
-      model: contextualToolbar.model,
       strings: strings
     };
-    new contextualToolbar.VisualView(viewOptions);
-    new contextualToolbar.AuralView(viewOptions);
+    contextualToolbar.model = new Drupal.contextual.ContextualToolbarModelView(viewOptions);
   }
 
   Drupal.behaviors.contextualToolbar = {
