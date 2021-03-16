@@ -741,7 +741,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertEquals('live node 1', $live_node->title->value);
 
     $result = $storage->getQuery()
-      ->accessCheck(FALSE);
+      ->accessCheck(FALSE)
       ->condition('title', 'live node 1')
       ->execute();
     $this->assertEquals([$live_node->getRevisionId() => $node->id()], $result);
@@ -754,7 +754,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       $this->assertEquals('stage node 1', $stage_node->title->value);
 
       $result = $storage->getQuery()
-        ->accessCheck(FALSE);
+        ->accessCheck(FALSE)
         ->condition('title', 'stage node 1')
         ->execute();
       $this->assertEquals([$stage_node->getRevisionId() => $stage_node->id()], $result);
