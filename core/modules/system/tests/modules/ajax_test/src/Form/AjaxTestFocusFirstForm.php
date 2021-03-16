@@ -43,6 +43,39 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['a_container']['second_container_input'] = [
       '#type' => 'textfield',
     ];
+    $form['focusable_container_without_focusable_children'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'tabindex' => '-1',
+        'id' => 'focusable-container-without-focusable-children',
+      ],
+      '#markup' => 'No focusable children here',
+    ];
+
+    $form['multiple_of_same_selector_1'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'multiple-of-same-selector-1',
+        'class' => ['multiple-of-same-selector'],
+      ],
+    ];
+
+    $form['multiple_of_same_selector_1']['inside_same_selector_container_1'] = [
+      '#type' => 'textfield',
+    ];
+
+    $form['multiple_of_same_selector_2'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'multiple-of-same-selector-2',
+        'class' => ['multiple-of-same-selector'],
+      ],
+    ];
+
+    $form['multiple_of_same_selector_2']['inside_same_selector_container_2'] = [
+      '#type' => 'textfield',
+    ];
+
     $form['focus_first_in_container'] = [
       '#type' => 'submit',
       '#value' => 'Focus the first item in a container',

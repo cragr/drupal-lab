@@ -5,6 +5,18 @@ namespace Drupal\Core\Ajax;
 /**
  * AJAX command for focusing an element.
  *
+ * This command is provided a selector then does the following:
+ * - The first element matching the provided selector will become the container
+ *   where the search for focusable elements is conducted.
+ * - If one or more focusable elements are found within the container, the first
+ *   of those will receive focus.
+ * - If no focusable elements are found within the container, but the container
+ *   itself is focusable, then the container will receive focus.
+ * - If the container is not focusable and contains no focusable elements, this
+ *   command will do nothing.
+ *
+ * @see Drupal.AjaxCommands.focusFirst
+ *
  * @ingroup ajax
  */
 class FocusFirstCommand implements CommandInterface {
@@ -27,7 +39,7 @@ class FocusFirstCommand implements CommandInterface {
   }
 
   /**
-   * Implements Drupal\Core\Ajax\CommandInterface:render().
+   * {@inheritdoc}
    */
   public function render() {
     return [

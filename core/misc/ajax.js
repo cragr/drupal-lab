@@ -628,8 +628,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       $(response.selector).data(response.name, response.value);
     },
     focusFirst: function focusFirst(ajax, response, status) {
-      var element = document.querySelector(response.selector);
-      tabbable(element)[0].focus();
+      var container = document.querySelector(response.selector);
+      var tabbableElements = tabbable(container);
+
+      if (!tabbableElements.length) {
+        tabbableElements = tabbable(container, {
+          includeContainer: true
+        });
+      }
+
+      if (tabbableElements.length) {
+        tabbableElements[0].focus();
+      }
     },
     invoke: function invoke(ajax, response, status) {
       var $element = $(response.selector);

@@ -1485,8 +1485,21 @@
      *   The XMLHttpRequest status.
      */
     focusFirst(ajax, response, status) {
-      const element = document.querySelector(response.selector);
-      tabbable(element)[0].focus();
+      const container = document.querySelector(response.selector);
+
+      // Find all tabbable elements within the container matching the selector.
+      let tabbableElements = tabbable(container);
+
+      // If no tabbable elements are found, add the container to the tabbable
+      // elements search.
+      if (!tabbableElements.length) {
+        tabbableElements = tabbable(container, { includeContainer: true });
+      }
+
+      // Move focus to the first tabbable item found.
+      if (tabbableElements.length) {
+        tabbableElements[0].focus();
+      }
     },
 
     /**
