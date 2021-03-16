@@ -774,6 +774,13 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
+  beforeEach(browser) {
+    if (browser.currentTest.name !== 'test position') {
+      browser
+        .drupalRelativeURL('/position-shim-test-ported-from-jqueryui')
+        .waitForElementVisible('#el1', 1000);
+    }
+  },
   'test position': (browser) => {
     browser
       .resizeWindow(1200, 600)
@@ -974,5 +981,1320 @@ module.exports = {
           });
         },
       );
+  },
+  // The remaining tests are ported from jQuery UI's QUnit tests.
+  'my, at, of': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'left top',
+          at: 'left top',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn['left top, left top'] = {
+          actual: $elx.offset(),
+          expected: { top: 40, left: 40 },
+        };
+        $elx.position({
+          my: 'left top',
+          at: 'left bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn['left top, left bottom'] = {
+          actual: $elx.offset(),
+          expected: { top: 60, left: 40 },
+        };
+        $elx.position({
+          my: 'left',
+          at: 'bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn['left, bottom'] = {
+          actual: $elx.offset(),
+          expected: { top: 55, left: 50 },
+        };
+        $elx.position({
+          my: 'left foo',
+          at: 'bar baz',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn['left foo, bar baz'] = {
+          actual: $elx.offset(),
+          expected: { top: 45, left: 50 },
+        };
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 4);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'multiple elements': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const elements = $('#el1, #el2');
+        const result = elements.position({
+          my: 'left top',
+          at: 'left bottom',
+          of: '#parent',
+          collision: 'none',
+        });
+        toReturn['elements return'] = {
+          actual: result,
+          expected: elements,
+        };
+        // eslint-disable-next-line func-names
+        elements.each(function (index) {
+          toReturn[`element${index}`] = {
+            actual: $(this).offset(),
+            expected: { top: 10, left: 4 },
+          };
+        });
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 3);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  positions: (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+
+        const offsets = {
+          left: 0,
+          center: 3,
+          right: 6,
+          top: 0,
+          bottom: 6,
+        };
+        const start = { left: 4, top: 4 };
+        const el = $('#el1');
+
+        $.each([0, 1], (my) => {
+          $.each(['top', 'center', 'bottom'], (vindex, vertical) => {
+            // eslint-disable-next-line max-nested-callbacks
+            $.each(['left', 'center', 'right'], (hindex, horizontal) => {
+              const _my = my ? `${horizontal} ${vertical}` : 'left top';
+              const _at = !my ? `${horizontal} ${vertical}` : 'left top';
+              el.position({
+                my: _my,
+                at: _at,
+                of: '#parent',
+                collision: 'none',
+              });
+              toReturn[`my: ${_my} at: ${_at}`] = {
+                actual: el.offset(),
+                expected: {
+                  top: start.top + offsets[vertical] * (my ? -1 : 1),
+                  left: start.left + offsets[horizontal] * (my ? -1 : 1),
+                },
+              };
+            });
+          });
+        });
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 17);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  of: (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        const $parentx = $('#parentx');
+        const win = $(window);
+        let event;
+
+        // eslint-disable-next-line func-names
+        let scrollTopSupport = function () {
+          const support = win.scrollTop(1).scrollTop() === 1;
+          win.scrollTop(0);
+          // eslint-disable-next-line func-names
+          scrollTopSupport = function () {
+            return support;
+          };
+          return support;
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'left top',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn.selector = {
+          actual: $elx.offset(),
+          expected: { top: 40, left: 40 },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'left bottom',
+          of: $parentx,
+          collision: 'none',
+        });
+        toReturn['jQuery object'] = {
+          actual: $elx.offset(),
+          expected: { top: 60, left: 40 },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'left top',
+          of: $parentx[0],
+          collision: 'none',
+        });
+        toReturn['DOM element'] = {
+          actual: $elx.offset(),
+          expected: { top: 40, left: 40 },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'right bottom',
+          of: document,
+          collision: 'none',
+        });
+        toReturn.document = {
+          actual: $elx.offset(),
+          expected: {
+            top: $(document).height() - 10,
+            left: $(document).width() - 10,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'right bottom',
+          of: $(document),
+          collision: 'none',
+        });
+        toReturn['document as jQuery object'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: $(document).height() - 10,
+            left: $(document).width() - 10,
+          },
+        };
+
+        win.scrollTop(0);
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'right bottom',
+          of: window,
+          collision: 'none',
+        });
+
+        toReturn.window = {
+          actual: $elx.offset(),
+          expected: {
+            top: win.height() - 10,
+            left: win.width() - 10,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'right bottom',
+          of: win,
+          collision: 'none',
+        });
+        toReturn['window as jQuery object'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: win.height() - 10,
+            left: win.width() - 10,
+          },
+        };
+
+        if (scrollTopSupport()) {
+          win.scrollTop(500).scrollLeft(200);
+          $elx.position({
+            my: 'right bottom',
+            at: 'right bottom',
+            of: window,
+            collision: 'none',
+          });
+
+          toReturn['window, scrolled'] = {
+            actual: $elx.offset(),
+            expected: {
+              top: win.height() + 500 - 10,
+              left: win.width() + 200 - 10,
+            },
+          };
+
+          win.scrollTop(0).scrollLeft(0);
+        }
+
+        event = $.extend($.Event('someEvent'), { pageX: 200, pageY: 300 });
+        $elx.position({
+          my: 'left top',
+          at: 'left top',
+          of: event,
+          collision: 'none',
+        });
+        toReturn['event - left top, left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 300,
+            left: 200,
+          },
+        };
+
+        event = $.extend($.Event('someEvent'), { pageX: 400, pageY: 600 });
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: event,
+          collision: 'none',
+        });
+        toReturn['event - left top, right bottom'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 600,
+            left: 400,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 10);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  offsets: (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {
+          deepEquals: {},
+          trues: {},
+        };
+        const $elx = $('#elx');
+        let offset;
+
+        $elx.position({
+          my: 'left top',
+          at: 'left+10 bottom+10',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn.deepEquals['offsets in at'] = {
+          actual: $elx.offset(),
+          expected: { top: 70, left: 50 },
+        };
+
+        $elx.position({
+          my: 'left+10 top-10',
+          at: 'left bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn.deepEquals['offsets in my'] = {
+          actual: $elx.offset(),
+          expected: { top: 50, left: 50 },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'left+50% bottom-10%',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn.deepEquals['percentage offsets in at'] = {
+          actual: $elx.offset(),
+          expected: { top: 58, left: 50 },
+        };
+
+        $elx.position({
+          my: 'left-30% top+50%',
+          at: 'left bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn.deepEquals['percentage offsets in my'] = {
+          actual: $elx.offset(),
+          expected: { top: 65, left: 37 },
+        };
+
+        $elx.position({
+          my: 'left-30.001% top+50.0%',
+          at: 'left bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        offset = $elx.offset();
+        toReturn.trues['decimal percentage top offsets in my'] =
+          Math.round(offset.top) === 65;
+        toReturn.trues['decimal percentage left offsets in my'] =
+          Math.round(offset.left) === 37;
+
+        $elx.position({
+          my: 'left+10.4 top-10.6',
+          at: 'left bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        offset = $elx.offset();
+        toReturn.trues['decimal top offsets in my'] =
+          Math.round(offset.top) === 49;
+        toReturn.trues['decimal left offsets in my'] =
+          Math.round(offset.left) === 50;
+
+        $elx.position({
+          my: 'left+right top-left',
+          at: 'left-top bottom-bottom',
+          of: '#parentx',
+          collision: 'none',
+        });
+        toReturn.deepEquals['invalid offsets'] = {
+          actual: $elx.offset(),
+          expected: { top: 60, left: 40 },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value.trues).length, 4);
+        browser.assert.equal(Object.keys(result.value.deepEquals).length, 5);
+        Object.entries(result.value.deepEquals).forEach(([key, value]) => {
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+        Object.entries(result.value.trues).forEach(([key, value]) => {
+          browser.assert.equal(value, true, key);
+        });
+      },
+    );
+  },
+  using: (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        let count = 0;
+        const elems = $('#el1, #el2');
+        const of = $('#parentx');
+        const expectedPosition = { top: 60, left: 60 };
+        const expectedFeedback = {
+          target: {
+            element: of,
+            width: 20,
+            height: 20,
+            left: 40,
+            top: 40,
+          },
+          element: {
+            width: 6,
+            height: 6,
+            left: 60,
+            top: 60,
+          },
+          horizontal: 'left',
+          vertical: 'top',
+          important: 'vertical',
+        };
+        const originalPosition = elems
+          .position({
+            my: 'right bottom',
+            at: 'rigt bottom',
+            of: '#parentx',
+            collision: 'none',
+          })
+          .offset();
+
+        elems.position({
+          my: 'left top',
+          at: 'center+10 bottom',
+          of: '#parentx',
+          using(position, feedback) {
+            toReturn[`correct context for call #${count}`] = {
+              actual: this,
+              expected: elems[count],
+            };
+            toReturn[`correct position for call #${count}`] = {
+              actual: position,
+              expected: expectedPosition,
+            };
+            toReturn[`feedback and element match for call #${count}`] = {
+              actual: feedback.element.element[0],
+              expected: elems[count],
+            };
+            // assert.deepEqual(feedback.element.element[0], elems[count]);
+            delete feedback.element.element;
+            toReturn[`expected feedback after delete for call #${count}`] = {
+              actual: feedback,
+              expected: expectedFeedback,
+            };
+            count += 1;
+          },
+        });
+
+        // eslint-disable-next-line func-names
+        elems.each(function (index) {
+          toReturn[`elements not moved: ${index}`] = {
+            actual: $(this).offset(),
+            expected: originalPosition,
+          };
+        });
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 10);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: fit, no collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'fit',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right+2 bottom+3',
+          of: '#parent',
+          collision: 'fit',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 13,
+            left: 12,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: fit, collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        const win = $(window);
+        // eslint-disable-next-line func-names
+        let scrollTopSupport = function () {
+          const support = win.scrollTop(1).scrollTop() === 1;
+          win.scrollTop(0);
+          // eslint-disable-next-line func-names
+          scrollTopSupport = function () {
+            return support;
+          };
+          return support;
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          collision: 'fit',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 0,
+            left: 0,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left+2 top+3',
+          of: '#parent',
+          collision: 'fit',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 0,
+            left: 0,
+          },
+        };
+
+        if (scrollTopSupport()) {
+          win.scrollTop(300).scrollLeft(200);
+          $elx.position({
+            my: 'right bottom',
+            at: 'left top',
+            of: '#parent',
+            collision: 'fit',
+          });
+          toReturn['window scrolled'] = {
+            actual: $elx.offset(),
+            expected: {
+              top: 300,
+              left: 200,
+            },
+          };
+
+          win.scrollTop(0).scrollLeft(0);
+        }
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 3);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: flip, no collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right+2 bottom+3',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 13,
+            left: 12,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: flip, collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left+2 top+3',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 7,
+            left: 8,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: flipfit, no collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'flipfit',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right+2 bottom+3',
+          of: '#parent',
+          collision: 'flipfit',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 13,
+            left: 12,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: flipfit, collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          collision: 'flipfit',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left+2 top+3',
+          of: '#parent',
+          collision: 'flipfit',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 7,
+            left: 8,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: none, no collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'none',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right+2 bottom+3',
+          of: '#parent',
+          collision: 'none',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 13,
+            left: 12,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: none, collision': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          collision: 'none',
+        });
+
+        toReturn['no offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: -6,
+            left: -6,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left+2 top+3',
+          of: '#parent',
+          collision: 'none',
+        });
+
+        toReturn['with offset'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: -3,
+            left: -4,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: fit, with margin': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx').css({
+          marginTop: 6,
+          marginLeft: 4,
+        });
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'fit',
+        });
+
+        toReturn['right bottom'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          collision: 'fit',
+        });
+
+        toReturn['left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 6,
+            left: 4,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 2);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'collision: flip, with margin': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx').css({
+          marginTop: 6,
+          marginLeft: 4,
+        });
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['right bottom'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'left top',
+          of: '#parent',
+          collision: 'flip',
+        });
+
+        toReturn['left top left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 0,
+            left: 4,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 3);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  within: (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          within: document,
+        });
+
+        toReturn['within document'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: 10,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          collision: 'fit',
+
+          within: '#within',
+        });
+
+        toReturn['fit - right bottom'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 4,
+            left: 2,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          within: '#within',
+          collision: 'fit',
+        });
+
+        toReturn['fit - left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 2,
+            left: 0,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          within: '#within',
+          collision: 'flip',
+        });
+
+        toReturn['flip - right bottom'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: -6,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          within: '#within',
+          collision: 'flip',
+        });
+
+        toReturn['flip - left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 10,
+            left: -6,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#parent',
+          within: '#within',
+          collision: 'flipfit',
+        });
+
+        toReturn['flipfit - right bottom'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 4,
+            left: 0,
+          },
+        };
+
+        $elx.position({
+          my: 'right bottom',
+          at: 'left top',
+          of: '#parent',
+          within: '#within',
+          collision: 'flipfit',
+        });
+
+        toReturn['flipfit - left top'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 4,
+            left: 0,
+          },
+        };
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 7);
+        Object.entries(result.value).forEach(([key, value]) => {
+          browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  fractions: (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $fractionElement = $('#fractions-element').position({
+          my: 'left top',
+          at: 'left top',
+          of: '#fractions-parent',
+          collision: 'none',
+        });
+        toReturn['left top, left top'] = {
+          actual: $fractionElement.offset(),
+          expected: $('#fractions-parent').offset(),
+        };
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 1);
+        Object.entries(result.value).forEach((key, value) => {
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'bug #5280: consistent results (avoid fractional values)': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const wrapper = $('#bug-5280');
+        const elem = wrapper.children();
+        const offset1 = elem
+          .position({
+            my: 'center',
+            at: 'center',
+            of: wrapper,
+            collision: 'none',
+          })
+          .offset();
+        const offset2 = elem
+          .position({
+            my: 'center',
+            at: 'center',
+            of: wrapper,
+            collision: 'none',
+          })
+          .offset();
+        toReturn['offsets consistient'] = {
+          actual: offset1,
+          expected: offset2,
+        };
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 1);
+        Object.entries(result.value).forEach((key, value) => {
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'bug #8710: flip if flipped position fits more': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const $elx = $('#elx');
+        $elx.position({
+          my: 'left top',
+          within: '#bug-8710-within-smaller',
+          of: '#parentx',
+          collision: 'flip',
+          at: 'right bottom+30',
+        });
+
+        toReturn['flip - top fits all'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 0,
+            left: 60,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          within: '#bug-8710-within-smaller',
+          of: '#parentx',
+          collision: 'flip',
+          at: 'right bottom+32',
+        });
+        toReturn['flip - top fits more'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: -2,
+            left: 60,
+          },
+        };
+
+        $elx.position({
+          my: 'left top',
+          within: '#bug-8710-within-bigger',
+          of: '#parentx',
+          collision: 'flip',
+          at: 'right bottom+32',
+        });
+        toReturn['no flip - top fits less'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 92,
+            left: 60,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 3);
+        Object.entries(result.value).forEach((key, value) => {
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
   },
 };

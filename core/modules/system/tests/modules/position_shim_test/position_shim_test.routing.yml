@@ -5,3 +5,12 @@ position_test_page:
     _title: 'position testing'
   requirements:
     _access: 'TRUE'
+
+position_test_ported_jqueryui:
+  path: '/position-shim-test-ported-from-jqueryui'
+  defaults:
+    _controller: '\Drupal\position_shim_test\Controller\PositionShimTestPortedJqueryTestsController::build'
+    _title: 'ported position testing'
+  requirements:
+    _access: 'TRUE'
+
