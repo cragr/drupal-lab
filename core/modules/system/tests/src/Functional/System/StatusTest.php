@@ -86,7 +86,7 @@ class StatusTest extends BrowserTestBase {
     $cron_last_run = \Drupal::state()->get('system.cron_last');
     \Drupal::state()->set('system.cron_last', 0);
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->elementTextContains('css', 'details.system-status-report__entry div', "Cron has not run recently");
+    $this->assertSession()->elementExists('xpath', '//details[contains(@class, "system-status-report__entry")]//div[contains(text(), "Cron has not run recently")]);
     \Drupal::state()->set('system.cron_last', $cron_last_run);
   }
 

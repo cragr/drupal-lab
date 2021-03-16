@@ -56,10 +56,10 @@ class UserBlocksTest extends BrowserTestBase {
     foreach ($paths as $path => $expected_visibility) {
       $this->drupalGet($path);
       if ($expected_visibility) {
-        $this->assertSession()->elementExists('//div[contains(@class,"block-user-login-block") and @role="form"]');
+        $this->assertSession()->elementExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
       }
       else {
-        $this->assertSession()->elementNotExists('//div[contains(@class,"block-user-login-block") and @role="form"]');
+        $this->assertSession()->elementNotExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
       }
     }
   }
