@@ -49,7 +49,7 @@
     render() {
       this.$el[0].classList.toggle('hidden', this.isVisible);
       const button = this.$el[0].querySelector('button');
-      button.classList.toggle('is-active', !this.isViewing)
+      button.classList.toggle('is-active', !this.isViewing);
       button.setAttribute('aria-pressed', !this.isViewing);
       this.contextualCount = Drupal.contextual.instances.count;
     }

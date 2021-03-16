@@ -8,7 +8,6 @@ tour:
     - core/drupal
     - core/jquery.joyride
     - tour/tour-styling
-    - core/modelview
 
 tour-styling:
   version: VERSION

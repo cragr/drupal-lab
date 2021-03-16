@@ -86,15 +86,14 @@
         .find('.trigger')
         .text(
           Drupal.t('@action @title configuration options', {
-            '@action': !isOpen
-              ? this.strings.open
-              : this.strings.close,
+            '@action': !isOpen ? this.strings.open : this.strings.close,
             '@title': this.title,
           }),
         )
         .attr('aria-pressed', isOpen);
     }
 
+    // eslint-disable-next-line class-methods-use-this
     touchEndToClick(event) {
       event.preventDefault();
       event.target.click();
