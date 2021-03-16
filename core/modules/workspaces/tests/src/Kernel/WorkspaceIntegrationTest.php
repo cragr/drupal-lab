@@ -20,11 +20,6 @@ use Drupal\workspaces\WorkspaceAccessException;
 /**
  * Tests a complete publishing scenario across different workspaces.
  *
- * The node_access_test module makes all nodes owned by the anonymous
- * user (such as all created during this test) inaccessible to 'view'.
- * Therefore this test implicitly checks that workspace operations do not
- * depend on entity access.
- *
  * @group #slow
  * @group workspaces
  */
@@ -100,7 +95,8 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     $this->createContentType(['type' => 'page']);
 
-    // node_access_test requires a node_access_rebuild().
+    // Make all anonymous nodes viewable.
+    \Drupal::state()->set('node_access_test.no_access_uid', -1);
     node_access_rebuild();
 
     $this->setCurrentUser($this->createUser(['administer nodes']));
@@ -360,6 +356,14 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ],
     ];
     $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
+
+    // Check publisher is not sensitive to access.
+    // All the nodes are anonymous, set node_access_test to make them unviewable.
+    \Drupal::state()->set('node_access_test.no_access_uid', 0);
+    node_access_rebuild();
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
+    \Drupal::state()->set('node_access_test.no_access_uid', -1);
+    node_access_rebuild();
 
     $this->workspaces['stage']->publish();
     $this->assertWorkspaceStatus($test_scenarios['push_stage_to_live'], 'node');
@@ -782,9 +786,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       // Check that entity queries return the correct results.
       $this->assertEntityQuery($expected_values, $entity_type_id);
 
-      // Make all anonymous nodes viewable.
-      \Drupal::state()->set('node_access_test.no_access_uid', -1);
-
       // Check that the 'Frontpage' view only shows published content that is
       // also considered as the default revision in the given workspace.
       $expected_frontpage = array_filter($expected_values, function ($expected_value) {
@@ -828,9 +829,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ]);
       $view->execute();
       $this->assertIdenticalResultset($view, $expected_frontpage, ['nid' => 'nid']);
-
-      // Make all anonymous nodes unviewable again.
-      \Drupal::state()->set('node_access_test.no_access_uid', -1);
     }
   }
 
