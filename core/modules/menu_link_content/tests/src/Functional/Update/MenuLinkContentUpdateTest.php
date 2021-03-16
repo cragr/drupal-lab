@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\menu_link_content\Functional\Update;
 
-use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use Drupal\user\Entity\User;
 
 /**
  * Tests the upgrade path for custom menu links.
