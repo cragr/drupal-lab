@@ -166,21 +166,12 @@
             tourItems.forEach((step, index) => {
               const tourItemOptions = {
                 title: step.title ? Drupal.checkPlain(step.title) : null,
-                text: () =>
-                  `<p>${step.body}</p><div class="tour-progress">${step.counter}</div>`,
+                text: () => Drupal.theme('tourItemContent', step),
                 attachTo: {
                   element: step.selector,
                   on: step.location ? step.location : 'bottom',
                 },
-                buttons: [
-                  {
-                    classes: 'button button--primary',
-                    text: step.cancelText ? step.cancelText : Drupal.t('Next'),
-                    action: step.cancelText
-                      ? shepherdTour.cancel
-                      : shepherdTour.next,
-                  },
-                ],
+                buttons: [Drupal.tour.nextButton(shepherdTour, step)],
                 classes: step.classes,
                 // @todo joyride_content_container_name  can be removed when the Stable9
                 //   theme is removed from core. This only exists to provide Joyride
@@ -286,4 +277,41 @@
       },
     },
   );
+
+  /**
+   * Provides an object that will become the tour item's 'next; button.
+   *
+   * Similar to a theme function, themes can override this function to customize
+   * the resulting button. Unlike a theme function, it returns an object instead
+   * of a string, which is why it is not part of Drupal.theme.
+   *
+   * @param {Tour} shepherdTour
+   *  A class representing a Shepherd site tour.
+   * @param {Step} step
+   *   A class representing a Shepherd tour step.
+   * @return {{classes: string, action: *, text: (*|string)}}
+   *    An object that Shepherd will use to create the 'next' button.
+   *
+   * @see https://shepherdjs.dev/docs/Step.html
+   */
+  Drupal.tour.nextButton = (shepherdTour, step) => {
+    return {
+      classes: 'button button--primary',
+      text: step.cancelText ? step.cancelText : Drupal.t('Next'),
+      action: step.cancelText ? shepherdTour.cancel : shepherdTour.next,
+    };
+  };
+
+  /**
+   * Theme function for tour item content.
+   *
+   * @param {Step} step
+   *   A class representing a Shepherd tour step.
+   * @return {string}
+   *   The tour item content markup.
+   *
+   * @see https://shepherdjs.dev/docs/Step.html
+   */
+  Drupal.theme.tourItemContent = (step) =>
+    `<p>${step.body}</p><div class="tour-progress">${step.counter}</div>`;
 })(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);

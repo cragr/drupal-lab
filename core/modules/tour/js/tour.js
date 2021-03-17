@@ -73,17 +73,13 @@
             var tourItemOptions = {
               title: step.title ? Drupal.checkPlain(step.title) : null,
               text: function text() {
-                return "<p>".concat(step.body, "</p><div class=\"tour-progress\">").concat(step.counter, "</div>");
+                return Drupal.theme('tourItemContent', step);
               },
               attachTo: {
                 element: step.selector,
                 on: step.location ? step.location : 'bottom'
               },
-              buttons: [{
-                classes: 'button button--primary',
-                text: step.cancelText ? step.cancelText : Drupal.t('Next'),
-                action: step.cancelText ? shepherdTour.cancel : shepherdTour.next
-              }],
+              buttons: [Drupal.tour.nextButton(shepherdTour, step)],
               classes: step.classes,
               joyride_content_container_name: step.joyride_content_container_name,
               index: index
@@ -146,4 +142,16 @@
       }
     }
   });
+
+  Drupal.tour.nextButton = function (shepherdTour, step) {
+    return {
+      classes: 'button button--primary',
+      text: step.cancelText ? step.cancelText : Drupal.t('Next'),
+      action: step.cancelText ? shepherdTour.cancel : shepherdTour.next
+    };
+  };
+
+  Drupal.theme.tourItemContent = function (step) {
+    return "<p>".concat(step.body, "</p><div class=\"tour-progress\">").concat(step.counter, "</div>");
+  };
 })(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);

@@ -2,7 +2,7 @@
 
 namespace Drupal\tour;
 
-@trigger_error(__NAMESPACE__ . '\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ' . __NAMESPACE__ . '\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234', E_USER_DEPRECATED);
+@trigger_error(__NAMESPACE__ . '\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ' . __NAMESPACE__ . '\TourTipPluginInterface instead. See https://www.drupal.org/node/3204096', E_USER_DEPRECATED);
 
 /**
  * Defines an interface for tour items.

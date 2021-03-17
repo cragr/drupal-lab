@@ -494,7 +494,7 @@ jquery.joyride:
     gpl-compatible: true
   js:
     assets/vendor/jquery-joyride/jquery.joyride-2.1.js: { }
-  deprecated: The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the core/shepherd library instead. See https://www.drupal.org/node/NID
+  deprecated: The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the core/shepherd library instead. See https://www.drupal.org/node/3195234
   dependencies:
     - core/jquery
 

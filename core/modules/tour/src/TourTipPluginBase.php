@@ -118,6 +118,12 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
       'left-end',
     ];
 
+    if (!is_null($location)) {
+      // This assertion is skipped if `$location` is null, as that instructs
+      // Shepherd to use automatic positioning.
+      assert(in_array(trim($location), $valid_values), "$location is not a valid Tour Tip position value.");
+    }
+
     return in_array(trim($location), $valid_values) ? $location : NULL;
   }
 
@@ -143,7 +149,7 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
       return $selector;
     }
 
-    $attributes = $this->getAttributes();
+    $attributes = $this->get('attributes');
     if (isset($attributes['data-id'])) {
       $selector = "#{$attributes['data-id']}";
     }
@@ -179,7 +185,7 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
   }
 
   /**
-   * This method should not actually be used. Returns an empty array.
+   * This method should not actually be used and throws an exception.
    *
    * This method exists so the class can implement TipPluginInterface, which is
    * needed for plugin discovery in Drupal 9. TipPluginInterface is deprecated
@@ -191,18 +197,23 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
    * @todo remove in https://drupal.org/node/3195193
    */
   final public function getAttributes() {
+    throw new \Exception('\Drupal\tour\TourTipPluginBase::getAttributes is not supported. Use getSelector() for the selector of the element the tip is associated with, and get() for other tip config properties.');
+
+    // This is never reached due to the exception above, but is here to meet the
+    // requirements of implementing TipPluginInterface.
+    // phpcs:ignore
     return [];
   }
 
   /**
-   * This method should not actually be used. Returns an empty array.
+   * This method should not actually be used and throws an exception.
    *
    * This method exists so the class can implement TipPluginInterface, which is
    * needed for plugin discovery in Drupal 9. TipPluginInterface is deprecated
    * and will be replaced with TourTipPluginInterface in Drupal 10.
    *
    * @return array
-   *   An empty array.
+   *   An empty array, were an exception not intentionally thrown.
    *
    * @todo remove in https://drupal.org/node/3195193
    */
@@ -210,6 +221,11 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
     // Intentionally return an empty array. This method exists so the class
     // implements TipPluginInterface, which is needed for plugin discovery in
     // Drupal 9, but is a deprecated interface.
+    throw new \Exception('\Drupal\tour\TourTipPluginBase::getOutput is not supported. Use getBody() and getTitle() instead. ');
+
+    // This is never reached due to the exception above, but is here to meet the
+    // requirements of implementing TipPluginInterface.
+    // phpcs:ignore
     return [];
   }
 

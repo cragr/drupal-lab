@@ -146,9 +146,9 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    * Test plugin and schema deprecations.
    */
   public function testTipDeprecations() {
-    $this->expectDeprecation('Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3195234');
-    $this->expectDeprecation('Drupal\tour\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginBase instead. See https://www.drupal.org/node/3195234');
-    $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3195234");
+    $this->expectDeprecation('Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3204096');
+    $this->expectDeprecation('Drupal\tour\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginBase instead. See https://www.drupal.org/node/3204096');
+    $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093");
     $this->drupalGet('tour-test-legacy');
   }
 
