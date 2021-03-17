@@ -8,11 +8,11 @@ namespace Drupal\Core\Ajax;
  * This command is provided a selector then does the following:
  * - The first element matching the provided selector will become the container
  *   where the search for focusable elements is conducted.
- * - If one or more focusable elements are found within the container, the first
+ * - If one or more tabbable elements are found within the container, the first
  *   of those will receive focus.
- * - If no focusable elements are found within the container, but the container
+ * - If no tabbable elements are found within the container, but the container
  *   itself is focusable, then the container will receive focus.
- * - If the container is not focusable and contains no focusable elements, this
+ * - If the container is not focusable and contains no tabbable elements, this
  *   command will do nothing.
  *
  * @see Drupal.AjaxCommands.focusFirst
