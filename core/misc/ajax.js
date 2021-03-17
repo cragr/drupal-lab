@@ -18,7 +18,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 (function ($, window, Drupal, drupalSettings, _ref) {
-  var focusable = _ref.focusable;
+  var isFocusable = _ref.isFocusable,
+      tabbable = _ref.tabbable;
   Drupal.behaviors.AJAX = {
     attach: function attach(context, settings) {
       function loadAjaxBehavior(base) {
@@ -631,16 +632,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var container = document.querySelector(response.selector);
 
       if (container) {
-        var focusableElements = focusable(container);
+        var tabbableElements = tabbable(container);
 
-        if (!focusableElements.length) {
-          focusableElements = focusable(container, {
-            includeContainer: true
-          });
-        }
-
-        if (focusableElements.length) {
-          focusableElements[0].focus();
+        if (tabbableElements.length) {
+          tabbableElements[0].focus();
+        } else if (isFocusable(container)) {
+          container.focus();
         }
       }
     },

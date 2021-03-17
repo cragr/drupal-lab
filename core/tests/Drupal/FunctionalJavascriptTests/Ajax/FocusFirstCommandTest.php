@@ -46,23 +46,24 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     $this->assertNull($assert_session->waitForElementVisible('css', '[data-has-focus]'));
     $this->assertEquals($has_focus_id, $this->getSession()->evaluateScript('document.activeElement.id'));
 
+    // Confirm focus is moved to first tabbable element in a container.
     $page->pressButton('focusfirstcontainer');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-first-container-input[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-first-container-input', $has_focus_id);
 
-    // Test focusFirst
+    // Confirm focus is moved to first tabbable element in a form.
     $page->pressButton('focusfirstform');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#ajax-test-focus-first-command-form #edit-first-input[data-has-focus]'));
 
-    // Confirm the form has more than one input to confirm that
-    // FocusFirstCommand focuses the first element in the container.
+    // Confirm the form has more than one input to confirm that focus is moved
+    // to the first tabbable element in the container.
     $this->assertNotNull($page->find('css', '#ajax-test-focus-first-command-form #edit-second-input'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-first-input', $has_focus_id);
 
-    // Confirm that the selector provided to FocusFirstCommand will use the
-    // first match in the DOM as the container.
+    // Confirm that the selector provided will use the first match in the DOM as
+    // the container.
     $page->pressButton('selectormultiplematches');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-inside-same-selector-container-1[data-has-focus]'));
     $this->assertNotNull($page->findById('edit-inside-same-selector-container-2'));
@@ -70,7 +71,7 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-inside-same-selector-container-1', $has_focus_id);
 
-    // Confirm that if a container has no focusable children, but is itself
+    // Confirm that if a container has no tabbable children, but is itself
     // focusable, then that container receives focus.
     $page->pressButton('focusablecontainernofocusablechildren');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#focusable-container-without-focusable-children[data-has-focus]'));

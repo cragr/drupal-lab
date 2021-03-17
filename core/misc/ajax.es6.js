@@ -11,7 +11,7 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings, { focusable }) {
+(function ($, window, Drupal, drupalSettings, { isFocusable, tabbable }) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -1473,7 +1473,10 @@
     },
 
     /**
-     * Command to focus the first focusable element within a container.
+     * Command to focus the first tabbable element within a container.
+     *
+     * If no tabbable elements are found and the container is focusable, then
+     * focus will move to that container.
      *
      * @param {Drupal.Ajax} [ajax]
      *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
@@ -1487,18 +1490,16 @@
     focusFirst(ajax, response, status) {
       const container = document.querySelector(response.selector);
       if (container) {
-        // Find all focusable elements within the container.
-        let focusableElements = focusable(container);
+        // Find all tabbable elements within the container.
+        const tabbableElements = tabbable(container);
 
-        // If no focusable elements are found, add the container to the
-        // focusable elements search.
-        if (!focusableElements.length) {
-          focusableElements = focusable(container, { includeContainer: true });
-        }
-
-        // Move focus to the first focusable item found.
-        if (focusableElements.length) {
-          focusableElements[0].focus();
+        // Move focus to the first tabbable item found.
+        if (tabbableElements.length) {
+          tabbableElements[0].focus();
+        } else if (isFocusable(container)) {
+          // If no tabbable elements are found, but the container is focusable,
+          // move focus to the container.
+          container.focus();
         }
       }
     },
