@@ -23,7 +23,7 @@ function template_preprocess_system_security_advisories_fetch_error_message(arra
     'items' => [
       '#theme' => 'item_list',
       '#items' => [
-        'documentation_link' => t('See <a href="@url">PHP OpenSSL requirements</a> in the Drupal.org handbook for possible reasons this could happen and what you can do to resolve them.', ['@url' => 'https://www.drupal.org/node/3170647']),
+        'documentation_link' => t('See <a href="@url">Debugging the advisory feed</a> in the Drupal.org handbook for possible reasons this could happen and what you can do to resolve them.', ['@url' => 'https://www.drupal.org/docs/updating-drupal/highly-critical-security-advisories-on-drupal-administration-pages#s-debugging-the-advisory-feed']),
       ],
     ],
   ];
