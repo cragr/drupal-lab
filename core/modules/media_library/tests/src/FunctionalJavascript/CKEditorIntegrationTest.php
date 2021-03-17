@@ -124,6 +124,20 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       ],
     ]);
     $this->media->save();
+    
+    // Created a second media entity to test multiple embedding.
+    $second_image = Media::create([
+      'bundle' => 'image',
+      'name' => 'Don’t fear failure',
+      'field_media_image' => [
+        [
+          'target_id' => 1,
+          'alt' => 'default alt',
+          'title' => 'default title',
+        ],
+      ],
+    ]);
+    $second_image->save();
 
     $arrakis_media = Media::create([
       'bundle' => 'arrakis',
@@ -229,9 +243,11 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       $this->assertSame($expected_tab_order[$key], $tab->getText());
     }
 
-    $assert_session->pageTextContains('0 of 1 item selected');
+    $assert_session->pageTextContains('0 items selected');
     $assert_session->elementExists('css', '.js-media-library-item')->click();
-    $assert_session->pageTextContains('1 of 1 item selected');
+    $assert_session->pageTextContains('1 item selected');
+    $assert_session->elementExists('css', '.js-media-library-item:nth-child(2)')->click();
+    $assert_session->pageTextContains('2 items selected');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
