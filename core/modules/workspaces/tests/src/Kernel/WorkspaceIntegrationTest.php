@@ -756,7 +756,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->initializeWorkspacesModule();
 
     // Verify that node access returns TRUE without node_access_test.
-    $this->assertTrue($node->access('view');
+    $this->assertTrue($node->access('view'));
 
     \Drupal::service('module_installer')->install(['node_access_test']);
     node_access_rebuild();
@@ -771,7 +771,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Verify that the node is not viewable, because node_access_test makes anonymous
     // nodes unviewable.
-    $this->assertFalse($node->access('view');
+    $this->assertFalse($node->access('view'));
 
     /** @var \Drupal\workspaces\WorkspacePublisher $workspace_publisher */
     $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
