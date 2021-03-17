@@ -81,10 +81,7 @@ class GenerateTheme extends Command {
     }
 
     $tmp_dir = $this->getUniqueTmpDirPath();
-    if (!$this->copyRecursive($source, $tmp_dir)) {
-      $io->getErrorStyle()->error('Failed generating theme into a temporary folder.');
-      return 1;
-    }
+    $this->copyRecursive($source, $tmp_dir);
 
     // Rename files based on the theme machine name.
     $file_pattern = "/$source_theme_name\.(theme|[^.]+\.yml)/";
@@ -197,6 +194,8 @@ class GenerateTheme extends Command {
       return 1;
     }
 
+    $output->writeln(sprintf('Theme generated successfully to %s', $destination));
+
     return 0;
   }
 
@@ -208,9 +207,10 @@ class GenerateTheme extends Command {
    * @param string $dest
    *   Destination directory where the directory or file should be copied.
    *
-   * @return bool
+   * @throws \RuntimeException
+   *   Exception thrown if copying failed.
    */
-  private function copyRecursive($src, $dest): bool {
+  private function copyRecursive($src, $dest): void {
     // Copy all subdirectories and files.
     if (is_dir($src)) {
       if (!mkdir($dest, FileSystem::CHMOD_DIRECTORY, FALSE)) {
@@ -244,8 +244,6 @@ class GenerateTheme extends Command {
         throw new \RuntimeException("The file permissions could not be set on $src");
       }
     }
-
-    return TRUE;
   }
 
   /**

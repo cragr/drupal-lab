@@ -54,7 +54,7 @@ class GenerateThemeTest extends QuickStartTestBase {
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
     $result = $process->run();
-    $this->assertEquals('', $process->getErrorOutput());
+    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()));
     $this->assertSame(0, $result);
 
     $theme_path = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
