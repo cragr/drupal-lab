@@ -471,6 +471,9 @@ class ExtensionDiscovery {
             $actual_filename = $filename;
             break;
           }
+          if ($extension === '') {
+            @trigger_error('Using .profile, .theme, or .module is deprecated is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use .profile.php/.module.php/.theme.php', E_USER_DEPRECATED);
+          }
         }
         $extension_arguments = [
           'type' => $type,
