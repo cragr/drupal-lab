@@ -7,7 +7,7 @@ namespace Drupal\Core\Ajax;
  *
  * This command is provided a selector then does the following:
  * - The first element matching the provided selector will become the container
- *   where the search for focusable elements is conducted.
+ *   where the search for tabbable elements is conducted.
  * - If one or more tabbable elements are found within the container, the first
  *   of those will receive focus.
  * - If no tabbable elements are found within the container, but the container

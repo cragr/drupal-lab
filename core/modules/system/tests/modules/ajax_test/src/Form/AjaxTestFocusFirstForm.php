@@ -43,13 +43,13 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['a_container']['second_container_input'] = [
       '#type' => 'textfield',
     ];
-    $form['focusable_container_without_focusable_children'] = [
+    $form['focusable_container_without_tabbable_children'] = [
       '#type' => 'container',
       '#attributes' => [
         'tabindex' => '-1',
-        'id' => 'focusable-container-without-focusable-children',
+        'id' => 'focusable-container-without-tabbable-children',
       ],
-      '#markup' => 'No focusable children here',
+      '#markup' => 'No tabbable children here',
     ];
 
     $form['multiple_of_same_selector_1'] = [
@@ -76,17 +76,17 @@ class AjaxTestFocusFirstForm implements FormInterface {
       '#type' => 'textfield',
     ];
 
-    $form['nothing_focusable'] = [
+    $form['nothing_tabbable'] = [
       '#type' => 'container',
       '#attributes' => [
-        'id' => 'nothing-focusable',
+        'id' => 'nothing-tabbable',
       ],
-      '#markup' => 'nothing focusable',
+      '#markup' => 'nothing tabbable',
     ];
 
-    $form['nothing_focusable']['nested'] = [
+    $form['nothing_tabbable']['nested'] = [
       '#type' => 'container',
-      '#markup' => 'There are divs in here, but nothing focusable',
+      '#markup' => 'There are divs in here, but nothing tabbable',
     ];
 
     $form['focus_first_in_container'] = [
@@ -113,21 +113,21 @@ class AjaxTestFocusFirstForm implements FormInterface {
         'callback' => '::focusFirstSelectorMultipleMatch',
       ],
     ];
-    $form['focusable_container_no_focusable_children'] = [
+    $form['focusable_container_no_tabbable_children'] = [
       '#type' => 'submit',
-      '#value' => 'Focusable container, no focusable children',
-      '#name' => 'focusablecontainernofocusablechildren',
+      '#value' => 'Focusable container, no tabbable children',
+      '#name' => 'focusablecontainernotabbablechildren',
       '#ajax' => [
-        'callback' => '::focusableContainerNoFocusableChildren',
+        'callback' => '::focusableContainerNoTabbableChildren',
       ],
     ];
 
-    $form['selector_has_nothing_focusable'] = [
+    $form['selector_has_nothing_tabbable'] = [
       '#type' => 'submit',
-      '#value' => 'Try to focus container with nothing focusable',
-      '#name' => 'selectornothingfocusable',
+      '#value' => 'Try to focus container with nothing tabbable',
+      '#name' => 'selectornothingtabbable',
       '#ajax' => [
-        'callback' => '::selectorHasNothingFocusable',
+        'callback' => '::selectorHasNothingTabbable',
       ],
     ];
 
@@ -162,9 +162,9 @@ class AjaxTestFocusFirstForm implements FormInterface {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The AJAX response.
    */
-  public function selectorHasNothingFocusable() {
+  public function selectorHasNothingTabbable() {
     $response = new AjaxResponse();
-    return $response->addCommand(new FocusFirstCommand('#nothing-focusable'));
+    return $response->addCommand(new FocusFirstCommand('#nothing-tabbable'));
   }
 
   /**
@@ -173,9 +173,9 @@ class AjaxTestFocusFirstForm implements FormInterface {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The AJAX response.
    */
-  public function focusableContainerNoFocusableChildren() {
+  public function focusableContainerNoTabbableChildren() {
     $response = new AjaxResponse();
-    return $response->addCommand(new FocusFirstCommand('#focusable-container-without-focusable-children'));
+    return $response->addCommand(new FocusFirstCommand('#focusable-container-without-tabbable-children'));
   }
 
   /**

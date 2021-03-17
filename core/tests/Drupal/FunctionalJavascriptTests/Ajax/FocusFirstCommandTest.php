@@ -35,8 +35,8 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     ]);
 
     // Confirm that focus does not change if the selector targets a
-    // non-focusable container containing no focusable elements.
-    $page->pressButton('selectornothingfocusable');
+    // non-focusable container containing no tabbable elements.
+    $page->pressButton('selectornothingtabbable');
     $this->assertNull($assert_session->waitForElementVisible('css', '[data-has-focus]'));
     $this->assertEquals($has_focus_id, $this->getSession()->evaluateScript('document.activeElement.id'));
 
@@ -73,10 +73,10 @@ class FocusFirstCommandTest extends WebDriverTestBase {
 
     // Confirm that if a container has no tabbable children, but is itself
     // focusable, then that container receives focus.
-    $page->pressButton('focusablecontainernofocusablechildren');
-    $this->assertNotNull($assert_session->waitForElementVisible('css', '#focusable-container-without-focusable-children[data-has-focus]'));
+    $page->pressButton('focusablecontainernotabbablechildren');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '#focusable-container-without-tabbable-children[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
-    $this->assertEquals('focusable-container-without-focusable-children', $has_focus_id);
+    $this->assertEquals('focusable-container-without-tabbable-children', $has_focus_id);
   }
 
 }
