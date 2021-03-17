@@ -754,15 +754,16 @@ class WorkspaceIntegrationTest extends KernelTestBase {
    */
   public function testNodeAccess() {
     $this->initializeWorkspacesModule();
+    $this->switchToWorkspace('stage');
 
     // Verify that node access returns TRUE without node_access_test.
+    $node = $this->entityTypeManager->getStorage('node')->load(1);
     $this->assertTrue($node->access('view'));
 
     \Drupal::service('module_installer')->install(['node_access_test']);
     node_access_rebuild();
 
     // Unpublish node 1 in 'stage', and ensure it's anonymous.
-    $this->switchToWorkspace('stage');
     $node = $this->entityTypeManager->getStorage('node')->load(1);
     $node->setTitle('stage - 1 - r3 - unpublished');
     $node->set('uid', 0);
