@@ -22,7 +22,7 @@ namespace Drupal\Core\Ajax;
 class FocusFirstCommand implements CommandInterface {
 
   /**
-   * The selector of the container with focusable elements.
+   * The selector of the container with tabbable elements.
    *
    * @var string
    */
@@ -32,7 +32,7 @@ class FocusFirstCommand implements CommandInterface {
    * Constructs an FocusFirstCommand object.
    *
    * @param string $selector
-   *   The selector of the container with focusable elements.
+   *   The selector of the container with tabbable elements.
    */
   public function __construct($selector) {
     $this->selector = $selector;
