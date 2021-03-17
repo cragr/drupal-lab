@@ -755,6 +755,9 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   public function testNodeAccess() {
     $this->initializeWorkspacesModule();
 
+    // Verify that node access returns TRUE without node_access_test.
+    $this->assertTrue($node->access('view');
+
     \Drupal::service('module_installer')->install(['node_access_test']);
     node_access_rebuild();
 
