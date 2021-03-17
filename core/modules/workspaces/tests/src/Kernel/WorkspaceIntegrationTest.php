@@ -750,47 +750,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Tests workspace publishing is not sensitive to node access.
-   */
-  public function testNodeAccess() {
-    $this->initializeWorkspacesModule();
-    $this->switchToWorkspace('stage');
-
-    // Verify that node access returns TRUE without node_access_test.
-    $node = $this->entityTypeManager->getStorage('node')->load(1);
-    $this->assertTrue($node->access('view'));
-
-    \Drupal::service('module_installer')->install(['node_access_test']);
-    node_access_rebuild();
-
-    // Unpublish node 1 in 'stage', and ensure it's anonymous.
-    $node = $this->entityTypeManager->getStorage('node')->load(1);
-    $node->setTitle('stage - 1 - r3 - unpublished');
-    $node->set('uid', 0);
-    $node->setUnpublished();
-    $node->save();
-
-    // Verify that the node is not viewable, because node_access_test makes anonymous
-    // nodes unviewable.
-    $this->assertFalse($node->access('view'));
-
-    /** @var \Drupal\workspaces\WorkspacePublisher $workspace_publisher */
-    $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
-
-    // Check which revisions need to be pushed.
-    $expected = [
-      'node' => [
-        3 => 1,
-      ],
-    ];
-    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
-
-    // Check that there are no more revisions to push after publishing.
-    $this->workspaces['stage']->publish();
-    $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnSource());
-  }
-
-  /**
    * Checks entity load, entity queries and views results for a test scenario.
    *
    * @param array $expected
@@ -1076,6 +1035,42 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $reloaded = $node_storage->load($node->id());
     $this->assertEquals('Bar title', $reloaded->title->value);
     $this->assertEquals('Bar body', $reloaded->body->value);
+  }
+
+  /**
+   * Tests workspace publishing is not sensitive to node access.
+   *
+   * The node_access_test module makes anonymous nodes unviewable,
+   * so enable it and test publishing an anonymous node.
+   */
+  public function testNodeAccess() {
+    $this->initializeWorkspacesModule();
+    $this->switchToWorkspace('stage');
+
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    node_access_rebuild();
+
+    // Unpublish node 1 in 'stage', and ensure it's anonymous.
+    $node = $this->entityTypeManager->getStorage('node')->load(1);
+    $node->setTitle('stage - 1 - r3 - unpublished');
+    $node->set('uid', 0);
+    $node->setUnpublished();
+    $node->save();
+
+    /** @var \Drupal\workspaces\WorkspacePublisher $workspace_publisher */
+    $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
+
+    // Check which revisions need to be pushed.
+    $expected = [
+      'node' => [
+        3 => 1,
+      ],
+    ];
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
+
+    // Check that there are no more revisions to push after publishing.
+    $this->workspaces['stage']->publish();
+    $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnSource());
   }
 
 }
