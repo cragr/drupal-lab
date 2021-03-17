@@ -68,7 +68,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     'language',
     'content_translation',
     'path_alias',
-    'node_access_test',
   ];
 
   /**
@@ -94,10 +93,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $language->save();
 
     $this->createContentType(['type' => 'page']);
-
-    // Make all anonymous nodes viewable.
-    \Drupal::state()->set('node_access_test.no_access_uid', -1);
-    node_access_rebuild();
 
     $this->setCurrentUser($this->createUser(['administer nodes']));
 
@@ -356,14 +351,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ],
     ];
     $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
-
-    // Check publisher is not sensitive to access.
-    // All the nodes are anonymous, set node_access_test to make them unviewable.
-    \Drupal::state()->set('node_access_test.no_access_uid', 0);
-    node_access_rebuild();
-    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
-    \Drupal::state()->set('node_access_test.no_access_uid', -1);
-    node_access_rebuild();
 
     $this->workspaces['stage']->publish();
     $this->assertWorkspaceStatus($test_scenarios['push_stage_to_live'], 'node');
@@ -760,6 +747,43 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Check that the 'stage' workspace was not persisted by the workspace
     // manager.
     $this->assertFalse($this->workspaceManager->getActiveWorkspace());
+  }
+
+  /**
+   * Tests workspace publishing is not sensitive to node access.
+   */
+  public function testNodeAccess() {
+    $this->initializeWorkspacesModule();
+
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    node_access_rebuild();
+
+    // Unpublish node 1 in 'stage', and ensure it's anonymous.
+    $this->switchToWorkspace('stage');
+    $node = $this->entityTypeManager->getStorage('node')->load(1);
+    $node->setTitle('stage - 1 - r3 - unpublished');
+    $node->set('uid', 0);
+    $node->setUnpublished();
+    $node->save();
+
+    // Verify that the node is not viewable, because node_access_test makes anonymous
+    // nodes unviewable.
+    $this->assertFalse($node->access('view');
+
+    /** @var \Drupal\workspaces\WorkspacePublisher $workspace_publisher */
+    $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
+
+    // Check which revisions need to be pushed.
+    $expected = [
+      'node' => [
+        3 => 1,
+      ],
+    ];
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnSource());
+
+    // Check that there are no more revisions to push after publishing.
+    $this->workspaces['stage']->publish();
+    $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnSource());
   }
 
   /**
