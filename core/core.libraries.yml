@@ -655,10 +655,13 @@ jquery.ui.mouse:
   deprecated: *jquery_ui_unused_deprecated
 
 drupal.jquery.position:
-  # This is a modified version of jQuery UI position for that does not require any
-  # jQuery UI assets, only core jQuery. Per the terms of jQuery UI's public
-  # domain license, that license is still referenced here.
-  license: *jquery_ui_license
+  # This is a modified version of jQuery UI position for that does not require
+  # any jQuery UI assets, only jQuery. It is still effectively jQuery UI code,
+  # so that is the license referenced here.
+  license:
+    name: Public Domain
+    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.12.1/LICENSE.txt
+    gpl-compatible: true
   version: VERSION
   js:
     misc/position.js: {}
