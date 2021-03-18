@@ -755,9 +755,8 @@ class RouteProviderTest extends KernelTestBase {
 
     $cache = $this->cache->get("route:[language]=en:{$request_path}:");
     $this->assertNotEmpty($cache);
-    /** @var RouteCollection $route_collection */
     $route_collection = $cache->data['routes'];
-    $this->assertEqual($route_collection->count(), $expected_routes);
+    $this->assertEquals($route_collection->count(), $expected_routes);
   }
 
   /**
