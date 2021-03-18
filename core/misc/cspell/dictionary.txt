@@ -599,7 +599,7 @@ floatingspace
 foaf
 foat
 focusable
-focusablecontainernofocusablechildren
+focusablecontainernotabbablechildren
 focusfirst
 focusfirstcontainer
 focusfirstform
@@ -1412,7 +1412,7 @@ seld
 selectbox
 selectormultiplematches
 selectornotexist
-selectornothingfocusable
+selectornothingtabbable
 semver
 sendmail
 serializer's
