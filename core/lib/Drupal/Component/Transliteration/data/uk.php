@@ -19,6 +19,7 @@ $overrides['uk'] = [
   0x446 => 'ts',
   0x429 => 'Shch',
   0x449 => 'shch',
+  // Hide several variations of apostrophe character.
   0x2bc => '',
   0x27 => '',
   0x2019 => '',
