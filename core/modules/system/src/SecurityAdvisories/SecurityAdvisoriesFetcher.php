@@ -300,7 +300,7 @@ final class SecurityAdvisoriesFetcher {
    * @param int $timeout
    *   The timeout in seconds for the request.
    * @param bool $with_http_fallback
-   *   Should the function fall back to HTTP.
+   *   Whether the request should fall back to HTTP if HTTPS fails.
    * @param bool $use_https
    *   (optional) Whether to use HTTPS. Defaults to TRUE.
    *
