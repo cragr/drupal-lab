@@ -1047,9 +1047,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->initializeWorkspacesModule();
     $this->switchToWorkspace('stage');
 
-    \Drupal::service('module_installer')->install(['node_access_test']);
-    node_access_rebuild();
-
     // Unpublish node 1 in 'stage', and ensure it's anonymous.
     $node = $this->entityTypeManager->getStorage('node')->load(1);
     $node->setTitle('stage - 1 - r3 - unpublished');
