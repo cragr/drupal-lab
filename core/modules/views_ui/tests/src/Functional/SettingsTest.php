@@ -122,12 +122,12 @@ class SettingsTest extends UITestBase {
 
     // Verify that the views sql is shown.
     $this->submitForm([], 'Update preview');
-    $this->assertSession()->elementExists('xpath', '//div[@class="views-query-info"]/pre');
+    $this->assertSession()->elementExists('xpath', '//div[@class="views-query-info"]//pre');
     // Verify that no placeholders are shown in the views sql.
-    $this->assertSession()->elementTextNotContains('xpath', '//div[@class="views-query-info"]/pre', 'db_condition_placeholder');
+    $this->assertSession()->elementTextNotContains('xpath', '//div[@class="views-query-info"]//pre', 'db_condition_placeholder');
     // Verify that the placeholders in the views sql are replaced by the actual
     // values.
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="views-query-info"]/pre', Database::getConnection()->escapeField("node_field_data.status") . " = '1'");
+    $this->assertSession()->elementTextContains('xpath', '//div[@class="views-query-info"]//pre', Database::getConnection()->escapeField("node_field_data.status") . " = '1'");
 
     // Test the advanced settings form.
 
