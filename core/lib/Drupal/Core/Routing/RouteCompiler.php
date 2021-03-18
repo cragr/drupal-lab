@@ -51,7 +51,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
 
     $unlimited_requirements = array_filter($route->getRequirements(), function ($it, $key) use ($stripped_path) {
       if ($it !== '.*' && $it !== '.+') {
-        return false;
+        return FALSE;
       }
 
       $needle = "{{$key}}";
