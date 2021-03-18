@@ -84,15 +84,16 @@
               joyride_content_container_name: step.joyride_content_container_name,
               index: index
             };
+            tourItemOptions.when = {
+              show: function show() {
+                var nextButton = shepherdTour.currentStep.el.querySelector('footer button');
+                nextButton.focus();
 
-            if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
-              tourItemOptions.when = {
-                show: function show() {
+                if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
                   Drupal.tour.convertToJoyrideMarkup(shepherdTour);
                 }
-              };
-            }
-
+              }
+            };
             shepherdTour.addStep(tourItemOptions);
           });
           shepherdTour.start();

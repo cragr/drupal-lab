@@ -15,9 +15,10 @@
   background-color: transparent;
 }
 
-.shepherd-cancel-icon:hover {
-  color: rgba(255, 255, 255, 0.8);
-  background-color: transparent;
+.shepherd-cancel-icon:hover,
+.shepherd-cancel-icon:focus {
+  color: #000;
+  background-color: #efefef;
 }
 
 .shepherd-title {

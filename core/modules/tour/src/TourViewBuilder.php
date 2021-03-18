@@ -155,6 +155,13 @@ class TourViewBuilder extends EntityViewBuilder {
                   'offset' => [10, 20],
                 ],
               ],
+              // Disable Shepherd's focusAfterRender modifier, which results in
+              // the tour item container being focused on any scroll or resize
+              // event.
+              [
+                'name' => 'focusAfterRender',
+                'enabled' => FALSE,
+              ],
             ],
           ],
         ],

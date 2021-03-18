@@ -116,5 +116,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       e.preventDefault();
       shepherdTour.cancel();
     });
+    shepherdElement.querySelector('.joyride-next-tip').focus();
   };
 })(Drupal);

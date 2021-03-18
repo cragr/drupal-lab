@@ -169,5 +169,6 @@
         e.preventDefault();
         shepherdTour.cancel();
       });
+    shepherdElement.querySelector('.joyride-next-tip').focus();
   };
 })(Drupal);

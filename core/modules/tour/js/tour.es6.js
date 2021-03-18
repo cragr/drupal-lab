@@ -173,7 +173,7 @@
                 },
                 buttons: [Drupal.tour.nextButton(shepherdTour, step)],
                 classes: step.classes,
-                // @todo joyride_content_container_name  can be removed when the Stable9
+                // @todo joyride_content_container_name can be removed when the Stable9
                 //   theme is removed from core. This only exists to provide Joyride
                 //   backwards compatibility.
                 joyride_content_container_name:
@@ -181,18 +181,26 @@
                 index,
               };
 
-              // When Stable or Stable 9 are part of the active theme, the
-              // Drupal.tour.convertToJoyrideMarkup() function is available.
-              // This function converts Shepherd markup to Joyride markup,
-              // facilitating the use of the Shepherd library that is backwards
-              // compatible with customizations intended for Joyride.
-              if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
-                tourItemOptions.when = {
-                  show() {
+              tourItemOptions.when = {
+                show() {
+                  const nextButton = shepherdTour.currentStep.el.querySelector(
+                    'footer button',
+                  );
+                  nextButton.focus();
+
+                  // When Stable or Stable 9 are part of the active theme, the
+                  // Drupal.tour.convertToJoyrideMarkup() function is available.
+                  // This function converts Shepherd markup to Joyride markup,
+                  // facilitating the use of the Shepherd library that is
+                  // backwards compatible with customizations intended for
+                  // Joyride.
+                  if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
                     Drupal.tour.convertToJoyrideMarkup(shepherdTour);
-                  },
-                };
-              }
+                  }
+                },
+              };
+
+
               shepherdTour.addStep(tourItemOptions);
             });
             shepherdTour.start();
