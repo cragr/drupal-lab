@@ -8,7 +8,7 @@ use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -673,7 +673,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     try {
       $this->getAdvisories();
     }
-    catch (ServerException $exception) {
+    catch (TransferException $exception) {
       $this->assertSame("Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n", $exception->getMessage());
       $exception_thrown = TRUE;
     }
