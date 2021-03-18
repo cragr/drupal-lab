@@ -318,7 +318,7 @@ final class SecurityAdvisoriesFetcher {
         $response = $this->doRequest($timeout, FALSE, FALSE);
       }
       else {
-        throw $exception;
+        throw new TransferException($exception->getMessage(), $exception->getCode(), $exception);
       }
     }
     return $response;
