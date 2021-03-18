@@ -49,9 +49,15 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     // allows the RouteProvider to filter candidate routes more efficiently.
     $num_parts = count(explode('/', trim($route->getPath(), '/')));
 
-    $unlimited_requirements = array_filter($route->getRequirements(), function ($it) {
-      return $it === '.*' || $it === '.+';
-    });
+    $unlimited_requirements = array_filter($route->getRequirements(), function ($it, $key) use ($stripped_path) {
+      if($it !== '.*' && $it !== '.+') {
+        return false;
+      }
+
+      $needle = "{{$key}}";
+      // Only the last parameter can be set to include '/' and only if the path ends with this parameter.
+      return substr_compare($stripped_path, $needle, -strlen($needle)) === 0;
+    }, ARRAY_FILTER_USE_BOTH);
 
     if (count($unlimited_requirements) > 0) {
       $num_parts = static::UNLIMITED_PARTS;
