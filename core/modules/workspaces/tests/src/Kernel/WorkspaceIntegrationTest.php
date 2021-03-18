@@ -488,7 +488,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $node->save();
 
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
-    $query->accessCheck(FALSE);
     $query->sort('nid');
     $query->pager(1);
     $result = $query->execute();
@@ -496,7 +495,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertSame([1 => '1'], $result);
 
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
-    $query->accessCheck(FALSE);
     $query->sort('nid', 'DESC');
     $query->pager(10);
     $result = $query->execute();
@@ -549,7 +547,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Make sure that we're requesting the default revision.
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
-    $query->accessCheck(FALSE);
     $query->currentRevision();
 
     $query
@@ -725,7 +722,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertEquals('live node 1', $live_node->title->value);
 
     $result = $storage->getQuery()
-      ->accessCheck(FALSE)
       ->condition('title', 'live node 1')
       ->execute();
     $this->assertEquals([$live_node->getRevisionId() => $node->id()], $result);
@@ -738,7 +734,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       $this->assertEquals('stage node 1', $stage_node->title->value);
 
       $result = $storage->getQuery()
-        ->accessCheck(FALSE)
         ->condition('title', 'stage node 1')
         ->execute();
       $this->assertEquals([$stage_node->getRevisionId() => $stage_node->id()], $result);
@@ -919,20 +914,20 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     });
 
     // Check entity query counts.
-    $result = (int) $storage->getQuery()->accessCheck(FALSE)->count()->execute();
+    $result = (int) $storage->getQuery()->count()->execute();
     $this->assertSame(count($expected_default_revisions), $result);
 
-    $result = (int) $storage->getAggregateQuery()->accessCheck(FALSE)->count()->execute();
+    $result = (int) $storage->getAggregateQuery()->count()->execute();
     $this->assertSame(count($expected_default_revisions), $result);
 
     // Check entity queries with no conditions.
-    $result = $storage->getQuery()->accessCheck(FALSE)->execute();
+    $result = $storage->getQuery()->execute();
     $expected_result = array_combine(array_column($expected_default_revisions, $revision_key), array_column($expected_default_revisions, $id_key));
     $this->assertEquals($expected_result, $result);
 
     // Check querying each revision individually.
     foreach ($expected_values as $expected_value) {
-      $query = $storage->getQuery()->accessCheck(FALSE);
+      $query = $storage->getQuery();
       $query
         ->condition($entity_keys['id'], $expected_value[$id_key])
         ->condition($entity_keys['label'], $expected_value[$label_key])
