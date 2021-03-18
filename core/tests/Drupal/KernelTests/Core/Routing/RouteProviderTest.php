@@ -777,6 +777,7 @@ class RouteProviderTest extends KernelTestBase {
       ['/some/{param}/{with_unlimited_parts}', 'param', '.*', '/some/param/hello/world', 0],
       // Not supported.
       ['/some/{param}', 'param', '[dor/]+', '/some/dor/dro', 0],
+      ['/some/{param}', 'random_var', '.+', '/some/dor/dro', 0],
     ];
   }
 
