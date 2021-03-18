@@ -112,7 +112,9 @@ trait FunctionalTestSetupTrait {
       'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
     ];
-    // Disable fetching of advisories during tests to avoid outbound calls.
+    // Disable fetching of advisories during tests to avoid outbound calls. This
+    // cannot be set in ::initConfig() because it would not stop these calls
+    // during install.
     $settings['config']['system.advisories']['enabled'] = (object) [
       'value' => $this->systemAdvisoriesEnabled,
       'required' => TRUE,
