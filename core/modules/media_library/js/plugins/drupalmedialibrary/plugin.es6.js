@@ -45,16 +45,18 @@
           const saveCallback = function (values) {
             editor.fire('saveSnapshot');
             let html = '';
-            values.forEach(media => {
-              const mediaElement = editor.document.createElement('drupal-media');
+            values.forEach((media) => {
+              const mediaElement = editor.document.createElement(
+                'drupal-media',
+              );
               // eslint-disable-next-line prefer-destructuring
               const attributes = media.attributes;
               Object.keys(attributes).forEach((key) => {
                 mediaElement.setAttribute(key, attributes[key]);
               });
-              $html += mediaElement.getOuterHtml();
+              html += mediaElement.getOuterHtml();
             });
-            editor.insertHtml($html);
+            editor.insertHtml(html);
             editor.fire('saveSnapshot');
           };
 

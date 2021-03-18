@@ -47,9 +47,9 @@
               Object.keys(attributes).forEach(function (key) {
                 mediaElement.setAttribute(key, attributes[key]);
               });
-              $html += mediaElement.getOuterHtml();
+              html += mediaElement.getOuterHtml();
             });
-            editor.insertHtml($html);
+            editor.insertHtml(html);
             editor.fire('saveSnapshot');
           };
 

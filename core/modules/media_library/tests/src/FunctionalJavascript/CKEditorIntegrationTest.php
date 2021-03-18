@@ -44,6 +44,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   protected $media;
 
   /**
+   * The second media item to embed.
+   *
+   * @var \Drupal\media\MediaInterface
+   */
+  protected $secondMedia;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -124,9 +131,9 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       ],
     ]);
     $this->media->save();
-    
+
     // Created a second media entity to test multiple embedding.
-    $second_image = Media::create([
+    $this->secondMedia = Media::create([
       'bundle' => 'image',
       'name' => 'Don’t fear failure',
       'field_media_image' => [
@@ -137,7 +144,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         ],
       ],
     ]);
-    $second_image->save();
+    $this->secondMedia->save();
 
     $arrakis_media = Media::create([
       'bundle' => 'arrakis',
@@ -258,14 +265,25 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $value = $assert_session->elementExists('css', 'textarea.cke_source')->getValue();
     $dom = Html::load($value);
     $xpath = new \DOMXPath($dom);
-    $drupal_media = $xpath->query('//drupal-media')[0];
-    $expected_attributes = [
+    // First media.
+    $first_drupal_media = $xpath->query('//drupal-media')[0];
+    $first_expected_attributes = [
       'data-entity-type' => 'media',
       'data-entity-uuid' => $this->media->uuid(),
       'data-align' => 'center',
     ];
-    foreach ($expected_attributes as $name => $expected) {
-      $this->assertSame($expected, $drupal_media->getAttribute($name));
+    foreach ($first_expected_attributes as $name => $expected) {
+      $this->assertSame($expected, $first_drupal_media->getAttribute($name));
+    }
+    // Second media.
+    $second_drupal_media = $xpath->query('//drupal-media')[1];
+    $second_expected_attributes = [
+      'data-entity-type' => 'media',
+      'data-entity-uuid' => $this->secondMedia->uuid(),
+      'data-align' => 'center',
+    ];
+    foreach ($second_expected_attributes as $name => $expected) {
+      $this->assertSame($expected, $second_drupal_media->getAttribute($name));
     }
     $this->pressEditorButton('source');
     // Why do we keep switching to the 'ckeditor' iframe? Because the buttons
