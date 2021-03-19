@@ -295,6 +295,9 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       ->method('condition')
       ->with('nid', [1, 2, 3, 4]);
     $query->expects($this->at(1))
+      ->method('accessCheck')
+      ->with(TRUE);
+    $query->expects($this->at(2))
       ->method('condition')
       ->with('status', NodeInterface::PUBLISHED);
     $query->expects($this->once())
