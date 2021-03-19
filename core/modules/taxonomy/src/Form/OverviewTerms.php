@@ -556,6 +556,8 @@ class OverviewTerms extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $triggering_element = $form_state->getTriggeringElement()['#array_parents'];
     if (in_array('filter', $triggering_element)) {
+      $this->getRequest()->query->remove('page');
+
       return $form_state->setRebuild(TRUE);
     }
     else {
