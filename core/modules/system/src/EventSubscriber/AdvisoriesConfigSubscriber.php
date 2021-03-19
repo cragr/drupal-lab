@@ -8,7 +8,7 @@ use Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Deletes the stored response from the advisories feed, if needed.
+ * Config subscriber for changes to 'system.advisories'.
  */
 class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
 
@@ -32,6 +32,9 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
   /**
    * Deletes the stored response from the security advisories feed, if needed.
    *
+   * The stored response will only be deleted if 'interval_hours' config setting
+   * is lowered from the current value.
+   *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The configuration event.
    */
@@ -50,7 +53,7 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[ConfigEvents::SAVE][] = ['onConfigSave'];
     return $events;
   }

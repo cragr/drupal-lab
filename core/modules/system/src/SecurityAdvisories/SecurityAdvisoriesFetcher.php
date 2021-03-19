@@ -41,14 +41,14 @@ final class SecurityAdvisoriesFetcher {
   protected $httpClient;
 
   /**
-   * The update expirable key/value store.
+   * The expirable key/value store for the advisories JSON response.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
   protected $keyValueExpirable;
 
   /**
-   * The extension lists keyed by extension type.
+   * Array of extension lists, keyed by extension type.
    *
    * @var \Drupal\Core\Extension\ExtensionList[]
    */
@@ -62,7 +62,7 @@ final class SecurityAdvisoriesFetcher {
   protected $logger;
 
   /**
-   * Whether to use HTTP fallback if HTTPS fails.
+   * Whether to fall back to HTTP if the HTTPS request fails.
    *
    * @var bool
    */
@@ -102,27 +102,27 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Gets security advisories that are applicable for the current site.
    *
-   * @param bool $allow_http_request
-   *   (optional) Whether to allow an HTTP request to fetch the advisories if
-   *   there is no stored JSON response. Defaults to TRUE.
+   * @param bool $allow_outgoing_request
+   *   (optional) Whether to allow an outgoing request to fetch the advisories
+   *   if there is no stored JSON response. Defaults to TRUE.
    * @param int $timeout
-   *   (optional) The timeout in seconds for the request. Defaults to 0 which is
-   *   no timeout.
+   *   (optional) The timeout in seconds for the request. Defaults to 0, which
+   *   is no timeout.
    *
    * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]|null
    *   The upstream security advisories, if any. NULL if there was a problem
    *   retrieving the JSON feed, or if there was no stored response and
-   *   $allow_http_request was set to FALSE.
+   *   allow_outgoing_request was set to FALSE.
    *
    * @throws \GuzzleHttp\Exception\TransferException
    *   Thrown if an error occurs while retrieving security advisories.
    */
-  public function getSecurityAdvisories(bool $allow_http_request = TRUE, int $timeout = 0): ?array {
+  public function getSecurityAdvisories(bool $allow_outgoing_request = TRUE, int $timeout = 0): ?array {
     $advisories = [];
 
     $json_payload = $this->keyValueExpirable->get(self::ADVISORIES_JSON_EXPIRABLE_KEY);
     if (!is_array($json_payload)) {
-      if (!$allow_http_request) {
+      if (!$allow_outgoing_request) {
         return NULL;
       }
       $response = $this->doRequest($timeout, $this->withHttpFallback);
@@ -167,7 +167,7 @@ final class SecurityAdvisoriesFetcher {
   }
 
   /**
-   * Determines if an advisory matches for the existing version of a project.
+   * Determines if an advisory matches the existing version of a project.
    *
    * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
    *   The security advisory.
@@ -180,25 +180,24 @@ final class SecurityAdvisoriesFetcher {
     if ($existing_version = $this->getProjectExistingVersion($sa)) {
       $existing_project_version = ExtensionVersion::createFromVersionString($existing_version);
       $insecure_versions = $sa->getInsecureVersions();
-      // If a site is running a dev version of Drupal core or an extension we
-      // cannot be certain if their version has the security vulnerabilities
-      // that make any of the versions in $insecure_versions insecure. Therefore
-      // we should err on the side of assuming the site's code does have the
-      // security vulnerabilities and show the advisories. This will result in
-      // some sites seeing advisories that do not affect their versions but it
-      // will make it less likely that sites with the security vulnerabilities
-      // will not see the advisories.
+      // If a site codebase has a development version of any project, including
+      // core, we cannot be certain if their development build has the security
+      // vulnerabilities that make any of the versions in $insecure_versions
+      // insecure. Therefore, we should err on the side of assuming the site's
+      // code does have the security vulnerabilities and show the advisories.
+      // This will result in some sites seeing advisories that do not affect
+      // their versions, but it will make it less likely that sites with the
+      // security vulnerabilities will not see the advisories.
       if ($existing_project_version->getVersionExtra() === 'dev') {
         foreach ($insecure_versions as $insecure_version) {
           try {
             $insecure_project_version = ExtensionVersion::createFromVersionString($insecure_version);
           }
           catch (\UnexpectedValueException $exception) {
-            // Any invalid versions should not stop the evaluating of
-            // valid versions in $insecure_versions. Version numbers that start
-            // with core prefix besides '8.x-' are expected in
-            // $insecure_versions but will never match and will throw an
-            // exception.
+            // An invalid version string should not halt the evaluation of valid
+            // versions in $insecure_versions. Version numbers that start with
+            // core prefix besides '8.x-' are expected in $insecure_versions,
+            // but will never match and will throw an exception.
             continue;
           }
           if ($existing_project_version->getMajorVersion() === $insecure_project_version->getMajorVersion()) {
@@ -258,7 +257,7 @@ final class SecurityAdvisoriesFetcher {
    *   The security advisory.
    *
    * @return string|null
-   *   The project version or NULL if the project does not exist on
+   *   The project version, or NULL if the project does not exist on
    *   the site.
    */
   protected function getProjectExistingVersion(SecurityAdvisory $sa): ?string {
@@ -280,7 +279,7 @@ final class SecurityAdvisoriesFetcher {
    */
   protected function isApplicable(SecurityAdvisory $sa): bool {
     // Only projects that are in the site's codebase can be applicable. Core
-    // will always be in the codebase and other projects are in the codebase if
+    // will always be in the codebase, and other projects are in the codebase if
     // ::getProjectInfo() finds a matching extension for the project name.
     if ($sa->isCoreAdvisory() || $this->getProjectInfo($sa)) {
       // PSA advisories are always applicable because they are not dependent on
