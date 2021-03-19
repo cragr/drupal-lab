@@ -196,12 +196,18 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
                 ],
                 'date' => [
                   'date_default' => 'datetime_default',
+                  'default' => 'datetime_default',
+                  'format_interval' => 'datetime_time_ago',
                 ],
                 'datestamp' => [
                   'date_default' => 'datetime_default',
+                  'default' => 'datetime_default',
+                  'format_interval' => 'datetime_time_ago',
                 ],
                 'datetime' => [
                   'date_default' => 'datetime_default',
+                  'default' => 'datetime_default',
+                  'format_interval' => 'datetime_time_ago',
                 ],
                 'filefield' => [
                   'default' => 'file_default',

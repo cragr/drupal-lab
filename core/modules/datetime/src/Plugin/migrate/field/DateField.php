@@ -5,6 +5,7 @@ namespace Drupal\datetime\Plugin\migrate\field;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
@@ -30,6 +31,10 @@ class DateField extends FieldPluginBase {
   public function getFieldFormatterMap() {
     return [
       'date_default' => 'datetime_default',
+      // Drupal 6.
+      // @see ::getFieldFormatterType
+      'default' => 'datetime_default',
+      'format_interval' => 'datetime_time_ago',
     ];
   }
 
@@ -97,6 +102,21 @@ class DateField extends FieldPluginBase {
       'process' => $process,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldFormatterType(Row $row) {
+    if ($d6_formatter_type = $row->getSourceProperty('display_settings/format')) {
+      // The Drupal 6 date formatter ID might be the machine name of the date
+      // format, e.g. 'short', 'medium', 'long', or any other custom format.
+      if ($d6_formatter_type !== 'format_interval') {
+        return 'default';
+      }
+    }
+
+    return parent::getFieldFormatterType($row);
   }
 
 }
