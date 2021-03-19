@@ -37,14 +37,16 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     // Confirm that focus does not change if the selector targets a
     // non-focusable container containing no tabbable elements.
     $page->pressButton('selectornothingtabbable');
-    $this->assertNull($assert_session->waitForElementVisible('css', '[data-has-focus]'));
-    $this->assertEquals($has_focus_id, $this->getSession()->evaluateScript('document.activeElement.id'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-selector-has-nothing-tabbable[data-has-focus]'));
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-selector-has-nothing-tabbable', $has_focus_id);
 
     // Confirm that focus does not change if the page has no match for the
     // provided selector.
     $page->pressButton('selectornotexist');
-    $this->assertNull($assert_session->waitForElementVisible('css', '[data-has-focus]'));
-    $this->assertEquals($has_focus_id, $this->getSession()->evaluateScript('document.activeElement.id'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-selector-does-not-exist[data-has-focus]'));
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals('edit-selector-does-not-exist', $has_focus_id);
 
     // Confirm focus is moved to first tabbable element in a container.
     $page->pressButton('focusfirstcontainer');

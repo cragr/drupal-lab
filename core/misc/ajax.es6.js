@@ -1488,6 +1488,7 @@
      *   The XMLHttpRequest status.
      */
     focusFirst(ajax, response, status) {
+      let focusChanged = false;
       const container = document.querySelector(response.selector);
       if (container) {
         // Find all tabbable elements within the container.
@@ -1496,11 +1497,19 @@
         // Move focus to the first tabbable item found.
         if (tabbableElements.length) {
           tabbableElements[0].focus();
+          focusChanged = true;
         } else if (isFocusable(container)) {
           // If no tabbable elements are found, but the container is focusable,
           // move focus to the container.
           container.focus();
+          focusChanged = true;
         }
+      }
+
+      // If no items were available to receive focus, return focus to the
+      // triggering element.
+      if (ajax.hasOwnProperty('element') && !focusChanged) {
+        ajax.element.focus();
       }
     },
 

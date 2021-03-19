@@ -629,6 +629,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       $(response.selector).data(response.name, response.value);
     },
     focusFirst: function focusFirst(ajax, response, status) {
+      var focusChanged = false;
       var container = document.querySelector(response.selector);
 
       if (container) {
@@ -636,9 +637,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         if (tabbableElements.length) {
           tabbableElements[0].focus();
+          focusChanged = true;
         } else if (isFocusable(container)) {
           container.focus();
+          focusChanged = true;
         }
+      }
+
+      if (ajax.hasOwnProperty('element') && !focusChanged) {
+        ajax.element.focus();
       }
     },
     invoke: function invoke(ajax, response, status) {
