@@ -12,8 +12,8 @@ namespace Drupal\Core\Ajax;
  *   of those will receive focus.
  * - If no tabbable elements are found within the container, but the container
  *   itself is focusable, then the container will receive focus.
- * - If the container is not focusable and contains no tabbable elements, this
- *   command will do nothing.
+ * - If the container is not focusable and contains no tabbable elements, the
+ *   triggering element will remain focused.
  *
  * @see Drupal.AjaxCommands.focusFirst
  *
