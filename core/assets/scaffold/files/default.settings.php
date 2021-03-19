@@ -308,7 +308,7 @@ $settings['hash_salt'] = '';
 $settings['update_free_access'] = FALSE;
 
 /**
- * Fallback to HTTP for Update Manager and security advisories fetching.
+ * Fallback to HTTP for Update Manager and fetching security advisories.
  *
  * If your Drupal site fails to connect to updates.drupal.org using HTTPS to
  * fetch Drupal core, module and theme update status or security advisories, you
