@@ -93,7 +93,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
         $output .= '<dt id="security-advisories">' . t('Displaying critical security advisories') . '</dt>';
         $output .= '<dd>' . t('The System module displays highly critical and time-sensitive security announcements to site administrators. Some security announcements will be displayed until a critical security update is installed. Announcements that are not associated with a specific release will appear for a fixed period of time. <a href=":handbook">More information on critical security advisories</a>.', [':handbook' => 'https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories']) . '</dd>';
-        $output .= '<dd>' . t('Only the most highly critical security announcements will be shown. <a href=":advisories-list">View all security announcements</a>', [':advisories-list' => 'https://www.drupal.org/security']) . '</dd>';
+        $output .= '<dd>' . t('Only the most highly critical security announcements will be shown. <a href=":advisories-list">View all security announcements</a>.', [':advisories-list' => 'https://www.drupal.org/security']) . '</dd>';
       }
       $output .= '</dl>';
       return $output;

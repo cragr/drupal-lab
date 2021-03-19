@@ -23,7 +23,7 @@ function template_preprocess_system_security_advisories_fetch_error_message(arra
     'items' => [
       '#theme' => 'item_list',
       '#items' => [
-        'documentation_link' => t('See <a href="@url">Troubleshooting the advisory feed</a> for possible reasons this could happen and what you can do to resolve them.', ['@url' => 'https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories#s-troubleshooting-the-advisory-feed']),
+        'documentation_link' => t('See <a href="@url">Troubleshooting the advisory feed</a> for possible causes and resolutions.', ['@url' => 'https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories#s-troubleshooting-the-advisory-feed']),
       ],
     ],
   ];
