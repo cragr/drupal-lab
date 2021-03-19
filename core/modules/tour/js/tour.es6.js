@@ -186,6 +186,11 @@
                   const nextButton = shepherdTour.currentStep.el.querySelector(
                     'footer button',
                   );
+
+                  // Drupal disables Shepherd's built in focus after item
+                  // creation functionality due to focus being set on the tour
+                  // item container after every scroll and resize event. In its
+                  // place, the 'next' button is focused here.
                   nextButton.focus();
 
                   // When Stable or Stable 9 are part of the active theme, the
@@ -199,7 +204,6 @@
                   }
                 },
               };
-
 
               shepherdTour.addStep(tourItemOptions);
             });
@@ -287,7 +291,7 @@
   );
 
   /**
-   * Provides an object that will become the tour item's 'next; button.
+   * Provides an object that will become the tour item's 'next' button.
    *
    * Similar to a theme function, themes can override this function to customize
    * the resulting button. Unlike a theme function, it returns an object instead
@@ -297,7 +301,8 @@
    *  A class representing a Shepherd site tour.
    * @param {Step} step
    *   A class representing a Shepherd tour step.
-   * @return {{classes: string, action: *, text: (*|string)}}
+   *
+   * @return {{classes: string, action: string, text: string}}
    *    An object that Shepherd will use to create the 'next' button.
    *
    * @see https://shepherdjs.dev/docs/Step.html
