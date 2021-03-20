@@ -86,8 +86,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createVocabularyAndTerms($vocab_id) {
-
+  protected function createVocabularyAndTerms(string $vocab_id): array {
     $vocab = Vocabulary::load($vocab_id);
     if (!$vocab) {
       Vocabulary::create([
@@ -122,7 +121,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    */
   public function testFilterUI() {
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
-    $this->assertFieldByXpath('//select[@id="edit-options-value"]', NULL);
+    $this->assertSession()->fieldExists("Select terms from vocabulary 'Test Vocabulary tags'");
 
     $result = $this->assertSession()->selectExists('edit-options-value')->findAll('css', 'option');
 
@@ -194,47 +193,49 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       'options[vids][tags2]' => TRUE,
       'options[type]' => 'textfield',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', [], 'Expose filter');
+    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->submitForm([], 'Expose filter');
     $edit = [
       'options[operator]' => 'and',
       'options[value]' => '',
       'options[reduce_duplicates]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
     $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => '']]);
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(3, count($xpath));
+    $this->assertCount(3, $xpath);
     $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "t1 ({$this->terms[0][0]->id()})"]]);
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(2, count($xpath));
+    $this->assertCount(2, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [
       ':href' => $node0->toUrl()->toString(),
     ]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [
       ':href' => $node2->toUrl()->toString(),
     ]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "t2 ({$terms2[0][0]->id()})"]]);
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(2, count($xpath));
+    $this->assertCount(2, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [
       ':href' => $node1->toUrl()->toString(),
     ]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [
       ':href' => $node2->toUrl()->toString(),
     ]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "t1 ({$this->terms[0][0]->id()}), t2 ({$terms2[0][0]->id()})"]]);
     $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [
       ':href' => $node2->toUrl()->toString(),
     ]);
-    $this->assertIdentical(1, count($xpath));
+    $this->assertCount(1, $xpath);
   }
 
   /**
