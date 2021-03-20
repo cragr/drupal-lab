@@ -165,7 +165,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   }
 
   /**
-   * Test filter UI with multiple vocabularies
+   * Test filter UI with multiple vocabularies.
    */
   public function testFilterUIWithMultipleVocabularies() {
     $terms2 = $this->createVocabularyAndTerms('tags2');
