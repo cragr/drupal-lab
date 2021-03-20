@@ -2,6 +2,18 @@
 # PHPStan is triggered on Drupal CI in drupalci.yml.
 parameters:
   level: 0
+  fileExtensions:
+    - engine
+    - inc
+    - install
+    - module
+    - php
+    - profile
+    - theme
+  bootstrapFiles:
+    - ../vendor/mglaman/phpstan-drupal/drupal-autoloader.php
+  drupal:
+    drupal_root: '%currentWorkingDirectory%'
   paths:
     - .
     - ../composer
@@ -9,17 +21,6 @@ parameters:
     - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
     - 'modules/migrate_drupal/tests/fixtures/*.php'
-  fileExtensions:
-    - module
-    - theme
-    - inc
-    - install
-    - profile
-    - engine
-  bootstrapFiles:
-    - ../vendor/mglaman/phpstan-drupal/drupal-autoloader.php
-  drupal:
-    drupal_root: '%currentWorkingDirectory%'
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
