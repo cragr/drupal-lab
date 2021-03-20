@@ -292,11 +292,11 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
 
     $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects($this->at(0))
-      ->method('condition')
-      ->with('nid', [1, 2, 3, 4]);
-    $query->expects($this->at(1))
       ->method('accessCheck')
       ->with(TRUE);
+    $query->expects($this->at(1))
+      ->method('condition')
+      ->with('nid', [1, 2, 3, 4]);
     $query->expects($this->at(2))
       ->method('condition')
       ->with('status', NodeInterface::PUBLISHED);
