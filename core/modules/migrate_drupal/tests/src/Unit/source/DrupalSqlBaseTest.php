@@ -28,7 +28,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   /**
    * The plugin definition.
    *
-   * @var string[][]
+   * @var array
    */
   protected $pluginDefinition = [];
 
