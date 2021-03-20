@@ -24,7 +24,7 @@ class UniqueFieldValueValidator extends ConstraintValidator {
     $id_key = $entity->getEntityType()->getKey('id');
 
     $query = \Drupal::entityQuery($entity_type_id);
-    
+
     // @todo Don't check access. http://www.drupal.org/node/3171047
     $query->accessCheck(TRUE);
 
