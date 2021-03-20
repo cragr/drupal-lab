@@ -10,8 +10,7 @@ use Drupal\views\Tests\ViewTestData;
 /**
  * Test the taxonomy term index filter.
  *
- * @see \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid
- *
+ * @coversDefaultClass \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid
  * @group taxonomy
  */
 class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
@@ -58,6 +57,8 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
 
   /**
    * Tests dependencies are not added for terms that do not exist.
+   *
+   * @covers ::calculateDependencies
    */
   public function testConfigDependency() {
     /** @var \Drupal\views\Entity\View $view */
@@ -97,6 +98,29 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
         'user',
       ],
     ], $view->calculateDependencies()->getDependencies());
+  }
+
+  /**
+   * Tests 'taxonomy_index_tid' filter handler vocabulary dependencies.
+   *
+   * @covers ::calculateDependencies
+   */
+  public function testMultipleVocabularies(): void {
+    /** @var \Drupal\views\Entity\View $view */
+    $view = View::load('test_filter_taxonomy_index_tid__non_existing_dependency');
+
+    // Add a second vocabulary to the view 'tid' filter handler.
+    Vocabulary::create(['vid' => 'second_vocab'])->save();
+    $displays = $view->get('display');
+    $displays['default']['display_options']['filters']['tid']['vids'][] = 'second_vocab';
+    $view->set('display', $displays);
+    $view->save();
+
+    // Check that the dependencies were updated.
+    $this->assertSame([
+      'taxonomy.vocabulary.second_vocab',
+      'taxonomy.vocabulary.tags',
+    ], $view->getDependencies()['config']);
   }
 
 }
