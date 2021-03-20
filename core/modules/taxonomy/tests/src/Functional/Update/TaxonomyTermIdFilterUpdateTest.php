@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Drupal\Tests\taxonomy\Functional\Update;
 
 use Drupal\Core\Serialization\Yaml;
@@ -46,7 +44,7 @@ class TaxonomyTermIdFilterUpdateTest extends UpdatePathTestBase {
     $config_factory = \Drupal::configFactory();
     $view_as_config = $config_factory->get('views.view.test_filter_taxonomy_index_tid');
 
-    // Check that, prior running updates, only the legacy 'vid' key exists.
+    // Check that, before running updates, only the legacy 'vid' key exists.
     $this->assertSame('tags', $view_as_config->get("{$path}.vid"));
     $this->assertArrayNotHasKey('vids', $view_as_config->get($path));
 
