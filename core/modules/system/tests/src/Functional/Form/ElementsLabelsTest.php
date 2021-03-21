@@ -33,32 +33,18 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     // Check that the checkbox/radio processing is not interfering with
     // basic placement.
-    $elements = $this->xpath('//input[@id="edit-form-checkboxes-test-third-checkbox"]/following-sibling::label[@for="edit-form-checkboxes-test-third-checkbox" and @class="option"]');
-    // Verify that label follows field and label option class correct for
-    // regular checkboxes.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-checkboxes-test-third-checkbox"]/following-sibling::label[@for="edit-form-checkboxes-test-third-checkbox" and @class="option"]');
 
     // Make sure the label is rendered for checkboxes.
-    $elements = $this->xpath('//input[@id="edit-form-checkboxes-test-0"]/following-sibling::label[@for="edit-form-checkboxes-test-0" and @class="option"]');
-    // Verify that label 0 found checkbox.
-    $this->assertArrayHasKey(0, $elements);
-
-    $elements = $this->xpath('//input[@id="edit-form-radios-test-second-radio"]/following-sibling::label[@for="edit-form-radios-test-second-radio" and @class="option"]');
-    // Verify that label follows field and label option class correct for
-    // regular radios.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-checkboxes-test-0"]/following-sibling::label[@for="edit-form-checkboxes-test-0" and @class="option"]');
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-radios-test-second-radio"]/following-sibling::label[@for="edit-form-radios-test-second-radio" and @class="option"]');
 
     // Make sure the label is rendered for radios.
-    $elements = $this->xpath('//input[@id="edit-form-radios-test-0"]/following-sibling::label[@for="edit-form-radios-test-0" and @class="option"]');
-    // Verify that label 0 found radios.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-radios-test-0"]/following-sibling::label[@for="edit-form-radios-test-0" and @class="option"]');
 
     // Exercise various defaults for checkboxes and modifications to ensure
     // appropriate override and correct behavior.
-    $elements = $this->xpath('//input[@id="edit-form-checkbox-test"]/following-sibling::label[@for="edit-form-checkbox-test" and @class="option"]');
-    // Verify that label follows field and label option class correct for a
-    // checkbox by default.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-checkbox-test"]/following-sibling::label[@for="edit-form-checkbox-test" and @class="option"]');
 
     // Exercise various defaults for textboxes and modifications to ensure
     // appropriate override and correct behavior.
@@ -66,23 +52,19 @@ class ElementsLabelsTest extends BrowserTestBase {
     // Verify that label precedes textfield, with required marker inside label.
     $this->assertArrayHasKey(0, $elements);
 
-    $elements = $this->xpath('//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required" and @class="js-form-required form-required"]');
     // Verify that label tag with required marker precedes required textfield
     // with no title.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-no-title-required"]/preceding-sibling::label[@for="edit-form-textfield-test-no-title-required" and @class="js-form-required form-required"]');
 
-    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="visually-hidden"]');
     // Verify that label preceding field and label class is visually-hidden.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-invisible"]/preceding-sibling::label[@for="edit-form-textfield-test-title-invisible" and @class="visually-hidden"]');
 
-    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title"]/preceding-sibling::span[@class="js-form-required form-required"]');
     // Verify that no required marker on non-required field.
-    $this->assertArrayNotHasKey(0, $elements);
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-form-textfield-test-title"]/preceding-sibling::span[@class="js-form-required form-required"]');
 
-    $elements = $this->xpath('//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
     // Verify that label after field and label option class correct for text
     // field.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="edit-form-textfield-test-title-after"]/following-sibling::label[@for="edit-form-textfield-test-title-after" and @class="option"]');
 
     $elements = $this->xpath('//label[@for="edit-form-textfield-test-title-no-show"]');
     // Verify that no label tag when title set not to display.
@@ -143,26 +125,23 @@ class ElementsLabelsTest extends BrowserTestBase {
     // Check #description placement with #description_display='after'.
     $field_id = 'edit-form-textfield-test-description-after';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[@id="' . $description_id . '"]');
     // Verify that properly places the #description element after the form item.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[@id="' . $description_id . '"]');
 
     // Check #description placement with #description_display='before'.
     $field_id = 'edit-form-textfield-test-description-before';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/preceding-sibling::div[@id="' . $description_id . '"]');
     // Verify that properly places the #description element before the form
     // item.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/preceding-sibling::div[@id="' . $description_id . '"]');
 
     // Check if the class is 'visually-hidden' on the form element description
     // for the option with #description_display='invisible' and also check that
     // the description is placed after the form element.
     $field_id = 'edit-form-textfield-test-description-invisible';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[contains(@class, "visually-hidden")]');
     // Verify that properly renders the #description element visually-hidden.
-    $this->assertArrayHasKey(0, $elements);
+    $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[contains(@class, "visually-hidden")]');
   }
 
   /**
