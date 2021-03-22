@@ -274,7 +274,11 @@
    */
   Drupal.ajax.expired = function () {
     return Drupal.ajax.instances.filter((instance) => {
-      if (instance && instance.element !== false && !(instance.element instanceof HTMLElement)) {
+      if (
+        instance &&
+        instance.element !== false &&
+        !(instance.element instanceof HTMLElement)
+      ) {
         Drupal.throwError(
           new Error(
             Drupal.t('TypeError: instance.element is not a HTMLElement'),
