@@ -8,6 +8,39 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 field instances source from database.
  *
+ *  Available configuration keys:
+ *  - entity_type: (optional) The entity type (machine name) to filter field
+ *    instances retrieved from the source. If omitted, all field instances are
+ *    retrieved.
+ *  - bundle: (optional) The bundle machine name to filter field instances
+ *    retrieved from the source. It should be used in combination with
+ *    entity_type property and will be ignored otherwise.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_field_instance
+ *   entity_type: node
+ * @endcode
+ *
+ * In this example field instances of all content types are retrieved from the
+ * source database.
+ *
+ * @code
+ * source:
+ *   plugin: d7_field_instance
+ *   entity_type: node
+ *   bundle: page
+ * @endcode
+ *
+ * In this example field instances of page content type are retrieved from the
+ * source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_field_instance",
  *   source_module = "field"
