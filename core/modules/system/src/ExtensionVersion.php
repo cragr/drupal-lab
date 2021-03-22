@@ -3,7 +3,7 @@
 namespace Drupal\system;
 
 /**
- * Provides a extension version value object.
+ * Provides an extension version value object.
  *
  * @internal
  *
@@ -43,7 +43,7 @@ final class ExtensionVersion {
   protected $versionExtra;
 
   /**
-   * Constructs a extension version object from a version string.
+   * Constructs an extension version object from a version string.
    *
    * @param string $version_string
    *   The version string.
@@ -90,7 +90,7 @@ final class ExtensionVersion {
   }
 
   /**
-   * Constructs a ExtensionVersion object.
+   * Constructs an ExtensionVersion object.
    *
    * @param string $major_version
    *   The major version.
@@ -106,7 +106,7 @@ final class ExtensionVersion {
   }
 
   /**
-   * Constructs a ExtensionVersion version object from a support branch.
+   * Constructs an ExtensionVersion version object from a support branch.
    *
    * This can be used to determine the major version of the branch.
    * ::getVersionExtra() will always return NULL for branches.

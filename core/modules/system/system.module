@@ -1342,10 +1342,10 @@ function system_page_top() {
         $links = [];
         foreach ($advisories as $advisory) {
           // To ensure that all the advisory messages are grouped together on
-          // the page they must all be warnings or all be errors. If any
-          // advisories are not PSA advisories then display all the messages as
-          // errors because non-PSA advisories are immediately actionable by
-          // upgrading to a secure version of a project.
+          // the page, they must all be warnings or all be errors. If any
+          // advisories are not public service announcements then, display all
+          // the messages as errors because non-PSA advisories are immediately
+          // actionable by upgrading to a secure version of a project.
           $display_as_errors = $display_as_errors ? TRUE : !$advisory->isPsa();
           $links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
         }
