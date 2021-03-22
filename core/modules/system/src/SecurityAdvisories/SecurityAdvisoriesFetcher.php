@@ -125,7 +125,7 @@ final class SecurityAdvisoriesFetcher {
       if (!$allow_outgoing_request) {
         return NULL;
       }
-      $response = $this->doRequest($timeout, $this->withHttpFallback);
+      $response = $this->doRequest($timeout);
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       $json_payload = Json::decode($response);
       if (is_array($json_payload)) {
@@ -292,36 +292,31 @@ final class SecurityAdvisoriesFetcher {
   }
 
   /**
-   * Applies a GET request with a possible HTTP fallback.
+   * Makes an HTTPS GET request, with a possible HTTP fallback.
    *
-   * This method falls back to HTTP in case there was some certificate
-   * problem.
+   * This method will fall back to HTTP if the HTTPS request fails and .
    *
    * @param int $timeout
    *   The timeout in seconds for the request.
-   * @param bool $with_http_fallback
-   *   Whether the request should fall back to HTTP if HTTPS fails.
-   * @param bool $use_https
-   *   (optional) Whether to use HTTPS. Defaults to TRUE.
    *
    * @return string
    *   The response.
    */
-  protected function doRequest(int $timeout, bool $with_http_fallback, bool $use_https = TRUE): string {
-    $url = ($use_https ? 'https' : 'http') . '://updates.drupal.org/psa.json';
-    try {
-      $response = (string) $this->httpClient->get($url, [RequestOptions::TIMEOUT => $timeout])->getBody();
+  protected function doRequest(int $timeout): string {
+    if (!$this->withHttpFallback) {
+      // If there is not a HTTP fallback just request the HTTPS and do not catch
+      // any exceptions.
+      return (string) $this->httpClient->get('https://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
     }
-    catch (TransferException $exception) {
-      watchdog_exception('system', $exception);
-      if ($with_http_fallback && $use_https) {
-        $response = $this->doRequest($timeout, FALSE, FALSE);
+    else {
+      try {
+        return (string) $this->httpClient->get('https://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
       }
-      else {
-        throw new TransferException($exception->getMessage(), $exception->getCode(), $exception);
+      catch (TransferException $exception) {
+        watchdog_exception('system', $exception);
+        return (string) $this->httpClient->get('http://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
       }
     }
-    return $response;
   }
 
 }
