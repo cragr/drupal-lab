@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Validation;
 /**
  * Provides a security advisory value object.
  *
- * These come from the PSA feed on Drupal.org.
+ * These come from the security advisory feed on Drupal.org.
  *
  * @internal
  *
@@ -71,7 +71,7 @@ final class SecurityAdvisory {
    * @param string $type
    *   The project type.
    * @param bool $is_psa
-   *   Whether this advisory is a PSA.
+   *   Whether this advisory is a public service announcement.
    * @param string $url
    *   The URL to the advisory.
    * @param string[] $insecure_versions
@@ -186,10 +186,10 @@ final class SecurityAdvisory {
   }
 
   /**
-   * Whether the security advisory is a PSA or not.
+   * Whether the security advisory is a public service announcement or not.
    *
    * @return bool
-   *   TRUE if the advisory is a PSA, otherwise FALSE.
+   *   TRUE if the advisory is a public service announcement, otherwise FALSE.
    */
   public function isPsa(): bool {
     return $this->isPsa;

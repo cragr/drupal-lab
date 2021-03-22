@@ -282,9 +282,10 @@ final class SecurityAdvisoriesFetcher {
     // will always be in the codebase, and other projects are in the codebase if
     // ::getProjectInfo() finds a matching extension for the project name.
     if ($sa->isCoreAdvisory() || $this->getProjectInfo($sa)) {
-      // PSA advisories are always applicable because they are not dependent on
-      // the version of the project that is currently present on the site. Other
-      // advisories are only applicable if they match the existing version.
+      // Public service announcements are always applicable because they are not
+      // dependent on the version of the project that is currently present on
+      // the site. Other advisories are only applicable if they match the
+      // existing version.
       return $sa->isPsa() || $this->matchesExistingVersion($sa);
     }
     return FALSE;
