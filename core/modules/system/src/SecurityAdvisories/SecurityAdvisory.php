@@ -139,9 +139,9 @@ final class SecurityAdvisory {
     $violations = Validation::createValidator()->validate($data, $collection_constraint);
     if ($violations->count()) {
       foreach ($violations as $violation) {
-        $violation_messages[] = (string) $violation;
+        $violation_messages[] = "Field " . $violation->getPropertyPath() . ": " . $violation->getMessage();
       }
-      throw new \UnexpectedValueException('Malformed PSA data: ' . implode(",\n", $violation_messages));
+      throw new \UnexpectedValueException('Malformed security advisory: ' . implode(",\n", $violation_messages));
     }
   }
 
