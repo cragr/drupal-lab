@@ -29,7 +29,6 @@ parameters:
     - "#^Access to an undefined property#"
     - "#^Call to an undefined method#"
     - "#^Cannot unset offset#"
-    - "#^Result of method PHPUnit#"
 
 parametersSchema:
   drupal: structure([
