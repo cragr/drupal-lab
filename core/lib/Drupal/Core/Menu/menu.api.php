@@ -5,6 +5,8 @@
  * Hooks and documentation related to the menu system and links.
  */
 
+use Drupal\Core\Url;
+
 /**
  * @defgroup menu Menu system
  * @{

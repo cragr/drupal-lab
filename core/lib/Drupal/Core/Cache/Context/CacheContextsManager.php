@@ -37,6 +37,13 @@ class CacheContextsManager {
   protected $contexts;
 
   /**
+   * Internal cache for validating context tokens, keyed by context ID.
+   *
+   * @var int[]
+   */
+  protected $validContextTokens;
+
+  /**
    * Constructs a CacheContextsManager object.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container

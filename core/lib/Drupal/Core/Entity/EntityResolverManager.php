@@ -29,6 +29,13 @@ class EntityResolverManager {
   protected $classResolver;
 
   /**
+   * Internal cache for entity type definitions from the entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeInterface[]
+   */
+  protected $entityTypes;
+
+  /**
    * Constructs a new EntityRouteAlterSubscriber.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager

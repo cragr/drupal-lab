@@ -27,16 +27,18 @@ class PhpBackend implements CacheBackendInterface {
   protected $bin;
 
   /**
-   * Array to store cache objects.
-   */
-  protected $cache = [];
-
-  /**
    * The cache tags checksum provider.
    *
    * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
    */
   protected $checksumProvider;
+
+  /**
+   * Holds the storage once it gets lazy instantiated in ::storage().
+   *
+   * @var \Drupal\Component\PhpStorage\PhpStorageInterface
+   */
+  protected $storage;
 
   /**
    * Constructs a PhpBackend object.
@@ -228,7 +230,6 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function removeBin() {
-    $this->cache = [];
     $this->storage()->deleteAll();
   }
 

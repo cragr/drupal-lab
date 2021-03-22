@@ -1168,6 +1168,7 @@ phpfile
 phplint
 phpserialize
 phpspec
+phpstan
 phpunit
 phpunit's
 pianura

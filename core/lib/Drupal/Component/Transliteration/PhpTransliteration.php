@@ -286,6 +286,7 @@ class PhpTransliteration implements TransliterationInterface {
     if (is_file($file)) {
       include $file;
     }
+    // @phpstan-ignore-next-line
     if (!isset($overrides) || !is_array($overrides)) {
       $overrides = [$langcode => []];
     }
@@ -314,6 +315,7 @@ class PhpTransliteration implements TransliterationInterface {
     if (is_file($file)) {
       include $file;
     }
+    // @phpstan-ignore-next-line
     if (!isset($base) || !is_array($base)) {
       $base = [];
     }

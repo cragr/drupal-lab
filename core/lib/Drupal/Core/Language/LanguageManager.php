@@ -77,7 +77,7 @@ class LanguageManager implements LanguageManagerInterface {
    *   hook_language_types_info().
    */
   public function getDefinedLanguageTypesInfo() {
-    $this->definedLanguageTypesInfo = [
+    return [
       LanguageInterface::TYPE_INTERFACE => [
         'name' => new TranslatableMarkup('Interface text'),
         'description' => new TranslatableMarkup('Order of language detection methods for interface text. If a translation of interface text is available in the detected language, it will be displayed.'),
@@ -92,8 +92,6 @@ class LanguageManager implements LanguageManagerInterface {
         'locked' => TRUE,
       ],
     ];
-
-    return $this->definedLanguageTypesInfo;
   }
 
   /**

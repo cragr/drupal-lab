@@ -1,0 +1,32 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+parameters:
+  level: 0
+  fileExtensions:
+    - inc
+    - install
+    - module
+    - php
+    - profile
+    - theme
+  paths:
+    - lib
+  excludePaths:
+    # Uncaught PHPStan\Broker\ClassAutoloadingException: Class Drupal\system\ModuleDependencyMessageTrait not found.
+    - lib/Drupal/Core/Extension/ThemeInstaller.php
+    # Third party code that does not follow our standards.
+    - lib/Drupal/Component/Diff/Engine/*.php
+  bootstrapFiles:
+    # Scan constants in legacy include files.
+    - includes/common.inc
+  scanDirectories:
+    # Scan function definitions in legacy include and module files.
+    - includes
+    - modules
+  scanFiles:
+    # Contains an optional class dependency dummy that PHPStan cannot find
+    # otherwise.
+    - tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static\\(\\)\\.$#"

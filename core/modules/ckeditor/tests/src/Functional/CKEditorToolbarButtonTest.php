@@ -45,20 +45,19 @@ class CKEditorToolbarButtonTest extends BrowserTestBase {
     ])->save();
 
     // Create a new user with admin rights.
-    $this->admin_user = $this->drupalCreateUser([
+    $admin_user = $this->drupalCreateUser([
       'administer languages',
       'access administration pages',
       'administer site configuration',
       'administer filters',
     ]);
+    $this->drupalLogin($admin_user);
   }
 
   /**
    * Method tests CKEditor image buttons.
    */
   public function testImageButtonDisplay() {
-    $this->drupalLogin($this->admin_user);
-
     // Install the Arabic language (which is RTL) and configure as the default.
     $edit = [];
     $edit['predefined_langcode'] = 'ar';

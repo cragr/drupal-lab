@@ -54,7 +54,13 @@ abstract class DataReferenceBase extends TypedData implements DataReferenceInter
    * {@inheritdoc}
    */
   public function getString() {
-    return (string) $this->getType() . ':' . $this->getTargetIdentifier();
+    if (method_exists($this, 'getType')) {
+      $type = $this->getType();
+    }
+    else {
+      $type = $this->getPluginId();
+    }
+    return $type . ':' . $this->getTargetIdentifier();
   }
 
 }

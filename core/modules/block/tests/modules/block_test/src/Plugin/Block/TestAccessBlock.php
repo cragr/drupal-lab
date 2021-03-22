@@ -21,6 +21,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The state holding the test flag to switch access.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * Tests the test access block.
    *
    *
