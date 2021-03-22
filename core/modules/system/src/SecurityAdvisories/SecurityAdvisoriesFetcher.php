@@ -294,7 +294,8 @@ final class SecurityAdvisoriesFetcher {
   /**
    * Makes an HTTPS GET request, with a possible HTTP fallback.
    *
-   * This method will fall back to HTTP if the HTTPS request fails and .
+   * This method will fall back to HTTP if the HTTPS request fails and the site
+   * setting 'update_fetch_with_http_fallback' is set to TRUE.
    *
    * @param int $timeout
    *   The timeout in seconds for the request.
@@ -303,20 +304,22 @@ final class SecurityAdvisoriesFetcher {
    *   The response.
    */
   protected function doRequest(int $timeout): string {
+    $options = [RequestOptions::TIMEOUT => $timeout];
     if (!$this->withHttpFallback) {
-      // If there is not a HTTP fallback just request the HTTPS and do not catch
-      // any exceptions.
-      return (string) $this->httpClient->get('https://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
+      // If not using an HTTP fallback just use HTTPS and do not catch any
+      // exceptions.
+      $response = $this->httpClient->get('https://updates.drupal.org/psa.json', $options);
     }
     else {
       try {
-        return (string) $this->httpClient->get('https://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
+        $response = $this->httpClient->get('https://updates.drupal.org/psa.json', $options);
       }
       catch (TransferException $exception) {
         watchdog_exception('system', $exception);
-        return (string) $this->httpClient->get('http://updates.drupal.org/psa.json', [RequestOptions::TIMEOUT => $timeout])->getBody();
+        $response = $this->httpClient->get('http://updates.drupal.org/psa.json', $options);
       }
     }
+    return (string) $response->getBody();
   }
 
 }
