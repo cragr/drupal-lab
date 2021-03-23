@@ -260,7 +260,8 @@ class OverviewTerms extends FormBase {
     // submitted.
     $user_input = $form_state->getUserInput();
     $triggering_element = $form_state->getTriggeringElement()['#array_parents'];
-    if (!empty($user_input) && !in_array('filter', $triggering_element)) {
+    $filter = !empty($triggering_element) && in_array('filter', $triggering_element);
+    if (!empty($user_input) && !$filter) {
       // Get the POST order.
       $order = array_flip(array_keys($user_input['terms']));
       // Update our form with the new order.
