@@ -179,7 +179,7 @@ final class SecurityAdvisory {
    * Whether the security advisory is for core or not.
    *
    * @return bool
-   *   TRUE if the advisory is for core, otherwise FALSE.
+   *   TRUE if the advisory is for core, or FALSE otherwise.
    */
   public function isCoreAdvisory(): bool {
     return $this->getProjectType() === 'core';
@@ -189,7 +189,8 @@ final class SecurityAdvisory {
    * Whether the security advisory is a public service announcement or not.
    *
    * @return bool
-   *   TRUE if the advisory is a public service announcement, otherwise FALSE.
+   *   TRUE if the advisory is a public service announcement, or FALSE
+   *   otherwise.
    */
   public function isPsa(): bool {
     return $this->isPsa;

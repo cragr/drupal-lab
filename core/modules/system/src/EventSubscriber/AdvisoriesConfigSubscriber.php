@@ -8,7 +8,7 @@ use Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Config subscriber for changes to 'system.advisories'.
+ * Defines a config subscriber for changes to 'system.advisories'.
  */
 class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
 

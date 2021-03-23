@@ -77,12 +77,13 @@ final class ExtensionVersion {
     }
     $last_part_split = explode('-', $version_parts[count($version_parts) - 1]);
     $version_extra = count($last_part_split) === 1 ? NULL : $last_part_split[1];
-    if ($version_parts_count > 3 || $version_parts_count < 2
+    if ($version_parts_count > 3
+       || $version_parts_count < 2
        || !is_numeric($major_version)
        || ($version_parts_count === 3 && !is_numeric($version_parts[1]))
-      // The only case where a non-numeric version part other the extra part is
-      // allowed is in development versions like 8.x-1.x-dev, 1.2.x-dev or
-      // 1.x-dev.
+       // The only case where a non-numeric version part other the extra part is
+       // allowed is in development versions like 8.x-1.x-dev, 1.2.x-dev or
+       // 1.x-dev.
        || (!is_numeric($last_part_split[0]) && $last_part_split !== 'x' && $version_extra !== 'dev')) {
       throw new \UnexpectedValueException("Unexpected version number in: $original_version");
     }

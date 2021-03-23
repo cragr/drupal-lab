@@ -59,7 +59,7 @@ trait FunctionalTestSetupTrait {
   protected $apcuEnsureUniquePrefix = FALSE;
 
   /**
-   * Flag to set the value of the "system.advisories.config" for the test.
+   * Flag to set the value of the 'system.advisories.enabled' for the test.
    *
    * Defaults to FALSE so that advisories are not fetched during tests unless a
    * test opts in.

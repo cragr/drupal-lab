@@ -112,7 +112,7 @@ final class SecurityAdvisoriesFetcher {
    * @return \Drupal\system\SecurityAdvisories\SecurityAdvisory[]|null
    *   The upstream security advisories, if any. NULL if there was a problem
    *   retrieving the JSON feed, or if there was no stored response and
-   *   allow_outgoing_request was set to FALSE.
+   *   $allow_outgoing_request was set to FALSE.
    *
    * @throws \GuzzleHttp\Exception\TransferException
    *   Thrown if an error occurs while retrieving security advisories.
@@ -275,7 +275,8 @@ final class SecurityAdvisoriesFetcher {
    *   The security advisory.
    *
    * @return bool
-   *   TRUE if the advisory is applicable for the current site, otherwise FALSE.
+   *   TRUE if the advisory is applicable for the current site, or FALSE
+   *   otherwise.
    */
   protected function isApplicable(SecurityAdvisory $sa): bool {
     // Only projects that are in the site's codebase can be applicable. Core
