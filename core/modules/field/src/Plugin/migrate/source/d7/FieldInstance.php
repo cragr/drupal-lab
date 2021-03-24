@@ -8,7 +8,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 field instances source from database.
  *
- *  Available configuration keys:
+ * Available configuration keys:
  *  - entity_type: (optional) The entity type (machine name) to filter field
  *    instances retrieved from the source. If omitted, all field instances are
  *    retrieved.
@@ -36,6 +36,9 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * In this example field instances of page content type are retrieved from the
  * source database.
+ *
+ * In any case, if the Drupal 7 Title module is enabled, the fields it provides
+ * are ignored.
  *
  * For additional configuration keys, refer to the parent classes:
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase

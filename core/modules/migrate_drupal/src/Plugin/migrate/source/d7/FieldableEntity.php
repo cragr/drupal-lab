@@ -8,7 +8,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Base class for D7 source plugins which need to collect field values from
  * the Field API.
  *
- * Please refer to the existing implementations for examples:
+ * Refer to the existing implementations for examples:
  * @see \Drupal\node\Plugin\migrate\source\d7\Node
  * @see \Drupal\user\Plugin\migrate\source\d7\User
  *
