@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validation;
  *
  * @internal
  *
- * @link https://www.drupal.org/docs/8/update/automatic-updates#s-public-service-announcement-psa-feed
+ * @link https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories#s-drupalorg-json-advisories-feed
  */
 final class SecurityAdvisory {
 
