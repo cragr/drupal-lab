@@ -51,7 +51,7 @@ final class ExtensionVersion {
    * @return \Drupal\system\ExtensionVersion
    *   The extension version instance.
    */
-  public static function createFromVersionString(string $version_string): self {
+  public static function createFromVersionString(string $version_string): ExtensionVersion {
     $original_version = $version_string;
     if (strpos($version_string, static::CORE_PREFIX) === 0 && $version_string !== '8.x-dev') {
       $version_string = preg_replace('/8\.x-/', '', $version_string, 1);
@@ -118,7 +118,7 @@ final class ExtensionVersion {
    * @return \Drupal\system\ExtensionVersion
    *   The ExtensionVersion instance.
    */
-  public static function createFromSupportBranch(string $branch): self {
+  public static function createFromSupportBranch(string $branch): ExtensionVersion {
     if (substr($branch, -1) !== '.') {
       throw new \UnexpectedValueException("Invalid support branch: $branch");
     }
