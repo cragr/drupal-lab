@@ -1220,7 +1220,7 @@ services:
     class: Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@current_user', '@messenger']
+    arguments: ['@current_user']
   ajax_response.attachments_processor:
     class: Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
     tags:
