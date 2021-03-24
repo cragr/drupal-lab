@@ -57,8 +57,9 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()));
     $this->assertSame(0, $result);
 
-    $theme_path = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
-    $this->assertFileExists($theme_path . '/test_custom_theme.info.yml');
+    $theme_path_relative = 'themes/test_custom_theme';
+    $theme_path_absolute = $this->getWorkspaceDirectory() . "/$theme_path_relative";
+    $this->assertFileExists($theme_path_absolute . '/test_custom_theme.info.yml');
 
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
@@ -68,6 +69,16 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->getMink()->assertSession()->pageTextContains('Custom theme generated from a starterkit theme');
     $this->getMink()->getSession()->getPage()->clickLink('Install "Test custom starterkit theme" theme');
     $this->getMink()->assertSession()->pageTextContains('The "Test custom starterkit theme" theme has been installed.');
+
+    $this->assertFileExists($theme_path_absolute . '/test_custom_theme.theme');
+    unlink($theme_path_absolute . '/test_custom_theme.theme');
+    $process = new Process($install_command, NULL);
+    $process->setTimeout(60);
+    $result = $process->run();
+    $this->assertStringContainsString('Theme could not be generated because the destination directory', $process->getErrorOutput());
+    $this->assertStringContainsString($theme_path_relative, $process->getErrorOutput());
+    $this->assertSame(1, $result);
+    $this->assertFileNotExists($theme_path_absolute . '/test_custom_theme.theme');
   }
 
 }
