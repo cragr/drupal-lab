@@ -2,7 +2,6 @@
 
 namespace Drupal\TestSite;
 
-use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 
 /**
@@ -10,7 +9,7 @@ use Drupal\Core\Extension\ThemeInstallerInterface;
  *
  * @see \Drupal\Tests\Scripts\TestSiteApplicationTest
  */
-class TestSiteInstallTestScript implements TestSetupInterface {
+class TestSiteOliveroInstallTestScript implements TestSetupInterface {
 
   /**
    * {@inheritdoc}
