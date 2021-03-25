@@ -182,7 +182,7 @@ parameters:
     # Configure requests allowed from specific origins.
     allowedOrigins: ['*']
     # Configure requests allowed from origins, matching against regex patterns.
-    allowedOriginsPatterns: ['.*']
+    allowedOriginsPatterns: ['/.*/']
     # Sets the Access-Control-Expose-Headers header.
     exposedHeaders: false
     # Sets the Access-Control-Max-Age header.
