@@ -2,7 +2,8 @@ module.exports = {
   '@tags': ['core', 'olivero'],
   before(browser) {
     browser.drupalInstall({
-      setupFile: 'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
+      setupFile:
+        'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
       installProfile: 'standard',
     });
     browser.resizeWindow(1400, 800);
@@ -12,7 +13,7 @@ module.exports = {
   },
   'On scroll, menu collapses to burger 🍔 menu': (browser) => {
     browser
-    .drupalRelativeURL('/')
+      .drupalRelativeURL('/')
       .assert.containsText(
         '#block-olivero-content h2',
         'Congratulations and welcome to the Drupal community!',
