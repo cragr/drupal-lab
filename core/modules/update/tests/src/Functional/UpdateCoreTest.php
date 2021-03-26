@@ -15,6 +15,11 @@ class UpdateCoreTest extends UpdateSemverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $updateProject = 'drupal';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $projectTitle = 'Drupal';
 
   /**
