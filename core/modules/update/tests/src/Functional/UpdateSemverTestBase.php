@@ -97,7 +97,7 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
         $this->refreshUpdateStatus([$this->updateProject => "$minor_version.1" . $extra_version]);
         $this->standardTests();
         $this->drupalGet('admin/reports/updates');
-        $this->clickLink(t('Check manually'));
+        $this->clickLink('Check manually');
         $this->checkForMetaRefresh();
         $this->assertUpdateTableTextNotContains('Security update required!');
         // The XML test fixtures for this method all contain the '8.2.0' release
@@ -162,12 +162,12 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
           $this->refreshUpdateStatus([$this->updateProject => '9']);
           $this->standardTests();
           $this->drupalGet('admin/reports/updates');
-          $this->clickLink(t('Check manually'));
+          $this->clickLink('Check manually');
           $this->checkForMetaRefresh();
           $this->assertUpdateTableTextNotContains('Security update required!');
           $this->assertUpdateTableElementContains(Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
-          $this->assertUpdateTableElementContains(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/{$this->updateProject}-9-0-0.tar.gz"))->toString());
-          $this->assertUpdateTableElementContains(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
+          $this->assertUpdateTableElementContains(Link::fromTextAndUrl('Download', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0.tar.gz"))->toString());
+          $this->assertUpdateTableElementContains(Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
           $this->assertUpdateTableTextNotContains('Up to date');
           $this->assertUpdateTableTextContains('Not supported!');
           $this->assertUpdateTableTextContains('Recommended version:');
@@ -410,15 +410,15 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/modules');
-    $this->clickLink(t('Add new module'));
+    $this->clickLink('Add new module');
     $this->assertSession()->addressEquals('admin/modules/install');
 
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Add new theme'));
+    $this->clickLink('Add new theme');
     $this->assertSession()->addressEquals('admin/theme/install');
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Add new module or theme'));
+    $this->clickLink('Add new module or theme');
     $this->assertSession()->addressEquals('admin/reports/updates/install');
   }
 
