@@ -46,7 +46,10 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
       });
     $mock_optimizer = $this->createMock(AssetOptimizerInterface::class);
     $mock_optimizer->method('optimize')
-      ->willReturn(file_get_contents(__DIR__ . '/css_test_files/css_input_with_import.css.optimized.css'));
+      ->willReturn(
+        file_get_contents(__DIR__ . '/css_test_files/css_input_with_import.css.optimized.css'),
+        file_get_contents(__DIR__ . '/css_test_files/import1.css')
+      );
     $mock_dumper = $this->createMock(AssetDumperInterface::class);
     $mock_dumper->method('dump')
       ->willReturnCallback(function ($css) {
@@ -66,6 +69,11 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
         'type' => 'file',
         'data' => 'core/modules/system/tests/modules/common_test/common_test_css_import.css',
         'preprocess' => TRUE,
+      ],
+      'core/modules/system/tests/modules/common_test/common_test_css_import_not_preprocessed.css' => [
+        'type' => 'file',
+        'data' => 'core/modules/system/tests/modules/common_test/common_test_css_import.css',
+        'preprocess' => FALSE,
       ],
     ]);
     self::assertEquals(file_get_contents(__DIR__ . '/css_test_files/css_input_with_import.css.optimized.aggregated.css'), $this->dumperData);
