@@ -239,10 +239,11 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    *   - 8.0.1 Insecure
    *   - 8.0.0 Insecure
    * - [::$updateProject].sec.1.2_insecure-unsupported
-   *   This file has the exact releases as [::$updateProject].sec.1.2_insecure.xml. It has a
-   *   different value for 'supported_branches' that does not contain '8.0.'.
-   *   It is used to ensure that the "Security update required!" is displayed
-   *   even if the currently installed version is in an unsupported branch.
+   *   This file has the exact releases as
+   *   [::$updateProject].sec.1.2_insecure.xml. It has a different value for
+   *   'supported_branches' that does not contain '8.0.'. It is used to ensure
+   *   that the "Security update required!" is displayed even if the currently
+   *   installed version is in an unsupported branch.
    * - [::$updateProject].sec.0.2-rc2-b.xml
    *   - 8.2.0-rc2
    *   - 8.2.0-rc1
