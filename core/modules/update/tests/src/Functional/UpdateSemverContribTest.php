@@ -27,7 +27,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['semver_test'];
+  protected static $modules = ['semver_test'];
 
   /**
    * {@inheritdoc}
