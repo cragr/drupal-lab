@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * Creates a test fixture for update XML feed tests.
+ */
+
 $xml_path = 'core/modules/update/tests/modules/update_test/';
 $xml_files = glob($xml_path . 'drupal.*.xml');
 // Exclude files only needed for testSecurityCoverageMessage().

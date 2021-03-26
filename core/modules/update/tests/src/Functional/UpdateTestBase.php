@@ -289,7 +289,6 @@ abstract class UpdateTestBase extends BrowserTestBase {
       ->elementNotContains('css', $this->updateTableLocator, $text);
   }
 
-
   /**
    * Asserts that the update table text does not contain the specified text.
    *
