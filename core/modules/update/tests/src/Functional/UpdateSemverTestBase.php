@@ -388,41 +388,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
   }
 
   /**
-   * Tests the Update Manager module when the update server returns 503 errors.
-   */
-  public function testServiceUnavailable() {
-    $this->refreshUpdateStatus([], '503-error');
-    // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
-    $this->assertNoText('SimpleXMLElement');
-    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
-  }
-
-  /**
-   * Ensures that the local actions appear.
-   */
-  public function testLocalActions() {
-    $admin_user = $this->drupalCreateUser([
-      'administer site configuration',
-      'administer modules',
-      'administer software updates',
-      'administer themes',
-    ]);
-    $this->drupalLogin($admin_user);
-
-    $this->drupalGet('admin/modules');
-    $this->clickLink('Add new module');
-    $this->assertSession()->addressEquals('admin/modules/install');
-
-    $this->drupalGet('admin/appearance');
-    $this->clickLink('Add new theme');
-    $this->assertSession()->addressEquals('admin/theme/install');
-
-    $this->drupalGet('admin/reports/updates');
-    $this->clickLink('Add new module or theme');
-    $this->assertSession()->addressEquals('admin/reports/updates/install');
-  }
-
-  /**
    * Tests messages when a project release is unpublished.
    *
    * This test confirms that revoked messages are displayed regardless of
