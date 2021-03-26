@@ -24,5 +24,10 @@ module.exports = {
       this.assert.visible('button.wide-nav-expand');
       this.assert.not.visible('#site-header__inner');
     });
+
+    browser.assert.not.visible('#block-olivero-main-menu');
+    browser.click('button.wide-nav-expand', function () {
+      browser.assert.visible('#block-olivero-main-menu');
+    });
   },
 };
