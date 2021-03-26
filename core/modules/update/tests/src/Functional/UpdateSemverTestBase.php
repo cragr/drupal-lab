@@ -31,14 +31,11 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
+   * The title of the project being tested.
+   *
+   * @var string
    */
-  protected $updateTableLocator = 'table.update';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $projectTitle = 'drupal';
+  protected $projectTitle;
 
   protected function setUp(): void {
     parent::setUp();

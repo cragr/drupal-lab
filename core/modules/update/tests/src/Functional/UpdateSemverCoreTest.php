@@ -15,6 +15,11 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $updateTableLocator = 'table.update';
+  
+  /**
+   * {@inheritdoc}
+   */
   protected $updateProject = 'drupal';
 
   /**
