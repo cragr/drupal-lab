@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  *
  * @group update
  */
-class UpdateCoreTest extends UpdateSemverTestBase {
+class UpdateSemverCoreTest extends UpdateSemverTestBase {
 
   /**
    * {@inheritdoc}
