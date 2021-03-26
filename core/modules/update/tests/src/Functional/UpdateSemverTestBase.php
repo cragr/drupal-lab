@@ -165,9 +165,9 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
           $this->clickLink(t('Check manually'));
           $this->checkForMetaRefresh();
           $this->assertUpdateTableTextNotContains('Security update required!');
-          $this->assertUpdateTableElementContains(Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/drupal-9-0-0-release"))->toString());
-          $this->assertUpdateTableElementContains(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz"))->toString());
-          $this->assertUpdateTableElementContains(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/drupal-9-0-0-release"))->toString());
+          $this->assertUpdateTableElementContains(Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
+          $this->assertUpdateTableElementContains(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/{$this->updateProject}-9-0-0.tar.gz"))->toString());
+          $this->assertUpdateTableElementContains(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
           $this->assertUpdateTableTextNotContains('Up to date');
           $this->assertUpdateTableTextContains('Not supported!');
           $this->assertUpdateTableTextContains('Recommended version:');
