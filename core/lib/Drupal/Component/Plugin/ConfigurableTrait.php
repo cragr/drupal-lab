@@ -39,7 +39,8 @@ trait ConfigurableTrait {
    * Sets the configuration for this plugin instance.
    *
    * @param array $configuration
-   *   An associative array containing the plugin's configuration. Provided value is merged with default configuration.
+   *   An associative array containing the plugin's configuration. Provided
+   *   value is merged with default configuration.
    *
    * @return $this
    *
