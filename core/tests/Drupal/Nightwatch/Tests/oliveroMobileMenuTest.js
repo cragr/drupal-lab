@@ -1,3 +1,6 @@
+// Nightwatch suggests non-ES6 functions when using the execute method.
+// eslint-disable func-names, prefer-arrow-callback
+
 module.exports = {
   '@tags': ['core', 'olivero'],
   before(browser) {
@@ -11,23 +14,30 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
-  'Verify mobile menu exists': (browser) => {
-    browser
-      .drupalRelativeURL('/')
-      .assert.not.visible('#header-nav');
+  'Verify mobile menu functionality': (browser) => {
+    browser.drupalRelativeURL('/').assert.not.visible('#header-nav');
 
     browser.click('button.mobile-nav-button', function () {
       browser.assert.visible('#header-nav');
       browser.assert.visible('#search-block-form');
+
+      // Send the tab key 19 times.
       for (let i = 0; i < 19; i++) {
         browser.keys(browser.Keys.TAB);
       }
 
-      browser.execute(function () {
-        return document.activeElement.matches('#header-nav *, button.mobile-nav-button');
-      }, [], (result) => {
-        browser.assert.ok(result.value);
-      });
+      // Ensure that focus trap keeps focused element within the navigation.
+      browser.execute(
+        function () {
+          return document.activeElement.matches(
+            '#header-nav *, button.mobile-nav-button',
+          );
+        },
+        [],
+        (result) => {
+          browser.assert.ok(result.value);
+        },
+      );
       browser.pause();
     });
   },
