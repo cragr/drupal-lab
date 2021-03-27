@@ -1,0 +1,10 @@
+# Create items in the Main menu.
+olivero_test.front_page:
+  title: Home
+  route_name: <front>
+  menu_name: main
+olivero_test.child:
+  title: Child link
+  route_name: <front>
+  parent: olivero_test.front_page
+  menu_name: main
