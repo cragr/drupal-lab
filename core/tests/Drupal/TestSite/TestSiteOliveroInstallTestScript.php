@@ -4,7 +4,6 @@ namespace Drupal\TestSite;
 
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
-use Drupal\Core\Menu\MenuLinkManager;
 
 /**
  * Setup file used by TestSiteInstallTestScript.
