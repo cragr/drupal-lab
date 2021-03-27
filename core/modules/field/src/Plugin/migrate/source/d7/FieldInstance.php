@@ -8,7 +8,9 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 field instances source from database.
  *
- * If the Drupal 7 Title module is enabled, the fields it provides are ignored.
+ * If the Drupal 7 Title module is enabled, the fields it provides are not
+ * migrated. The values of those fields will be migrated to the base fields they
+ * were replacing.
  *
  * Available configuration keys:
  *  - entity_type: (optional) The entity type (machine name) to filter field
@@ -72,9 +74,7 @@ class FieldInstance extends DrupalSqlBase {
       }
     }
 
-    // If the Drupal 7 Title module is enabled, we don't want to migrate the
-    // fields it provides. The values of those fields will be migrated to the
-    // base fields they were replacing.
+    // The Title module fields are not migrated.
     if ($this->moduleExists('title')) {
       $title_fields = [
         'title_field',
