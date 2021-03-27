@@ -16,7 +16,6 @@ module.exports = {
   },
   'Verify mobile menu functionality': (browser) => {
     browser.drupalRelativeURL('/').assert.not.visible('#header-nav');
-
     browser.click('button.mobile-nav-button', function () {
       browser.assert.visible('#header-nav');
       browser.assert.visible('#search-block-form');
@@ -38,7 +37,22 @@ module.exports = {
           browser.assert.ok(result.value);
         },
       );
-      browser.pause();
+
+      // Ensure that submenu is not visible.
+      browser.assert.not.visible('#home-submenu-1');
+      browser.assert.attributeEquals(
+        '[aria-controls="home-submenu-1"]',
+        'aria-expanded',
+        'false'
+      )
+      browser.click('[aria-controls="home-submenu-1"]', function () {
+        browser.assert.visible('#home-submenu-1');
+        browser.assert.attributeEquals(
+          '[aria-controls="home-submenu-1"]',
+          'aria-expanded',
+          'true'
+        )
+      });
     });
   },
 };
