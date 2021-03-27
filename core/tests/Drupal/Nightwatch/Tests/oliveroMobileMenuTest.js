@@ -18,29 +18,11 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
-  'Verify mobile menu functionality': (browser) => {
+  'Verify mobile menu and submenu functionality': (browser) => {
     browser.drupalRelativeURL('/').assert.not.visible(headerNavSelector);
     browser.click(mobileNavButtonSelector, function () {
       browser.assert.visible(headerNavSelector);
       browser.assert.visible('#search-block-form');
-
-      // Send the tab key 19 times.
-      for (let i = 0; i < 19; i++) {
-        browser.keys(browser.Keys.TAB);
-      }
-
-      // Ensure that focus trap keeps focused element within the navigation.
-      browser.execute(
-        function (mobileNavButtonSelector, headerNavSelector) {
-          return document.activeElement.matches(
-            `${headerNavSelector} *, ${mobileNavButtonSelector}`,
-          );
-        },
-        [mobileNavButtonSelector, headerNavSelector],
-        (result) => {
-          browser.assert.ok(result.value);
-        },
-      );
 
       // Ensure that submenu is not visible.
       browser.assert.not.visible(`#${subMenuId}`);
@@ -57,6 +39,28 @@ module.exports = {
           'true',
         );
       });
+    });
+  },
+  'Verify mobile menu focus trap': (browser) => {
+    browser.drupalRelativeURL('/').click(mobileNavButtonSelector, function () {
+      // Send the tab key 17 times.
+      for (let i = 0; i < 17; i++) {
+        browser.keys(browser.Keys.TAB);
+        browser.pause(50);
+      }
+
+      // Ensure that focus trap keeps focused element within the navigation.
+      browser.execute(
+        function (mobileNavButtonSelector, headerNavSelector) {
+          return document.activeElement.matches(
+            `${headerNavSelector} *, ${mobileNavButtonSelector}`,
+          );
+        },
+        [mobileNavButtonSelector, headerNavSelector],
+        (result) => {
+          browser.assert.ok(result.value);
+        },
+      );
     });
   },
 };
