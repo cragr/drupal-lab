@@ -11,7 +11,7 @@ module.exports = {
     browser.drupalInstall({
       setupFile:
         'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
-      installProfile: 'standard',
+      installProfile: 'minimal',
     });
     browser.resizeWindow(1000, 800);
   },
@@ -22,7 +22,6 @@ module.exports = {
     browser.drupalRelativeURL('/').assert.not.visible(headerNavSelector);
     browser.click(mobileNavButtonSelector, function () {
       browser.assert.visible(headerNavSelector);
-      browser.assert.visible('#search-block-form');
 
       // Ensure that submenu is not visible.
       browser.assert.not.visible(`#${subMenuId}`);
@@ -44,6 +43,8 @@ module.exports = {
   'Verify mobile menu focus trap': (browser) => {
     browser.drupalRelativeURL('/').click(mobileNavButtonSelector, function () {
       // Send the tab key 17 times.
+      // @todo test shift+tab functionality when
+      // https://www.drupal.org/project/drupal/issues/3191077 is committed.
       for (let i = 0; i < 17; i++) {
         browser.keys(browser.Keys.TAB);
         browser.pause(50);
@@ -52,6 +53,7 @@ module.exports = {
       // Ensure that focus trap keeps focused element within the navigation.
       browser.execute(
         function (mobileNavButtonSelector, headerNavSelector) {
+          // Verify focused element is still within the focus trap.
           return document.activeElement.matches(
             `${headerNavSelector} *, ${mobileNavButtonSelector}`,
           );
