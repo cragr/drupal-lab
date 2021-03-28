@@ -31,10 +31,13 @@ function drupal_rebuild($class_loader, Request $request) {
   // Force kernel to rebuild php cache.
   PhpStorageFactory::get('twig')->deleteAll();
 
+  // Get the app root from the class loader. This stores paths to files as it
+  // actually sees them, without resolving symlinks.
+  $app_root = dirname($class_loader->findFile(\Drupal::class), 3);
+
   // Bootstrap up to where caches exist and clear them.
-  $app_root = dirname(__DIR__, 2);
   $kernel = new DrupalKernel('prod', $class_loader, TRUE, $app_root);
-  $kernel->setSitePath(DrupalKernel::findSitePath($request, TRUE, $app_root));
+  $kernel->setSitePath(DrupalKernel::findSitePath($request));
   $kernel->boot();
   $kernel->preHandle($request);
   // Ensure our request includes the session if appropriate.
