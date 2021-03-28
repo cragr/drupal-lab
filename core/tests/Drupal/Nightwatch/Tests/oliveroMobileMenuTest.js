@@ -80,7 +80,6 @@ module.exports = {
           browser.assert.ok(result.value);
         },
       );
-      browser.pause();
     });
   },
 };
