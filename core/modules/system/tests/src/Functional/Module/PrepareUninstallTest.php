@@ -120,13 +120,13 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Only the 5 pages should be listed as the 5 articles are initially inaccessible.
     foreach ($this->nodes as $node) {
       if ($node->bundle() === 'page') {
-        $this->assertText($node->label());
+        $this->assertSession()->pageTextContains($node->label());
       }
       else {
         $node->set('private', FALSE)->save();
       }
     }
-    $this->assertText('And 5 more content items.');
+    $this->assertSession()->pageTextContains('And 5 more content items.');
 
     // All 10 nodes should now be listed as none are still inaccessible.
     $this->drupalGet('admin/modules/uninstall/entity/node');
