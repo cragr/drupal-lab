@@ -3,7 +3,8 @@
 
 const mobileNavButtonSelector = 'button.mobile-nav-button';
 const headerNavSelector = '#header-nav';
-const subMenuId = 'home-submenu-1';
+const linkSubMenuId = 'home-submenu-1';
+const buttonSubMenuId = 'button-submenu-2';
 
 module.exports = {
   '@tags': ['core', 'olivero'],
@@ -23,17 +24,33 @@ module.exports = {
     browser.click(mobileNavButtonSelector, function () {
       browser.assert.visible(headerNavSelector);
 
-      // Ensure that submenu is not visible.
-      browser.assert.not.visible(`#${subMenuId}`);
+      // Test interactions for normal <a> menu links.
+      browser.assert.not.visible(`#${linkSubMenuId}`);
       browser.assert.attributeEquals(
-        `[aria-controls="${subMenuId}"]`,
+        `[aria-controls="${linkSubMenuId}"]`,
         'aria-expanded',
         'false',
       );
-      browser.click('[aria-controls="home-submenu-1"]', function () {
-        browser.assert.visible(`#${subMenuId}`);
+      browser.click(`[aria-controls="${linkSubMenuId}"]`, function () {
+        browser.assert.visible(`#${linkSubMenuId}`);
         browser.assert.attributeEquals(
-          `[aria-controls="${subMenuId}"]`,
+          `[aria-controls="${linkSubMenuId}"]`,
+          'aria-expanded',
+          'true',
+        );
+      });
+
+      // Test interactions for route:<button> menu links.
+      browser.assert.not.visible(`#${buttonSubMenuId}`);
+      browser.assert.attributeEquals(
+        `[aria-controls="${buttonSubMenuId}"]`,
+        'aria-expanded',
+        'false',
+      );
+      browser.click(`[aria-controls="${buttonSubMenuId}"]`, function () {
+        browser.assert.visible(`#${buttonSubMenuId}`);
+        browser.assert.attributeEquals(
+          `[aria-controls="${buttonSubMenuId}"]`,
           'aria-expanded',
           'true',
         );
@@ -63,6 +80,7 @@ module.exports = {
           browser.assert.ok(result.value);
         },
       );
+      browser.pause();
     });
   },
 };
