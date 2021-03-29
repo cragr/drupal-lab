@@ -20,13 +20,13 @@ module.exports = {
       );
 
     browser.assert.not.visible('button.wide-nav-expand');
-    browser.getLocationInView('footer.site-footer', function () {
-      this.assert.visible('button.wide-nav-expand');
-      this.assert.not.visible('#site-header__inner');
+    browser.getLocationInView('footer.site-footer', () => {
+      browser.assert.visible('button.wide-nav-expand');
+      browser.assert.not.visible('#site-header__inner');
     });
 
     browser.assert.not.visible('#block-olivero-main-menu');
-    browser.click('button.wide-nav-expand', function () {
+    browser.click('button.wide-nav-expand', () => {
       browser.assert.visible('#block-olivero-main-menu');
     });
   },
