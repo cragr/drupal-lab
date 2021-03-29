@@ -21,7 +21,7 @@ module.exports = {
   },
   'Verify mobile menu and submenu functionality': (browser) => {
     browser.drupalRelativeURL('/').assert.not.visible(headerNavSelector);
-    browser.click(mobileNavButtonSelector, function () {
+    browser.click(mobileNavButtonSelector, () => {
       // Test interactions for normal <a> menu links.
       browser.assert
         .visible(headerNavSelector)
@@ -31,7 +31,7 @@ module.exports = {
           'aria-expanded',
           'false',
         );
-      browser.click(`[aria-controls="${linkSubMenuId}"]`, function () {
+      browser.click(`[aria-controls="${linkSubMenuId}"]`, () => {
         browser
           .pause(200)
           .assert.visible(`#${linkSubMenuId}`)
@@ -50,7 +50,7 @@ module.exports = {
           'aria-expanded',
           'false',
         )
-        .click(`[aria-controls="${buttonSubMenuId}"]`, function () {
+        .click(`[aria-controls="${buttonSubMenuId}"]`, () => {
           browser.assert
             .visible(`#${buttonSubMenuId}`)
             .assert.attributeEquals(
@@ -62,7 +62,7 @@ module.exports = {
     });
   },
   'Verify mobile menu focus trap': (browser) => {
-    browser.drupalRelativeURL('/').click(mobileNavButtonSelector, function () {
+    browser.drupalRelativeURL('/').click(mobileNavButtonSelector, () => {
       // Send the tab key 17 times.
       // @todo test shift+tab functionality when
       // https://www.drupal.org/project/drupal/issues/3191077 is committed.

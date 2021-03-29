@@ -28,7 +28,7 @@ module.exports = {
         'aria-expanded',
         'false',
       )
-      .click(`[aria-controls="${linkSubMenuId}"]`, function () {
+      .click(`[aria-controls="${linkSubMenuId}"]`, () => {
         browser.assert.visible(`#${linkSubMenuId}`);
         browser.assert.attributeEquals(
           `[aria-controls="${linkSubMenuId}"]`,
@@ -44,7 +44,7 @@ module.exports = {
         'aria-expanded',
         'false',
       )
-      .click(`[aria-controls="${buttonSubMenuId}"]`, function () {
+      .click(`[aria-controls="${buttonSubMenuId}"]`, () => {
         browser.assert.visible(`#${buttonSubMenuId}`);
         browser.assert.attributeEquals(
           `[aria-controls="${buttonSubMenuId}"]`,
@@ -56,10 +56,10 @@ module.exports = {
   'Verify desktop menu hover functionality': (browser) => {
     browser
       .drupalRelativeURL('/node')
-      .waitForElementVisible('body', 1000, function () {
+      .waitForElementVisible('body', 1000, () => {
         browser.assert
           .visible(headerNavSelector)
-          .moveToElement('link text', 'home', function () {
+          .moveToElement('link text', 'home', () => {
             browser.assert.visible(`#${linkSubMenuId}`);
             browser.assert.attributeEquals(
               `[aria-controls="${linkSubMenuId}"]`,
@@ -67,8 +67,7 @@ module.exports = {
               'true',
             );
           })
-          .moveToElement('link text', 'button', function () {
-            console.log('button');
+          .moveToElement('link text', 'button', () => {
             browser.assert.visible(`#${buttonSubMenuId}`);
             browser.assert.attributeEquals(
               `[aria-controls="${buttonSubMenuId}"]`,
