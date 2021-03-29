@@ -48,7 +48,6 @@ anotherwordenglish
 anotherwordgerman
 antilop
 anyall
-anycrlf
 api's
 apng
 apos
@@ -192,7 +191,6 @@ browserkit
 browsertest
 browsertestbase
 brûlée
-bsr_anycrlf
 bubbleable
 buildable
 buildinfo
