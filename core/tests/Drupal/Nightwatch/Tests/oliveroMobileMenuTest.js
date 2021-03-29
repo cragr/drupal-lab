@@ -22,39 +22,43 @@ module.exports = {
   'Verify mobile menu and submenu functionality': (browser) => {
     browser.drupalRelativeURL('/').assert.not.visible(headerNavSelector);
     browser.click(mobileNavButtonSelector, function () {
-      browser.assert.visible(headerNavSelector);
-
       // Test interactions for normal <a> menu links.
-      browser.assert.not.visible(`#${linkSubMenuId}`);
-      browser.assert.attributeEquals(
-        `[aria-controls="${linkSubMenuId}"]`,
-        'aria-expanded',
-        'false',
-      );
-      browser.click(`[aria-controls="${linkSubMenuId}"]`, function () {
-        browser.assert.visible(`#${linkSubMenuId}`);
-        browser.assert.attributeEquals(
+      browser.assert
+        .visible(headerNavSelector)
+        .assert.not.visible(`#${linkSubMenuId}`)
+        .assert.attributeEquals(
           `[aria-controls="${linkSubMenuId}"]`,
           'aria-expanded',
-          'true',
+          'false',
         );
+      browser.click(`[aria-controls="${linkSubMenuId}"]`, function () {
+        browser
+          .pause(200)
+          .assert.visible(`#${linkSubMenuId}`)
+          .assert.attributeEquals(
+            `[aria-controls="${linkSubMenuId}"]`,
+            'aria-expanded',
+            'true',
+          );
       });
 
       // Test interactions for route:<button> menu links.
       browser.assert.not.visible(`#${buttonSubMenuId}`);
-      browser.assert.attributeEquals(
-        `[aria-controls="${buttonSubMenuId}"]`,
-        'aria-expanded',
-        'false',
-      );
-      browser.click(`[aria-controls="${buttonSubMenuId}"]`, function () {
-        browser.assert.visible(`#${buttonSubMenuId}`);
-        browser.assert.attributeEquals(
+      browser.assert
+        .attributeEquals(
           `[aria-controls="${buttonSubMenuId}"]`,
           'aria-expanded',
-          'true',
-        );
-      });
+          'false',
+        )
+        .click(`[aria-controls="${buttonSubMenuId}"]`, function () {
+          browser.assert
+            .visible(`#${buttonSubMenuId}`)
+            .assert.attributeEquals(
+              `[aria-controls="${buttonSubMenuId}"]`,
+              'aria-expanded',
+              'true',
+            );
+        });
     });
   },
   'Verify mobile menu focus trap': (browser) => {
@@ -63,8 +67,7 @@ module.exports = {
       // @todo test shift+tab functionality when
       // https://www.drupal.org/project/drupal/issues/3191077 is committed.
       for (let i = 0; i < 17; i++) {
-        browser.keys(browser.Keys.TAB);
-        browser.pause(50);
+        browser.keys(browser.Keys.TAB).pause(50);
       }
 
       // Ensure that focus trap keeps focused element within the navigation.
