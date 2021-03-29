@@ -48,7 +48,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
     $mock_optimizer->method('optimize')
       ->willReturn(
         file_get_contents(__DIR__ . '/css_test_files/css_input_with_import.css.optimized.css'),
-        file_get_contents(__DIR__ . '/css_test_files/import1.css')
+        file_get_contents(__DIR__ . '/css_test_files/css_subfolder/css_input_with_import.css.optimized.css')
       );
     $mock_dumper = $this->createMock(AssetDumperInterface::class);
     $mock_dumper->method('dump')
