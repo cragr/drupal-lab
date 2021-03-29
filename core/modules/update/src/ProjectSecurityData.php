@@ -220,7 +220,7 @@ final class ProjectSecurityData {
     foreach ($this->releases as $release_info) {
       $release = ProjectRelease::createFromArray($release_info);
       $release_version = ModuleVersion::createFromVersionString($release->getVersion());
-      if ($release_version->getMajorVersion() === $security_covered_version_major && !$release->isUnpublished() && !$release_version->getVersionExtra()) {
+      if ($release_version->getMajorVersion() === $security_covered_version_major && $release->isPublished() && !$release_version->getVersionExtra()) {
         // The releases are ordered with the most recent releases first.
         // Therefore, if we have found a published, official release with the
         // same major version as $security_covered_version, then this release
