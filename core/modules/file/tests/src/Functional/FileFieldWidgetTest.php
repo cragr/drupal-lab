@@ -105,8 +105,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSession()->buttonNotExists('Remove');
     $this->assertSession()->buttonExists('Upload');
     // Test label has correct 'for' attribute.
-    $input = $this->xpath('//input[@name="files[' . $field_name . '_0]"]');
-    $label = $this->xpath('//label[@for="' . $input[0]->getAttribute('id') . '"]');
+    $input = $this->assertSession()->fieldExists("files[{$field_name}_0]");
+    $label = $this->xpath('//label[@for="' . $input->getAttribute('id') . '"]');
     $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
     // Save the node and ensure it does not have the file.
@@ -186,13 +186,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
         // Ensure an "Upload" button for the current field is displayed with the
         // correct name.
         $upload_button_name = $current_field_name . '_' . $remaining . '_upload_button';
-        $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', [':name' => $upload_button_name]);
-        $this->assertCount(1, $buttons, 'The upload button is displayed with the correct name.');
+        $button = $this->assertSession()->buttonExists($upload_button_name);
+        $this->assertSame('Upload', $button->getValue());
 
         // Ensure only at most one button per field is displayed.
-        $buttons = $this->xpath('//input[@type="submit" and @value="Upload"]');
         $expected = $current_field_name == $field_name ? 1 : 2;
-        $this->assertCount($expected, $buttons, 'After removing a file, only one "Upload" button for each possible field is displayed.');
+        $this->assertSession()->elementsCount('xpath', '//input[@type="submit" and @value="Upload"]', $expected);
       }
     }
 
@@ -501,6 +500,27 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = ['settings[file_extensions]' => 'jpg php'];
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+
+    // Check that a file extension with an underscore can be configured.
+    $edit = [
+      'settings[file_extensions]' => 'x_t x.t xt x_y_t',
+    ];
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->submitForm($edit, 'Save settings');
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $this->assertEquals('x_t x.t xt x_y_t', $field->getSetting('file_extensions'));
+
+    // Check that a file field with an invalid value in allowed extensions
+    // property throws an error message.
+    $invalid_extensions = ['x_.t', 'x._t', 'xt_', 'x__t', '_xt'];
+    foreach ($invalid_extensions as $value) {
+      $edit = [
+        'settings[file_extensions]' => $value,
+      ];
+      $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+      $this->submitForm($edit, 'Save settings');
+      $this->assertSession()->pageTextContains("The list of allowed extensions is not valid. Allowed characters are a-z, 0-9, '.', and '_'. The first and last characters cannot be '.' or '_', and these two characters cannot appear next to each other. Separate extensions with a comma or space.");
+    }
   }
 
   /**

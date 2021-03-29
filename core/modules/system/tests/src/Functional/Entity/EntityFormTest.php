@@ -96,12 +96,14 @@ class EntityFormTest extends BrowserTestBase {
   /**
    * Tests hook_entity_form_display_alter().
    *
+   * Verify that the altered field has the correct size value.
+   *
    * @see entity_test_entity_form_display_alter()
    */
   public function testEntityFormDisplayAlter() {
     $this->drupalGet('entity_test/add');
-    $altered_field = $this->xpath('//input[@name="field_test_text[0][value]" and @size="42"]');
-    $this->assertCount(1, $altered_field, 'The altered field has the correct size value.');
+    $altered_field = $this->assertSession()->fieldExists('field_test_text[0][value]');
+    $this->assertEquals(42, $altered_field->getAttribute('size'));
   }
 
   /**
@@ -162,13 +164,13 @@ class EntityFormTest extends BrowserTestBase {
     // translation module.
     $entity->addTranslation('ro', ['name' => $name1_ro])->save();
     $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
-    $this->assertEqual($translated_entity->name->value, $name1_ro, new FormattableMarkup('%entity_type: The translation has been added.', ['%entity_type' => $entity_type_id]));
+    $this->assertEqual($name1_ro, $translated_entity->name->value, new FormattableMarkup('%entity_type: The translation has been added.', ['%entity_type' => $entity_type_id]));
 
     $edit['name[0][value]'] = $name2_ro;
     $this->drupalPostForm('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $translated_entity = $this->loadEntityByName($entity_type_id, $name1)->getTranslation('ro');
     $this->assertNotNull($translated_entity, new FormattableMarkup('%entity_type: Modified translation found in the database.', ['%entity_type' => $entity_type_id]));
-    $this->assertEqual($translated_entity->name->value, $name2_ro, new FormattableMarkup('%entity_type: The name of the translation has been modified.', ['%entity_type' => $entity_type_id]));
+    $this->assertEqual($name2_ro, $translated_entity->name->value, new FormattableMarkup('%entity_type: The name of the translation has been modified.', ['%entity_type' => $entity_type_id]));
 
     $this->drupalGet('ro/' . $entity_type_id . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));
@@ -207,7 +209,7 @@ class EntityFormTest extends BrowserTestBase {
     // to be thrown.
     $state->set('entity_test.form.validate.test', 'button-level');
     $this->drupalPostForm('entity_test/add', [], 'Save');
-    $this->assertEqual($state->get('entity_test.form.save.exception'), 'Drupal\Core\Entity\EntityStorageException: Entity validation was skipped.', 'Button-level validation handlers behave correctly.');
+    $this->assertEqual('Drupal\\Core\\Entity\\EntityStorageException: Entity validation was skipped.', $state->get('entity_test.form.save.exception'), 'Button-level validation handlers behave correctly.');
   }
 
 }

@@ -182,11 +182,11 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Submit the form using the displayed values.
     $displayed = [];
-    $displayed['subject[0][value]'] = current($this->xpath("//input[@id='edit-subject-0-value']"))->getValue();
-    $displayed['comment_body[0][value]'] = current($this->xpath("//textarea[@id='edit-comment-body-0-value']"))->getValue();
-    $displayed['uid'] = current($this->xpath("//input[@id='edit-uid']"))->getValue();
-    $displayed['date[date]'] = current($this->xpath("//input[@id='edit-date-date']"))->getValue();
-    $displayed['date[time]'] = current($this->xpath("//input[@id='edit-date-time']"))->getValue();
+    $displayed['subject[0][value]'] = $this->assertSession()->fieldExists('edit-subject-0-value')->getValue();
+    $displayed['comment_body[0][value]'] = $this->assertSession()->fieldExists('edit-comment-body-0-value')->getValue();
+    $displayed['uid'] = $this->assertSession()->fieldExists('edit-uid')->getValue();
+    $displayed['date[date]'] = $this->assertSession()->fieldExists('edit-date-date')->getValue();
+    $displayed['date[time]'] = $this->assertSession()->fieldExists('edit-date-time')->getValue();
     $this->drupalPostForm('comment/' . $comment->id() . '/edit', $displayed, 'Save');
 
     // Check that the saved comment is still correct.
@@ -194,10 +194,10 @@ class CommentPreviewTest extends CommentTestBase {
     $comment_storage->resetCache([$comment->id()]);
     /** @var \Drupal\comment\CommentInterface $comment_loaded */
     $comment_loaded = Comment::load($comment->id());
-    $this->assertEqual($comment_loaded->getSubject(), $edit['subject[0][value]'], 'Subject loaded.');
-    $this->assertEqual($comment_loaded->comment_body->value, $edit['comment_body[0][value]'], 'Comment body loaded.');
-    $this->assertEqual($comment_loaded->getOwner()->id(), $web_user->id(), 'Name loaded.');
-    $this->assertEqual($comment_loaded->getCreatedTime(), $raw_date, 'Date loaded.');
+    $this->assertEqual($edit['subject[0][value]'], $comment_loaded->getSubject(), 'Subject loaded.');
+    $this->assertEqual($edit['comment_body[0][value]'], $comment_loaded->comment_body->value, 'Comment body loaded.');
+    $this->assertEqual($web_user->id(), $comment_loaded->getOwner()->id(), 'Name loaded.');
+    $this->assertEqual($raw_date, $comment_loaded->getCreatedTime(), 'Date loaded.');
     $this->drupalLogout();
 
     // Check that the date and time of the comment are correct when edited by
@@ -210,7 +210,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->drupalPostForm('comment/' . $comment->id() . '/edit', $user_edit, 'Save');
     $comment_storage->resetCache([$comment->id()]);
     $comment_loaded = Comment::load($comment->id());
-    $this->assertEqual($comment_loaded->getCreatedTime(), $expected_created_time, 'Expected date and time for comment edited.');
+    $this->assertEqual($expected_created_time, $comment_loaded->getCreatedTime(), 'Expected date and time for comment edited.');
     $this->drupalLogout();
   }
 

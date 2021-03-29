@@ -101,7 +101,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $file1 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file1);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual(substr($file1->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
+    $this->assertEqual('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
     file_test_reset();
@@ -120,7 +120,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $file2 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file2);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual(substr($file2->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
+    $this->assertEqual('image', substr($file2->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Load both files using File::loadMultiple().
     $files = File::loadMultiple([$file1->id(), $file2->id()]);
@@ -338,6 +338,63 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
+   * Test dangerous file handling.
+   */
+  public function testHandleDotFile() {
+    $dot_file = $this->siteDirectory . '/.test';
+    file_put_contents($dot_file, 'This is a test');
+    $config = $this->config('system.file');
+    $edit = [
+      'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($dot_file),
+      'is_image_file' => FALSE,
+    ];
+    $this->drupalGet('file-test/upload');
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('The specified file .test could not be uploaded');
+    $this->assertSession()->pageTextContains('Epic upload FAIL!');
+
+    // Check that the correct hooks were called.
+    $this->assertFileHooksCalled(['validate']);
+
+    $edit = [
+      'file_test_replace' => FileSystemInterface::EXISTS_RENAME,
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($dot_file),
+      'is_image_file' => FALSE,
+      'allow_all_extensions' => 'empty_array',
+    ];
+    $this->drupalGet('file-test/upload');
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('For security reasons, your upload has been renamed to test.');
+    $this->assertSession()->pageTextContains('File name is test.');
+    $this->assertSession()->pageTextContains('You WIN!');
+
+    // Check that the correct hooks were called.
+    $this->assertFileHooksCalled(['validate', 'insert']);
+
+    // Reset the hook counters.
+    file_test_reset();
+
+    // Turn off insecure uploads, then try the same thing as above to ensure dot
+    // files are renamed regardless.
+    $config->set('allow_insecure_uploads', 0)->save();
+    $this->drupalGet('file-test/upload');
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('For security reasons, your upload has been renamed to test_0.');
+    $this->assertSession()->pageTextContains('File name is test_0.');
+    $this->assertSession()->pageTextContains('You WIN!');
+
+    // Check that the correct hooks were called.
+    $this->assertFileHooksCalled(['validate', 'insert']);
+
+    // Reset the hook counters.
+    file_test_reset();
+  }
+
+  /**
    * Test file munge handling.
    */
   public function testHandleFileMunge() {
@@ -422,7 +479,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('For security reasons, your upload has been renamed'));
-    $this->assertRaw(t('File name is @filename', ['@filename' => 'image-test.png.php_.png']));
+    $this->assertRaw(t('File name is @filename', ['@filename' => 'image-test.png_.php_.png']));
     $this->assertRaw(t('You WIN!'));
 
     // Check that the correct hooks were called.
@@ -440,7 +497,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('For security reasons, your upload has been renamed'));
-    $this->assertRaw(t('File name is @filename.', ['@filename' => 'image-test.png_.php_.png_.txt']));
+    $this->assertRaw(t('File name is @filename.', ['@filename' => 'image-test.png_.php__0.png']));
     $this->assertRaw(t('You WIN!'));
 
     // Check that the correct hooks were called.
