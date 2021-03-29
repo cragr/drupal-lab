@@ -597,7 +597,7 @@ abstract class EntityBase implements EntityInterface {
       // Incorporate the bundle as "entity:$entity_type:$bundle", if applicable.
       // (This condition is copied directly from the entity data type deriver.)
       //
-      // @see \Drupal\Core\Entity\Plugin\DataType\Deriver::getDerivativeDefinitions()
+      // @see \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver::getDerivativeDefinitions()
       $bundles = $this->entityTypeBundleInfo()->getBundleInfo($this->getEntityTypeId());
       if (count($bundles) > 1 || $this->getEntityType()->getKey('bundle')) {
         $data_type_ids[] = "entity:{$this->getEntityTypeId()}:{$this->bundle()}";
