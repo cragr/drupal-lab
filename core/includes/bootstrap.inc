@@ -121,7 +121,9 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
  *
  * This strips two levels of directories off the current directory.
  */
-define('DRUPAL_ROOT', dirname(__DIR__, 2));
+if (!defined('DRUPAL_ROOT')) {
+  define('DRUPAL_ROOT', dirname(__DIR__, 2));
+}
 
 /**
  * Returns and optionally sets the filename for a system resource.
