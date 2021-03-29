@@ -3,7 +3,9 @@
 namespace Drupal\media_library;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Http\InputBag;
 use Drupal\Core\Site\Settings;
+use Drupal\Tests\Core\Http\InputBagTest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -37,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * @see \Drupal\media_library\MediaLibraryOpenerInterface
  */
-class MediaLibraryState extends ParameterBag {
+class MediaLibraryState extends InputBag {
 
   /**
    * {@inheritdoc}
