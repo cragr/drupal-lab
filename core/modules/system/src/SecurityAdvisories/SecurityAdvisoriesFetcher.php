@@ -196,7 +196,7 @@ final class SecurityAdvisoriesFetcher {
           catch (\UnexpectedValueException $exception) {
             // An invalid version string should not halt the evaluation of valid
             // versions in $insecure_versions. Version numbers that start with
-            // core prefix besides '8.x-' are expected in $insecure_versions,
+            // core prefix besides '8.x-' are allowed in $insecure_versions,
             // but will never match and will throw an exception.
             continue;
           }
