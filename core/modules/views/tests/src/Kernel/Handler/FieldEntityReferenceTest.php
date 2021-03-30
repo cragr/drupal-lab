@@ -114,7 +114,7 @@ class FieldEntityReferenceTest extends ViewsKernelTestBase {
       ],
     ]);
 
-    // Create a page referencing nothin.
+    // Create a page referencing nothing.
     $this->hostNodes[2] = $this->createNode([
       'type' => 'page',
       'title' => 'Page 2',
