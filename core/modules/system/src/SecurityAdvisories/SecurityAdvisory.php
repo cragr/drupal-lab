@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validation;
  *
  * @internal
  *
- * @link https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories#s-drupalorg-json-advisories-feed
+ * @see https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories#s-drupalorg-json-advisories-feed
  */
 final class SecurityAdvisory {
 

@@ -32,8 +32,8 @@ class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
   /**
    * Deletes the stored response from the security advisories feed, if needed.
    *
-   * The stored response will only be deleted if 'interval_hours' config setting
-   * is lowered from the current value.
+   * The stored response will only be deleted if the 'interval_hours' config
+   * setting is reduced from the previous value.
    *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The configuration event.
