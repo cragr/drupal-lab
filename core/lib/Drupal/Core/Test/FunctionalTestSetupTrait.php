@@ -59,16 +59,6 @@ trait FunctionalTestSetupTrait {
   protected $apcuEnsureUniquePrefix = FALSE;
 
   /**
-   * The value of the 'system.advisories.enabled' config setting for the test.
-   *
-   * Defaults to FALSE so that advisories are not fetched during tests unless a
-   * test opts in.
-   *
-   * @var bool
-   */
-  protected $systemAdvisoriesEnabled = FALSE;
-
-  /**
    * Prepares site settings and services before installation.
    */
   protected function prepareSettings() {
@@ -114,9 +104,12 @@ trait FunctionalTestSetupTrait {
     ];
     // Disable fetching of advisories during tests to avoid outbound calls. This
     // cannot be set in ::initConfig() because it would not stop these calls
-    // during install.
+    // during install. Tests that need to have the security advisories
+    // functionality enabled should override this method and unset this
+    // variable.
+    // @see \Drupal\Tests\system\Functional\SecurityAdvisories\SecurityAdvisoryTest::writeSettings()
     $settings['config']['system.advisories']['enabled'] = (object) [
-      'value' => $this->systemAdvisoriesEnabled,
+      'value' => FALSE,
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
