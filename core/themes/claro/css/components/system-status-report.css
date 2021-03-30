@@ -11,7 +11,7 @@
  */
 
 .system-status-report__requirements-group {
-  padding-top: 20px;
+  padding-top: 1.25rem;
 }
 
 .system-status-report__entry {
@@ -32,9 +32,15 @@
 }
 
 .system-status-report__entry h3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
   font-size: 1.231em;
+}
+
+.system-status-report .claro-details {
+  border: none;
+  border-bottom: 1px solid #dedfe4;
+  box-shadow: none;
 }
 
 /* Account for native and poly-filled details element */
@@ -65,43 +71,15 @@
   padding: 1em 3em 1em 1em;
 }
 
-.collapse-processed > .system-status-report__status-title:before {
-  float: right; /* LTR */
-}
-
-.system-status-report__status-title::-webkit-details-marker {
-  float: right; /* LTR */
-}
-
-[dir="rtl"] .collapse-processed > .system-status-report__status-title:before {
-  float: left;
-}
-
-[dir="rtl"] .system-status-report__status-title::-webkit-details-marker {
-  float: left;
-}
-
-/* Make poly-filled details and summary elements behave correctly. */
-
-.system-status-report summary:first-child ~ * {
-  display: none;
-}
-
-.system-status-report details[open] > *,
-.system-status-report details > summary:first-child {
-  display: block;
-  color: inherit;
-}
-
 .system-status-report__status-title .details-title:before,
 .details .system-status-report__status-icon:before {
   position: absolute;
   top: 1em;
-  left: 10px; /* LTR */
+  left: 0.625rem; /* LTR */
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 10px; /* LTR */
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.625rem; /* LTR */
   content: "";
   vertical-align: top;
   background-repeat: no-repeat;
@@ -111,7 +89,7 @@
 
 [dir="rtl"] .system-status-report__status-title .details-title:before,
 [dir="rtl"].details .system-status-report__status-title:before {
-  right: 10px;
+  right: 0.625rem;
   left: auto;
   margin-right: 0;
 }
@@ -129,11 +107,16 @@
 .system-status-report__entry__value {
   box-sizing: border-box;
   padding: 0 1em 1em 3em; /* LTR */
+  font-size: 0.875rem;
 }
 
 [dir="rtl"] .system-status-report__entry__value {
   padding-right: 3em;
   padding-left: 1em;
+}
+
+.claro-details__summary--system-status-report {
+  background: #f3f4f9;
 }
 
 @media screen and (max-width: 48em) {
@@ -149,7 +132,6 @@
     content: "";
   }
   .system-status-report__status-title {
-    float: left; /* LTR */
     width: 18rem;
     cursor: default;
   }
@@ -157,19 +139,16 @@
   .system-status-report__status-title:focus {
     text-decoration: none;
   }
-  [dir="rtl"] .system-status-report__status-title {
-    float: right;
-  }
+
   html.js .system-status-report__status-title::-webkit-details-marker {
     display: none;
   }
   .collapse-processed > .system-status-report__status-title:before {
     position: relative;
-    top: 3px;
+    top: 0.1875rem;
   }
   .system-status-report__entry__value {
     display: block;
-    float: right;
     width: calc(100% - 23em);
     padding-top: 1em;
     padding-left: 0; /* LTR */

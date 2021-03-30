@@ -70,8 +70,9 @@ class FieldEntityOperationsTest extends ViewTestBase {
       'access administration pages',
       'administer nodes',
       'bypass node access',
+      'administer views',
     ]);
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($admin_user);
     $this->drupalGet('test-entity-operations');
     /** @var $entity \Drupal\entity_test\Entity\EntityTest */
     foreach ($entities as $entity) {
@@ -79,7 +80,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
       foreach ($entity->getTranslationLanguages() as $language) {
         $entity = $entity->getTranslation($language->getId());
         $operations = \Drupal::service('entity_type.manager')->getListBuilder('node')->getOperations($entity);
-        $this->assertTrue(count($operations) > 0, 'There are operations.');
+        $this->assertNotEmpty($operations);
         foreach ($operations as $operation) {
           $expected_destination = Url::fromUri('internal:/test-entity-operations')->toString();
           // Update destination property of the URL as generating it in the
@@ -92,7 +93,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
           $base_path = \Drupal::request()->getBasePath();
           $parts = explode('/', str_replace($base_path, '', $operation['url']->toString()));
           $expected_prefix = ($language->getId() != 'en' ? $language->getId() : 'node');
-          $this->assertEqual($parts[1], $expected_prefix, 'Entity operation links to the correct language for the entity.');
+          $this->assertEqual($expected_prefix, $parts[1], 'Entity operation links to the correct language for the entity.');
         }
       }
     }

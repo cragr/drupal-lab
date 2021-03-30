@@ -17,33 +17,44 @@
  *  - system-status-report-counters.css
  */
 
+.system-status-report {
+  position: relative;
+  padding-top: 1rem;
+}
+
+@media screen and (min-width: 38em) {
+  .system-status-report {
+    padding-top: 1.5rem;
+  }
+}
+
 .system-status-report__status-title {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 6px 10px 40px; /* LTR */
+  padding: 0.625rem 0.375rem 0.625rem 2.5rem; /* LTR */
   vertical-align: top;
   background-color: transparent;
   font-weight: normal;
 }
 
 [dir="rtl"] .system-status-report__status-title {
-  padding: 10px 40px 10px 6px;
+  padding: 0.625rem 2.5rem 0.625rem 0.375rem;
 }
 
 .system-status-report__status-icon:before {
   position: absolute;
-  top: 12px;
-  left: 12px; /* LTR */
+  top: 0.75rem;
+  left: 0.75rem; /* LTR */
   display: block;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   content: "";
   background-repeat: no-repeat;
 }
 
 [dir="rtl"] .system-status-report__status-icon:before {
-  right: 12px;
+  right: 0.75rem;
   left: auto;
 }
 
@@ -61,4 +72,17 @@
 
 .cron-description__run-cron {
   display: block;
+}
+
+.claro-details__wrapper.claro-details__wrapper--system-status-report {
+  margin: 0;
+}
+
+.system-status-report__row {
+  display: flex;
+  border-bottom: 1px solid #d4d4d8;
+}
+
+.system-status-report__row:last-of-type {
+  border-bottom: none;
 }

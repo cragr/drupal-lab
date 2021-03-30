@@ -74,8 +74,8 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    */
   public function createFeed($feed_url = NULL, array $edit = []) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
-    $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
-    $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
+    $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
+    $this->assertText('The feed ' . Html::escape($edit['title[0][value]']) . ' has been added.');
 
     // Verify that the creation message contains a link to a feed.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
@@ -92,7 +92,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   Feed object representing the feed.
    */
   public function deleteFeed(FeedInterface $feed) {
-    $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/delete', [], t('Delete'));
+    $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/delete', [], 'Delete');
     $this->assertRaw(t('The feed %title has been deleted.', ['%title' => $feed->label()]));
   }
 
@@ -161,14 +161,13 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function getDefaultFeedItemCount() {
     // Our tests are based off of rss.xml, so let's find out how many elements
     // should be related.
-    $feed_count = \Drupal::entityQuery('node')
+    return \Drupal::entityQuery('node')
       ->condition('promote', NodeInterface::PROMOTED)
       ->condition('status', NodeInterface::PUBLISHED)
       ->accessCheck(FALSE)
-      ->range(0, $this->config('system.rss')->get('items.limit'))
+      ->range(0, 10)
       ->count()
       ->execute();
-    return min($feed_count, 10);
   }
 
   /**
@@ -212,7 +211,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   Feed object representing the feed.
    */
   public function deleteFeedItems(FeedInterface $feed) {
-    $this->drupalPostForm('admin/config/services/aggregator/delete/' . $feed->id(), [], t('Delete items'));
+    $this->drupalPostForm('admin/config/services/aggregator/delete/' . $feed->id(), [], 'Delete items');
     $this->assertRaw(t('The news items from %title have been deleted.', ['%title' => $feed->label()]));
   }
 
@@ -333,7 +332,7 @@ EOF;
   }
 
   /**
-   * Returns a example RSS091 feed.
+   * Returns an example RSS091 feed.
    *
    * @return string
    *   Path to the feed.
@@ -343,7 +342,7 @@ EOF;
   }
 
   /**
-   * Returns a example Atom feed.
+   * Returns an example Atom feed.
    *
    * @return string
    *   Path to the feed.
@@ -355,7 +354,7 @@ EOF;
   }
 
   /**
-   * Returns a example feed.
+   * Returns an example feed.
    *
    * @return string
    *   Path to the feed.
@@ -376,7 +375,7 @@ EOF;
       $edit = [];
       $edit['title[0][value]'] = $this->randomMachineName();
       $edit['body[0][value]'] = $this->randomMachineName();
-      $this->drupalPostForm('node/add/article', $edit, t('Save'));
+      $this->drupalPostForm('node/add/article', $edit, 'Save');
     }
   }
 

@@ -19,7 +19,7 @@ use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateMapSaveEvent;
 use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines the sql based ID map implementation.
@@ -39,7 +39,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * An event dispatcher instance to use for map events.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -154,7 +154,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The configuration for the plugin.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to do.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
@@ -198,7 +198,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The source identifiers
    *
    * @return string
-   *   An hash containing the hashed values of the source identifiers.
+   *   A hash containing the hashed values of the source identifiers.
    */
   public function getSourceIdsHash(array $source_id_values) {
     // When looking up the destination ID we require an array with both the
@@ -713,7 +713,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    */
   public function getMessages(array $source_id_values = [], $level = NULL) {
     $query = $this->getDatabase()->select($this->messageTableName(), 'msg');
-    $condition = sprintf('msg.%s = map.%s', $this::SOURCE_IDS_HASH, $this::SOURCE_IDS_HASH);
+    $condition = sprintf('[msg].[%s] = [map].[%s]', $this::SOURCE_IDS_HASH, $this::SOURCE_IDS_HASH);
     $query->addJoin('LEFT', $this->mapTableName(), 'map', $condition);
     // Explicitly define the fields we want. The order will be preserved: source
     // IDs, destination IDs (if possible), and then the rest.

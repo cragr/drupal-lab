@@ -49,7 +49,7 @@ class RestExportAuthTest extends ViewTestBase {
       'show[wizard_key]' => 'users',
       'rest_export[path]' => $view_rest_path,
       'rest_export[create]' => TRUE,
-    ], t('Save and edit'));
+    ], 'Save and edit');
 
     $this->drupalGet("admin/structure/views/nojs/display/$view_id/$view_display/auth");
     // The "basic_auth" will always be available since module,
@@ -62,8 +62,8 @@ class RestExportAuthTest extends ViewTestBase {
     // @see \Drupal\rest\Plugin\views\display\RestExport::getAuthOptions()
     $this->assertSession()->fieldNotExists('edit-auth-user');
 
-    $this->drupalPostForm(NULL, ['auth[basic_auth]' => 1, 'auth[cookie]' => 1], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm(['auth[basic_auth]' => 1, 'auth[cookie]' => 1], 'Apply');
+    $this->submitForm([], 'Save');
 
     $view = View::load($view_id);
     $this->assertEquals(['basic_auth', 'cookie'], $view->getDisplay('rest_export_1')['display_options']['auth']);

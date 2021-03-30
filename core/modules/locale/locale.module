@@ -799,7 +799,7 @@ function locale_translation_get_file_history() {
 
   if (empty($history)) {
     // Get file history from the database.
-    $result = \Drupal::database()->query('SELECT project, langcode, filename, version, uri, timestamp, last_checked FROM {locale_file}');
+    $result = \Drupal::database()->query('SELECT [project], [langcode], [filename], [version], [uri], [timestamp], [last_checked] FROM {locale_file}');
     foreach ($result as $file) {
       $file->type = $file->timestamp ? LOCALE_TRANSLATION_CURRENT : '';
       $history[$file->project][$file->langcode] = $file;
@@ -996,7 +996,7 @@ function locale_translation_use_remote_source() {
  * not have any false positives. But it is only a test, not a transformation,
  * as it destroys valid HTML. We cannot reliably filter translation strings
  * on import because some strings are irreversibly corrupted. For example,
- * a &amp; in the translation would get encoded to &amp;amp; by
+ * an &amp; in the translation would get encoded to &amp;amp; by
  * \Drupal\Component\Utility\Xss::filter() before being put in the database,
  * and thus would be displayed incorrectly.
  *

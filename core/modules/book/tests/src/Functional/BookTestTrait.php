@@ -137,11 +137,11 @@ trait BookTestTrait {
     }
 
     // Compare expected and got breadcrumbs.
-    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, 'The breadcrumb is correctly displayed on the page.');
+    $this->assertSame($expected_breadcrumb, $got_breadcrumb, 'The breadcrumb is correctly displayed on the page.');
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
-    $this->assertText($node->label(), 'Printer friendly title found.');
+    $this->assertText($node->label());
     $this->assertRaw($node->body->processed);
 
     $number++;
@@ -191,16 +191,16 @@ trait BookTestTrait {
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {
-      $this->drupalPostForm('node/add/book', $edit, t('Change book (update list of parents)'));
+      $this->drupalPostForm('node/add/book', $edit, 'Change book (update list of parents)');
 
       $edit['book[pid]'] = $parent;
-      $this->drupalPostForm(NULL, $edit, t('Save'));
+      $this->submitForm($edit, 'Save');
       // Make sure the parent was flagged as having children.
       $parent_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($parent);
       $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {
-      $this->drupalPostForm('node/add/book', $edit, t('Save'));
+      $this->drupalPostForm('node/add/book', $edit, 'Save');
     }
 
     // Check to make sure the book node was created.

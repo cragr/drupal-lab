@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\Language;
@@ -153,7 +152,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // original form.
     $this->clickLink(t('Edit'));
     // Also check that saving the form leads back to the translation overview.
-    $this->drupalPostForm(NULL, [], t('Save configuration'));
+    $this->submitForm([], 'Save configuration');
     $this->assertSession()->addressEquals($translation_base_url);
 
     // Check 'Add' link of French to visit add page.
@@ -170,7 +169,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][slogan]' => $fr_site_slogan,
     ];
 
-    $this->drupalPostForm("$translation_base_url/fr/add", $edit, t('Save translation'));
+    $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
 
     // Check for edit, delete links (and no 'add' link) for French language.
@@ -202,14 +201,14 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'langcode' => 'fr',
       'translation' => 'untranslated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
 
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $fr_site_name_label,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
 
     // Ensure that the label is in French (and not in English).
     $this->drupalGet("fr/$translation_base_url/fr/edit");
@@ -247,7 +246,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
     ];
     // First time, no overrides, so just Add link.
-    $this->drupalPostForm("$translation_base_url/fr/add", $edit, t('Save translation'));
+    $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
 
     // Read overridden file from active config.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
@@ -269,7 +268,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][name]' => $site_name,
       'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save translation'));
+    $this->submitForm($edit, 'Save translation');
     $this->assertRaw(t('Successfully updated @language translation.', ['@language' => 'French']));
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
 
@@ -284,7 +283,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][name]' => $site_name,
       'translation[config_names][system.site][slogan]' => $site_slogan,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save translation'));
+    $this->submitForm($edit, 'Save translation');
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
 
     // Expect no language specific file.
@@ -323,7 +322,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'recipients' => 'sales@example.com,support@example.com',
       'reply' => 'Thank you for your mail',
     ];
-    $this->drupalPostForm('admin/structure/contact/manage/feedback', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/contact/manage/feedback', $edit, 'Save');
 
     // Ensure translation link is present.
     $translation_base_url = 'admin/structure/contact/manage/feedback/translate';
@@ -356,7 +355,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ];
 
       // Save language specific version of form.
-      $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
+      $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
 
       // Expect translated values in language specific file.
       $override = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'contact.form.feedback');
@@ -380,7 +379,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
         'subject[0][value]' => 'Test subject',
         'message[0][value]' => 'Test message',
       ];
-      $this->drupalPostForm(NULL, $edit, t('Send message'));
+      $this->submitForm($edit, 'Send message');
     }
 
     // Now that all language translations are present, check translation and
@@ -402,7 +401,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     foreach ($captured_emails as $email) {
       if ($email['id'] == 'contact_page_autoreply') {
         // Trim because we get an added newline for the body.
-        $this->assertEqual(trim($email['body']), 'Thank you for your mail - ' . $email['langcode']);
+        $this->assertEqual('Thank you for your mail - ' . $email['langcode'], trim($email['body']));
       }
     }
 
@@ -415,7 +414,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       // Assert link back to list page to cancel delete is present.
       $this->assertSession()->linkByHrefExists($translation_base_url);
 
-      $this->drupalPostForm(NULL, [], t('Delete'));
+      $this->submitForm([], 'Delete');
       $this->assertRaw(t('@language translation of %label was deleted', $replacements));
       $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/add");
       $this->assertSession()->linkByHrefNotExists("translation_base_url/$langcode/edit");
@@ -458,7 +457,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'id' => 'custom_medium',
       'date_format_pattern' => 'Y. m. d. H:i',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
 
     // Test translating a default shipped format and our custom format.
     $formats = [
@@ -488,7 +487,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ];
 
       // Save language specific version of form.
-      $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
+      $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
 
       // Get translation and check we've got the right value.
       $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'core.date_format.' . $id);
@@ -501,7 +500,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
       // display "Tue".
       $formatted_date = $this->container->get('date.formatter')->format(494015820, $id, NULL, 'America/New_York', 'fr');
-      $this->assertEqual($formatted_date, 'Tue', 'Got the right formatted date using the date format translation pattern.');
+      $this->assertEqual('Tue', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
     }
   }
 
@@ -529,18 +528,17 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][user.mail][status_blocked][body]' => 'Testing account blocked body.',
     ];
 
-    $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, t('Save translation'));
+    $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, 'Save translation');
 
     // Make sure the changes are saved and loaded back properly.
     $this->drupalGet('admin/config/people/accounts/translate/fr/edit');
     foreach ($edit as $key => $value) {
       // Check the translations appear in the right field type as well.
-      $xpath = '//' . (strpos($key, '[body]') ? 'textarea' : 'input') . '[@name="' . $key . '"]';
-      $this->assertFieldByXPath($xpath, $value);
+      $this->assertSession()->fieldValueEquals($key, $value);
     }
     // Check that labels for email settings appear.
-    $this->assertText(t('Account cancellation confirmation'));
-    $this->assertText(t('Password recovery'));
+    $this->assertText('Account cancellation confirmation');
+    $this->assertText('Password recovery');
   }
 
   /**
@@ -597,8 +595,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     $description = 'All content promoted to the front page.';
     $human_readable_name = 'Frontpage';
-    $display_settings_master = 'Master';
-    $display_options_master = '(Empty)';
+    $display_settings_default = 'Default';
+    $display_options_default = '(Empty)';
     $translation_base_url = 'admin/structure/views/view/frontpage/translate';
 
     $this->drupalGet($translation_base_url);
@@ -615,10 +613,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][views.view.frontpage][description]' => $description . " FR",
       'translation[config_names][views.view.frontpage][label]' => $human_readable_name . " FR",
-      'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_master . " FR",
-      'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_master . " FR",
+      'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_default . " FR",
+      'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_default . " FR",
     ];
-    $this->drupalPostForm("$translation_base_url/fr/add", $edit, t('Save translation'));
+    $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
 
     // Check for edit, delete links (and no 'add' link) for French language.
@@ -630,8 +628,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet("$translation_base_url/fr/edit");
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][description]', $description . " FR");
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][label]', $human_readable_name . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_master . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_master . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_default . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_default . " FR");
   }
 
   /**
@@ -654,7 +652,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $this->drupalPostForm('admin/config/regional/translate/import', [
         'langcode' => $langcode,
         'files[file]' => $name,
-      ], t('Import'));
+      ], 'Import');
 
       // Change the config langcode of the 'files' view.
       $config = \Drupal::service('config.factory')->getEditable('views.view.files');
@@ -690,7 +688,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/translate/import', [
       'langcode' => 'sl',
       'files[file]' => $name,
-    ], t('Import'));
+    ], 'Import');
 
     // Translate the files view, as this one uses numeric formatters.
     $description = 'Singular form';
@@ -714,7 +712,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]' => $field_value_plural . ' 2 SL',
       'translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]' => $field_value_plural . ' 3 SL',
     ];
-    $this->drupalPostForm($translation_url, $edit, t('Save translation'));
+    $this->drupalPostForm($translation_url, $edit, 'Save translation');
 
     // Make sure the values have changed.
     $this->drupalGet($translation_url);
@@ -825,7 +823,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'label' => $name,
       'direction' => Language::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
 
     // Make sure there is no translation stored in locale storage before edit.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
@@ -835,7 +833,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][user.settings][anonymous]' => 'Anonyme',
     ];
-    $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, t('Save translation'));
+    $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, 'Save translation');
 
     // Make sure translation stored in locale storage after saved language
     // specific configuration translation.
@@ -846,7 +844,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][user.settings][anonymous]' => 'Anonymous',
     ];
-    $this->drupalPostForm('admin/config/people/accounts/translate/fr/edit', $edit, t('Save translation'));
+    $this->drupalPostForm('admin/config/people/accounts/translate/fr/edit', $edit, 'Save translation');
 
     // Make sure there is no translation stored in locale storage after revert.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
@@ -860,18 +858,18 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Delete French language
-    $this->drupalPostForm('admin/config/regional/language/delete/fr', [], t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/fr', [], 'Delete');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'French', '%langcode' => 'fr']));
 
     // Change default language to Tamil.
     $edit = [
       'site_default_language' => 'ta',
     ];
-    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
     $this->assertRaw(t('Configuration saved.'));
 
     // Delete English language
-    $this->drupalPostForm('admin/config/regional/language/delete/en', [], t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'English', '%langcode' => 'en']));
 
     // Visit account setting translation page, this should not
@@ -889,14 +887,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->container->get('state')->set('config_translation_test_config_translation_info_alter', TRUE);
     $this->container->get('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
 
-    // Check out if the translation page has the altered in settings.
-    $this->drupalGet('admin/config/system/site-information/translate/fr/add');
-    $this->assertText(t('Feed channel'));
-    $this->assertText(t('Feed description'));
-
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
-    $this->assertText(t('Name'));
+    $this->assertText('Name');
     $this->assertNoText('Account cancellation confirmation');
     $this->assertNoText('Password recovery');
   }
@@ -925,7 +918,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][config_translation_test.content][animals][1]' => 'llama - FR',
       'translation[config_names][config_translation_test.content][animals][2]' => 'elephant - FR',
     ];
-    $this->drupalPostForm('admin/config/media/file-system/translate/fr/add', $edit, t('Save translation'));
+    $this->drupalPostForm('admin/config/media/file-system/translate/fr/add', $edit, 'Save translation');
 
     $this->container->get('language.config_factory_override')
       ->setLanguage(new Language(['id' => 'fr']));
@@ -977,7 +970,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
 
     // Save language specific version of form.
-    $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
+    $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
 
     // Get translation and check we've got the right value.
     $expected = [
@@ -1011,7 +1004,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogin($this->translatorUser);
     $this->drupalGet($translation_page_url);
     $this->assertDisabledTextarea('edit-translation-config-names-config-translation-testcontent-content-value');
-    $this->drupalPostForm(NULL, [], t('Save translation'));
+    $this->submitForm([], 'Save translation');
     // Check that submitting the form did not update the text format of the
     // translation.
     $actual = $config_factory
@@ -1024,7 +1017,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][config_translation_test.content][content][format]' => 'full_html',
     ];
-    $this->drupalPostForm($translation_page_url, $edit, t('Save translation'));
+    $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
     $expected = [
       'value' => '<p><strong>Hello World</strong> - FR</p>',
       'format' => 'full_html',
@@ -1066,7 +1059,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][field.field.node.article.translatable_field][description]' => 'FR Help text.',
       'translation[config_names][field.field.node.article.translatable_field][label]' => 'FR label',
     ];
-    $this->drupalPostForm(NULL, $form_values, 'Save translation');
+    $this->submitForm($form_values, 'Save translation');
     $this->assertText('Successfully saved French translation.');
 
     // Check that the translations are saved.
@@ -1119,7 +1112,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'site_name' => $site_name,
       'site_slogan' => $site_slogan,
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
     $this->assertRaw(t('The configuration options have been saved.'));
   }
 
@@ -1152,15 +1145,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertDisabledTextarea($id) {
-    $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', [
-      ':id' => $id,
-    ]);
-    $textarea = reset($textarea);
-    $this->assertInstanceOf(NodeElement::class, $textarea);
-    $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($textarea->getText(), $expected, new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', [
-      '@id' => $id,
-    ]));
+    $textarea = $this->assertSession()->fieldDisabled($id);
+    $this->assertSame('textarea', $textarea->getTagName());
+    $this->assertSame('This field has been disabled because you do not have sufficient permissions to edit it.', $textarea->getText());
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $xpath = $this->assertSession()->buildXPathQuery('//select[@id=:id]', [':id' => $select_id]);

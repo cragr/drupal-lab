@@ -56,10 +56,10 @@ class UserAdminTest extends BrowserTestBase {
     $admin_user->save();
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/people');
-    $this->assertText($user_a->getAccountName(), 'Found user A on admin users page');
-    $this->assertText($user_b->getAccountName(), 'Found user B on admin users page');
-    $this->assertText($user_c->getAccountName(), 'Found user C on admin users page');
-    $this->assertText($admin_user->getAccountName(), 'Found Admin user on admin users page');
+    $this->assertText($user_a->getAccountName());
+    $this->assertText($user_b->getAccountName());
+    $this->assertText($user_c->getAccountName());
+    $this->assertText($admin_user->getAccountName());
 
     // Test for existence of edit link in table.
     $link = $user_a->toLink(t('Edit'), 'edit-form', ['query' => ['destination' => $user_a->toUrl('collection')->toString()]])->toString();
@@ -88,9 +88,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['permission' => 'administer taxonomy']]);
 
     // Check if the correct users show up.
-    $this->assertNoText($user_a->getAccountName(), 'User A not on filtered by perm admin users page');
-    $this->assertText($user_b->getAccountName(), 'Found user B on filtered by perm admin users page');
-    $this->assertText($user_c->getAccountName(), 'Found user C on filtered by perm admin users page');
+    $this->assertNoText($user_a->getAccountName());
+    $this->assertText($user_b->getAccountName());
+    $this->assertText($user_c->getAccountName());
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->getRoles();
@@ -98,9 +98,9 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['role' => reset($roles)]]);
 
     // Check if the correct users show up when filtered by role.
-    $this->assertNoText($user_a->getAccountName(), 'User A not on filtered by role on admin users page');
-    $this->assertNoText($user_b->getAccountName(), 'User B not on filtered by role on admin users page');
-    $this->assertText($user_c->getAccountName(), 'User C on filtered by role on admin users page');
+    $this->assertNoText($user_a->getAccountName());
+    $this->assertNoText($user_b->getAccountName());
+    $this->assertText($user_c->getAccountName());
 
     // Test blocking of a user.
     $account = $user_storage->load($user_c->id());
@@ -111,7 +111,7 @@ class UserAdminTest extends BrowserTestBase {
     $config
       ->set('notify.status_blocked', TRUE)
       ->save();
-    $this->drupalPostForm('admin/people', $edit, t('Apply to selected items'), [
+    $this->drupalPostForm('admin/people', $edit, 'Apply to selected items', [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => ['order' => 'name', 'sort' => 'asc'],
@@ -124,15 +124,15 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test filtering on admin page for blocked users
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
-    $this->assertNoText($user_a->getAccountName(), 'User A not on filtered by status on admin users page');
-    $this->assertNoText($user_b->getAccountName(), 'User B not on filtered by status on admin users page');
-    $this->assertText($user_c->getAccountName(), 'User C on filtered by status on admin users page');
+    $this->assertNoText($user_a->getAccountName());
+    $this->assertNoText($user_b->getAccountName());
+    $this->assertText($user_c->getAccountName());
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = [];
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[4]'] = TRUE;
-    $this->drupalPostForm('admin/people', $editunblock, t('Apply to selected items'), [
+    $this->drupalPostForm('admin/people', $editunblock, 'Apply to selected items', [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => ['order' => 'name', 'sort' => 'asc'],
@@ -146,11 +146,11 @@ class UserAdminTest extends BrowserTestBase {
     $user_d = $this->drupalCreateUser([]);
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());
-    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => 0], t('Save'));
+    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => 0], 'Save');
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());
     $this->assertTrue($account1->isBlocked(), 'User D blocked');
-    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => TRUE], t('Save'));
+    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => TRUE], 'Save');
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());
     $this->assertTrue($account1->isActive(), 'User D unblocked');
@@ -190,7 +190,7 @@ class UserAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = $this->randomMachineName();
     $edit['mail'] = $edit['name'] . '@example.com';
-    $this->drupalPostForm('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, 'Create new account');
     $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';
     // Ensure that admin notification mail is sent to the configured
     // Notification Email address.

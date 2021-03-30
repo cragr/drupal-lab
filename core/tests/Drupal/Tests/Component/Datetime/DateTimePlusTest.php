@@ -115,7 +115,7 @@ class DateTimePlusTest extends TestCase {
   /**
    * Tests DateTimePlus::checkArray().
    *
-   * @param mixed $array
+   * @param array $array
    *   Input argument for DateTimePlus::checkArray().
    * @param bool $expected
    *   The expected result of DateTimePlus::checkArray().
@@ -187,7 +187,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @param \Drupal\Component\Datetime\DateTimePlus $date
    *   DateTimePlus to test.
-   * @input mixed $input
+   * @param string $input
    *   The original input passed to the test method.
    * @param array $initial
    *   @see testTimestamp()
@@ -230,6 +230,7 @@ class DateTimePlusTest extends TestCase {
    *   Input argument for DateTimePlus.
    * @param string $timezone
    *   Timezone argument for DateTimePlus.
+   * @param string $format
    * @param string $format_date
    *   Format argument for DateTimePlus::format().
    * @param string $expected
@@ -668,7 +669,7 @@ class DateTimePlusTest extends TestCase {
         'expected' => $positive_19_hours,
       ],
       // In 1970 Sydney did not observe daylight savings time
-      // So there is only a 18 hour time interval.
+      // So there is only an 18 hour time interval.
       [
         'input2' => DateTimePlus::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('Australia/Sydney')),
         'input1' => DateTimePlus::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('America/Los_Angeles')),

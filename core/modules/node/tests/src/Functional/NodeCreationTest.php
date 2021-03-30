@@ -5,6 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Create a node and test saving it.
@@ -12,6 +13,8 @@ use Drupal\node\Entity\Node;
  * @group node
  */
 class NodeCreationTest extends NodeTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * Modules to enable.
@@ -43,6 +46,18 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
+   * Tests the order of the node types on the add page.
+   */
+  public function testNodeAddPageOrder() {
+    $this->createContentType(['type' => 'bundle_1', 'name' => 'Bundle 1']);
+    $this->createContentType(['type' => 'bundle_2', 'name' => 'Aaa Bundle 2']);
+    $admin_content_types = $this->drupalCreateUser(['bypass node access']);
+    $this->drupalLogin($admin_content_types);
+    $this->drupalGet('node/add');
+    $this->assertSession()->pageTextMatches('/Aaa Bundle 2(.*)Bundle 1/');
+  }
+
+  /**
    * Creates a "Basic page" node and verifies its consistency in the database.
    */
   public function testNodeCreation() {
@@ -57,10 +72,10 @@ class NodeCreationTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the Basic page has been created.
-    $this->assertText(t('@post @title has been created.', ['@post' => 'Basic page', '@title' => $edit['title[0][value]']]), 'Basic page created.');
+    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -123,7 +138,8 @@ class NodeCreationTest extends NodeTestBase {
 
     // Check that the rollback error was logged.
     $records = static::getWatchdogIdsForTestExceptionRollback();
-    $this->assertTrue(count($records) > 0, 'Rollback explanatory error logged to watchdog.');
+    // Verify that the rollback explanatory error was logged.
+    $this->assertNotEmpty($records);
   }
 
   /**
@@ -143,14 +159,14 @@ class NodeCreationTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the user was redirected to the home page.
     $this->assertSession()->addressEquals('');
-    $this->assertText(t('Test page text'));
+    $this->assertText('Test page text');
 
     // Confirm that the node was created.
-    $this->assertText(t('@post @title has been created.', ['@post' => 'Basic page', '@title' => $edit['title[0][value]']]));
+    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -232,8 +248,8 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
-    $this->assertCount(0, $result, 'No autocompletion without access user profiles.');
+    // Verify that no autocompletion exists without access user profiles.
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
 
     $admin_user = $this->drupalCreateUser([
       'administer nodes',
@@ -244,8 +260,8 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]');
-    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
+    // Ensure that the user does have access to the autocompletion.
+    $this->assertSession()->elementsCount('xpath', '//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]', 1);
   }
 
   /**

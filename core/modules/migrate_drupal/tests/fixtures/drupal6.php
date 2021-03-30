@@ -46177,6 +46177,22 @@ $connection->insert('node_type')
   'locked' => '0',
   'orig_type' => 'test_story',
 ))
+->values(array(
+  'type' => 'a_thirty_two_character_type_name',
+  'name' => 'Test long name',
+  'module' => 'node',
+  'description' => '',
+  'help' => '',
+  'has_title' => '1',
+  'title_label' => 'Title',
+  'has_body' => '1',
+  'body_label' => 'Body',
+  'min_word_count' => '0',
+  'custom' => '1',
+  'modified' => '1',
+  'locked' => '0',
+  'orig_type' => '',
+))
 ->execute();
 $connection->schema()->createTable('permission', array(
   'fields' => array(
@@ -47270,7 +47286,7 @@ $connection->insert('system')
   'name' => 'update',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'throttle' => '0',
   'bootstrap' => '0',
   'schema_version' => '-1',

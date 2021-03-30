@@ -8,7 +8,6 @@
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    // @todo, I'm not sure we even need the .mobile-buttons container anymore.
     const navButtons = document.querySelector('.mobile-buttons');
     return (
       window.getComputedStyle(navButtons).getPropertyValue('display') === 'none'
@@ -17,7 +16,7 @@
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
 
-  const wideNavButton = document.querySelector('.nav-primary__button');
+  const wideNavButton = document.querySelector('.wide-nav-expand');
   const siteHeaderFixable = document.querySelector('.site-header__fixable');
 
   function wideNavIsOpen() {

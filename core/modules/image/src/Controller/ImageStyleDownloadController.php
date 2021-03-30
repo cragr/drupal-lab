@@ -45,14 +45,14 @@ class ImageStyleDownloadController extends FileDownloadController {
   protected $logger;
 
   /**
-   * File system service,
+   * File system service.
    *
    * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
 
   /**
-   * Constructs a ImageStyleDownloadController object.
+   * Constructs an ImageStyleDownloadController object.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.

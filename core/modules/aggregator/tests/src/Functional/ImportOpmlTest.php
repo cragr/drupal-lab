@@ -46,7 +46,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
-    $this->assertText('A single OPML document may contain many feeds.', 'Found OPML help text.');
+    $this->assertText('A single OPML document may contain many feeds.');
     // Ensure that the file upload, remote URL, and refresh fields exist.
     $this->assertSession()->fieldExists('files[upload]');
     $this->assertSession()->fieldExists('remote');
@@ -61,7 +61,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $before = $count_query->execute();
 
     $edit = [];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
     $path = $this->getEmptyOpml();
@@ -69,12 +69,13 @@ class ImportOpmlTest extends AggregatorTestBase {
       'files[upload]' => $path,
       'remote' => file_create_url($path),
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
+    // Error if the URL is invalid.
     $edit = ['remote' => 'invalidUrl://empty'];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertText(t('The URL invalidUrl://empty is not valid.'), 'Error if the URL is invalid.');
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
+    $this->assertText('The URL invalidUrl://empty is not valid.');
 
     $after = $count_query->execute();
     $this->assertEqual($before, $after, 'No feeds were added during the three last form submissions.');
@@ -87,13 +88,15 @@ class ImportOpmlTest extends AggregatorTestBase {
     $count_query = \Drupal::entityQuery('aggregator_feed')->count();
     $before = $count_query->execute();
 
+    // Attempting to upload invalid XML.
     $form['files[upload]'] = $this->getInvalidOpml();
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $form, t('Import'));
-    $this->assertText(t('No new feed has been added.'), 'Attempting to upload invalid XML.');
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $form, 'Import');
+    $this->assertText('No new feed has been added.');
 
+    // Attempting to load empty OPML from remote URL
     $edit = ['remote' => file_create_url($this->getEmptyOpml())];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertText(t('No new feed has been added.'), 'Attempting to load empty OPML from remote URL.');
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
+    $this->assertText('No new feed has been added.');
 
     $after = $count_query->execute();
     $this->assertEqual($before, $after, 'No feeds were added during the two last form submissions.');
@@ -109,14 +112,14 @@ class ImportOpmlTest extends AggregatorTestBase {
       'files[upload]' => $this->getValidOpml($feeds),
       'refresh'       => '900',
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     // Verify that a duplicate URL was identified.
     $this->assertRaw(t('A feed with the URL %url already exists.', ['%url' => $feeds[0]['url[0][value]']]));
     // Verify that a duplicate title was identified.
     $this->assertRaw(t('A feed named %title already exists.', ['%title' => $feeds[1]['title[0][value]']]));
 
     $after = $count_query->execute();
-    $this->assertEqual($after, 2, 'Verifying that two distinct feeds were added.');
+    $this->assertEqual(2, $after, 'Verifying that two distinct feeds were added.');
 
     $feed_entities = Feed::loadMultiple();
     $refresh = TRUE;

@@ -40,29 +40,29 @@ class StyleUITest extends UITestBase {
     $edit = [
       'style[type]' => 'test_style',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->fieldExists('style_options[test_option]');
     $random_name = $this->randomMachineName();
     $edit = [
       'style_options[test_option]' => $random_name,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet($style_options_url);
     $this->assertSession()->fieldValueEquals('style_options[test_option]', $random_name);
 
-    $this->drupalPostForm($view_edit_url, [], t('Save'));
+    $this->drupalPostForm($view_edit_url, [], 'Save');
     $this->assertSession()->linkExists('Test style plugin', 0, 'Make sure the test style plugin is shown in the UI');
 
     $view = Views::getView($view_name);
     $view->initDisplay();
     $style = $view->display_handler->getOption('style');
-    $this->assertEqual($style['type'], 'test_style', 'Make sure that the test_style got saved as used style plugin.');
-    $this->assertEqual($style['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
+    $this->assertEqual('test_style', $style['type'], 'Make sure that the test_style got saved as used style plugin.');
+    $this->assertEqual($random_name, $style['options']['test_option'], 'Make sure that the custom settings field got saved as expected.');
 
     // Test that fields are working correctly in the UI for style plugins when
     // a field row plugin is selected.
     $this->drupalPostForm("admin/structure/views/view/$view_name/edit", [], 'Add Page');
-    $this->drupalPostForm("admin/structure/views/nojs/display/$view_name/page_1/row", ['row[type]' => 'fields'], t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/$view_name/page_1/row", ['row[type]' => 'fields'], 'Apply');
     // If fields are being used this text will not be shown.
     $this->assertNoText('The selected style or row format does not use fields.');
   }

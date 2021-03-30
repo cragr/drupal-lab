@@ -42,7 +42,7 @@
 
 .claro-details__summary.claro-details__summary--package-listing {
   color: #222330;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background: #f3f4f9;
   font-size: 1.125rem; /* 18px */
   line-height: 1.424rem; /* 23px */
@@ -119,6 +119,10 @@ td.module-list__description {
   padding-bottom: 1rem;
   font-weight: normal;
   line-height: 1.295rem;
+}
+
+.claro-details__summary.module-list__module-summary::before {
+  top: 1.75rem;
 }
 
 .module-details__description {
