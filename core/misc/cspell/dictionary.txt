@@ -573,6 +573,7 @@ fieldblock
 fieldbody
 fieldgroups
 fielditem
+fieldlayout
 fieldlinks
 fieldnames
 fieldsets
