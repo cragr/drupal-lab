@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * @internal only used as a bridge from Symfony 4 to Symfony 5, will be removed
  *   in drupal:10.0.0.
  */
-class InputBag extends ParameterBag {
+final class InputBag extends ParameterBag {
 
   /**
    * Returns the parameters.

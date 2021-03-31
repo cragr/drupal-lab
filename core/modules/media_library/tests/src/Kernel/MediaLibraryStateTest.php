@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\media_library\Kernel;
 
-use Drupal\Core\Http\InputBag;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -280,9 +279,7 @@ class MediaLibraryStateTest extends KernelTestBase {
       $this->expectException(BadRequestHttpException::class);
       $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
-    $request = new Request($query);
-    $request->query = new InputBag($request->query->all());
-    $state = MediaLibraryState::fromRequest($request);
+    $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }
 
