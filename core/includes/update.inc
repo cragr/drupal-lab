@@ -500,8 +500,8 @@ function update_resolve_dependencies($starting_updates) {
 /**
  * Prepares the update graph array for sorting.
  *
- * The weights of updates in a group of the same weight containing system
- * updates will be adjusted, so that we ensure that system updates are executed
+ * The weights of all updates with the same weight value as a system update
+ * will be increased, so that we ensure that system updates are executed
  * as soon as possible.
  *
  * For example the following graph:
