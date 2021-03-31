@@ -28,7 +28,7 @@ class DrupalErrorHandlerTestCase extends DrupalWebTestCase {
     );
     $error_warning = array(
       '%type' => 'Warning',
-      '!message' => 'var_export does not handle circular references',
+      '!message' => \PHP_VERSION_ID < 80000 ? 'Invalid argument supplied for foreach()' : 'foreach() argument must be of type array|object, string given',
       '%function' => 'error_test_generate_warnings()',
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
     );
