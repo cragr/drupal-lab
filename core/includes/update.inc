@@ -557,9 +557,9 @@ function _update_prepare_graph_for_sort(array &$graph) {
       }
     }
   }
-  // Increment the weight of all updates in a group with a system update but
-  // leave the system update with the old weight in order for it to be executed
-  // first.
+  // Increment the weight of all updates with the same weight value as a system
+  // update, but leave the system update with the old weight in order for it to
+  // be executed first.
   foreach ($graph as $update_name => &$update_data) {
     if ($update_data['module'] !== 'system') {
       $update_data['weight'] = $new_weights[$update_data['weight']];
