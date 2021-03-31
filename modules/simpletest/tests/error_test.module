@@ -43,9 +43,10 @@ function error_test_generate_warnings($collect_errors = FALSE) {
   $notice = new \stdClass();
   $notice == 1 ? 1 : 0;
   // This will generate a warning.
-  $obj = new \stdClass();
-  $obj->p =& $obj;
-  var_export($obj, TRUE);
+  $a = '';
+  foreach ($a as $b) {
+
+  }
   // This will generate a user error.
   trigger_error("Drupal is awesome", E_USER_WARNING);
   return "";
