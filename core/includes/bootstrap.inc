@@ -117,13 +117,6 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
- * Defines the root directory of the Drupal installation.
- *
- * This strips two levels of directories off the current directory.
- */
-define('DRUPAL_ROOT', dirname(__DIR__, 2));
-
-/**
  * Returns and optionally sets the filename for a system resource.
  *
  * The filename, whether provided, cached, or retrieved from the database, is
