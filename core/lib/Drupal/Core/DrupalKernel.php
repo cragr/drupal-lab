@@ -305,6 +305,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The application root.
    */
   protected static function guessApplicationRoot() {
+    // Give precedence to DRUPAL_ROOT, which shoud be defined by autoload.php.
+    if (defined('DRUPAL_ROOT')) {
+      return DRUPAL_ROOT;
+    }
+
     // Determine the application root by:
     // - Removing the namespace directories from the path.
     // - Getting the path to the directory two levels up from the path
