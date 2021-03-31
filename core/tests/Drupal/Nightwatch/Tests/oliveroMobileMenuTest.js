@@ -22,43 +22,45 @@ module.exports = {
   'Verify mobile menu and submenu functionality': (browser) => {
     browser.drupalRelativeURL('/').assert.not.visible(headerNavSelector);
     browser.click(mobileNavButtonSelector, () => {
-      // Test interactions for normal <a> menu links.
-      browser.assert
-        .visible(headerNavSelector)
-        .assert.not.visible(`#${linkSubMenuId}`)
-        .assert.attributeEquals(
-          `[aria-controls="${linkSubMenuId}"]`,
-          'aria-expanded',
-          'false',
-        );
-      browser.click(`[aria-controls="${linkSubMenuId}"]`, () => {
-        browser
-          .pause(200)
-          .assert.visible(`#${linkSubMenuId}`)
+      browser.waitForElementVisible(headerNavSelector, 1000, () => {
+        // Test interactions for normal <a> menu links.
+        browser.assert.not
+          .visible(`#${linkSubMenuId}`)
           .assert.attributeEquals(
             `[aria-controls="${linkSubMenuId}"]`,
             'aria-expanded',
-            'true',
+            'false',
           );
-      });
-
-      // Test interactions for route:<button> menu links.
-      browser.assert.not.visible(`#${buttonSubMenuId}`);
-      browser.assert
-        .attributeEquals(
-          `[aria-controls="${buttonSubMenuId}"]`,
-          'aria-expanded',
-          'false',
-        )
-        .click(`[aria-controls="${buttonSubMenuId}"]`, () => {
-          browser.assert
-            .visible(`#${buttonSubMenuId}`)
-            .assert.attributeEquals(
-              `[aria-controls="${buttonSubMenuId}"]`,
+        browser.click(`[aria-controls="${linkSubMenuId}"]`, () => {
+          browser.waitForElementVisible(`#${linkSubMenuId}`, 1000, () => {
+            browser.assert.attributeEquals(
+              `[aria-controls="${linkSubMenuId}"]`,
               'aria-expanded',
               'true',
             );
+          });
         });
+
+        // Test interactions for route:<button> menu links.
+        browser.assert.not.visible(`#${buttonSubMenuId}`);
+        browser.assert
+          .attributeEquals(
+            `[aria-controls="${buttonSubMenuId}"]`,
+            'aria-expanded',
+            'false',
+          )
+          .click(`[aria-controls="${buttonSubMenuId}"]`, () => {
+            browser.assert
+              .visible(`#${buttonSubMenuId}`)
+              .assert.attributeEquals(
+                `[aria-controls="${buttonSubMenuId}"]`,
+                'aria-expanded',
+                'true',
+              );
+          });
+      });
+
+      // Test interactions for route:<button> menu links.
     });
   },
   'Verify mobile menu focus trap': (browser) => {
