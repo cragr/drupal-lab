@@ -13,78 +13,72 @@ module.exports = {
       setupFile:
         'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
       installProfile: 'minimal',
-    });
-    browser.resizeWindow(1000, 800);
+    })
+    .resizeWindow(1000, 800);
   },
   after(browser) {
     browser.drupalUninstall();
   },
   'Verify mobile menu and submenu functionality': (browser) => {
-    browser.drupalRelativeURL('/').assert.not.visible(headerNavSelector);
-    browser.click(mobileNavButtonSelector, () => {
-      browser.waitForElementVisible(headerNavSelector, 1000, () => {
-        // Test interactions for normal <a> menu links.
-        browser.assert.not
-          .visible(`#${linkSubMenuId}`)
-          .assert.attributeEquals(
-            `[aria-controls="${linkSubMenuId}"]`,
-            'aria-expanded',
-            'false',
-          );
-        browser.click(`[aria-controls="${linkSubMenuId}"]`, () => {
-          browser.waitForElementVisible(`#${linkSubMenuId}`, 1000, () => {
-            browser.assert.attributeEquals(
-              `[aria-controls="${linkSubMenuId}"]`,
-              'aria-expanded',
-              'true',
-            );
-          });
-        });
-
-        // Test interactions for route:<button> menu links.
-        browser.assert.not.visible(`#${buttonSubMenuId}`);
-        browser.assert
-          .attributeEquals(
-            `[aria-controls="${buttonSubMenuId}"]`,
-            'aria-expanded',
-            'false',
-          )
-          .click(`[aria-controls="${buttonSubMenuId}"]`, () => {
-            browser.assert
-              .visible(`#${buttonSubMenuId}`)
-              .assert.attributeEquals(
-                `[aria-controls="${buttonSubMenuId}"]`,
-                'aria-expanded',
-                'true',
-              );
-          });
-      });
-
+    browser
+      .drupalRelativeURL('/')
+      .assert.not.visible(headerNavSelector)
+      .click(mobileNavButtonSelector)
+      .waitForElementVisible(headerNavSelector)
+      // Test interactions for normal <a> menu links.
+      .assert.not.visible(`#${linkSubMenuId}`)
+      .assert.attributeEquals(
+        `[aria-controls="${linkSubMenuId}"]`,
+        'aria-expanded',
+        'false',
+      )
+      .waitForElementVisible(`[aria-controls="${linkSubMenuId}"]`)
+      .click(`[aria-controls="${linkSubMenuId}"]`)
+      .waitForElementVisible(`#${linkSubMenuId}`)
+      .assert.attributeEquals(
+        `[aria-controls="${linkSubMenuId}"]`,
+        'aria-expanded',
+        'true',
+      )
       // Test interactions for route:<button> menu links.
-    });
+      .assert.not.visible(`#${buttonSubMenuId}`)
+      .assert.attributeEquals(
+        `[aria-controls="${buttonSubMenuId}"]`,
+        'aria-expanded',
+        'false',
+      )
+      .click(`[aria-controls="${buttonSubMenuId}"]`)
+      .assert.visible(`#${buttonSubMenuId}`)
+      .assert.attributeEquals(
+        `[aria-controls="${buttonSubMenuId}"]`,
+        'aria-expanded',
+        'true',
+      );
+      // Test interactions for route:<button> menu links/
   },
   'Verify mobile menu focus trap': (browser) => {
-    browser.drupalRelativeURL('/').click(mobileNavButtonSelector, () => {
-      // Send the tab key 17 times.
-      // @todo test shift+tab functionality when
-      // https://www.drupal.org/project/drupal/issues/3191077 is committed.
-      for (let i = 0; i < 17; i++) {
-        browser.keys(browser.Keys.TAB).pause(50);
-      }
+    browser
+    .drupalRelativeURL('/')
+    .click(mobileNavButtonSelector);
+    // Send the tab key 17 times.
+    // @todo test shift+tab functionality when
+    // https://www.drupal.org/project/drupal/issues/3191077 is committed.
+    for (let i = 0; i < 17; i++) {
+      browser.keys(browser.Keys.TAB).pause(50);
+    }
 
-      // Ensure that focus trap keeps focused element within the navigation.
-      browser.execute(
-        function (mobileNavButtonSelector, headerNavSelector) {
-          // Verify focused element is still within the focus trap.
-          return document.activeElement.matches(
-            `${headerNavSelector} *, ${mobileNavButtonSelector}`,
-          );
-        },
-        [mobileNavButtonSelector, headerNavSelector],
-        (result) => {
-          browser.assert.ok(result.value);
-        },
-      );
-    });
+    // Ensure that focus trap keeps focused element within the navigation.
+    browser.execute(
+      function (mobileNavButtonSelector, headerNavSelector) {
+        // Verify focused element is still within the focus trap.
+        return document.activeElement.matches(
+          `${headerNavSelector} *, ${mobileNavButtonSelector}`,
+        );
+      },
+      [mobileNavButtonSelector, headerNavSelector],
+      (result) => {
+        browser.assert.ok(result.value);
+      },
+    );
   },
 };
