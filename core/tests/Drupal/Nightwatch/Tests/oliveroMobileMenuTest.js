@@ -1,6 +1,3 @@
-// Nightwatch suggests non-ES6 functions when using the execute method.
-// eslint-disable func-names, prefer-arrow-callback
-
 const mobileNavButtonSelector = 'button.mobile-nav-button';
 const headerNavSelector = '#header-nav';
 const linkSubMenuId = 'home-submenu-1';
@@ -67,6 +64,7 @@ module.exports = {
 
     // Ensure that focus trap keeps focused element within the navigation.
     browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
       function (mobileNavButtonSelector, headerNavSelector) {
         // Verify focused element is still within the focus trap.
         return document.activeElement.matches(
