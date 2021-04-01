@@ -9,12 +9,13 @@ const buttonSubMenuId = 'button-submenu-2';
 module.exports = {
   '@tags': ['core', 'olivero'],
   before(browser) {
-    browser.drupalInstall({
-      setupFile:
-        'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
-      installProfile: 'minimal',
-    })
-    .resizeWindow(1000, 800);
+    browser
+      .drupalInstall({
+        setupFile:
+          'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
+        installProfile: 'minimal',
+      })
+      .resizeWindow(1000, 800);
   },
   after(browser) {
     browser.drupalUninstall();
@@ -54,12 +55,9 @@ module.exports = {
         'aria-expanded',
         'true',
       );
-      // Test interactions for route:<button> menu links/
   },
   'Verify mobile menu focus trap': (browser) => {
-    browser
-    .drupalRelativeURL('/')
-    .click(mobileNavButtonSelector);
+    browser.drupalRelativeURL('/').click(mobileNavButtonSelector);
     // Send the tab key 17 times.
     // @todo test shift+tab functionality when
     // https://www.drupal.org/project/drupal/issues/3191077 is committed.
