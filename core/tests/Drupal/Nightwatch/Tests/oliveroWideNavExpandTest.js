@@ -17,17 +17,15 @@ module.exports = {
       .assert.containsText(
         '#block-olivero-content h2',
         'Congratulations and welcome to the Drupal community!',
-      );
-
-    browser.assert.not.visible('button.wide-nav-expand');
-    browser.getLocationInView('footer.site-footer', () => {
-      browser.assert.visible('button.wide-nav-expand');
-      browser.assert.not.visible('#site-header__inner');
-    });
-
-    browser.assert.not.visible('#block-olivero-main-menu');
-    browser.click('button.wide-nav-expand', () => {
-      browser.assert.visible('#block-olivero-main-menu');
-    });
+      )
+      .assert.not.visible('button.wide-nav-expand')
+      .getLocationInView('footer.site-footer', () => {
+        browser.assert.visible('button.wide-nav-expand');
+        browser.assert.not.visible('#site-header__inner');
+      })
+      .assert.not.visible('#block-olivero-main-menu')
+      .click('button.wide-nav-expand', () => {
+        browser.assert.visible('#block-olivero-main-menu');
+      });
   },
 };
