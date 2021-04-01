@@ -640,7 +640,7 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
-   * Test RouteProvider::getRouteByName() and RouteProvider::getRoutesByNames().
+   * Test RouteProvider::getRouteByName(), RouteProvider::getRoutesByNames() and RouteProvider::routeExists().
    */
   public function testRouteByName() {
     $connection = Database::getConnection();
@@ -651,6 +651,14 @@ class RouteProviderTest extends KernelTestBase {
     $dumper = new MatcherDumper($connection, $this->state, 'test_routes');
     $dumper->addRoutes($this->fixtures->sampleRouteCollection());
     $dumper->dump();
+
+    $emptyRouteName = '';
+    $this->assertFalse($provider->routeExists($emptyRouteName));
+    $emptyRouteName = NULL;
+    $this->assertFalse($provider->routeExists($emptyRouteName));
+    $this->assertFalse($provider->routeExists('route_z'));
+    $this->assertTrue($provider->routeExists('route_a'));
+    $this->assertTrue($provider->routeExists('route_b'));
 
     $route = $provider->getRouteByName('route_a');
     $this->assertEqual('/path/one', $route->getPath(), 'The right route pattern was found.');
