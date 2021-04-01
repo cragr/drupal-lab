@@ -5,6 +5,7 @@ namespace Drupal\media_library;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Http\InputBag;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\HttpFoundation\InputBag as SymfonyInputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -97,7 +98,7 @@ class MediaLibraryState extends ParameterBag {
     $query = $request->query;
     // Replace ParameterBag with InputBag for compatibility with Symfony 5.
     // @todo Remove this when Symfony 4 is no longer supported.
-    if ($query instanceof ParameterBag) {
+    if (!($query instanceof InputBag || $query instanceof SymfonyInputBag)) {
       $query = new InputBag($query->all());
     }
 
