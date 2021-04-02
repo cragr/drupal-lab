@@ -837,9 +837,6 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoTitle($title, $message = '', $group = 'Other') {
     $actual = (string) current($this->xpath('//title'));
@@ -849,7 +846,7 @@ trait AssertContentTrait {
         '@unexpected' => var_export($title, TRUE),
       ]);
     }
-    return $this->assertNotEquals($title, $actual, $message, $group);
+    $this->assertNotEquals($title, $actual, $message, $group);
   }
 
   /**
@@ -871,9 +868,6 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '', $group = 'Other') {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -889,7 +883,7 @@ trait AssertContentTrait {
       $message = '%callback rendered correctly.';
     }
     $message = new FormattableMarkup($message, ['%callback' => 'theme_' . $callback . '()']);
-    return $this->assertSame($expected, $output, $message, $group);
+    $this->assertSame($expected, $output, $message, $group);
   }
 
   /**
@@ -1245,14 +1239,10 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass.
    */
   protected function assertOption($id, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertArrayHasKey(0, $options, $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]), $group);
-    return TRUE;
   }
 
   /**
@@ -1264,14 +1254,10 @@ trait AssertContentTrait {
    *   The text for the option tag to assert.
    * @param string $message
    *   (optional) A message to display with the assertion.
-   *
-   * @return bool
-   *   TRUE on pass.
    */
   protected function assertOptionByText($id, $text, $message = '') {
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
     $this->assertArrayHasKey(0, $options, $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
-    return TRUE;
   }
 
   /**
@@ -1291,14 +1277,10 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass.
    */
   protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
     $this->assertArrayHasKey(0, $options, $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
-    return TRUE;
   }
 
   /**

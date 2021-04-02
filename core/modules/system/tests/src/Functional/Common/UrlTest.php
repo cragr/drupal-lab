@@ -218,6 +218,7 @@ class UrlTest extends BrowserTestBase {
   /**
    * Checks for class existence in link.
    *
+   * @param $attribute
    * @param $link
    *   URL to search.
    * @param $class
