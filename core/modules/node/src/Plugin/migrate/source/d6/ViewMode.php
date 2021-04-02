@@ -65,15 +65,4 @@ class ViewMode extends ViewModeBase {
     return $ids;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    $this->dependencies = parent::calculateDependencies();
-    if (isset($this->configuration['constants']['targetEntityType'])) {
-      $this->addDependency('module', $this->entityTypeManager->getDefinition($this->configuration['constants']['targetEntityType'])->getProvider());
-    }
-    return $this->dependencies;
-  }
-
 }
