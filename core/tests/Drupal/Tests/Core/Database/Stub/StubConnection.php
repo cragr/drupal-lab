@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Log;
-use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapper;
 
 /**
@@ -57,8 +56,7 @@ class StubConnection extends Connection {
    * {@inheritdoc}
    */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
-    $statement_reflection = new \ReflectionClass(StatementInterface::class);
-    return $statement_reflection->newInstance();
+    return NULL;
   }
 
   /**
