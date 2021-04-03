@@ -50,7 +50,7 @@ class Link implements RenderableInterface {
    * @param string|array|\Drupal\Component\Render\MarkupInterface $text
    *   The link text for the anchor tag as a translated string or render array.
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options
@@ -112,7 +112,7 @@ class Link implements RenderableInterface {
    * Sets the URL of this link.
    *
    * @param Url $url
-   *   The URL object to set
+   *   The URL object to set.
    *
    * @return $this
    */
