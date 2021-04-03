@@ -232,7 +232,7 @@ EOD;
    *   - t: constraint trigger;
    *   - x: exclusion constraint.
    *   Defaults to 'c' for a CHECK constraint.
-   *   @see https://www.postgresql.org/docs/current/catalog-pg-constraint.html
+   *   @see https://www.postgresql.org/docs/current/catalog-pg-constraint.html.
    *
    * @return array
    *   An array containing all the constraint names for the field.
