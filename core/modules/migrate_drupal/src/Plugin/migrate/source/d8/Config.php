@@ -13,7 +13,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   from the source - can be a string or an array. If omitted, configuration
  *   objects of all available collections are retrieved.
  * - names: (optional) Names of configuration objects to retrieve from the
- *   source - can be a string or an array. If omitted then all available
+ *   source - can be a string or an array. If omitted, all available
  *   configuration objects are retrieved.
  *
  * Examples:
