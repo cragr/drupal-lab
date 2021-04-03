@@ -72,6 +72,11 @@
     <exclude name="Drupal.Commenting.FunctionComment.MissingReturnType"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
+  <rule ref="Drupal.Commenting.FunctionComment.ParamCommentFullStop">
+    <exclude-pattern>core/lib/Drupal/Component/Datetime/DateTimePlus\.php</exclude-pattern>
+    <exclude-pattern>core/lib/Drupal/Core/Database/Driver/pgsql/Schema\.php</exclude-pattern>
+    <exclude-pattern>core/lib/Drupal/Core/Datetime/DrupalDateTime\.php</exclude-pattern>
+  </rule>
   <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.GenderNeutralComment" />
   <rule ref="Drupal.Commenting.VariableComment">
