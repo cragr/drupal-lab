@@ -136,6 +136,10 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlQuery->isNull("base_table_2.$id_field");
     }
 
+    if (is_null($this->accessCheck)) {
+      // Just for debugging, throw an exception to trace the call stack.
+      throw new \Exception("access check not set");
+    }
     if ($this->accessCheck) {
       $this->sqlQuery->addTag($this->entityTypeId . '_access');
     }
