@@ -137,8 +137,9 @@ class Query extends QueryBase implements QueryInterface {
     }
 
     if (is_null($this->accessCheck)) {
-      // Just for debugging, throw an exception to trace the call stack.
-      throw new \Exception("access check not set");
+      // Just for debugging, dump the call stack.
+      $e = new \Exception('access check not set');
+      dump($e->getTraceAsString());
     }
     if ($this->accessCheck) {
       $this->sqlQuery->addTag($this->entityTypeId . '_access');
