@@ -7,10 +7,11 @@
 
 use Drupal\Component\Utility\OpCodeCache;
 
-// Change the directory to the Drupal root.
-chdir('..');
 // Store the Drupal root path.
-$root_path = realpath('');
+$root_path = dirname($_SERVER['SCRIPT_FILENAME'], 2);
+
+// Change the directory to the Drupal root.
+chdir($root_path);
 
 /**
  * Global flag to indicate the site is in installation mode.
