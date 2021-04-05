@@ -60,6 +60,7 @@
     <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
   </rule>
+  <rule ref="Drupal.Commenting.DocCommentAlignment"/>
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">
@@ -370,6 +371,7 @@
       <property name="ignoreNewlines" value="true"/>
     </properties>
   </rule>
+  <rule ref="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
   <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
   <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 
