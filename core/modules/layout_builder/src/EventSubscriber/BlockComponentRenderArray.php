@@ -124,8 +124,26 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#base_plugin_id' => $block->getBaseId(),
         '#derivative_plugin_id' => $block->getDerivativeId(),
         '#weight' => $event->getComponent()->getWeight(),
+        '#attributes' => isset($content['#attributes']) ? $content['#attributes'] : [],
         'content' => $content,
+        '#contextual_links' => isset($content['#contextual_links']) ? $content['#contextual_links'] : [],
       ];
+      if (!$is_content_empty) {
+        // Place the $content returned by the block plugin into a 'content'
+        // child element, as a way to allow the plugin to have complete control
+        // of its properties and rendering (for instance, its own #theme)
+        // without conflicting with the properties used above, or alternate ones
+        // used by alternate block rendering approaches in contributed modules.
+        // However, the use of a child element is an implementation detail of
+        // this particular block rendering approach. Semantically, the content
+        // returned by the block plugin, and in particular, #attributes is
+        // information about the entire block. Therefore, we must move this
+        // property from $content and merge them into the top-level element.
+        if (isset($content['#attributes'])) {
+          unset($content['#attributes']);
+        }
+      }
+      $build['content'] = $content;
 
       if ($event->inPreview()) {
         if ($block instanceof PreviewFallbackInterface) {
