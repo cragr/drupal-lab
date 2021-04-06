@@ -293,7 +293,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
     if ($app_root === NULL) {
-      $app_root = static::guessApplicationRoot();
+      $app_root = static::getApplicationRoot();
     }
     $this->root = $app_root;
   }
@@ -310,7 +310,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @see \Drupal\Composer\Plugin\Scaffold\GenerateAutoloadReferenceFile
    */
-  protected static function guessApplicationRoot() {
+  protected static function getApplicationRoot() {
     if (!defined('DRUPAL_ROOT')) {
       @trigger_error("The DRUPAL_ROOT constant defined in Drupal's autoload.php is the authoritative definition of the application root as of drupal:9.2.0. Relying on the fallback is deprecated and will be removed in drupal:10.0.0.", E_USER_DEPRECATED);
 
@@ -386,7 +386,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     if ($app_root === NULL) {
-      $app_root = static::guessApplicationRoot();
+      $app_root = static::getApplicationRoot();
     }
 
     // Check for a simpletest override.
@@ -1003,7 +1003,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Determine the application root if it's not supplied.
     if ($app_root === NULL) {
-      $app_root = static::guessApplicationRoot();
+      $app_root = static::getApplicationRoot();
     }
 
     // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
