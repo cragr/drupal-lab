@@ -12,11 +12,12 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Confirm that \Drupal\Core\Url,
+ * Confirm that these closses work correctly with various input.
+ *
+ * \Drupal\Core\Url,
  * \Drupal\Component\Utility\UrlHelper::filterQueryParameters(),
  * \Drupal\Component\Utility\UrlHelper::buildQuery(), and
- * \Drupal\Core\Utility\LinkGeneratorInterface::generate()
- * work correctly with various input.
+ * \Drupal\Core\Utility\LinkGeneratorInterface::generate().
  *
  * @group Common
  */
