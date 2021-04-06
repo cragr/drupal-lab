@@ -1164,8 +1164,9 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test against SQL inject of condition field. This covers a
-   * database driver's EntityQuery\Condition class.
+   * Test against SQL inject of condition field.
+   *
+   * This covers a database driver's EntityQuery\Condition class.
    */
   public function testInjectionInCondition() {
     $this->expectException(\Exception::class);
