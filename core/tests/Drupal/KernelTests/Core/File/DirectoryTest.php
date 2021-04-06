@@ -138,7 +138,7 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
-   * Test file destionation.
+   * Test file destination.
    *
    * This will test the filepath for a destination based on passed flags and
    * whether or not the file exists.
