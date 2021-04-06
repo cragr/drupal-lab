@@ -23,7 +23,8 @@ class UnicodeTest extends TestCase {
   public function testMimeHeaderEncode($value, $encoded) {
     // The second parameter ($shorten) is set to FALSE, which is the default,
     // to ensure we do not truncate the result.
-    $this->assertEquals($encoded, Unicode::mimeHeaderEncode($value, FALSE));
+    $encoded = 'foo: ' . $encoded;
+    $this->assertEquals($encoded, Unicode::mimeHeaderEncode($value, FALSE, 'foo'));
   }
 
   /**
@@ -42,7 +43,7 @@ class UnicodeTest extends TestCase {
       ],
       'ASCII characters only' => [
         'test.txt',
-        'test.txt',
+        '=?UTF-8?B?dGVzdC50eHQ=?=',
       ],
       'ASCII string including a LF' => [
         "ASCII\nASCII",
@@ -51,20 +52,21 @@ class UnicodeTest extends TestCase {
       ],
       'Long ASCII string (more than 45 bytes)' => [
         '1234567890abcdefghij1234567890abcdefghij123456',
-        '1234567890abcdefghij1234567890abcdefghij123456',
+        "=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2g=?=\r\n =?UTF-8?B?aWoxMjM0NTY=?=",
       ],
       // Strings containing non-ASCII characters.
       'Non-ASCII string, 44 characters, 45 bytes -> one encoded chunk' => [
         '1234567890abcdefghij1234567890abcdefghij123à',
-        '=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2hpajEyM8Og?=',
+        "=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2g=?=\r\n =?UTF-8?B?aWoxMjPDoA==?=",
       ],
       // Encoded chunks are separated by CRLF + space.
       // @see http://www.rfc-editor.org/rfc/rfc2047.txt
       'Non-ASCII string, >45 bytes -> two encoded chunks' => [
         '1234567890abcdefghij1234567890abcdefghij1234à',
-        "=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2hpajEyMzQ=?=\r\n =?UTF-8?B?w6A=?=",
+        "=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2g=?=\r\n =?UTF-8?B?aWoxMjM0w6A=?=",
       ],
     ];
+    // cSpell:enable
   }
 
   /**
@@ -76,7 +78,8 @@ class UnicodeTest extends TestCase {
   public function testMimeHeaderEncodeShorten($value, $encoded) {
     // The second parameter ($shorten) is set to TRUE to ensure we return only
     // the first chunk.
-    $this->assertEquals($encoded, Unicode::mimeHeaderEncode($value, TRUE));
+    $encoded = 'foo: ' . $encoded;
+    $this->assertEquals($encoded, Unicode::mimeHeaderEncode($value, TRUE, 'foo'));
   }
 
   /**
@@ -91,19 +94,19 @@ class UnicodeTest extends TestCase {
     return [
       'Long ASCII string that should not be shortened' => [
         '1234567890abcdefghij1234567890abcdefghij123456',
-        '1234567890abcdefghij1234567890abcdefghij123456',
+        '=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2g=?=',
       ],
       // Strings containing non-ASCII characters should only be shortened
       // if they result in more than one chunk.
       'Non-ASCII string, 44 characters, 45 bytes -> one encoded chunk (not shortened)' => [
         '1234567890abcdefghij1234567890abcdefghij123à',
-        '=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2hpajEyM8Og?=',
+        '=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2g=?=',
       ],
       // Encoded chunks are separated by CRLF + space.
       // @see http://www.rfc-editor.org/rfc/rfc2047.txt
       'Non-ASCII string, >45 bytes -> two encoded chunks (shortened)' => [
         '1234567890abcdefghij1234567890abcdefghij1234à',
-        "=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2hpajEyMzQ=?=",
+        "=?UTF-8?B?MTIzNDU2Nzg5MGFiY2RlZmdoaWoxMjM0NTY3ODkwYWJjZGVmZ2g=?=",
       ],
     ];
   }

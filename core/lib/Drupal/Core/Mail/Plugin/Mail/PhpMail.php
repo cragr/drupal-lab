@@ -77,11 +77,11 @@ class PhpMail implements MailInterface {
     }
     $mimeheaders = [];
     foreach ($message['headers'] as $name => $value) {
-      $mimeheaders[] = $name . ': ' . Unicode::mimeHeaderEncode($value);
+      $mimeheaders[] = $name . ': ' . Unicode::mimeHeaderEncode($value, FALSE, $name);
     }
     $line_endings = Settings::get('mail_line_endings', PHP_EOL);
     // Prepare mail commands.
-    $mail_subject = Unicode::mimeHeaderEncode($message['subject']);
+    $mail_subject = Unicode::mimeHeaderEncode($message['subject'], FALSE, 'subject');
     // Note: email uses CRLF for line-endings. PHP's API requires LF
     // on Unix and CRLF on Windows. Drupal automatically guesses the
     // line-ending format appropriate for your system. If you need to

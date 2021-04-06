@@ -257,7 +257,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     // originating SMTP server.
     $headers['Sender'] = $headers['Return-Path'] = $site_mail;
     // Make sure the site-name is a RFC-2822 compliant 'display-name'.
-    $headers['From'] = MailHelper::formatDisplayName($site_config->get('name')) . ' <' . $site_mail . '>';
+    $headers['From'] = MailHelper::formatDisplayName($site_config->get('name'), 'From') . ' <' . $site_mail . '>';
     if ($reply) {
       $headers['Reply-to'] = $reply;
     }

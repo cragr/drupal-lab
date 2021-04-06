@@ -393,28 +393,12 @@ EOD;
    * @return string
    *   The mime-encoded header.
    */
-  public static function mimeHeaderEncode($string, $shorten = FALSE) {
-    if (preg_match('/[^\x20-\x7E]/', $string)) {
-      // Set the maximum size of the string that can be expanded to the maximum
-      // encoded line length of 75 characters or less. Base64 expands to 4/3
-      // times the line size (in bytes), rounded up to a multiple of 4.
-      //
-      // $chunk_size = floor((75 - strlen("=?UTF-8?B??=")) / 4) * 3;
-      $chunk_size = 45;
-      $len = strlen($string);
-      $output = '';
-      while ($len > 0) {
-        $chunk = static::truncateBytes($string, $chunk_size);
-        $output .= '=?UTF-8?B?' . base64_encode($chunk) . "?=\r\n ";
-        if ($shorten) {
-          break;
-        }
-        $c = strlen($chunk);
-        $string = substr($string, $c);
-        $len -= $c;
-      }
-      // Remove CRLF + SPACE from the end of the encoded string.
-      return trim($output);
+  public static function mimeHeaderEncode($string, $shorten = FALSE, $field_name = '') {
+    $options = [];
+    $string = iconv_mime_encode($field_name , $string, $options);
+    if ($shorten) {
+      $array = explode("\r\n", $string);
+      $string = $array[0];
     }
     return $string;
   }
