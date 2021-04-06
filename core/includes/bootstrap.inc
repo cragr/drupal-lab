@@ -117,6 +117,18 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
+ * Defines the root directory if autoload.php hasn't already.
+ */
+if (!defined('DRUPAL_ROOT')) {
+  // Strip two levels of directories off the current directory. This will be
+  // incorrect in some installation configurations, such as if Drupal is
+  // symlinked into Composer from a local Composer repository.
+  define('DRUPAL_ROOT', dirname(__DIR__, 2));
+
+  @trigger_error("The DRUPAL_ROOT constant is defined in Drupal's autoload.php as of drupal:9.2.0, and defining it in bootstrap.inc will be removed in drupal:10.0.0.", E_USER_DEPRECATED);
+}
+
+/**
  * Returns and optionally sets the filename for a system resource.
  *
  * The filename, whether provided, cached, or retrieved from the database, is
