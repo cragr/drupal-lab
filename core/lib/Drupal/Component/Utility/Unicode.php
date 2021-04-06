@@ -395,7 +395,11 @@ EOD;
    */
   public static function mimeHeaderEncode($string, $shorten = FALSE, $field_name = '') {
     $options = [];
+<<<<<<< Updated upstream
     $string = iconv_mime_encode($field_name , $string, $options);
+=======
+    $string = iconv_mime_encode($field_name, $string, $options);
+>>>>>>> Stashed changes
     if ($shorten) {
       $array = explode("\r\n", $string);
       $string = $array[0];
