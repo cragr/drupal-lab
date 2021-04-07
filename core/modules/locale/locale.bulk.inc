@@ -33,10 +33,9 @@ use Drupal\locale\Locale;
  * @return array|bool
  *   The batch structure, or FALSE if no files are used to build the batch.
  *
- * @todo
- *   Integrate with update status to identify projects needed and integrate
- *   l10n_update functionality to feed in translation files alike.
- *   See https://www.drupal.org/node/1191488.
+ * @todo Integrate with update status to identify projects needed and integrate
+ * @todo l10n_update functionality to feed in translation files alike.
+ * @see https://www.drupal.org/node/1191488
  */
 function locale_translate_batch_import_files(array $options, $force = FALSE) {
   $options += [

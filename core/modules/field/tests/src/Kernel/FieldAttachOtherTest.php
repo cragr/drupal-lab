@@ -126,8 +126,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
       $this->assertRaw($expected, "Value $delta is displayed, formatter settings are applied.");
     }
 
-    // @todo 
-    // - check display order with several fields
+    // @todo check display order with several fields.
   }
 
   /**

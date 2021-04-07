@@ -466,11 +466,10 @@ class Select extends Query implements SelectInterface {
       // taxonomy_term_access to its queries. Provide backwards compatibility
       // by adding both tags here instead of attempting to fix all contrib
       // modules in a coordinated effort.
-      // @todo 
-      // - Extract this mechanism into a hook as part of a public (non-security)
-      //   issue.
-      // - Emit E_USER_DEPRECATED if term_access is used.
-      //   https://www.drupal.org/node/2575081
+      // @todo Extract this mechanism into a hook as part of a public
+      // (non-security) issue.
+      // @todo Emit E_USER_DEPRECATED if term_access is used.
+      // @see https://www.drupal.org/node/2575081
       $term_access_tags = ['term_access' => 1, 'taxonomy_term_access' => 1];
       if (array_intersect_key($this->alterTags, $term_access_tags)) {
         $this->alterTags += $term_access_tags;
