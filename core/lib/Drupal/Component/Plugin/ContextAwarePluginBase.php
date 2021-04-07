@@ -155,7 +155,7 @@ abstract class ContextAwarePluginBase extends PluginBase implements ContextAware
    */
   public function validateContexts() {
     $violations = new ConstraintViolationList();
-    // @todo Implement symfony validator API to let the validator traverse
+    // @todo Implement Symfony validator API to let the validator traverse
     // and set property paths accordingly.
 
     foreach ($this->getContexts() as $context) {

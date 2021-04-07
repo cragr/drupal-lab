@@ -47,7 +47,7 @@ class MultipleFileUploadTest extends BrowserTestBase {
       $edit["files[multi_file][$i]"] = $file_path;
     }
 
-    // @todo Replace after https://www.drupal.org/project/drupal/issues/2917885
+    // @todo Replace after hhttp://www.drupal.org/node/2917885
     $this->drupalGet("admin/appearance/settings/$theme");
     $submit_xpath = $this->assertSession()->buttonExists('Save configuration')->getXpath();
     $client = $this->getSession()->getDriver()->getClient();

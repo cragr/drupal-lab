@@ -469,7 +469,7 @@ class Select extends Query implements SelectInterface {
       // @todo Extract this mechanism into a hook as part of a public
       // (non-security) issue.
       // @todo Emit E_USER_DEPRECATED if term_access is used.
-      // @see https://www.drupal.org/node/2575081
+      // https://www.drupal.org/node/2575081
       $term_access_tags = ['term_access' => 1, 'taxonomy_term_access' => 1];
       if (array_intersect_key($this->alterTags, $term_access_tags)) {
         $this->alterTags += $term_access_tags;
