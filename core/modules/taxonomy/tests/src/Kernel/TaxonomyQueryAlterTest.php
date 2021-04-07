@@ -65,14 +65,14 @@ class TaxonomyQueryAlterTest extends KernelTestBase {
     // All parent terms were loaded.
     $this->assertCount(1, $loaded_terms);
     // TermStorage::loadParents().
-    $this->assertQueryTagTestResult(3, 0);
+    $this->assertQueryTagTestResult(3, 1);
 
     $this->setupQueryTagTestHooks();
     $loaded_terms = $term_storage->loadChildren($terms[1]->id());
     // All child terms were loaded.
     $this->assertCount(1, $loaded_terms);
     // TermStorage::loadChildren().
-    $this->assertQueryTagTestResult(3, 0);
+    $this->assertQueryTagTestResult(3, 1);
 
     $this->setupQueryTagTestHooks();
     $connection = Database::getConnection();
