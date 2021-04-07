@@ -20,7 +20,7 @@ class GraphTest extends TestCase {
     //       |     ^     ^
     //       |     |     |
     //       |     |     |
-    //       +---> 4 <-- 7      8 ---> 9
+    //       +---> 4 <-- 7      8 ---> 9.
     $graph = $this->normalizeGraph([
       1 => [2],
       2 => [3, 4],

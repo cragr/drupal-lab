@@ -311,7 +311,7 @@ class FormTest extends BrowserTestBase {
     $this->assertText('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('integer_step', 5);
 
-    // Check a form with a Url field
+    // Check a form with a Url field.
     $this->drupalGet(Url::fromRoute('form_test.url'));
     $this->assertSession()
       ->elementExists('css', 'input[name="form_token"]')

@@ -127,7 +127,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     }
 
     // TODO:
-    // - check display order with several fields
+    // - check display order with several fields.
   }
 
   /**
@@ -266,11 +266,11 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $this->assertEqual($this->fieldTestData->field->getLabel(), $form[$this->fieldTestData->field_name]['widget']['#title'], "First field's form title is {$this->fieldTestData->field->getLabel()}");
     $this->assertEqual($this->fieldTestData->field_2->getLabel(), $form[$this->fieldTestData->field_name_2]['widget']['#title'], "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage->getCardinality(); $delta++) {
-      // field_test_widget uses 'textfield'
+      // field_test_widget uses 'textfield'.
       $this->assertEqual('textfield', $form[$this->fieldTestData->field_name]['widget'][$delta]['value']['#type'], "First field's form delta {$delta} widget is textfield");
     }
     for ($delta = 0; $delta < $this->fieldTestData->field_storage_2->getCardinality(); $delta++) {
-      // field_test_widget uses 'textfield'
+      // field_test_widget uses 'textfield'.
       $this->assertEqual('textfield', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");
     }
 
@@ -288,7 +288,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $this->assertFalse(isset($form[$this->fieldTestData->field_name]), 'The first field does not exist in the form');
     $this->assertEqual($this->fieldTestData->field_2->getLabel(), $form[$this->fieldTestData->field_name_2]['widget']['#title'], "Second field's form title is {$this->fieldTestData->field_2->getLabel()}");
     for ($delta = 0; $delta < $this->fieldTestData->field_storage_2->getCardinality(); $delta++) {
-      // field_test_widget uses 'textfield'
+      // field_test_widget uses 'textfield'.
       $this->assertEqual('textfield', $form[$this->fieldTestData->field_name_2]['widget'][$delta]['value']['#type'], "Second field's form delta {$delta} widget is textfield");
     }
   }

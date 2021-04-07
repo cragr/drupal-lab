@@ -55,7 +55,7 @@ class TestStatus {
       static::EXCEPTION => 'exception',
       static::SYSTEM => 'error',
     ];
-    // For status 3 and higher, we want 'error.'
+    // For status 3 and higher, we want 'error.'.
     $label = $statusMap[$status > static::SYSTEM ? static::SYSTEM : $status];
     return $label;
   }

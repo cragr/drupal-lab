@@ -19,7 +19,7 @@ class FileMoveTest extends FileTestBase {
    * Move a normal file.
    */
   public function testNormal() {
-    // Create a file for testing
+    // Create a file for testing.
     $uri = $this->createUri();
 
     // Moving to a new name.

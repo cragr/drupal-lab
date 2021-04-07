@@ -83,7 +83,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $expected_default_settings = [
       'toolbar' => [
         'rows' => [
-          // Button groups
+          // Button groups.
           [
             [
               'name' => 'Formatting',

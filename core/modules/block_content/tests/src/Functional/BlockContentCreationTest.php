@@ -113,7 +113,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       '%name' => $edit['info[0][value]'],
     ]));
 
-    // Save our block permanently
+    // Save our block permanently.
     $this->submitForm(['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.

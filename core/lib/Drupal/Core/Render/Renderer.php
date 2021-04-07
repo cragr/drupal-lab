@@ -161,7 +161,7 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function renderPlaceholder($placeholder, array $elements) {
-    // Get the render array for the given placeholder
+    // Get the render array for the given placeholder.
     $placeholder_elements = $elements['#attached']['placeholders'][$placeholder];
 
     // Prevent the render array from being auto-placeholdered again.

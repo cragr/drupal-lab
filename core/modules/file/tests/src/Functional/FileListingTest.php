@@ -206,7 +206,7 @@ class FileListingTest extends FileFieldTestBase {
 
     $this->assertSession()->statusCodeEquals(200);
     // Entity name should be displayed, but not linked if Entity::toUrl
-    // throws an exception
+    // throws an exception.
     $this->assertText($entity_name);
     $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
     $this->assertSession()->linkExists($node->getTitle());

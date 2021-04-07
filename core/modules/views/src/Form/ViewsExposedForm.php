@@ -86,7 +86,7 @@ class ViewsExposedForm extends FormBase {
 
     // Let form plugins know this is for exposed widgets.
     $form_state->set('exposed', TRUE);
-    // Check if the form was already created
+    // Check if the form was already created.
     if ($cache = $this->exposedFormCache->getForm($view->storage->id(), $view->current_display)) {
       return $cache;
     }

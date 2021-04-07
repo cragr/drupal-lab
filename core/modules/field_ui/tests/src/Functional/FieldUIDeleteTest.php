@@ -116,7 +116,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $type_name1, $field_name), 'Field was deleted.');
-    // Check that the field storage was not deleted
+    // Check that the field storage was not deleted.
     $this->assertNotNull(FieldStorageConfig::loadByName('node', $field_name), 'Field storage was not deleted.');
 
     // Check the config dependencies of the first field.

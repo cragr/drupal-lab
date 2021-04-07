@@ -90,7 +90,7 @@ class OffCanvasTest extends OffCanvasTestBase {
     $page->clickLink('Display more links!');
     $this->waitForOffCanvasToOpen();
     $web_assert->linkExists('Off_canvas link!');
-    // Click off-canvas link inside off-canvas dialog
+    // Click off-canvas link inside off-canvas dialog.
     $page->clickLink('Off_canvas link!');
     /*  @var \Behat\Mink\Element\NodeElement $dialog */
     $this->waitForOffCanvasToOpen();
@@ -104,7 +104,7 @@ class OffCanvasTest extends OffCanvasTestBase {
     $page->clickLink('Display more links!');
     $this->waitForOffCanvasToOpen();
     $web_assert->linkExists('Off_canvas link!');
-    // Click off-canvas link inside off-canvas dialog
+    // Click off-canvas link inside off-canvas dialog.
     $page->clickLink('Off_canvas link!');
     /*  @var \Behat\Mink\Element\NodeElement $dialog */
     $this->waitForOffCanvasToOpen();

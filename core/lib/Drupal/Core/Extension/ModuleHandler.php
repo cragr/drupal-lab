@@ -261,7 +261,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function loadInclude($module, $type, $name = NULL) {
     if ($type == 'install') {
-      // Make sure the installation API is available
+      // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
     }
 

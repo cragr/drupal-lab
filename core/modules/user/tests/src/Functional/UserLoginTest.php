@@ -120,10 +120,10 @@ class UserLoginTest extends BrowserTestBase {
    * Test that user password is re-hashed upon login after changing $count_log2.
    */
   public function testPasswordRehashOnLogin() {
-    // Determine default log2 for phpass hashing algorithm
+    // Determine default log2 for phpass hashing algorithm.
     $default_count_log2 = 16;
 
-    // Retrieve instance of password hashing algorithm
+    // Retrieve instance of password hashing algorithm.
     $password_hasher = $this->container->get('password');
 
     // Create a new user and authenticate.

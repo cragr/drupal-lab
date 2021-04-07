@@ -428,7 +428,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $migration = $this->getMigration();
     $source = new StubSourceGeneratorPlugin([], '', [], $migration);
 
-    // Test the default value of the skipCount Value;
+    // Test the default value of the skipCount Value.
     $this->assertTrue($source->getSkipCount());
     $this->assertTrue($source->getCacheCounts());
     $this->assertTrue($source->getTrackChanges());

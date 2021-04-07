@@ -221,13 +221,13 @@ class UpdateContribTest extends UpdateTestBase {
       '#all' => [
         'version' => '8.0.0',
       ],
-      // Show the update_test_basetheme
+      // Show the update_test_basetheme.
       'update_test_basetheme' => [
         'project' => 'update_test_basetheme',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
       ],
-      // Show the update_test_subtheme
+      // Show the update_test_subtheme.
       'update_test_subtheme' => [
         'project' => 'update_test_subtheme',
         'version' => '8.x-1.0',

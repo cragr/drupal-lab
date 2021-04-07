@@ -33,7 +33,7 @@ abstract class StorageTestBase extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
 
-    // Define two data collections,
+    // Define two data collections,.
     $this->collections = [0 => 'zero', 1 => 'one'];
 
     // Create several objects for testing.

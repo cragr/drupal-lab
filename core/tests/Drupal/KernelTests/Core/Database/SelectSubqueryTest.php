@@ -172,7 +172,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // FROM {test} t
     // WHERE (SELECT AVG(tt.priority) AS expression FROM {test_task} tt WHERE (tt.pid = t.id))
     //   BETWEEN (SELECT MIN(tt2.priority) AS expression FROM {test_task} tt2 WHERE (tt2.pid <> t.id))
-    //       AND (SELECT AVG(tt3.priority) AS expression FROM {test_task} tt3 WHERE (tt3.pid <> t.id));
+    //       AND (SELECT AVG(tt3.priority) AS expression FROM {test_task} tt3 WHERE (tt3.pid <> t.id)).
     $people = $select->execute()->fetchCol();
     $this->assertEqualsCanonicalizing(['George', 'Paul'], $people, 'Returned George and Paul.');
   }

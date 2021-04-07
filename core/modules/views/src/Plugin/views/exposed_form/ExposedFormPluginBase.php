@@ -203,7 +203,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       $form['actions']['submit']['#value'] = $this->options['submit_button'];
     }
 
-    // Check if there is exposed sorts for this view
+    // Check if there is exposed sorts for this view.
     $exposed_sorts = [];
     foreach ($this->view->sort as $id => $handler) {
       if ($handler->canExpose() && $handler->isExposed()) {

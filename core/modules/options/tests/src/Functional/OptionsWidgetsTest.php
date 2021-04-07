@@ -343,7 +343,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->card1->setSetting('allowed_values_function', 'options_test_allowed_values_callback');
     $this->card1->save();
 
-    // Display form: with no field data, nothing is selected
+    // Display form: with no field data, nothing is selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->assertFalse($this->assertSession()->optionExists('card_1', 0)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 1)->isSelected());

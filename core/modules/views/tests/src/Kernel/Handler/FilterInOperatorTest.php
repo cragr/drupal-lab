@@ -112,7 +112,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
-    // Filter: Age, Operator: in, Value: 26, 30
+    // Filter: Age, Operator: in, Value: 26, 30.
     $filters['age']['group_info']['default_group'] = 1;
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', $filters);
@@ -138,7 +138,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
-    // Filter: Age, Operator: in, Value: 26, 30
+    // Filter: Age, Operator: in, Value: 26, 30.
     $filters['age']['group_info']['default_group'] = 2;
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', $filters);

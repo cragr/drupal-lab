@@ -292,7 +292,7 @@ class TestDatabase {
       foreach (file($log) as $line) {
         if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
           // Parse PHP fatal errors for example: PHP Fatal error: Call to
-          // undefined function break_me() in /path/to/file.php on line 17
+          // undefined function break_me() in /path/to/file.php on line 17.
           $caller = [
             'line' => $match[4],
             'file' => $match[3],

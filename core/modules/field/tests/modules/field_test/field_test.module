@@ -177,7 +177,7 @@ function field_test_query_efq_metadata_test_alter(&$query) {
  * Implements hook_entity_extra_field_info_alter().
  */
 function field_test_entity_extra_field_info_alter(&$info) {
-  // Remove all extra fields from the 'no_fields' content type;
+  // Remove all extra fields from the 'no_fields' content type.
   unset($info['node']['no_fields']);
 }
 

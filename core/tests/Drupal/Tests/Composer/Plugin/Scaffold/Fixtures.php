@@ -310,7 +310,7 @@ class Fixtures {
     // Clear out variables from the previous pass.
     $this->tmpDirs = [];
     $this->io = NULL;
-    // Clear the composer cache dir, if it was set
+    // Clear the composer cache dir, if it was set.
     putenv('COMPOSER_CACHE_DIR=');
   }
 

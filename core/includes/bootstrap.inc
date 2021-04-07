@@ -651,7 +651,7 @@ function &drupal_register_shutdown_function($callback = NULL) {
     $args = func_get_args();
     // Remove $callback from the arguments.
     unset($args[0]);
-    // Save callback and arguments
+    // Save callback and arguments.
     $callbacks[] = ['callback' => $callback, 'arguments' => $args];
   }
   return $callbacks;

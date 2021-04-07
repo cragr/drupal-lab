@@ -121,7 +121,7 @@ class PageTitleTest extends BrowserTestBase {
     $result = $this->xpath('//h1[@class="page-title"]');
     $this->assertEqual('Foo', $result[0]->getText());
 
-    // Test forms
+    // Test forms.
     $this->drupalGet('form-test/object-builder');
 
     $this->assertSession()->titleEquals('Test dynamic title | Drupal');

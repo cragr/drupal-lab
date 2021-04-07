@@ -162,7 +162,7 @@ class DependencyTest extends ModuleTestBase {
     \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
     // - color depends on config
-    // - config depends on help
+    // - config depends on help.
     $expected_order = ['help', 'config', 'color'];
 
     // Enable the modules through the UI, verifying that the dependency chain

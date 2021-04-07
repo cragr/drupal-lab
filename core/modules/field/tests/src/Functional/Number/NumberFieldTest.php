@@ -193,7 +193,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertRaw('placeholder="4"');
 
-    // Submit a valid integer
+    // Submit a valid integer.
     $value = rand($minimum, $maximum);
     $edit = [
       "{$field_name}[0][value]" => $value,
@@ -203,7 +203,7 @@ class NumberFieldTest extends BrowserTestBase {
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
 
-    // Try to set a value below the minimum value
+    // Try to set a value below the minimum value.
     $this->drupalGet('entity_test/add');
     $edit = [
       "{$field_name}[0][value]" => $minimum - 1,
@@ -211,7 +211,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertRaw(t('%name must be higher than or equal to %minimum.', ['%name' => $field_name, '%minimum' => $minimum]));
 
-    // Try to set a decimal value
+    // Try to set a decimal value.
     $this->drupalGet('entity_test/add');
     $edit = [
       "{$field_name}[0][value]" => 1.5,
@@ -219,7 +219,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertRaw(t('%name is not a valid number.', ['%name' => $field_name]));
 
-    // Try to set a value above the maximum value
+    // Try to set a value above the maximum value.
     $this->drupalGet('entity_test/add');
     $edit = [
       "{$field_name}[0][value]" => $maximum + 1,

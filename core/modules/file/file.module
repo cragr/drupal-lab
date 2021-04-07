@@ -952,7 +952,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
       }
 
     default:
-      // Unknown error
+      // Unknown error.
       \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $original_file_name]));
       return FALSE;
 
@@ -1202,7 +1202,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $replacements[$original] = $file->id();
           break;
 
-        // Essential file data
+        // Essential file data.
         case 'name':
           $replacements[$original] = $file->getFilename();
           break;
@@ -1663,7 +1663,7 @@ function file_icon_map($mime_type) {
     case 'application/x-pef-executable':
       return 'application-x-executable';
 
-    // Acrobat types
+    // Acrobat types.
     case 'application/pdf':
     case 'application/x-pdf':
     case 'applications/vnd.pdf':

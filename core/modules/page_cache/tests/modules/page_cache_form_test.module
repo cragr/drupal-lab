@@ -34,7 +34,7 @@ function page_cache_form_test_form_page_cache_form_test_process($form, FormState
  */
 function page_cache_form_test_module_implements_alter(&$implementations, $hook) {
   if ($hook === 'form_alter' && \Drupal::state()->get('page_cache_bypass_form_immutability', FALSE)) {
-    // Disable system_form_alter
+    // Disable system_form_alter.
     unset($implementations['system']);
   }
 }

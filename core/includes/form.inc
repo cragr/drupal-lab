@@ -875,7 +875,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
   $batch =& batch_get();
 
   if (isset($batch)) {
-    // Add process information
+    // Add process information.
     $process_info = [
       'current_set' => 0,
       'progressive' => TRUE,

@@ -135,7 +135,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $themes = $this->themeHandler->listInfo();
 
-    // Default settings are defined in theme_get_setting() in includes/theme.inc
+    // Default settings are defined in theme_get_setting() in includes/theme.inc.
     if ($theme) {
       if (!$this->themeHandler->hasUi($theme)) {
         throw new NotFoundHttpException();
@@ -163,7 +163,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       '#value' => $config_key,
     ];
 
-    // Toggle settings
+    // Toggle settings.
     $toggles = [
       'node_user_picture' => $this->t('User pictures in posts'),
       'comment_user_picture' => $this->t('User pictures in comments'),
@@ -171,7 +171,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       'favicon' => $this->t('Shortcut icon'),
     ];
 
-    // Some features are not always available
+    // Some features are not always available.
     $disabled = [];
     if (!user_picture_enabled()) {
       $disabled['toggle_node_user_picture'] = TRUE;

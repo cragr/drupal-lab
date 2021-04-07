@@ -75,7 +75,7 @@ class HandlerTest extends ViewTestBase {
     // Check defaults.
     $this->assertEqual((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
 
-    // Test ors
+    // Test ors.
     $handler = HandlerBase::breakString('word1 word2+word');
     $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
     $this->assertEqual('or', $handler->operator);
@@ -109,13 +109,13 @@ class HandlerTest extends ViewTestBase {
     $this->assertEqualValue(['wõrd1', 'wõrd2', 'wõrd'], $handler);
     $this->assertEqual('and', $handler->operator);
 
-    // Test a single word
+    // Test a single word.
     $handler = HandlerBase::breakString('word');
     $this->assertEqualValue(['word'], $handler);
     $this->assertEqual('and', $handler->operator);
 
     $s1 = $this->randomMachineName();
-    // Generate three random numbers which can be used below;
+    // Generate three random numbers which can be used below.
     $n1 = rand(0, 100);
     $n2 = rand(0, 100);
     $n3 = rand(0, 100);
@@ -163,7 +163,7 @@ class HandlerTest extends ViewTestBase {
     $this->assertEqualValue([(int) $s1, $n2, $n3], $handlerBase);
     $this->assertEqual('or', $handlerBase->operator);
 
-    // Generate three random decimals which can be used below;
+    // Generate three random decimals which can be used below.
     $d1 = rand(0, 10) / 10;
     $d2 = rand(0, 10) / 10;
     $d3 = rand(0, 10) / 10;

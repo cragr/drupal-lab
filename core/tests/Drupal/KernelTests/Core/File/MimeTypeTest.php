@@ -48,7 +48,7 @@ class MimeTypeTest extends FileTestBase {
         $this->assertSame($expected, $output);
       }
 
-      // Test normal path equivalent
+      // Test normal path equivalent.
       $output = $guesser->guessMimeType($input);
       $this->assertSame($expected, $output);
     }

@@ -67,7 +67,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
     $size = \Drupal::config('text.settings')->get('default_summary_length');
   }
 
-  // Find where the delimiter is in the body
+  // Find where the delimiter is in the body.
   $delimiter = strpos($text, '<!--break-->');
 
   // If the size is zero, and there is no delimiter, the entire body is the summary.

@@ -363,7 +363,7 @@ class ContainerAwareEventDispatcherTest extends TestCase {
 
     // postFoo() stops the propagation, so only one listener should
     // be executed
-    // Manually set priority to enforce $this->listener to be called first
+    // Manually set priority to enforce $this->listener to be called first.
     $this->dispatcher->addListener('post.foo', [$this->listener, 'postFoo'], 10);
     $this->dispatcher->addListener('post.foo', [$otherListener, 'postFoo']);
     $this->dispatcher->dispatch(new Event(), self::POSTFOO);

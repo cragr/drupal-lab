@@ -33,7 +33,7 @@ class SelectCloneTest extends DatabaseTestBase {
     $clone_result = $clone->countQuery()->execute()->fetchField();
     $query_result = $query->countQuery()->execute()->fetchField();
 
-    // Make sure the cloned query has not been modified
+    // Make sure the cloned query has not been modified.
     $this->assertEqual(3, $clone_result, 'The cloned query returns the expected number of rows');
     $this->assertEqual(2, $query_result, 'The query returns the expected number of rows');
   }

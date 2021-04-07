@@ -45,7 +45,7 @@ class FormValuesTest extends WebDriverTestBase {
       // Updating the field will trigger an AJAX request/response.
       $session->getPage()->selectFieldOption('select', $item);
 
-      // The AJAX command in the response will update the DOM
+      // The AJAX command in the response will update the DOM.
       $select = $assertSession->waitForElement('css', "div#ajax_selected_color:contains('$item')");
       $this->assertNotNull($select, "DataCommand has updated the page with a value of $item.");
     }

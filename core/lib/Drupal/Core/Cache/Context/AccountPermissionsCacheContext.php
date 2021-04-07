@@ -54,7 +54,7 @@ class AccountPermissionsCacheContext extends UserCacheContextBase implements Cac
     $cacheable_metadata = new CacheableMetadata();
 
     // The permissions hash changes when:
-    // - a user is updated to have different roles;
+    // - a user is updated to have different roles.
     $tags = ['user:' . $this->user->id()];
     // - a role is updated to have different permissions.
     foreach ($this->user->getRoles() as $rid) {

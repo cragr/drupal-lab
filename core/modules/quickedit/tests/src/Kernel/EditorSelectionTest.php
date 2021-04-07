@@ -72,7 +72,7 @@ class EditorSelectionTest extends QuickEditTestBase {
     // With cardinality 1.
     $this->assertEqual('plain_text', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality 1, the 'plain_text' editor is selected.");
 
-    // With cardinality >1
+    // With cardinality >1.
     $this->fields->field_text_field_storage->setCardinality(2);
     $this->fields->field_text_field_storage->save();
     $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $field_name), "With cardinality >1, the 'form' editor is selected.");

@@ -321,7 +321,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $result = $this->xpath('//table[contains(@class, :class)]', [':class' => 'diff']);
     $this->assertCount(1, $result, "Diff UI is displaying colors.");
 
-    // Reset data back to original, and remove a key
+    // Reset data back to original, and remove a key.
     $sync_data = $original_data;
     unset($sync_data[$remove_key]);
     $sync->write($config_name, $sync_data);
@@ -334,7 +334,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Removed key is escaped.
     $this->assertText(Html::escape("404: '<em>herp</em>'"));
 
-    // Reset data back to original and add a key
+    // Reset data back to original and add a key.
     $sync_data = $original_data;
     $sync_data[$add_key] = $add_data;
     $sync->write($config_name, $sync_data);

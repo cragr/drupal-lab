@@ -69,12 +69,12 @@ class VariableTest extends TestCase {
         '\\',
       ],
       [
-        // Double-quote "
+        // Double-quote ".
         "'\"'",
         "\"",
       ],
       [
-        // Single-quote '
+        // Single-quote '.
         '"\'"',
         "'",
       ],

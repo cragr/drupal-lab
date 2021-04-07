@@ -122,13 +122,13 @@ class UserAdminTest extends BrowserTestBase {
     $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isBlocked(), 'User C blocked');
 
-    // Test filtering on admin page for blocked users
+    // Test filtering on admin page for blocked users.
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
     $this->assertNoText($user_a->getAccountName());
     $this->assertNoText($user_b->getAccountName());
     $this->assertText($user_c->getAccountName());
 
-    // Test unblocking of a user from /admin/people page and sending of activation mail
+    // Test unblocking of a user from /admin/people page and sending of activation mail.
     $editunblock = [];
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[4]'] = TRUE;
@@ -142,7 +142,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertTrue($account->isActive(), 'User C unblocked');
     $this->assertMail("to", $account->getEmail(), "Activation mail sent to user C");
 
-    // Test blocking and unblocking another user from /user/[uid]/edit form and sending of activation mail
+    // Test blocking and unblocking another user from /user/[uid]/edit form and sending of activation mail.
     $user_d = $this->drupalCreateUser([]);
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());

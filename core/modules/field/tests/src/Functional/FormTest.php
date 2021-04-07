@@ -141,7 +141,7 @@ class FormTest extends FieldTestBase {
     $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]));
     // TODO : check that the correct field is flagged for error.
 
-    // Create an entity
+    // Create an entity.
     $value = mt_rand(1, 127);
     $edit = [
       "{$field_name}[0][value]" => $value,
@@ -233,7 +233,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm('entity_test/add', $edit, 'Save');
     $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
 
-    // Create an entity
+    // Create an entity.
     $value = mt_rand(1, 127);
     $edit = [
       "{$field_name}[0][value]" => $value,
@@ -308,7 +308,7 @@ class FormTest extends FieldTestBase {
       $pattern[$weight] = "<input [^>]*value=\"$value\" [^>]*";
     }
 
-    // Press 'add more' button -> 4 widgets
+    // Press 'add more' button -> 4 widgets.
     $this->submitForm($edit, 'Add another item');
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       $this->assertSession()->fieldValueEquals("{$field_name}[$delta][value]", $values[$delta]);
@@ -339,7 +339,7 @@ class FormTest extends FieldTestBase {
     // Submit: check that the entity is updated with correct values
     // Re-submit: check that the field can be emptied.
 
-    // Test with several multiple fields in a form
+    // Test with several multiple fields in a form.
   }
 
   /**

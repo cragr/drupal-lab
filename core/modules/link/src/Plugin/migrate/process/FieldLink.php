@@ -96,7 +96,7 @@ class FieldLink extends ProcessPluginBase {
       if (!preg_match($internal_pattern . $end, $uri)) {
         $link_domains = '[a-z][a-z0-9-]{1,62}';
 
-        // Starting a parenthesis group with (?: means that it is grouped, but is not captured
+        // Starting a parenthesis group with (?: means that it is grouped, but is not captured.
         $authentication = "(?:(?:(?:[\w\.\-\+!$&'\(\)*\+,;=" . $link_ichars . "]|%[0-9a-f]{2})+(?::(?:[\w" . $link_ichars . "\.\-\+%!$&'\(\)*\+,;=]|%[0-9a-f]{2})*)?)?@)";
         $domain = '(?:(?:[a-z0-9' . $link_ichars . ']([a-z0-9' . $link_ichars . '\-_\[\]])*)(\.(([a-z0-9' . $link_ichars . '\-_\[\]])+\.)*(' . $link_domains . '|[a-z]{2}))?)';
         $ipv4 = '(?:[0-9]{1,3}(\.[0-9]{1,3}){3})';

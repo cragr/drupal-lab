@@ -619,7 +619,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->setUpRequest();
     $this->setupMemoryCache();
 
-    // Ensure a logic exception
+    // Ensure a logic exception.
     $data = [
       '#cache' => [
         'keys' => ['llama', 'bar'],

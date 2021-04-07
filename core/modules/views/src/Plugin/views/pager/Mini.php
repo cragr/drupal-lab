@@ -47,7 +47,7 @@ class Mini extends SqlBase {
   public function query() {
     parent::query();
 
-    // Only modify the query if we don't want to do a total row count
+    // Only modify the query if we don't want to do a total row count.
     if (!$this->view->get_total_rows) {
       // Don't query for the next page if we have a pager that has a limited
       // amount of pages.
@@ -72,7 +72,7 @@ class Mini extends SqlBase {
    * {@inheritdoc}
    */
   public function postExecute(&$result) {
-    // Only modify the result if we didn't do a total row count
+    // Only modify the result if we didn't do a total row count.
     if (!$this->view->get_total_rows) {
       $this->total_items = $this->getCurrentPage() * $this->getItemsPerPage() + count($result);
       // query() checks if we need a next link by setting limit 1 record past

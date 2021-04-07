@@ -646,7 +646,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
 
     foreach ($languages as $langcode => $data) {
-      // Import a .po file to add a new language with a given number of plural forms
+      // Import a .po file to add a new language with a given number of plural forms.
       $name = \Drupal::service('file_system')->tempnam('temporary://', $langcode . '_') . '.po';
       file_put_contents($name, $this->getPoFile($data['plurals']));
       $this->drupalPostForm('admin/config/regional/translate/import', [
@@ -857,7 +857,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   public function testSingleLanguageUI() {
     $this->drupalLogin($this->adminUser);
 
-    // Delete French language
+    // Delete French language.
     $this->drupalPostForm('admin/config/regional/language/delete/fr', [], 'Delete');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'French', '%langcode' => 'fr']));
 
@@ -868,7 +868,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
     $this->assertRaw(t('Configuration saved.'));
 
-    // Delete English language
+    // Delete English language.
     $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'English', '%langcode' => 'en']));
 

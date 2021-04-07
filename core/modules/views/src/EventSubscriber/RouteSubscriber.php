@@ -77,7 +77,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   public static function getSubscribedEvents() {
     $events = parent::getSubscribedEvents();
     $events[RoutingEvents::FINISHED] = ['routeRebuildFinished'];
-    // Ensure to run after the entity resolver subscriber
+    // Ensure to run after the entity resolver subscriber.
     // @see \Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
     $events[RoutingEvents::ALTER] = ['onAlterRoutes', -175];
 

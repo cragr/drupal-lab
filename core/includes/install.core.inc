@@ -1195,7 +1195,7 @@ function install_database_errors($database, $settings_file) {
     $errors['driver'] = t("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", ['%settings_file' => $settings_file, '@drupal' => drupal_install_profile_distribution_name(), '%driver' => $driver]);
   }
   else {
-    // Run driver specific validation
+    // Run driver specific validation.
     $errors += $database_types[$driver]->validateDatabaseSettings($database);
     if (!empty($errors)) {
       // No point to try further.

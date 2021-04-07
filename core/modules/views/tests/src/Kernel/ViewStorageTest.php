@@ -70,7 +70,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $this->createTests();
     $this->displayTests();
 
-    // Helper method tests
+    // Helper method tests.
     $this->displayMethodTests();
   }
 

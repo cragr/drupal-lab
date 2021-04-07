@@ -407,7 +407,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // language codes, already in order, with the first occurrence of the
     // entity id marked with *:
     // 8  NULL pl *
-    // 12 NULL pl *
+    // 12 NULL pl *.
 
     // 4  NULL tr *
     // 12 NULL tr

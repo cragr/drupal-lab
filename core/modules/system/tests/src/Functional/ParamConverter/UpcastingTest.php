@@ -34,19 +34,19 @@ class UpcastingTest extends BrowserTestBase {
     $user = $this->drupalCreateUser(['access content']);
     $foo = 'bar';
 
-    // paramconverter_test/test_user_node_foo/{user}/{node}/{foo}
+    // paramconverter_test/test_user_node_foo/{user}/{node}/{foo}.
     $this->drupalGet("paramconverter_test/test_user_node_foo/" . $user->id() . '/' . $node->id() . "/$foo");
     // Verify user and node upcast by entity name.
     $this->assertRaw("user: {$user->label()}, node: {$node->label()}, foo: $foo");
 
     // paramconverter_test/test_node_user_user/{node}/{foo}/{user}
-    // options.parameters.foo.type = entity:user
+    // options.parameters.foo.type = entity:user.
     $this->drupalGet("paramconverter_test/test_node_user_user/" . $node->id() . "/" . $user->id() . "/" . $user->id());
     // Verify foo converted to user as well.
     $this->assertRaw("user: {$user->label()}, node: {$node->label()}, foo: {$user->label()}");
 
     // paramconverter_test/test_node_node_foo/{user}/{node}/{foo}
-    // options.parameters.user.type = entity:node
+    // options.parameters.user.type = entity:node.
     $this->drupalGet("paramconverter_test/test_node_node_foo/" . $node->id() . "/" . $node->id() . "/$foo");
     // Verify that user is upcast to node (rather than to user).
     $this->assertRaw("user: {$node->label()}, node: {$node->label()}, foo: $foo");
@@ -59,7 +59,7 @@ class UpcastingTest extends BrowserTestBase {
     $node = $this->drupalCreateNode(['title' => $this->randomMachineName(8)]);
     $parent = $this->drupalCreateNode(['title' => $this->randomMachineName(8)]);
     // paramconverter_test/node/{node}/set/parent/{parent}
-    // options.parameters.parent.type = entity:node
+    // options.parameters.parent.type = entity:node.
     $this->drupalGet("paramconverter_test/node/" . $node->id() . "/set/parent/" . $parent->id());
     $this->assertRaw("Setting '" . $parent->getTitle() . "' as parent of '" . $node->getTitle() . "'.");
   }

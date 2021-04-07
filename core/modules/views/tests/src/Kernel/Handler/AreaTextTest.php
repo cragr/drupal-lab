@@ -35,7 +35,7 @@ class AreaTextTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // add a text header
+    // add a text header.
     $string = $this->randomMachineName();
     $view->displayHandlers->get('default')->overrideOption('header', [
       'area' => [

@@ -70,7 +70,7 @@ function _batch_test_callback_5($id, $sleep, &$context) {
   // 'finished' callback.
   batch_test_stack("op 5 id $id");
   $context['results'][5][] = $id;
-  // This test is to test finished > 1
+  // This test is to test finished > 1.
   $context['finished'] = 3.14;
 }
 

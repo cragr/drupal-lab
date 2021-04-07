@@ -589,7 +589,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function getJoin() {
     // get the join from this table that links back to the base table.
-    // Determine the primary table to seek
+    // Determine the primary table to seek.
     if (empty($this->query->relationships[$this->relationship])) {
       $base_table = $this->view->storage->get('base_table');
     }
@@ -755,7 +755,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public function displayExposedForm($form, FormStateInterface $form_state) {
     $item = &$this->options;
-    // flip
+    // flip.
     $item['exposed'] = empty($item['exposed']);
 
     // If necessary, set new defaults:
@@ -833,7 +833,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     $form_state->get('rerender', TRUE);
     $form_state->setRebuild();
-    // Write to cache
+    // Write to cache.
     $view->cacheSet();
   }
 

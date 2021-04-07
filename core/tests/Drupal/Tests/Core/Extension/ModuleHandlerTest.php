@@ -470,7 +470,7 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testResetImplementations() {
     $module_handler = $this->getModuleHandler();
-    // Prime caches
+    // Prime caches.
     $module_handler->getImplementations('hook');
     $module_handler->getHookInfo();
 

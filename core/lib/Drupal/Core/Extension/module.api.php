@@ -973,7 +973,7 @@ function hook_updater_info_alter(&$updaters) {
 function hook_requirements($phase) {
   $requirements = [];
 
-  // Report Drupal version
+  // Report Drupal version.
   if ($phase == 'runtime') {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
@@ -982,7 +982,7 @@ function hook_requirements($phase) {
     ];
   }
 
-  // Test PHP version
+  // Test PHP version.
   $requirements['php'] = [
     'title' => t('PHP'),
     'value' => ($phase == 'runtime') ? Link::fromTextAndUrl(phpversion(), Url::fromRoute('system.php'))->toString() : phpversion(),
@@ -992,7 +992,7 @@ function hook_requirements($phase) {
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
   }
 
-  // Report cron status
+  // Report cron status.
   if ($phase == 'runtime') {
     $cron_last = \Drupal::state()->get('system.cron_last');
 

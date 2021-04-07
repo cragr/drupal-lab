@@ -38,7 +38,7 @@ class ConfigDraggableListBuilderTest extends BrowserTestBase {
       $role->save();
     }
 
-    // Navigate to Roles page
+    // Navigate to Roles page.
     $this->drupalGet('admin/people/roles');
 
     // Test for the page title.

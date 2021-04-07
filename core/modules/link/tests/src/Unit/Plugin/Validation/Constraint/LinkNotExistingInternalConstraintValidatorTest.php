@@ -44,7 +44,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
   public function providerValidate() {
     $data = [];
 
-    // External URL
+    // External URL.
     $data[] = [Url::fromUri('https://www.drupal.org'), TRUE];
 
     // Existing routed URL.

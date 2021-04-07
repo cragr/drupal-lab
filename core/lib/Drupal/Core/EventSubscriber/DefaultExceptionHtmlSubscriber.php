@@ -159,13 +159,13 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       // Add to query (GET) or request (POST) parameters:
       // - 'destination' (to ensure e.g. the login form in a 403 response
       //   redirects to the original URL)
-      // - '_exception_statuscode'
+      // - '_exception_statuscode'.
       $parameters = $sub_request->isMethod('GET') ? $sub_request->query : $sub_request->request;
       $parameters->add($this->redirectDestination->getAsArray() + ['_exception_statuscode' => $status_code]);
 
       $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
       // Only 2xx responses should have their status code overridden; any
-      // other status code should be passed on: redirects (3xx), error (5xx)…
+      // other status code should be passed on: redirects (3xx), error (5xx)….
       // @see https://www.drupal.org/node/2603788#comment-10504916
       if ($response->isSuccessful()) {
         $response->setStatusCode($status_code);

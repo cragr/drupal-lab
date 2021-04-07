@@ -1228,7 +1228,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // the following directories:
     // - Element
     // - Entity
-    // - Plugin
+    // - Plugin.
     foreach (['Core', 'Component'] as $parent_directory) {
       $path = 'core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;

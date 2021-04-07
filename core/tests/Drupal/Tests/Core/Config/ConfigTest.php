@@ -442,7 +442,7 @@ class ConfigTest extends UnitTestCase {
         'Config object name ' . str_repeat('a', Config::MAX_NAME_LENGTH) . '. exceeds maximum allowed length of ' . Config::MAX_NAME_LENGTH . ' characters.',
       ],
     ];
-    // Name must not contain : ? * < > " ' / \
+    // Name must not contain : ? * < > " ' / \.
     foreach ([':', '?', '*', '<', '>', '"', "'", '/', '\\'] as $char) {
       $name = 'name.' . $char;
       $return[] = [

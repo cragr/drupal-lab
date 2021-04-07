@@ -107,7 +107,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     ]);
 
     // Create 2 users, the only difference being the ability to use in-place
-    // editing
+    // editing.
     $basic_permissions = [
       'access content',
       'create article content',

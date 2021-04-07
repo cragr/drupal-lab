@@ -573,7 +573,7 @@ EOD;
     $indexes = $this->connection->query('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', [':schema' => $old_schema, ':table' => $old_table_name]);
 
     foreach ($indexes as $index) {
-      // Get the index type by suffix, e.g. idx/key/pkey
+      // Get the index type by suffix, e.g. idx/key/pkey.
       $index_type = substr($index->indexname, strrpos($index->indexname, '_') + 1);
 
       // If the index is already rewritten by ensureIdentifiersLength() to not

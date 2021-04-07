@@ -184,7 +184,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // Change the CKEditor text editor configuration to only have link buttons.
     // This means:
     // - 0 buttons are from \Drupal\ckeditor\Plugin\CKEditorPlugin\Internal
-    // - 2 buttons are from \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalLink
+    // - 2 buttons are from \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalLink.
     $filtered_html_editor = Editor::load('filtered_html');
     $settings = $filtered_html_editor->getSettings();
     $settings['toolbar']['rows'] = [

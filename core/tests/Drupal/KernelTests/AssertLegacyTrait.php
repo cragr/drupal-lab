@@ -91,7 +91,7 @@ trait AssertLegacyTrait {
   protected function assertIdenticalObject($actual, $expected, $message = '') {
     @trigger_error('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     // Note: ::assertSame checks whether its the same object. ::assertEquals
-    // though compares
+    // though compares.
 
     $this->assertEquals($expected, $actual, (string) $message);
   }

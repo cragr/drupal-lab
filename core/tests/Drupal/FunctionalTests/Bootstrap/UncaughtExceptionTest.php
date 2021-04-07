@@ -259,7 +259,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
     $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
 
-    // Find fatal error logged to the error.log
+    // Find fatal error logged to the error.log.
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
     $this->assertCount(8, $errors, 'The error + the error that the logging service is broken has been written to the error log.');
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');

@@ -202,7 +202,7 @@ class DateRangeFieldTest extends DateTestBase {
         '%timezone' => $timezone,
       ]));
 
-      // Test formatters when start date and end date are the same
+      // Test formatters when start date and end date are the same.
       $this->drupalGet('entity_test/add');
       $value = '2012-12-31 00:00:00';
       $start_date = new DrupalDateTime($value, 'UTC');
@@ -391,7 +391,7 @@ class DateRangeFieldTest extends DateTestBase {
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
 
-    // Test formatters when start date and end date are the same
+    // Test formatters when start date and end date are the same.
     $this->drupalGet('entity_test/add');
     $value = '2012-12-31 00:00:00';
     $start_date = new DrupalDateTime($value, 'UTC');
@@ -564,7 +564,7 @@ class DateRangeFieldTest extends DateTestBase {
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected.', ['%expected' => $expected]));
 
-    // Test formatters when start date and end date are the same
+    // Test formatters when start date and end date are the same.
     $this->drupalGet('entity_test/add');
 
     $value = '2012-12-31 00:00:00';

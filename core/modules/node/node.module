@@ -577,7 +577,7 @@ function node_ranking() {
   $ranking = [
     'relevance' => [
       'title' => t('Keyword relevance'),
-      // Average relevance values hover around 0.15
+      // Average relevance values hover around 0.15.
       'score' => 'i.relevance',
     ],
     'sticky' => [
@@ -1056,7 +1056,7 @@ function node_access_rebuild($batch_mode = FALSE) {
       batch_set($batch);
     }
     else {
-      // Try to allocate enough time to rebuild node grants
+      // Try to allocate enough time to rebuild node grants.
       Environment::setTimeLimit(240);
 
       // Rebuild newest nodes first so that recent content becomes available

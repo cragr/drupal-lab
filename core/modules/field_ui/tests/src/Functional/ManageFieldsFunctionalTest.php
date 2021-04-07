@@ -518,7 +518,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEqual([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
-    // Check that the default value shows up in the form
+    // Check that the default value shows up in the form.
     $this->drupalGet($admin_path);
     $this->assertSession()->fieldValueEquals($element_id, '1');
 
@@ -577,7 +577,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $this->contentType, $this->fieldName), 'Field was deleted.');
-    // Check that the field storage was not deleted
+    // Check that the field storage was not deleted.
     $this->assertNotNull(FieldStorageConfig::loadByName('node', $this->fieldName), 'Field storage was not deleted.');
 
     // Delete the second field.
@@ -755,7 +755,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    * Tests that help descriptions render valid HTML.
    */
   public function testHelpDescriptions() {
-    // Create an image field
+    // Create an image field.
     FieldStorageConfig::create([
       'field_name' => 'field_image',
       'entity_type' => 'node',

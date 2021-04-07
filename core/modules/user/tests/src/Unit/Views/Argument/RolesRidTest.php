@@ -29,7 +29,7 @@ class RolesRidTest extends UnitTestCase {
       'label' => 'test <strong>rid 2</strong>',
     ], 'user_role');
 
-    // Creates a stub entity storage;
+    // Creates a stub entity storage.
     $role_storage = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityStorageInterface');
     $role_storage->expects($this->any())
       ->method('loadMultiple')

@@ -266,7 +266,7 @@ class HtmlTagTest extends RendererTestBase {
     $expected['#suffix'] = "<!--<![endif]-->\n";
     $tags['no-ie'] = [$element, $expected];
 
-    // IE gt 8
+    // IE gt 8.
     $element = [
       '#tag' => 'link',
       '#browsers' => [

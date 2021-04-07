@@ -139,7 +139,7 @@ class Cron implements CronInterface {
       // Release cron lock.
       $this->lock->release('cron');
 
-      // Return TRUE so other functions can check if it did run successfully
+      // Return TRUE so other functions can check if it did run successfully.
       $return = TRUE;
     }
 

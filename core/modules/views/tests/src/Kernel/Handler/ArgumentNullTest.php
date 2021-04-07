@@ -27,7 +27,7 @@ class ArgumentNullTest extends ViewsKernelTestBase {
   }
 
   public function testAreaText() {
-    // Test validation
+    // Test validation.
     $view = Views::getView('test_view');
     $view->setDisplay();
 

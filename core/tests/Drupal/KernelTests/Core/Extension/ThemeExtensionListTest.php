@@ -20,7 +20,7 @@ class ThemeExtensionListTest extends KernelTestBase {
       ->save();
 
     // The installation profile is provided by a container parameter.
-    // Saving the configuration doesn't automatically trigger invalidation
+    // Saving the configuration doesn't automatically trigger invalidation.
     $this->container->get('kernel')->rebuildContainer();
 
     /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list */

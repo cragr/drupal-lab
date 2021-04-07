@@ -44,7 +44,7 @@ function comment_token_info() {
     }
   }
 
-  // Core comment tokens
+  // Core comment tokens.
   $comment['cid'] = [
     'name' => t("Comment ID"),
     'description' => t("The unique ID of the comment."),
@@ -82,7 +82,7 @@ function comment_token_info() {
     'description' => t("The URL of the comment's edit page."),
   ];
 
-  // Chained tokens for comments
+  // Chained tokens for comments.
   $comment['created'] = [
     'name' => t("Date created"),
     'description' => t("The date the comment was posted."),

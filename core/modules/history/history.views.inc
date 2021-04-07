@@ -9,7 +9,7 @@
  * Implements hook_views_data().
  */
 function history_views_data() {
-  // History table
+  // History table.
 
   // We're actually defining a specific instance of the table, so let's
   // alias it so that we can later add the real table for other purposes if we

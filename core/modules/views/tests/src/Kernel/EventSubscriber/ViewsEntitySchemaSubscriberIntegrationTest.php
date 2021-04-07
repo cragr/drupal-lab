@@ -323,9 +323,9 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     // base + translation <-> base + translation + revision
     // base + revision <-> base + translation + revision
     // base <-> base + revision
-    // base <-> base + translation + revision
+    // base <-> base + translation + revision.
 
-    // base <-> base + translation
+    // base <-> base + translation.
     $this->updateEntityTypeToTranslatable(TRUE);
     list($view, $display) = $this->getUpdatedViewAndDisplay();
 
@@ -342,7 +342,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     $this->resetEntityType();
 
-    // base + translation <-> base + translation + revision
+    // base + translation <-> base + translation + revision.
     $this->updateEntityTypeToTranslatable(TRUE);
     list($view, $display) = $this->getUpdatedViewAndDisplay();
 
@@ -366,7 +366,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     $this->resetEntityType();
 
-    // base + revision <-> base + translation + revision
+    // base + revision <-> base + translation + revision.
     $this->updateEntityTypeToRevisionable();
     list($view, $display) = $this->getUpdatedViewAndDisplay();
 
@@ -390,7 +390,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     $this->resetEntityType();
 
-    // base <-> base + revision
+    // base <-> base + revision.
     $this->updateEntityTypeToRevisionable(TRUE);
     list($view, $display) = $this->getUpdatedViewAndDisplay();
 
@@ -407,7 +407,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     $this->resetEntityType();
 
-    // base <-> base + translation + revision
+    // base <-> base + translation + revision.
     $this->updateEntityTypeToRevisionable(TRUE);
     $this->updateEntityTypeToTranslatable(TRUE);
     list($view, $display) = $this->getUpdatedViewAndDisplay();
@@ -436,7 +436,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests some possible entity table updates for a revision view.
    */
   public function testVariousTableUpdatesForRevisionView() {
-    // base + revision <-> base + translation + revision
+    // base + revision <-> base + translation + revision.
     $this->updateEntityTypeToRevisionable(TRUE);
 
     list($view, $display) = $this->getUpdatedViewAndDisplay(TRUE);

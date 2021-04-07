@@ -81,7 +81,7 @@ class MiniPagerTest extends ViewTestBase {
     $this->assertText($this->nodes[18]->label());
     $this->assertText($this->nodes[19]->label());
 
-    // Test @total value in result summary
+    // Test @total value in result summary.
     $view = Views::getView('test_mini_pager');
     $view->setDisplay('page_4');
     $this->executeView($view);

@@ -20,7 +20,7 @@ const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
  * @see file_test_reset()
  */
 function file_test_reset() {
-  // Keep track of calls to these hooks
+  // Keep track of calls to these hooks.
   $results = [
     'load' => [],
     'validate' => [],

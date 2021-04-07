@@ -53,7 +53,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     // commands:
     // - UpdateBuildIdCommand
     // - HtmlCommand
-    // - DataCommand
+    // - DataCommand.
     $session = $this->getSession();
     $session->getPage()->selectFieldOption('select', 'green');
 

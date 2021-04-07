@@ -165,7 +165,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->assertEqual('Settings(active tab)', $result[0]->getText(), 'The settings tab is active.');
     $this->assertEqual('Derive 1(active tab)', $result[1]->getText(), 'The derive1 tab is active.');
 
-    // Ensures that the local tasks contains the proper 'provider key'
+    // Ensures that the local tasks contains the proper 'provider key'.
     $definitions = $this->container->get('plugin.manager.menu.local_task')->getDefinitions();
     $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_view']['provider']);
     $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_edit']['provider']);

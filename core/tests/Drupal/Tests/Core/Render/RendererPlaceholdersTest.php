@@ -204,7 +204,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Case one: render array that has a placeholder that is:
     // - automatically created, but manually triggered (#create_placeholder = TRUE)
-    // - uncacheable
+    // - uncacheable.
     $element_without_cache_keys = $base_element_a1;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a1['placeholder']);
     $cases[] = [
@@ -219,7 +219,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Case two: render array that has a placeholder that is:
     // - automatically created, but manually triggered (#create_placeholder = TRUE)
-    // - cacheable
+    // - cacheable.
     $element_with_cache_keys = $base_element_a1;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
     $expected_placeholder_render_array['#cache']['keys'] = $keys;
@@ -247,7 +247,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Case three: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to max-age=0
-    // - uncacheable
+    // - uncacheable.
     $element_without_cache_keys = $base_element_a2;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a2['placeholder']);
     $cases[] = [
@@ -262,7 +262,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Case four: render array that has a placeholder that is:
     // - automatically created, but automatically triggered due to max-age=0
-    // - cacheable
+    // - cacheable.
     $element_with_cache_keys = $base_element_a2;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
     $expected_placeholder_render_array['#cache']['keys'] = $keys;
@@ -279,7 +279,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case five: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   cardinality cache contexts
-    // - uncacheable
+    // - uncacheable.
     $element_without_cache_keys = $base_element_a3;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a3['placeholder']);
     $cases[] = [
@@ -295,7 +295,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case six: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   cardinality cache contexts
-    // - cacheable
+    // - cacheable.
     $element_with_cache_keys = $base_element_a3;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
     $expected_placeholder_render_array['#cache']['keys'] = $keys;
@@ -328,7 +328,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case seven: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   invalidation frequency cache tags
-    // - uncacheable
+    // - uncacheable.
     $element_without_cache_keys = $base_element_a4;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a4['placeholder']);
     $cases[] = [
@@ -344,7 +344,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case eight: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   invalidation frequency cache tags
-    // - cacheable
+    // - cacheable.
     $element_with_cache_keys = $base_element_a4;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
     $expected_placeholder_render_array['#cache']['keys'] = $keys;
@@ -380,12 +380,12 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case ten: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to max-age=0
     //   that is bubbled
-    // - cacheable
+    // - cacheable.
     // @todo in https://www.drupal.org/node/2559847
 
     // Case eleven: render array that DOES NOT have a placeholder that is:
     // - NOT created, despite high cardinality cache contexts that are bubbled
-    // - uncacheable
+    // - uncacheable.
     $element_without_cache_keys = $base_element_a6;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a6['placeholder']);
     $cases[] = [
@@ -401,7 +401,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case twelve: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   cardinality cache contexts that are bubbled
-    // - cacheable
+    // - cacheable.
     $element_with_cache_keys = $base_element_a6;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
     $expected_placeholder_render_array['#cache']['keys'] = $keys;
@@ -430,7 +430,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case thirteen: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   invalidation frequency cache tags that are bubbled
-    // - uncacheable
+    // - uncacheable.
     $element_without_cache_keys = $base_element_a7;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a7['placeholder']);
     $cases[] = [
@@ -446,7 +446,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Case fourteen: render array that has a placeholder that is:
     // - automatically created, and automatically triggered due to high
     //   invalidation frequency cache tags that are bubbled
-    // - cacheable
+    // - cacheable.
     $element_with_cache_keys = $base_element_a7;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;
     $expected_placeholder_render_array['#cache']['keys'] = $keys;
@@ -474,7 +474,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Case fifteen: render array that has a placeholder that is:
     // - manually created
-    // - uncacheable
+    // - uncacheable.
     $x = $base_element_b;
     $expected_placeholder_render_array = $x['#attached']['placeholders'][(string) $generate_placeholder_markup()];
     unset($x['#attached']['placeholders'][(string) $generate_placeholder_markup()]['#cache']);
@@ -490,7 +490,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
 
     // Case sixteen: render array that has a placeholder that is:
     // - manually created
-    // - cacheable
+    // - cacheable.
     $x = $base_element_b;
     $x['#markup'] = $placeholder_markup = $generate_placeholder_markup($keys);
     $placeholder_markup = (string) $placeholder_markup;
@@ -645,7 +645,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // the parent (with CID 'placeholder_test_GET') is vastly different. These
     // are the cases where:
     // - the placeholder is uncacheable (because it has no #cache[keys]), and;
-    // - cacheability metadata that meets auto_placeholder_conditions is bubbled
+    // - cacheability metadata that meets auto_placeholder_conditions is bubbled.
     $has_uncacheable_lazy_builder = !isset($test_element['placeholder']['#cache']['keys']) && isset($test_element['placeholder']['#lazy_builder']);
     // Edge cases: always where both bubbling of an auto-placeholdering
     // condition happens from within a #lazy_builder that is uncacheable.

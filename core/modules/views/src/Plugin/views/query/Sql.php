@@ -198,7 +198,7 @@ class Sql extends QueryPluginBase {
       'join' => NULL,
     ];
 
-    // init the tables with our primary table
+    // init the tables with our primary table.
     $this->tables[$base_table][$base_table] = [
       'count' => 1,
       'alias' => $base_table,
@@ -578,7 +578,7 @@ class Sql extends QueryPluginBase {
    *   cannot be ensured.
    */
   public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
-    // ensure a relationship
+    // ensure a relationship.
     if (empty($relationship)) {
       $relationship = $this->view->storage->get('base_table');
     }
@@ -732,7 +732,7 @@ class Sql extends QueryPluginBase {
         $this->ensureTable($join->leftTable, $relationship);
       }
 
-      // First, if this is our link point/anchor table, just use the relationship
+      // First, if this is our link point/anchor table, just use the relationship.
       if ($join->leftTable == $this->relationships[$relationship]['table']) {
         $join->leftTable = $relationship;
       }
@@ -830,14 +830,14 @@ class Sql extends QueryPluginBase {
       $alias = $table . '_' . $field;
     }
 
-    // Make sure an alias is assigned
+    // Make sure an alias is assigned.
     $alias = $alias ? $alias : $field;
 
     // PostgreSQL truncates aliases to 63 characters:
     //   https://www.drupal.org/node/571548.
 
     // We limit the length of the original alias up to 60 characters
-    // to get a unique alias later if its have duplicates
+    // to get a unique alias later if its have duplicates.
     $alias = strtolower(substr($alias, 0, 60));
 
     // Create a field info array.

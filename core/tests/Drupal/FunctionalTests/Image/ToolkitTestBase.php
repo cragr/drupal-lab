@@ -135,7 +135,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
    * Resets/initializes the history of calls to the test toolkit functions.
    */
   protected function imageTestReset() {
-    // Keep track of calls to these operations
+    // Keep track of calls to these operations.
     $results = [
       'parseFile' => [],
       'save' => [],

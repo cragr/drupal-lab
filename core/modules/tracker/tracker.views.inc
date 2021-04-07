@@ -157,7 +157,7 @@ function tracker_views_data() {
  * Implements hook_views_data_alter().
  */
 function tracker_views_data_alter(&$data) {
-  // Provide additional uid_touch handlers which are handled by tracker
+  // Provide additional uid_touch handlers which are handled by tracker.
   $data['node_field_data']['uid_touch_tracker'] = [
     'group' => t('Tracker - User'),
     'title' => t('User posted or commented'),

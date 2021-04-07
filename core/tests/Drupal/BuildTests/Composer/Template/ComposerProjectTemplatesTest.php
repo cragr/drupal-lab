@@ -98,7 +98,8 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    * @dataProvider provideTemplateCreateProject
    */
   public function testTemplateCreateProject($project, $package_dir, $docroot_dir) {
-    // Make a working COMPOSER_HOME directory for setting global composer config
+    // Make a working COMPOSER_HOME directory for setting global composer
+    // config.
     $composer_home = $this->getWorkspaceDirectory() . '/composer-home';
     mkdir($composer_home);
     // Create an empty global composer.json file, just to avoid warnings.

@@ -418,11 +418,11 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
-    // Assert that Hour and Minute Elements do not appear on Date Only
+    // Assert that Hour and Minute Elements do not appear on Date Only.
     $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
     $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
 
-    // Go to the form display page to assert that increment option does not appear on Date Only
+    // Go to the form display page to assert that increment option does not appear on Date Only.
     $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
     $this->drupalGet($fieldEditUrl);
 
@@ -448,7 +448,7 @@ class DateTimeFieldTest extends DateTestBase {
       ->save();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
-    // Go to the form display page to assert that increment option does appear on Date Time
+    // Go to the form display page to assert that increment option does appear on Date Time.
     $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
     $this->drupalGet($fieldEditUrl);
 

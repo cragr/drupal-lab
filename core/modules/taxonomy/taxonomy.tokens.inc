@@ -67,7 +67,7 @@ function taxonomy_token_info() {
     'description' => t("The number of terms belonging to the taxonomy vocabulary."),
   ];
 
-  // Chained tokens for taxonomies
+  // Chained tokens for taxonomies.
   $term['vocabulary'] = [
     'name' => t("Vocabulary"),
     'description' => t("The vocabulary the taxonomy term belongs to."),

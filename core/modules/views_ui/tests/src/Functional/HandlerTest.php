@@ -136,7 +136,7 @@ class HandlerTest extends UITestBase {
       $display = $view->getDisplay('default');
       $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
 
-      // Remove the item and check that it's removed
+      // Remove the item and check that it's removed.
       $this->drupalPostForm($edit_handler_url, [], 'Remove');
       $this->assertSession()->linkByHrefNotExists($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
 
