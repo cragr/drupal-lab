@@ -84,9 +84,8 @@
     <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
   </rule>
   <rule ref="Drupal.Commenting.InlineComment">
-    <!-- Sniff for: NoSpaceBefore, WrongStyle -->
+    <!-- Sniff for: InvalidEndChar, NoSpaceBefore, WrongStyle -->
     <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
-    <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
     <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
