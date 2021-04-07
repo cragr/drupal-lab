@@ -165,7 +165,7 @@ function views_ui_theme_suggestions_views_ui_view_preview_section(array $variabl
 /**
  * Returns contextual links for each handler of a certain section.
  *
- * @TODO
+ * @todo 
  *   Bring in relationships
  *   Refactor this function to use much stuff of views_ui_edit_form_get_bucket.
  *

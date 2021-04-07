@@ -44,8 +44,8 @@ class FileMoveTest extends FileTestBase {
     $this->assertFileNotExists($new_filepath);
     $this->assertFilePermissions($newer_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
 
-    // TODO: test moving to a directory (rather than full directory/file path)
-    // TODO: test creating and moving normal files (rather than streams)
+    // @todo test moving to a directory (rather than full directory/file path)
+    // @todo test creating and moving normal files (rather than streams)
   }
 
   /**

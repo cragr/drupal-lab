@@ -236,7 +236,7 @@ class EntityAccessChecker {
    * @return \Drupal\Core\Access\AccessResultInterface|\Drupal\Core\Access\AccessResultReasonInterface
    *   The access check result.
    *
-   * @todo: remove when a generic revision access API exists in Drupal core, and
+   * @todo remove when a generic revision access API exists in Drupal core, and
    * also remove the injected "node" and "media" services.
    * @see https://www.drupal.org/project/drupal/issues/2992833#comment-12818386
    */

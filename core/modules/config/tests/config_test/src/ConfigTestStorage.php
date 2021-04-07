@@ -6,7 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\Config;
 
 /**
- * @todo.
+ * @todo .
  */
 class ConfigTestStorage extends ConfigEntityStorage {
 

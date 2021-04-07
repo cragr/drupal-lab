@@ -352,7 +352,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    */
   public function buildEntity(array $form, FormStateInterface $form_state) {
     // Change the roles array to a list of enabled roles.
-    // @todo: Alter the form state as the form values are directly extracted and
+    // @todo Alter the form state as the form values are directly extracted and
     //   set on the field, which throws an exception as the list requires
     //   numeric keys. Allow to override this per field. As this function is
     //   called twice, we have to prevent it from getting the array keys twice.

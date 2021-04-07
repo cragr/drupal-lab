@@ -7,7 +7,7 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\user\Entity\User;
 
 /**
- * @todo.
+ * @todo .
  */
 abstract class UserTestBase extends ViewTestBase {
 

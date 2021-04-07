@@ -466,7 +466,7 @@ class Select extends Query implements SelectInterface {
       // taxonomy_term_access to its queries. Provide backwards compatibility
       // by adding both tags here instead of attempting to fix all contrib
       // modules in a coordinated effort.
-      // TODO:
+      // @todo 
       // - Extract this mechanism into a hook as part of a public (non-security)
       //   issue.
       // - Emit E_USER_DEPRECATED if term_access is used.

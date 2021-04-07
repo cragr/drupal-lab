@@ -60,7 +60,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * The write safe session handler.
    *
-   * @todo: This reference should be removed once all database queries
+   * @todo This reference should be removed once all database queries
    *   are removed from the session manager class.
    *
    * @var \Drupal\Core\Session\WriteSafeSessionHandlerInterface

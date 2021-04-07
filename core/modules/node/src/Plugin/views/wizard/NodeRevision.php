@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
- * @todo: replace numbers with constants.
+ * @todo replace numbers with constants.
  */
 
 /**

@@ -631,7 +631,7 @@ class Sql extends QueryPluginBase {
       // scan through the table queue to see if a matching join and
       // relationship exists.  If so, use it instead of this join.
 
-      // TODO: Scanning through $this->tableQueue results in an
+      // @todo Scanning through $this->tableQueue results in an
       // O(N^2) algorithm, and this code runs every time the view is
       // instantiated (Views 2 does not currently cache queries).
       // There are a couple possible "improvements" but we should do
@@ -1024,7 +1024,7 @@ class Sql extends QueryPluginBase {
    */
   public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = []) {
     // Only ensure the table if it's not the special random key.
-    // @todo: Maybe it would make sense to just add an addOrderByRand or something similar.
+    // @todo Maybe it would make sense to just add an addOrderByRand or something similar.
     if ($table && $table != 'rand') {
       $this->ensureTable($table);
     }
@@ -1722,7 +1722,7 @@ class Sql extends QueryPluginBase {
   }
 
   public function getAggregationInfo() {
-    // @todo -- need a way to get database specific and customized aggregation
+    // @todo need a way to get database specific and customized aggregation
     // functions into here.
     return [
       'group' => [

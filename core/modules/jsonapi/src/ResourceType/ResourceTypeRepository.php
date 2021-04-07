@@ -282,7 +282,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     // access the display name of a user. This is useful when displaying the
     // name of a node's author.
     // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    // @todo eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
     if ($entity_type->id() === 'user') {
       $fields['display_name'] = new ResourceTypeAttribute('display_name');
     }
@@ -367,7 +367,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   TRUE if the entity type is versionable, FALSE otherwise.
    */
   protected static function isVersionableResourceType(EntityTypeInterface $entity_type) {
-    // @todo: remove the following line and uncomment the next one when revisions have standardized access control. For now, it is unsafe to support all revisionable entity types.
+    // @todo remove the following line and uncomment the next one when revisions have standardized access control. For now, it is unsafe to support all revisionable entity types.
     return in_array($entity_type->id(), ['node', 'media']);
     /* return $entity_type->isRevisionable(); */
   }

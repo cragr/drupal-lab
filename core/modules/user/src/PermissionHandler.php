@@ -114,7 +114,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    * {@inheritdoc}
    */
   public function moduleProvidesPermissions($module_name) {
-    // @TODO Static cache this information, see
+    // @todo Static cache this information, see
     // https://www.drupal.org/node/2339487
     $permissions = $this->getPermissions();
 

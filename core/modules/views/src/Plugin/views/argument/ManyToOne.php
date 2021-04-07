@@ -140,7 +140,7 @@ class ManyToOne extends ArgumentPluginBase {
       $this->operator = 'or';
     }
 
-    // @todo -- both of these should check definition for alternate keywords.
+    // @todo both of these should check definition for alternate keywords.
 
     if (empty($this->value)) {
       return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');

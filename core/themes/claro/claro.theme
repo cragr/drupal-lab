@@ -633,7 +633,7 @@ function claro_views_ui_display_tab_alter(&$element) {
   // the Dropbutton type, we just have to set it's '#dropbutton_type' to
   // 'extrasmall'.
   //
-  // @todo: revisit after https://www.drupal.org/node/3057577 is fixed.
+  // @todo revisit after https://www.drupal.org/node/3057577 is fixed.
   $dummy_dropbutton = &$element['details']['top']['actions'];
 
   if ($dummy_dropbutton) {
