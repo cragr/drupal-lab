@@ -75,6 +75,7 @@
   </rule>
   <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.GenderNeutralComment" />
+  <rule ref="Drupal.Commenting.TodoComment" />
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName -->
     <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
