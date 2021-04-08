@@ -42,7 +42,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     $path_repos = Composer::composerSubprojectPaths($workspace_directory, $subdir);
 
     $data = [];
-    /* @var $path_repo \SplFileInfo */
+    /** @var \SplFileInfo $path_repo */
     foreach ($path_repos as $path_repo) {
       $json_file = new JsonFile($path_repo->getPathname());
       $json = $json_file->read();
@@ -83,7 +83,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     foreach ($data as $data_name => $data_value) {
       $template_data[$data_value[0]] = $data_name;
     }
-    /* @var $file \SplFileInfo */
+    /** @var \SplFileInfo $file */
     foreach ($template_files as $file) {
       $json_file = new JsonFile($file->getPathname());
       $json = $json_file->read();
