@@ -339,9 +339,9 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->executeView($view);
     $resultset = [
     [
-        'name' => 'John',
-        'age' => 25,
-      ],
+      'name' => 'John',
+      'age' => 25,
+    ],
       [
         'name' => 'George',
         'age' => 27,
@@ -392,9 +392,9 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->executeView($view);
     $resultset = [
     [
-        'name' => 'John',
-        'age' => 25,
-      ],
+      'name' => 'John',
+      'age' => 25,
+    ],
       [
         'name' => 'George',
         'age' => 27,

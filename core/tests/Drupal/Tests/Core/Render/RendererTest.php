@@ -221,7 +221,7 @@ class RendererTest extends RendererTestBase {
         '#pre_render' => [function ($elements) {
           $elements['#markup'] .= '<script>alert("bar");</script>';
           return $elements;
-        },
+          },
         ],
       ],
       'fooalert("bar");',
@@ -234,7 +234,7 @@ class RendererTest extends RendererTestBase {
         '#pre_render' => [function ($elements) {
           $elements['#markup'] .= '<script>alert("bar");</script>';
           return $elements;
-        },
+          },
         ],
       ],
       'foo<script>alert("bar");</script>',
@@ -247,7 +247,7 @@ class RendererTest extends RendererTestBase {
         '#pre_render' => [function ($elements) {
           $elements['#plain_text'] .= '<script>alert("bar");</script>';
           return $elements;
-        },
+          },
         ],
       ],
       'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;',

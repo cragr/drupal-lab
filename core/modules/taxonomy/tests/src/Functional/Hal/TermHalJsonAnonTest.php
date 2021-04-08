@@ -69,7 +69,7 @@ class TermHalJsonAnonTest extends TermResourceTestBase {
       case [2]:
         $expected_parent_normalization_links = [
           [
-          'href' => $this->baseUrl . '/taxonomy/term/2?_format=hal_json',
+            'href' => $this->baseUrl . '/taxonomy/term/2?_format=hal_json',
           ],
         ];
         $expected_parent_normalization_embedded = [

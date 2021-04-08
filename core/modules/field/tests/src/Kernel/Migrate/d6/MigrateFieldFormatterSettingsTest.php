@@ -95,10 +95,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected['weight'] = 2;
     $expected['type'] = 'number_decimal';
     $expected['settings'] = [
-       'scale' => 2,
-       'decimal_separator' => '.',
-       'thousand_separator' => ',',
-       'prefix_suffix' => TRUE,
+      'scale' => 2,
+      'decimal_separator' => '.',
+      'thousand_separator' => ',',
+      'prefix_suffix' => TRUE,
     ];
     $component = $display->getComponent('field_test_three');
     $this->assertSame($expected, $component);

@@ -125,9 +125,9 @@ class UrlTest extends UnitTestCase {
       ->method('matchRequest')
       ->with($this->getRequestConstraint('/node'))
       ->willReturn([
-          RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
-          '_raw_variables' => new ParameterBag(),
-        ]);
+        RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
+        '_raw_variables' => new ParameterBag(),
+      ]);
     $this->router->expects($this->at(1))
       ->method('matchRequest')
       ->with($this->getRequestConstraint('/node/1'))

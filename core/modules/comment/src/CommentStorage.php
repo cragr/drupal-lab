@@ -192,12 +192,12 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
                         AND [status] = :status
                         AND SUBSTRING([thread], 1, (LENGTH([thread]) - 1)) < :thread
                         AND [default_langcode] = 1', [
-        ':status' => CommentInterface::PUBLISHED,
-        ':entity_id' => $entity->id(),
-        ':field_name' => $field_name,
-        ':entity_type' => $entity->getEntityTypeId(),
-        ':thread' => $first_thread,
-      ])->fetchField();
+                          ':status' => CommentInterface::PUBLISHED,
+                          ':entity_id' => $entity->id(),
+                          ':field_name' => $field_name,
+                          ':entity_type' => $entity->getEntityTypeId(),
+                          ':thread' => $first_thread,
+                        ])->fetchField();
     }
 
     return $comments_per_page > 0 ? (int) ($count / $comments_per_page) : 0;
