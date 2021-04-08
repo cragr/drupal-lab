@@ -597,14 +597,13 @@ class FilterKernelTest extends KernelTestBase {
         '<a href="ssh://192.168.0.100/srv/git/drupal.git">ssh://192.168.0.100/srv/git/drupal.git</a>' => TRUE,
       ],
       // International Unicode characters.
-      'http://Ð¿Ñ€Ð¸Ð¼ÐµÑ€.Ð¸ÑÐ¿Ñ‹Ñ‚Ð°Ð½Ð¸Ðµ/
-      http://Ù…Ø«Ø§Ù„.Ø¥Ø®ØªØ¨Ø§Ø±/
-      http://ä¾‹å­.æ¸¬è©¦/
-      http://12345.ä¸­å›½/
-      http://ä¾‹ãˆ.ãƒ†ã‚¹ãƒˆ/
-      http://drÃ©iÃŸig-bÃ¼cher.de/
-      http://mÃ©xico-maÃ±ana.es/
-      ' => [
+      'http://пример.испытание/
+      http://مثال.إختبار/
+      http://例子.測試/
+      http://12345.中国/
+      http://例え.テスト/
+      http://dréißig-bücher.de/
+      http://méxico-mañana.es/' => [
         '<a href="http://пример.испытание/">http://пример.испытание/</a>' => TRUE,
         '<a href="http://مثال.إختبار/">http://مثال.إختبار/</a>' => TRUE,
         '<a href="http://例子.測試/">http://例子.測試/</a>' => TRUE,
