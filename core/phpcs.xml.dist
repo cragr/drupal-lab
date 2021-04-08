@@ -40,9 +40,7 @@
   <rule ref="Drupal.Classes.UseLeadingBackslash"/>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
   <rule ref="Drupal.CSS.ColourDefinition"/>
-  <rule ref="Drupal.Commenting.ClassComment">
-    <exclude name="Drupal.Commenting.ClassComment.Missing"/>
-  </rule>
+  <rule ref="Drupal.Commenting.ClassComment"/>
   <rule ref="Drupal.Commenting.DataTypeNamespace"/>
   <rule ref="Drupal.Commenting.Deprecated"/>
   <rule ref="Drupal.Commenting.DocComment">
