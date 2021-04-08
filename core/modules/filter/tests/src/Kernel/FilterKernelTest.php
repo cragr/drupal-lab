@@ -332,17 +332,16 @@ class FilterKernelTest extends KernelTestBase {
       ],
       // Skip contents of certain block tags entirely.
       "<script>aaa\nbbb\n\nccc</script>
-<style>aaa\nbbb\n\nccc</style>
-<pre>aaa\nbbb\n\nccc</pre>
-<object>aaa\nbbb\n\nccc</object>
-<iframe>aaa\nbbb\n\nccc</iframe>
-" => [
-  "<script>aaa\nbbb\n\nccc</script>" => TRUE,
-  "<style>aaa\nbbb\n\nccc</style>" => TRUE,
-  "<pre>aaa\nbbb\n\nccc</pre>" => TRUE,
-  "<object>aaa\nbbb\n\nccc</object>" => TRUE,
-  "<iframe>aaa\nbbb\n\nccc</iframe>" => TRUE,
-],
+      <style>aaa\nbbb\n\nccc</style>
+      <pre>aaa\nbbb\n\nccc</pre>
+      <object>aaa\nbbb\n\nccc</object>
+      <iframe>aaa\nbbb\n\nccc</iframe>" => [
+        "<script>aaa\nbbb\n\nccc</script>" => TRUE,
+        "<style>aaa\nbbb\n\nccc</style>" => TRUE,
+        "<pre>aaa\nbbb\n\nccc</pre>" => TRUE,
+        "<object>aaa\nbbb\n\nccc</object>" => TRUE,
+        "<iframe>aaa\nbbb\n\nccc</iframe>" => TRUE,
+      ],
       // Skip comments entirely.
       "One. <!-- comment --> Two.\n<!--\nThree.\n-->\n" => [
         '<!-- comment -->' => TRUE,
