@@ -1661,10 +1661,10 @@ class Sql extends QueryPluginBase {
         }
 
         if ($relationship_id == 'none') {
-          $results[$index]->_entity = $entity;
+          $results[$index]->entity = $entity;
         }
         else {
-          $results[$index]->_relationship_entities[$relationship_id] = $entity;
+          $results[$index]->relationship_entities[$relationship_id] = $entity;
         }
       }
     }
@@ -1706,10 +1706,10 @@ class Sql extends QueryPluginBase {
   protected function getAllEntities() {
     $entities = [];
     foreach ($this->view->result as $row) {
-      if ($row->_entity) {
-        $entities[] = $row->_entity;
+      if ($row->entity) {
+        $entities[] = $row->entity;
       }
-      foreach ($row->_relationship_entities as $entity) {
+      foreach ($row->relationship_entities as $entity) {
         $entities[] = $entity;
       }
     }

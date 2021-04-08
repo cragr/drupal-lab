@@ -84,7 +84,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
 
     /** @var \Drupal\views\ResultRow $row */
     foreach ($result as $row) {
-      $entity = $row->_entity;
+      $entity = $row->entity;
       $entity->view = $this->view;
       $langcode = $this->getLangcode($row);
       $this->build[$entity->id()][$langcode] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $this->getLangcode($row));
@@ -95,7 +95,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $row) {
-    $entity_id = $row->_entity->id();
+    $entity_id = $row->entity->id();
     $langcode = $this->getLangcode($row);
     return $this->build[$entity_id][$langcode];
   }

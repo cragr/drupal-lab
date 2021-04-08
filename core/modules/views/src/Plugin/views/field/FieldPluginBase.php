@@ -403,10 +403,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   public function getEntity(ResultRow $values) {
     $relationship_id = $this->options['relationship'];
     if ($relationship_id == 'none') {
-      return $values->_entity;
+      return $values->entity;
     }
-    elseif (isset($values->_relationship_entities[$relationship_id])) {
-      return $values->_relationship_entities[$relationship_id];
+    elseif (isset($values->relationship_entities[$relationship_id])) {
+      return $values->relationship_entities[$relationship_id];
     }
   }
 

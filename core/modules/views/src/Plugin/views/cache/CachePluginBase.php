@@ -313,10 +313,10 @@ abstract class CachePluginBase extends PluginBase {
    *   The row cache tags.
    */
   public function getRowCacheTags(ResultRow $row) {
-    $tags = !empty($row->_entity) ? $row->_entity->getCacheTags() : [];
+    $tags = !empty($row->entity) ? $row->entity->getCacheTags() : [];
 
-    if (!empty($row->_relationship_entities)) {
-      foreach ($row->_relationship_entities as $entity) {
+    if (!empty($row->relationship_entities)) {
+      foreach ($row->relationship_entities as $entity) {
         $tags = Cache::mergeTags($tags, $entity->getCacheTags());
       }
     }

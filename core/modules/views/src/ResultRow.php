@@ -12,14 +12,14 @@ class ResultRow {
    *
    * @var \Drupal\Core\Entity\EntityInterface
    */
-  public $_entity = NULL;
+  public $entity = NULL;
 
   /**
    * An array of relationship entities.
    *
    * @var \Drupal\Core\Entity\EntityInterface[]
    */
-  public $_relationship_entities = [];
+  public $relationship_entities = [];
 
   /**
    * An incremental number which represents the row in the entire result.
@@ -44,8 +44,8 @@ class ResultRow {
    * Resets the _entity and _relationship_entities properties.
    */
   public function resetEntityData() {
-    $this->_entity = NULL;
-    $this->_relationship_entities = [];
+    $this->entity = NULL;
+    $this->relationship_entities = [];
   }
 
 }

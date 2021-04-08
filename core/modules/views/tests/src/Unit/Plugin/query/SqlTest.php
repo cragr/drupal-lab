@@ -45,7 +45,7 @@ class SqlTest extends UnitTestCase {
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheTags()->willReturn(['entity_test:123']);
     $entity = $prophecy->reveal();
-    $row->_entity = $entity;
+    $row->entity = $entity;
 
     $result[] = $row;
     $view->result = $result;
@@ -55,16 +55,16 @@ class SqlTest extends UnitTestCase {
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheTags()->willReturn(['entity_test:124']);
     $entity = $prophecy->reveal();
-    $row->_entity = $entity;
+    $row->entity = $entity;
 
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheTags()->willReturn(['entity_test:125']);
     $entity = $prophecy->reveal();
-    $row->_relationship_entities[] = $entity;
+    $row->relationship_entities[] = $entity;
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheTags()->willReturn(['entity_test:126']);
     $entity = $prophecy->reveal();
-    $row->_relationship_entities[] = $entity;
+    $row->relationship_entities[] = $entity;
 
     $result[] = $row;
     $view->result = $result;
@@ -93,7 +93,7 @@ class SqlTest extends UnitTestCase {
     $prophecy->getCacheMaxAge()->willReturn(10);
     $entity = $prophecy->reveal();
 
-    $row->_entity = $entity;
+    $row->entity = $entity;
     $view->result[] = $row;
 
     // Add a row with an entity and a relationship entity.
@@ -101,16 +101,16 @@ class SqlTest extends UnitTestCase {
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheMaxAge()->willReturn(20);
     $entity = $prophecy->reveal();
-    $row->_entity = $entity;
+    $row->entity = $entity;
 
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheMaxAge()->willReturn(30);
     $entity = $prophecy->reveal();
-    $row->_relationship_entities[] = $entity;
+    $row->relationship_entities[] = $entity;
     $prophecy = $this->prophesize('Drupal\Core\Entity\EntityInterface');
     $prophecy->getCacheMaxAge()->willReturn(40);
     $entity = $prophecy->reveal();
-    $row->_relationship_entities[] = $entity;
+    $row->relationship_entities[] = $entity;
 
     $this->assertEquals(10, $query->getCacheMaxAge());
   }
@@ -306,9 +306,9 @@ class SqlTest extends UnitTestCase {
     $query->addField('entity_first', 'id', 'id');
     $query->loadEntities($result);
 
-    $this->assertSame($entities['first'][1], $result[0]->_entity);
-    $this->assertSame($entities['first'][2], $result[1]->_entity);
-    $this->assertSame($entities['first'][2], $result[2]->_entity);
+    $this->assertSame($entities['first'][1], $result[0]->entity);
+    $this->assertSame($entities['first'][2], $result[1]->entity);
+    $this->assertSame($entities['first'][2], $result[2]->entity);
   }
 
   /**
@@ -375,13 +375,13 @@ class SqlTest extends UnitTestCase {
     $query->addField('entity_second', 'id', 'entity_second__id');
     $query->loadEntities($result);
 
-    $this->assertSame($entities['first'][1], $result[0]->_entity);
-    $this->assertSame($entities['first'][2], $result[1]->_entity);
-    $this->assertSame($entities['first'][2], $result[2]->_entity);
+    $this->assertSame($entities['first'][1], $result[0]->entity);
+    $this->assertSame($entities['first'][2], $result[1]->entity);
+    $this->assertSame($entities['first'][2], $result[2]->entity);
 
-    $this->assertSame($entities['second'][11], $result[0]->_relationship_entities['entity_second']);
-    $this->assertEquals([], $result[1]->_relationship_entities);
-    $this->assertSame($entities['second'][12], $result[2]->_relationship_entities['entity_second']);
+    $this->assertSame($entities['second'][11], $result[0]->relationship_entities['entity_second']);
+    $this->assertEquals([], $result[1]->relationship_entities);
+    $this->assertSame($entities['second'][12], $result[2]->relationship_entities['entity_second']);
   }
 
   /**
@@ -423,11 +423,11 @@ class SqlTest extends UnitTestCase {
     $query->loadEntities($result);
     $entity_information = $query->getEntityTableInfo();
 
-    $this->assertSame($entities['first'][1], $result[0]->_entity);
-    $this->assertSame($entities['first'][2], $result[1]->_entity);
+    $this->assertSame($entities['first'][1], $result[0]->entity);
+    $this->assertSame($entities['first'][2], $result[1]->entity);
 
-    $this->assertEquals([], $result[0]->_relationship_entities);
-    $this->assertEquals([], $result[1]->_relationship_entities);
+    $this->assertEquals([], $result[0]->relationship_entities);
+    $this->assertEquals([], $result[1]->relationship_entities);
 
     // This is an entity table and should be in $entity_information.
     $this->assertContains('first', array_keys($entity_information));
@@ -477,9 +477,9 @@ class SqlTest extends UnitTestCase {
     $query->addField('entity_first__revision', 'vid', 'vid');
     $query->loadEntities($result);
 
-    $this->assertSame($entity_revisions['first'][1], $result[0]->_entity);
-    $this->assertSame($entity_revisions['first'][1], $result[1]->_entity);
-    $this->assertSame($entity_revisions['first'][3], $result[2]->_entity);
+    $this->assertSame($entity_revisions['first'][1], $result[0]->entity);
+    $this->assertSame($entity_revisions['first'][1], $result[1]->entity);
+    $this->assertSame($entity_revisions['first'][3], $result[2]->entity);
   }
 
   /**
@@ -536,12 +536,12 @@ class SqlTest extends UnitTestCase {
     $query->addField('entity_first__revision', 'vid', 'entity_first__revision__vid');
     $query->loadEntities($result);
 
-    $this->assertSame($entity['first'][1], $result[0]->_entity);
-    $this->assertSame($entity['first'][2], $result[1]->_entity);
-    $this->assertSame($entity['first'][2], $result[2]->_entity);
-    $this->assertSame($entity_revisions['first'][1], $result[0]->_relationship_entities['entity_first__revision']);
-    $this->assertSame($entity_revisions['first'][2], $result[1]->_relationship_entities['entity_first__revision']);
-    $this->assertSame($entity_revisions['first'][3], $result[2]->_relationship_entities['entity_first__revision']);
+    $this->assertSame($entity['first'][1], $result[0]->entity);
+    $this->assertSame($entity['first'][2], $result[1]->entity);
+    $this->assertSame($entity['first'][2], $result[2]->entity);
+    $this->assertSame($entity_revisions['first'][1], $result[0]->relationship_entities['entity_first__revision']);
+    $this->assertSame($entity_revisions['first'][2], $result[1]->relationship_entities['entity_first__revision']);
+    $this->assertSame($entity_revisions['first'][3], $result[2]->relationship_entities['entity_first__revision']);
   }
 
   /**
@@ -597,13 +597,13 @@ class SqlTest extends UnitTestCase {
     $query->addField('entity_second', 'id', 'entity_second__id');
     $query->loadEntities($result);
 
-    $this->assertSame($entity_revisions['first'][1], $result[0]->_entity);
-    $this->assertSame($entity_revisions['first'][1], $result[1]->_entity);
-    $this->assertSame($entity_revisions['first'][3], $result[2]->_entity);
+    $this->assertSame($entity_revisions['first'][1], $result[0]->entity);
+    $this->assertSame($entity_revisions['first'][1], $result[1]->entity);
+    $this->assertSame($entity_revisions['first'][3], $result[2]->entity);
 
-    $this->assertSame($entities['second'][11], $result[0]->_relationship_entities['entity_second']);
-    $this->assertEquals([], $result[1]->_relationship_entities);
-    $this->assertSame($entities['second'][12], $result[2]->_relationship_entities['entity_second']);
+    $this->assertSame($entities['second'][11], $result[0]->relationship_entities['entity_second']);
+    $this->assertEquals([], $result[1]->relationship_entities);
+    $this->assertSame($entities['second'][12], $result[2]->relationship_entities['entity_second']);
   }
 
 }

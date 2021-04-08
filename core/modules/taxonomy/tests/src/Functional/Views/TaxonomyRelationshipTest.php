@@ -94,16 +94,16 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
       $this->assertEqual($this->terms[$index]->id(), $row->tid);
 
       // Also check that we have the correct result entity.
-      $this->assertEqual($this->terms[$index]->id(), $row->_entity->id());
-      $this->assertInstanceOf(TermInterface::class, $row->_entity);
+      $this->assertEqual($this->terms[$index]->id(), $row->entity->id());
+      $this->assertInstanceOf(TermInterface::class, $row->entity);
 
       if (!$index) {
-        $this->assertInstanceOf(TermInterface::class, $row->_relationship_entities['parent']);
-        $this->assertEqual($this->term2->id(), $row->_relationship_entities['parent']->id());
+        $this->assertInstanceOf(TermInterface::class, $row->relationship_entities['parent']);
+        $this->assertEqual($this->term2->id(), $row->relationship_entities['parent']->id());
         $this->assertEqual($this->term2->id(), $row->taxonomy_term_field_data_taxonomy_term__parent_tid);
       }
-      $this->assertInstanceOf(NodeInterface::class, $row->_relationship_entities['nid']);
-      $this->assertEqual($this->nodes[$index]->id(), $row->_relationship_entities['nid']->id());
+      $this->assertInstanceOf(NodeInterface::class, $row->relationship_entities['nid']);
+      $this->assertEqual($this->nodes[$index]->id(), $row->relationship_entities['nid']->id());
     }
 
     // Test node fields are available through relationship.

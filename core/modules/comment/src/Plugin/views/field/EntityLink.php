@@ -57,7 +57,7 @@ class EntityLink extends FieldPluginBase {
     // Render all nodes, so you can grep the comment links.
     $entities = [];
     foreach ($values as $row) {
-      $entity = $row->_entity;
+      $entity = $row->entity;
       $entities[$entity->id()] = $entity;
     }
     if ($entities) {

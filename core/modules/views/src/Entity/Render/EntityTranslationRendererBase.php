@@ -37,7 +37,7 @@ abstract class EntityTranslationRendererBase extends RendererBase {
     foreach ($result as $row) {
       // @todo Take relationships into account.
       //   See https://www.drupal.org/node/2457999.
-      $entity = $row->_entity;
+      $entity = $row->entity;
       $entity->view = $this->view;
       $this->build[$entity->id()] = $view_builder->view($entity, $this->view->rowPlugin->options['view_mode'], $this->getLangcode($row));
     }
@@ -47,7 +47,7 @@ abstract class EntityTranslationRendererBase extends RendererBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $row) {
-    $entity_id = $row->_entity->id();
+    $entity_id = $row->entity->id();
     return $this->build[$entity_id];
   }
 
