@@ -1044,7 +1044,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           'entity_type' => isset($data['table']['entity type']) ? $data['table']['entity type'] : NULL,
           'entity_field' => isset($data[$column]['entity field']) ? $data[$column]['entity field'] : NULL,
           'plugin_id' => $data[$column]['sort']['id'],
-       ];
+        ];
       }
     }
 

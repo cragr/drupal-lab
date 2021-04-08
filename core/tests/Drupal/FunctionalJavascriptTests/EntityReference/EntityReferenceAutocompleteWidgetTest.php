@@ -127,12 +127,12 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
 
     // Change the size of the result set via the UI.
     $this->drupalLogin($this->createUser([
-        'access content',
-        'administer content types',
-        'administer node fields',
-        'administer node form display',
-        'create page content',
-      ]
+      'access content',
+      'administer content types',
+      'administer node fields',
+      'administer node form display',
+      'create page content',
+    ]
     ));
     $this->drupalGet('/admin/structure/types/manage/page/form-display');
     $assert_session->pageTextContains('Autocomplete suggestion list size: 1');

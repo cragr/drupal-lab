@@ -169,15 +169,15 @@ class EntityViewsDataTest extends UnitTestCase {
       ->setDescription('A description of the term.')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
-          'label' => 'hidden',
-          'type' => 'text_default',
-          'weight' => 0,
-        ])
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => 0,
+      ])
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('form', [
-          'type' => 'text_textfield',
-          'weight' => 0,
-        ])
+        'type' => 'text_textfield',
+        'weight' => 0,
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     // Add a URL field; this example is from the Comment entity.
@@ -424,13 +424,13 @@ class EntityViewsDataTest extends UnitTestCase {
       ->method('getDefinition')
       ->willReturnMap([
           ['user', TRUE, static::userEntityInfo()],
-        ]
+      ]
       );
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->willReturnMap([
           ['user', TRUE, static::userEntityInfo()],
-        ]
+      ]
       );
     $user_id_field_storage_definition = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
     $user_id_field_storage_definition->expects($this->any())
@@ -574,10 +574,10 @@ class EntityViewsDataTest extends UnitTestCase {
       'left_field' => 'id',
       'field' => 'entity_id',
       'extra' => [[
-          'field' => 'deleted',
-          'value' => 0,
-          'numeric' => TRUE,
-        ],
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ],
       ],
     ], $data['entity_test__string']['table']['join']['entity_test']);
   }
@@ -735,10 +735,10 @@ class EntityViewsDataTest extends UnitTestCase {
       'left_field' => 'id',
       'field' => 'entity_id',
       'extra' => [[
-          'field' => 'deleted',
-          'value' => 0,
-          'numeric' => TRUE,
-        ],
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ],
       ],
     ], $data['entity_test_mul__string']['table']['join']['entity_test_mul']);
   }
@@ -927,10 +927,10 @@ class EntityViewsDataTest extends UnitTestCase {
       'left_field' => 'id',
       'field' => 'entity_id',
       'extra' => [[
-          'field' => 'deleted',
-          'value' => 0,
-          'numeric' => TRUE,
-        ],
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ],
       ],
     ], $data['entity_test_mulrev__string']['table']['join']['entity_test_mulrev_property_data']);
 
@@ -940,10 +940,10 @@ class EntityViewsDataTest extends UnitTestCase {
       'left_field' => 'revision_id',
       'field' => 'entity_id',
       'extra' => [[
-          'field' => 'deleted',
-          'value' => 0,
-          'numeric' => TRUE,
-        ],
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
+      ],
       ],
     ], $data['entity_test_mulrev_revision__string']['table']['join']['entity_test_mulrev_property_revision']);
   }

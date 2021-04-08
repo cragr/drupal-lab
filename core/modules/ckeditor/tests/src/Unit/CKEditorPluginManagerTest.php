@@ -67,7 +67,7 @@ class CKEditorPluginManagerTest extends UnitTestCase {
             ['name' => 'Formatting', 'items' => ['Bold', 'Italic']],
             // Group 2.
             ['name' => 'Linking', 'items' => ['Link']],
-        ],
+          ],
           // Row 2.
           [
             // Group 1.

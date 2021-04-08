@@ -24,9 +24,9 @@ class AlreadyInstalledException extends InstallerException {
 <li>To upgrade an existing installation, proceed to the <a href=":update-url">update script</a>.</li>
 <li>View your <a href=":base-url">existing site</a>.</li>
 </ul>', [
-      ':base-url' => $GLOBALS['base_url'],
-      ':update-url' => $GLOBALS['base_path'] . 'update.php',
-    ]);
+  ':base-url' => $GLOBALS['base_url'],
+  ':update-url' => $GLOBALS['base_path'] . 'update.php',
+]);
     parent::__construct($message, $title);
   }
 

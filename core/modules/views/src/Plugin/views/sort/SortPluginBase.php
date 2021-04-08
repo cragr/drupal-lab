@@ -208,7 +208,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
       '#required' => TRUE,
       '#size' => 40,
       '#weight' => -1,
-   ];
+    ];
   }
 
   /**

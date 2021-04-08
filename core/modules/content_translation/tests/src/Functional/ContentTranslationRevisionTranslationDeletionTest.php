@@ -62,10 +62,10 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     // Add a draft translation and check that it is available only in the latest
     // revision.
     $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
-        $entity->getEntityTypeId() => $id,
-        'source' => 'en',
-        'target' => 'it',
-      ],
+      $entity->getEntityTypeId() => $id,
+      'source' => 'en',
+      'target' => 'it',
+    ],
       [
         'language' => ConfigurableLanguage::load('it'),
         'absolute' => FALSE,
@@ -187,9 +187,9 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $this->drupalLogin($this->editor);
     $this->drupalGet($it_revision->toUrl('version-history'));
     $revision_deletion_url = Url::fromRoute('node.revision_delete_confirm', [
-        'node' => $id,
-        'node_revision' => $it_revision->getRevisionId(),
-      ],
+      'node' => $id,
+      'node_revision' => $it_revision->getRevisionId(),
+    ],
       [
         'language' => ConfigurableLanguage::load('it'),
         'absolute' => FALSE,

@@ -40,10 +40,10 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
 
     // Add a published Italian translation.
     $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
-        $entity->getEntityTypeId() => $id,
-        'source' => 'en',
-        'target' => 'it',
-      ],
+      $entity->getEntityTypeId() => $id,
+      'source' => 'en',
+      'target' => 'it',
+    ],
       [
         'language' => ConfigurableLanguage::load('it'),
         'absolute' => FALSE,
@@ -59,10 +59,10 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
 
     // Add a published French translation.
     $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
-        $entity->getEntityTypeId() => $id,
-        'source' => 'en',
-        'target' => 'fr',
-      ],
+      $entity->getEntityTypeId() => $id,
+      'source' => 'en',
+      'target' => 'fr',
+    ],
       [
         'language' => ConfigurableLanguage::load('fr'),
         'absolute' => FALSE,
