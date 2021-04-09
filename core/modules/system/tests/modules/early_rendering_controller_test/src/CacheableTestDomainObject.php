@@ -6,7 +6,7 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\UncacheableDependencyTrait;
 
 /**
- * Cachable test domain.
+ * Cacheable test domain.
  */
 class CacheableTestDomainObject extends TestDomainObject implements CacheableDependencyInterface {
 
