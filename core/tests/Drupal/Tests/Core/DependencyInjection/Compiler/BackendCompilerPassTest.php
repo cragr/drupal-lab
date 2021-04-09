@@ -187,7 +187,6 @@ class ServiceClassMariaDb extends ServiceClassMysql {
  * Test service with parent.
  */
 class ServiceClassSqlite extends ServiceClassDefault {
-	
 }
 
 /**
