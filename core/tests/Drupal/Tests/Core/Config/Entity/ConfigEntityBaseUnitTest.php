@@ -377,7 +377,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $vars = $entity->__sleep();
     $this->assertNotContains('pluginCollection', $vars);
     $this->assertNotContains('pluginManager', $vars);
-    $this->assertSame(['pluginManager' => 'plugin.manager.foo'], $entity->get('_serviceIds'));
+    $this->assertSame(['pluginManager' => 'plugin.manager.foo'], $entity->get('serviceIds'));
 
     $expected_plugin_config = [$instance_id => ['foo' => 'new_value']];
     // Ensure the updated values are stored in the entity.

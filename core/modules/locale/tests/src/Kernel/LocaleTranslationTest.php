@@ -33,9 +33,9 @@ class LocaleTranslationTest extends KernelTestBase {
     // Ensure that all properties on the unserialized object match the original.
     $translation_reflection = new \ReflectionObject($translation);
     $unserialized_reflection = new \ReflectionObject($unserialized);
-    // Ignore the '_serviceIds' property in the comparison.
+    // Ignore the 'serviceIds' property in the comparison.
     $properties = array_filter($translation_reflection->getProperties(), function ($value) {
-      return $value->getName() !== '_serviceIds';
+      return $value->getName() !== 'serviceIds';
     });
     foreach ($properties as $value) {
       $value->setAccessible(TRUE);
