@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  *
- * @deprecated in drupal 9.2.0 and is removed in drupal 10.0.x.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
  *   Use \Drupal\system\Form\ExtensionConfirmForm instead. As internal API,
  *   ModulesListConfirmForm may also be removed in a minor release.
  *
