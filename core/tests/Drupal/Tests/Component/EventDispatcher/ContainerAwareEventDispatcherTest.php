@@ -669,4 +669,7 @@ class TestEventSubscriberWithMultipleListeners implements EventSubscriberInterfa
 
 }
 
+/**
+ * Empty test class for testing Symfony inherited events.
+ */
 class SymfonyInheritedEvent extends SymfonyEvent {}

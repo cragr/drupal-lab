@@ -453,6 +453,9 @@ class TestServiceComplexMethod {
 
 }
 
+/**
+ * Test service with nullable typehint self.
+ */
 class TestServiceNullableTypehintSelf {
 
   public function typehintSelf(?self $parameter): ?self {
@@ -461,6 +464,9 @@ class TestServiceNullableTypehintSelf {
 
 }
 
+/**
+ * Test service with void returning method.
+ */
 class TestServiceMethodReturnsVoid {
 
   public function methodReturnsVoid(string $parameter): void {
