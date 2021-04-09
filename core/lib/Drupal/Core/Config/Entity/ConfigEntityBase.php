@@ -91,7 +91,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    *
    * @var array
    */
-  protected $_core = [];
+  protected $core = [];
 
   /**
    * Trust supplied data and not use configuration schema on save.
@@ -264,7 +264,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if (empty($this->third_party_settings)) {
       unset($properties['third_party_settings']);
     }
-    if (empty($this->_core)) {
+    if (empty($this->core)) {
       unset($properties['_core']);
     }
     return $properties;

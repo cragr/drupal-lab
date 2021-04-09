@@ -177,7 +177,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $entities = [];
     foreach ($view->result as $row) {
-      $entities[] = $row->_entity;
+      $entities[] = $row->entity;
     }
 
     $expected = $serializer->serialize($entities, 'json');
@@ -602,7 +602,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $entities = [];
     foreach ($view->result as $row) {
-      $entities[] = $row->_entity;
+      $entities[] = $row->entity;
     }
 
     $expected = $serializer->serialize($entities, 'json');
@@ -687,7 +687,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Test the raw 'created' value against each row.
     foreach (Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']])) as $index => $values) {
-      $this->assertSame($view->result[$index]->_entity->title->value, $values['title'], 'Expected raw title value found.');
+      $this->assertSame($view->result[$index]->entity->title->value, $values['title'], 'Expected raw title value found.');
     }
 
     // Test that multiple raw body fields are shown.

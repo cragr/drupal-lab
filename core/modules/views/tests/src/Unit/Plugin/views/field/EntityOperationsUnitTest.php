@@ -122,7 +122,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $this->plugin->options['destination'] = TRUE;
 
     $result = new ResultRow();
-    $result->_entity = $entity;
+    $result->entity = $entity;
 
     $expected_build = [
       '#type' => 'operations',
@@ -164,7 +164,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $this->plugin->options['destination'] = FALSE;
 
     $result = new ResultRow();
-    $result->_entity = $entity;
+    $result->entity = $entity;
 
     $expected_build = [
       '#type' => 'operations',
