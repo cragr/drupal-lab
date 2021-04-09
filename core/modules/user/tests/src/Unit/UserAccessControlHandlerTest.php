@@ -33,7 +33,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   protected $viewer;
 
   /**
-   * The mock user account with 'access user mail' permission.
+   * The mock user account with 'view user email addresses' permission.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
@@ -108,7 +108,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->expects($this->any())
       ->method('hasPermission')
       ->will($this->returnValueMap([
-        ['access user mail', TRUE],
+        ['view user email addresses', TRUE],
       ]));
     $this->emailViewer
       ->expects($this->any())
