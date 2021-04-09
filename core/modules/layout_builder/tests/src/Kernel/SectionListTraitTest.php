@@ -31,6 +31,9 @@ class SectionListTraitTest extends SectionStorageTestBase {
 
 }
 
+/**
+ * Test item list class for layout section fields.
+ */
 class TestSectionList implements SectionListInterface {
 
   use SectionStorageTrait {

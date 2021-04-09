@@ -7,6 +7,9 @@ use Drupal\Tests\comment\Functional\Rest\CommentResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\user\Entity\User;
 
+/**
+ * {@inheritdoc}
+ */
 abstract class CommentHalJsonTestBase extends CommentResourceTestBase {
 
   use HalEntityNormalizationTrait;

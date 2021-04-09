@@ -783,6 +783,9 @@ class EntityFieldManagerTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing EntityFieldManager.
+ */
 class TestEntityFieldManager extends EntityFieldManager {
 
   /**

@@ -8,6 +8,9 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
+/**
+ * ResourceTestBase for Node entity.
+ */
 abstract class NodeResourceTestBase extends EntityResourceTestBase {
 
   /**

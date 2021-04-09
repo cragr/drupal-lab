@@ -6,6 +6,9 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * ResourceTestBase for EntityFormDisplay entity.
+ */
 abstract class EntityFormDisplayResourceTestBase extends EntityResourceTestBase {
 
   /**

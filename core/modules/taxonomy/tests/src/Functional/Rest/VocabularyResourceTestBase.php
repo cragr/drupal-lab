@@ -5,6 +5,9 @@ namespace Drupal\Tests\taxonomy\Functional\Rest;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * ResourceTestBase for Vocabulary entity.
+ */
 abstract class VocabularyResourceTestBase extends EntityResourceTestBase {
 
   /**
