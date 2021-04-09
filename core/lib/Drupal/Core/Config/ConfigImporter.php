@@ -1056,7 +1056,7 @@ class ConfigImporter {
    * keep the services used by the importer in sync.
    */
   protected function reInjectMe() {
-    $this->_serviceIds = [];
+    $this->serviceIds = [];
     $vars = get_object_vars($this);
     foreach ($vars as $key => $value) {
       if (is_object($value) && isset($value->_serviceId)) {
