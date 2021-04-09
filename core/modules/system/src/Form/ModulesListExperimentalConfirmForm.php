@@ -6,6 +6,12 @@ namespace Drupal\system\Form;
  * Builds a confirmation form for enabling experimental modules.
  *
  * @internal
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+ *   Use \Drupal\system\Form\ExtensionConfirmForm instead. As internal API,
+ *   ModulesListConfirmForm may also be removed in a minor release.
+ *
+ * @see https://www.drupal.org/node/3188194
  */
 class ModulesListExperimentalConfirmForm extends ModulesListConfirmForm {
 

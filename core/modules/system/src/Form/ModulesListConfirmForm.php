@@ -16,6 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Builds a confirmation form for enabling modules with dependencies.
  *
  * @internal
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+ *   Use \Drupal\system\Form\ExtensionConfirmForm instead. As internal API,
+ *   ModulesListConfirmForm may also be removed in a minor release.
+ *
+ * @see https://www.drupal.org/node/3188194
  */
 class ModulesListConfirmForm extends ConfirmFormBase {
 
@@ -136,7 +142,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
    * @return \Drupal\Component\Render\MarkupInterface[]
    *   Array of markup for the list of messages on the form.
    *
-   * @see \Drupal\system\Form\ModulesListForm::buildModuleList()
+   * @see \Drupal\system\Form\ExtensionFormTrait::buildModuleList()
    */
   protected function buildMessageList() {
     $items = [];
