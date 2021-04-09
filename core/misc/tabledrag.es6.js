@@ -966,7 +966,7 @@
     }
 
     /**
-     * Get the event offset from the target row lement.
+     * Get the event offset from the target row element.
      *
      * Given a target element and a pointer event, get the event offset from that
      * element. To do this we need the element's position and the target position.
