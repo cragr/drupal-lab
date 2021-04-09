@@ -5,6 +5,9 @@ namespace Drupal\Tests\block_content\Functional\Rest;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\block_content\Entity\BlockContentType;
 
+/**
+ * ResourceTestBase for BlockContentType entity.
+ */
 abstract class BlockContentTypeResourceTestBase extends EntityResourceTestBase {
 
   /**

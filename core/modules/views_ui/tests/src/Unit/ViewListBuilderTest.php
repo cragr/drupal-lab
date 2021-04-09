@@ -184,6 +184,9 @@ class ViewListBuilderTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing ViewListBuilder methods.
+ */
 class TestViewListBuilder extends ViewListBuilder {
 
   public function buildOperations(EntityInterface $entity) {

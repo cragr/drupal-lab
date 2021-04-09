@@ -165,15 +165,27 @@ class BackendCompilerPassTest extends UnitTestCase {
 
 }
 
+/**
+ * Test service.
+ */
 class ServiceClassDefault {
 }
 
+/**
+ * Test service with parent.
+ */
 class ServiceClassMysql extends ServiceClassDefault {
 }
 
+/**
+ * Test service with another parent.
+ */
 class ServiceClassMariaDb extends ServiceClassMysql {
 }
 
+/**
+ * Test service with parent.
+ */
 class ServiceClassSqlite extends ServiceClassDefault {
 }
 

@@ -7,6 +7,9 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * ResourceTestBase for FieldConfig entity.
+ */
 abstract class FieldConfigResourceTestBase extends EntityResourceTestBase {
 
   /**

@@ -5,6 +5,9 @@ namespace Drupal\FunctionalTests\Rest;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 
+/**
+ * ResourceTestBase for EntityViewMode entity.
+ */
 abstract class EntityViewModeResourceTestBase extends EntityResourceTestBase {
 
   /**

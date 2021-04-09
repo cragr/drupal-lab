@@ -5,6 +5,9 @@ namespace Drupal\Tests\media\Functional\Rest;
 use Drupal\media\Entity\MediaType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * ResourceTestBase for MediaType entity.
+ */
 abstract class MediaTypeResourceTestBase extends EntityResourceTestBase {
 
   /**

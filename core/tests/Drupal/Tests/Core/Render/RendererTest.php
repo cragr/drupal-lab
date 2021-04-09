@@ -1036,6 +1036,9 @@ class RendererTest extends RendererTestBase {
 
 }
 
+/**
+ * Test class for mocking the access callback.
+ */
 class TestAccessClass implements TrustedCallbackInterface {
 
   public static function accessTrue() {
@@ -1063,6 +1066,9 @@ class TestAccessClass implements TrustedCallbackInterface {
 
 }
 
+/**
+ * Mock callable for testing the pre_render.
+ */
 class TestCallables implements TrustedCallbackInterface {
 
   public function preRenderPrinted($elements) {

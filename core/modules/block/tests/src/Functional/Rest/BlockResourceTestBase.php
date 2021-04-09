@@ -6,6 +6,9 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
+/**
+ * ResourceTestBase for Block entity.
+ */
 abstract class BlockResourceTestBase extends EntityResourceTestBase {
 
   /**

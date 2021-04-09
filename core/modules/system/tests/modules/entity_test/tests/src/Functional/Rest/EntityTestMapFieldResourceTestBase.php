@@ -6,6 +6,9 @@ use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 
+/**
+ * ResourceTestBase for EntityTestMapField entity.
+ */
 abstract class EntityTestMapFieldResourceTestBase extends EntityResourceTestBase {
 
   /**

@@ -861,6 +861,9 @@ class UrlTest extends UnitTestCase {
 
 }
 
+/**
+ * URL information holder with overridden access manager for testing.
+ */
 class TestUrl extends Url {
 
   /**

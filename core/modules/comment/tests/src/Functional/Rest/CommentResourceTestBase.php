@@ -11,6 +11,9 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
+/**
+ * ResourceTestBase for Comment entity.
+ */
 abstract class CommentResourceTestBase extends EntityResourceTestBase {
 
   use CommentTestTrait;
