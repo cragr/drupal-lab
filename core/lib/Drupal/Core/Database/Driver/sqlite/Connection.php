@@ -39,7 +39,7 @@ class Connection extends DatabaseConnection {
    *
    * We don't want to override any of the defaults.
    *
-   * @var string[]
+   * @var string[][]
    */
   protected static $sqliteConditionOperatorMap = [
     'LIKE' => ['postfix' => " ESCAPE '\\'"],
