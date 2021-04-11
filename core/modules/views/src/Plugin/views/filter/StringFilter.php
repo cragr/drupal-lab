@@ -93,7 +93,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   /**
-   * Operators.
+   * Get operators.
    *
    * This kind of construct makes it relatively easy for a child class
    * to add or remove functionality by overriding this function and
