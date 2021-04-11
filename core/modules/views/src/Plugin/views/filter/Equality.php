@@ -15,6 +15,8 @@ class Equality extends FilterPluginBase {
 
   /**
    * Exposed filter options.
+   *
+   * @var bool
    */
   protected $alwaysMultiple = TRUE;
 

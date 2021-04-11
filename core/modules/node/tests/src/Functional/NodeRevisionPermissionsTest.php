@@ -34,6 +34,8 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
 
   /**
    * Map revision permission names to node revision access ops.
+   *
+   * @var array
    */
   protected $map = [
     'view' => 'view all revisions',
@@ -43,6 +45,8 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
 
   /**
    * Map revision permission names to node type revision access ops.
+   *
+   * @var array
    */
   protected $typeMap = [
     'view' => 'view page revisions',

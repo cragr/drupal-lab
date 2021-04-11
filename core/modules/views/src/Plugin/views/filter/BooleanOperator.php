@@ -42,11 +42,15 @@ class BooleanOperator extends FilterPluginBase {
 
   /**
    * Exposed filter options.
+   *
+   * @var bool
    */
   protected $alwaysMultiple = TRUE;
 
   /**
    * Whether to accept NULL as a false value or not.
+   *
+   * @var bool
    */
   public $accept_null = FALSE;
 

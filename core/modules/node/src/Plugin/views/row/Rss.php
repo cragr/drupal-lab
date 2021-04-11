@@ -28,6 +28,8 @@ class Rss extends RssPluginBase {
 
   /**
    * Stores the nodes loaded with preRender.
+   *
+   * @var array
    */
   public $nodes = [];
 
