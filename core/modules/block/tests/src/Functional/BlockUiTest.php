@@ -33,6 +33,9 @@ class BlockUiTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'classy';
 
+  /**
+   * @var array
+   */
   protected $regions;
 
   /**
