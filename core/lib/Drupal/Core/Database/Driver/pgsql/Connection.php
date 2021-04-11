@@ -55,7 +55,7 @@ class Connection extends DatabaseConnection {
    * In PostgreSQL, 'LIKE' is case-sensitive. ILIKE should be used for
    * case-insensitive statements.
    *
-   * @var string[]
+   * @var string[][]
    */
   protected static $postgresqlConditionOperatorMap = [
     'LIKE' => ['operator' => 'ILIKE'],
