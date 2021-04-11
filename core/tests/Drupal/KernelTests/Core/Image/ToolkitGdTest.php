@@ -25,6 +25,8 @@ class ToolkitGdTest extends KernelTestBase {
 
   /**
    * Colors that are used in testing.
+   *
+   * @var array
    */
   protected $black       = [0, 0, 0, 0];
   protected $red         = [255, 0, 0, 0];
@@ -36,6 +38,8 @@ class ToolkitGdTest extends KernelTestBase {
 
   /**
    * Used as rotate background colors.
+   *
+   * @var array
    */
   protected $fuchsia           = [255, 0, 255, 0];
   protected $rotateTransparent = [255, 255, 255, 127];
