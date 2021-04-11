@@ -32,14 +32,18 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
    */
   protected $accounts = [];
 
-  // Map revision permission names to node revision access ops.
+  /**
+   * Map revision permission names to node revision access ops.
+   */
   protected $map = [
     'view' => 'view all revisions',
     'update' => 'revert all revisions',
     'delete' => 'delete all revisions',
   ];
 
-  // Map revision permission names to node type revision access ops.
+  /**
+   * Map revision permission names to node type revision access ops.
+   */
   protected $typeMap = [
     'view' => 'view page revisions',
     'update' => 'revert page revisions',

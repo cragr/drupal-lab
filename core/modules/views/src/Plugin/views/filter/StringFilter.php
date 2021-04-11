@@ -21,7 +21,9 @@ class StringFilter extends FilterPluginBase {
    */
   const WORDS_PATTERN = '/ (-?)("[^"]+"|[^" ]+)/i';
 
-  // exposed filter options
+  /**
+   * Exposed filter options.
+   */
   protected $alwaysMultiple = TRUE;
 
   /**

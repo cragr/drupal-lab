@@ -40,9 +40,14 @@ class BooleanOperator extends FilterPluginBase {
    */
   const NOT_EQUAL = '<>';
 
-  // exposed filter options
+  /**
+   * Exposed filter options.
+   */
   protected $alwaysMultiple = TRUE;
-  // Whether to accept NULL as a false value or not
+
+  /**
+   * Whether to accept NULL as a false value or not.
+   */
   public $accept_null = FALSE;
 
   /**

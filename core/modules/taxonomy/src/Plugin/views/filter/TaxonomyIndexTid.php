@@ -22,7 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class TaxonomyIndexTid extends ManyToOne {
 
-  // Stores the exposed input for this filter.
+  /**
+   * Stores the exposed input for this filter.
+   */
   public $validated_exposed_input = NULL;
 
   /**

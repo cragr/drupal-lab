@@ -140,7 +140,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $customTranslations;
 
-  /*
+  /**
    * Mink class for the default driver to use.
    *
    * Should be a fully-qualified class name that implements
@@ -152,7 +152,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $minkDefaultDriverClass = BrowserKitDriver::class;
 
-  /*
+  /**
    * Mink default driver params.
    *
    * If it's an array its contents are used as constructor params when default
@@ -161,7 +161,6 @@ abstract class BrowserTestBase extends TestCase {
    * Can be overridden using the environment variable MINK_DRIVER_ARGS. In this
    * case that variable should be a JSON array, for example:
    * '["firefox", null, "http://localhost:4444/wd/hub"]'.
-   *
    *
    * @var array
    */
