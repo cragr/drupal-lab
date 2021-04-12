@@ -76,7 +76,9 @@ function content_translation_field_sync_widget(FieldDefinitionInterface $field, 
 }
 
 /**
- * (proxied) Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * (proxied)
  */
 function _content_translation_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state) {
   // Inject into the content language settings the translation settings if the
@@ -190,7 +192,9 @@ function _content_translation_is_field_translatability_configurable(EntityTypeIn
 }
 
 /**
- * (proxied) Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_HOOK().
+ *
+ * (proxied)
  */
 function _content_translation_preprocess_language_content_settings_table(&$variables) {
   // Alter the 'build' variable injecting the translation settings if the user
