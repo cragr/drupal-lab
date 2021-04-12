@@ -31,7 +31,9 @@ class ViewsWizard extends ViewsPluginAnnotationBase {
   public $title = '';
 
   /**
-   * (optional) The short title used in the views UI.
+   * The short title used in the views UI.
+   *
+   * (optional)
    *
    * @var \Drupal\Core\Annotation\Translation
    *
