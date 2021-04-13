@@ -29,7 +29,7 @@ interface ConditionAggregateInterface extends \Countable {
    * @param string $langcode
    *   For which language the entity should be prepared, defaults to
    *   the current content language.
-
+   *
    * @return $this
    *   The called object.
    *
