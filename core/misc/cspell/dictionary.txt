@@ -1302,6 +1302,7 @@ realword
 rebuilder
 reclosed
 recolorable
+redeclaration
 redirections
 redstrawberryhiddenfield
 refactorings
