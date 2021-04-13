@@ -599,10 +599,6 @@ floatingspace
 foaf
 foat
 focusable
-focusablecontainernotabbablechildren
-focusfirst
-focusfirstcontainer
-focusfirstform
 focusring
 fodg
 fodp

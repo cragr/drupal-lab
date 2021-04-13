@@ -27,7 +27,7 @@ order-header-js-command:
   js:
     header.js: {}
 
-focusfirst:
+focus.first:
   js:
     js/focus-ajax.js: {}
   dependencies:

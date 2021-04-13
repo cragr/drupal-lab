@@ -29,10 +29,7 @@ class FocusFirstCommandTest extends WebDriverTestBase {
 
     $this->drupalGet('ajax-test/focus-first');
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
-    $this->assertNotContains($has_focus_id,
-    ['edit-first-input',
-      'edit-first-container-input',
-    ]);
+    $this->assertNotContains($has_focus_id, ['edit-first-input', 'edit-first-container-input']);
 
     // Confirm that focus does not change if the selector targets a
     // non-focusable container containing no tabbable elements.
@@ -49,13 +46,13 @@ class FocusFirstCommandTest extends WebDriverTestBase {
     $this->assertEquals('edit-selector-does-not-exist', $has_focus_id);
 
     // Confirm focus is moved to first tabbable element in a container.
-    $page->pressButton('focusfirstcontainer');
+    $page->pressButton('focusFirstContainer');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-first-container-input[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-first-container-input', $has_focus_id);
 
     // Confirm focus is moved to first tabbable element in a form.
-    $page->pressButton('focusfirstform');
+    $page->pressButton('focusFirstForm');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#ajax-test-focus-first-command-form #edit-first-input[data-has-focus]'));
 
     // Confirm the form has more than one input to confirm that focus is moved
@@ -75,7 +72,7 @@ class FocusFirstCommandTest extends WebDriverTestBase {
 
     // Confirm that if a container has no tabbable children, but is itself
     // focusable, then that container receives focus.
-    $page->pressButton('focusablecontainernotabbablechildren');
+    $page->pressButton('focusableContainerNotTabbableChildren');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#focusable-container-without-tabbable-children[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('focusable-container-without-tabbable-children', $has_focus_id);

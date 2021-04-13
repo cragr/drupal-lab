@@ -92,7 +92,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['focus_first_in_container'] = [
       '#type' => 'submit',
       '#value' => 'Focus the first item in a container',
-      '#name' => 'focusfirstcontainer',
+      '#name' => 'focusFirstContainer',
       '#ajax' => [
         'callback' => '::focusFirstInContainer',
       ],
@@ -100,7 +100,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['focus_first_in_form'] = [
       '#type' => 'submit',
       '#value' => 'Focus the first item in the form',
-      '#name' => 'focusfirstform',
+      '#name' => 'focusFirstForm',
       '#ajax' => [
         'callback' => '::focusFirstInForm',
       ],
@@ -116,9 +116,9 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['focusable_container_no_tabbable_children'] = [
       '#type' => 'submit',
       '#value' => 'Focusable container, no tabbable children',
-      '#name' => 'focusablecontainernotabbablechildren',
+      '#name' => 'focusableContainerNotTabbableChildren',
       '#ajax' => [
-        'callback' => '::focusableContainerNoTabbableChildren',
+        'callback' => '::focusableContainerNotTabbableChildren',
       ],
     ];
 
@@ -133,14 +133,14 @@ class AjaxTestFocusFirstForm implements FormInterface {
 
     $form['selector_does_not_exist'] = [
       '#type' => 'submit',
-      '#value' => 'Call focusfirst on selector that does not exist.',
+      '#value' => 'Call FocusFirst on selector that does not exist.',
       '#name' => 'selectornotexist',
       '#ajax' => [
         'callback' => '::selectorDoesNotExist',
       ],
     ];
 
-    $form['#attached']['library'][] = 'ajax_test/focusfirst';
+    $form['#attached']['library'][] = 'ajax_test/focus.first';
 
     return $form;
   }
@@ -173,7 +173,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The AJAX response.
    */
-  public function focusableContainerNoTabbableChildren() {
+  public function focusableContainerNotTabbableChildren() {
     $response = new AjaxResponse();
     return $response->addCommand(new FocusFirstCommand('#focusable-container-without-tabbable-children'));
   }
