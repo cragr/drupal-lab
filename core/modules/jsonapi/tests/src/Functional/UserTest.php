@@ -413,8 +413,8 @@ class UserTest extends ResourceTestBase {
     $this->assertSame($user_b->uuid(), $doc['data'][count($doc['data']) - 1]['id']);
     $this->assertArrayHasKey('mail', $doc['data'][count($doc['data']) - 1]['attributes']);
 
-    // Now grant permission to access user mail and verify.
-    $this->grantPermissionsToTestedRole(['access user mail']);
+    // Now grant permission to view user email addresses and verify.
+    $this->grantPermissionsToTestedRole(['view user email addresses']);
     // Viewing user A as user B: "mail" field should be accessible.
     $response = $this->request('GET', $user_a_url, $request_options);
     $doc = Json::decode((string) $response->getBody());
