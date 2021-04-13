@@ -39,6 +39,7 @@ class TestServiceProvider implements ServiceProviderInterface, ServiceModifierIn
    * Add the on demand rebuild route provider service.
    *
    * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
+   *   The container builder.
    */
   public static function addRouteProvider(ContainerBuilder $container) {
     $route_provider_service_name = 'router.route_provider';
