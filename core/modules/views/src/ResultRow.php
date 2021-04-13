@@ -12,6 +12,8 @@ class ResultRow {
    *
    * @var \Drupal\Core\Entity\EntityInterface
    */
+  // The property $_entity is a special property relating to views. It can't be
+  // renamed without a BC layer.
   // phpcs:ignore Drupal.Classes.PropertyDeclaration
   public $_entity = NULL;
 
@@ -20,6 +22,8 @@ class ResultRow {
    *
    * @var \Drupal\Core\Entity\EntityInterface[]
    */
+  // The property $_relationship_entities is a special property relating to
+  // views. It can't be renamed without a BC layer.
   // phpcs:ignore Drupal.Classes.PropertyDeclaration
   public $_relationship_entities = [];
 
