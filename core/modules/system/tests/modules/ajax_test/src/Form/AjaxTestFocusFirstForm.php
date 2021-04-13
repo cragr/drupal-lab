@@ -108,7 +108,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['uses_selector_with_multiple_matches'] = [
       '#type' => 'submit',
       '#value' => 'Uses selector with multiple matches',
-      '#name' => 'selectormultiplematches',
+      '#name' => 'SelectorMultipleMatches',
       '#ajax' => [
         'callback' => '::focusFirstSelectorMultipleMatch',
       ],
@@ -125,7 +125,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['selector_has_nothing_tabbable'] = [
       '#type' => 'submit',
       '#value' => 'Try to focus container with nothing tabbable',
-      '#name' => 'selectornothingtabbable',
+      '#name' => 'SelectorNothingTabbable',
       '#ajax' => [
         'callback' => '::selectorHasNothingTabbable',
       ],
@@ -134,7 +134,7 @@ class AjaxTestFocusFirstForm implements FormInterface {
     $form['selector_does_not_exist'] = [
       '#type' => 'submit',
       '#value' => 'Call FocusFirst on selector that does not exist.',
-      '#name' => 'selectornotexist',
+      '#name' => 'SelectorNotExist',
       '#ajax' => [
         'callback' => '::selectorDoesNotExist',
       ],

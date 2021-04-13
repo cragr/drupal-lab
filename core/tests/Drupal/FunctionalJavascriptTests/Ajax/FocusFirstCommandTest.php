@@ -33,14 +33,14 @@ class FocusFirstCommandTest extends WebDriverTestBase {
 
     // Confirm that focus does not change if the selector targets a
     // non-focusable container containing no tabbable elements.
-    $page->pressButton('selectornothingtabbable');
+    $page->pressButton('SelectorNothingTabbable');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-selector-has-nothing-tabbable[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-selector-has-nothing-tabbable', $has_focus_id);
 
     // Confirm that focus does not change if the page has no match for the
     // provided selector.
-    $page->pressButton('selectornotexist');
+    $page->pressButton('SelectorNotExist');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-selector-does-not-exist[data-has-focus]'));
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-selector-does-not-exist', $has_focus_id);
@@ -63,7 +63,7 @@ class FocusFirstCommandTest extends WebDriverTestBase {
 
     // Confirm that the selector provided will use the first match in the DOM as
     // the container.
-    $page->pressButton('selectormultiplematches');
+    $page->pressButton('SelectorMultipleMatches');
     $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-inside-same-selector-container-1[data-has-focus]'));
     $this->assertNotNull($page->findById('edit-inside-same-selector-container-2'));
     $this->assertNull($assert_session->waitForElementVisible('css', '#edit-inside-same-selector-container-2[data-has-focus]'));
