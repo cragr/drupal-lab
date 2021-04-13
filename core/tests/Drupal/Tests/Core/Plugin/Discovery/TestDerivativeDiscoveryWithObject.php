@@ -26,6 +26,7 @@ class TestDerivativeDiscoveryWithObject implements DeriverInterface {
   /**
    * {@inheritdoc}
    * @param array $base_plugin_definition
+   *   An associative array defining the base plugin.
    *
    * @return array
    */
