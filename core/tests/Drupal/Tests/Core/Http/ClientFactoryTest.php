@@ -36,6 +36,7 @@ class ClientFactoryTest extends UnitTestCase {
    * @param array $settings_config
    * @param array $parameter_config
    * @param array $expected_config_keys
+   *   The expected
    */
   public function testCreateFromOptions($settings_config, $parameter_config, $expected_config_keys) {
     if ($settings_config) {
