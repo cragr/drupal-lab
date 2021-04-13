@@ -92,8 +92,6 @@ class MediaSource extends Plugin {
   /**
    * The metadata attribute name to provide the thumbnail alt.
    *
-   * (optional)
-   *
    * "Thumbnail" will be used if the attribute name is not provided.
    *
    * @var string|null
@@ -102,8 +100,6 @@ class MediaSource extends Plugin {
 
   /**
    * The metadata attribute name to provide the thumbnail title.
-   *
-   * (optional)
    *
    * The name of the media item will be used if the attribute name is not
    * provided.
