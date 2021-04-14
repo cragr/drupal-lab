@@ -141,16 +141,9 @@ class ImageWidget extends FileWidget {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
+    $element['#upload_validators'] = $items[$delta]->getUploadValidators();
 
     $field_settings = $this->getFieldSettings();
-
-    // Add image validation.
-    $element['#upload_validators']['file_validate_is_image'] = [];
-
-    // Add upload resolution validation.
-    if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
-      $element['#upload_validators']['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
-    }
 
     $extensions = $field_settings['file_extensions'];
     $supported_extensions = $this->imageFactory->getSupportedExtensions();
