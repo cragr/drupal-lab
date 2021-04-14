@@ -1696,27 +1696,3 @@ function claro_system_module_invoked_theme_registry_alter(array &$theme_registry
     }
   }
 }
-
-/**
- * Implements hook_preprocess_toolbar().
- */
-function claro_preprocess_toolbar(&$variables) {
-  // Move items that should appear last to the end of the array so they are also
-  // last in the DOM.
-  // @todo revisit in https://drupal.org/node/3167438. This can potentially be
-  // removed as part of that issue.
-  $push_right_class = TRUE;
-  foreach (['workspace', 'contextual', 'tour'] as $item_name) {
-    if (isset($variables['tabs'][$item_name])) {
-      $item = $variables['tabs'][$item_name];
-      unset($variables['tabs'][$item_name]);
-      $variables['tabs'][$item_name] = $item;
-      // Add a class to the first item to move the items to the right.
-      if ($push_right_class) {
-        $variables['tabs'][$item_name]['attributes']->addClass('toolbar-tab--push-end');
-        $push_right_class = FALSE;
-      }
-    }
-  }
-}
-
