@@ -26,6 +26,9 @@
 .container-inline .details-wrapper {
   display: block;
 }
+.container-inline .hidden {
+  display: none;
+}
 
 /**
  * Textarea and datetime items need to be flex in order to properly position
