@@ -510,8 +510,8 @@ class ImageItem extends FileItem {
 
     // If the image's resolution is constrained by the field settings, validate
     // that too.
-    $min_resolution = $this->getSetting('min_resolution') ?? 0;
-    $max_resolution = $this->getSetting('max_resolution') ?? 0;
+    $min_resolution = $this->getSetting('min_resolution') ?: 0;
+    $max_resolution = $this->getSetting('max_resolution') ?: 0;
     if ($min_resolution || $max_resolution) {
       $upload_validators['file_validate_image_resolution'] = [
         $max_resolution,
