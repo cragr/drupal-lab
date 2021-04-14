@@ -133,7 +133,7 @@ class EntityOperationsTest extends KernelTestBase {
    * Verifies that a newly-created node can go straight to published.
    */
   public function testPublishedCreation() {
-    // Create a new node in draft.
+    // Create a new node as published.
     $page = Node::create([
       'type' => 'page',
       'title' => 'A',
@@ -185,7 +185,7 @@ class EntityOperationsTest extends KernelTestBase {
    * Verifies that moderation state is not cloned.
    */
   public function testCreateDuplicate() {
-    // Create a new node in draft.
+    // Create a new node as published.
     $page = Node::create([
       'type' => 'page',
       'title' => 'A',
