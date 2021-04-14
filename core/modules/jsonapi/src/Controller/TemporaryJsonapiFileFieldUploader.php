@@ -2,9 +2,7 @@
 
 namespace Drupal\jsonapi\Controller;
 
-use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Environment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldDefinitionInterface;
