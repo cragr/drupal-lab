@@ -503,7 +503,7 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function getUploadValidators(){
+  public function getUploadValidators() {
     $upload_validators = parent::getUploadValidators();
     // Always validate that the uploaded file is an image.
     $upload_validators['file_validate_is_image'] = [];
