@@ -21,7 +21,6 @@ class AccountProxyTest extends UnitTestCase {
    */
   public function testId() {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
-    $dispatcher->dispatch(Argument::any(), Argument::any())->willReturn(new Event());
     $account_proxy = new AccountProxy($dispatcher->reveal());
     $this->assertSame(0, $account_proxy->id());
     $account_proxy->setInitialAccountId(1);
@@ -42,7 +41,6 @@ class AccountProxyTest extends UnitTestCase {
   public function testSetInitialAccountIdException() {
     $this->expectException(\LogicException::class);
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
-    $dispatcher->dispatch(Argument::any(), Argument::any())->willReturn(new Event());
     $account_proxy = new AccountProxy($dispatcher->reveal());
     $current_user = $this->prophesize(AccountInterface::class);
     $account_proxy->setAccount($current_user->reveal());

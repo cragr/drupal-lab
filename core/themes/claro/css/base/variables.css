@@ -52,7 +52,8 @@
   /**
    * Breadcrumb.
    */
-  /**
+   /* Toolbar */ /* Line height must be higher than horizontal to account for text wrapping. */
+    /**
     * Vertical Tabs.
     */
 }
