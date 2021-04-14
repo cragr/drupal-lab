@@ -67,7 +67,7 @@ class ListElement implements ElementInterface {
         }
 
         $sub_build += $form_element->getTranslationBuild($source_language, $translation_language, $source_config_item, $translation_config_item, $element_parents, $element_key);
-        
+       
         if (empty($sub_build)) {
           continue;
         }
