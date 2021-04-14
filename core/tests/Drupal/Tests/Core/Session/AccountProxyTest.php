@@ -5,8 +5,6 @@ namespace Drupal\Tests\Core\Session;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Argument;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
