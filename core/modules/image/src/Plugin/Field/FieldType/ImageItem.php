@@ -500,4 +500,25 @@ class ImageItem extends FileItem {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getUploadValidators(){
+    $upload_validators = parent::getUploadValidators();
+    // Always validate that the uploaded file is an image.
+    $upload_validators['file_validate_is_image'] = [];
+
+    // If the image's resolution is constrained by the field settings, validate
+    // that too.
+    $min_resolution = $this->getSetting('min_resolution') ?? 0;
+    $max_resolution = $this->getSetting('max_resolution') ?? 0;
+    if ($min_resolution || $max_resolution) {
+      $upload_validators['file_validate_image_resolution'] = [
+        $max_resolution,
+        $min_resolution,
+      ];
+    }
+    return $upload_validators;
+  }
+
 }
