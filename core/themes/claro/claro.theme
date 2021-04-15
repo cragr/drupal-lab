@@ -441,7 +441,7 @@ function claro_preprocess_links(&$variables) {
     }
   }
 
-  if (isset($variables['theme_hook_original']) && substr($variables['theme_hook_original'], 0, 14) === 'links__toolbar' ) {
+  if (isset($variables['theme_hook_original']) && substr($variables['theme_hook_original'], 0, 14) === 'links__toolbar') {
     foreach ($variables['links'] as &$link) {
       $link['link']['#options']['attributes']['class'][] = 'toolbar-menu__link';
     }

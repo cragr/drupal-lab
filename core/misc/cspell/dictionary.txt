@@ -1778,6 +1778,7 @@ unmunge
 unmunged
 unmunging
 unoptimized
+unoriented
 unpad
 unparsable
 unparseable

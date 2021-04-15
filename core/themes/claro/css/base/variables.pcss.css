@@ -207,7 +207,9 @@
    * Breadcrumb.
    */
   --breadcrumb-height: 1.25rem;
-   /* Toolbar */
+  /**
+   * Toolbar.
+   */
   --toolbar-font-size: var(--font-size-s);
   --toolbar-tray-fg-color: var(--color-text);
   --toolbar-tray-bg-color: var(--color-white);
@@ -255,9 +257,9 @@
   --toolbar-icon-z-index: calc(var(--toolbar-tray-z-index) + 1);
   --toolbar-bar-z-index: calc(var(--toolbar-tray-z-index) + 1);
   --toolbar-tray-z-index--active: calc(var(--toolbar-icon-z-index) + 1);
-    /**
-    * Vertical Tabs.
-    */
+  /**
+  * Vertical Tabs.
+  */
   --vertical-tabs-margin-vertical: var(--space-s);
   --vertical-tabs-border-radius: var(--details-accordion-border-size-radius);
   --vertical-tabs-shadow: var(--details-box-shadow);
