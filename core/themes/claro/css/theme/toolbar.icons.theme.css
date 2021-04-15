@@ -275,13 +275,13 @@ button.toolbar-icon {
 
 .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle:hover::before,
 .toolbar .toolbar-icon.toolbar-handle:hover::before {
-  background-image: url(../../images/icons/0036B1/chevron-down.svg);
+  background-image: url("data:image/svg+xml,%3csvg width='14' height='9' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M.238 1.938L1.647.517 7 5.819 12.354.517l1.408 1.421L7 8.636z' fill='%230036B1'/%3e%3c/svg%3e");
 }
 
 .toolbar .toolbar-icon.toolbar-handle.open::before,
 .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open::before {
   transform: rotate(180deg);
-  background-image: url(../../images/icons/0036B1/chevron-down.svg);
+  background-image: url("data:image/svg+xml,%3csvg width='14' height='9' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M.238 1.938L1.647.517 7 5.819 12.354.517l1.408 1.421L7 8.636z' fill='%230036B1'/%3e%3c/svg%3e");
 }
 
 .toolbar .toolbar-icon.toolbar-handle.open:hover::before,
