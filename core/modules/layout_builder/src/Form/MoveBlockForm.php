@@ -187,13 +187,13 @@ class MoveBlockForm extends FormBase {
     if (!isset($components[$uuid])) {
       $components[$uuid] = $sections[$delta]->getComponent($uuid);
     }
-    
+
     $delta = 10;
     $count = count($components);
     if ($count > 20) {
       $delta = ceil($count / 2);
     }
-    
+
     foreach ($components as $component_uuid => $component) {
       /** @var \Drupal\Core\Block\BlockPluginInterface $plugin */
       $plugin = $component->getPlugin();
