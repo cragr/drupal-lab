@@ -1811,7 +1811,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function getExpectedRelatedResponse($relationship_field_name, array $request_options, EntityInterface $entity) {
     // Get the relationships responses which contain resource identifiers for
     // every related resource.
-    /** @var \Drupal\jsonapi\ResourceResponse[] $relationship_responses */
     $base_resource_identifier = static::toResourceIdentifier($entity);
     $internal_name = $this->resourceType->getInternalName($relationship_field_name);
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);

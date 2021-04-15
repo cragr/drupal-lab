@@ -666,9 +666,9 @@ class EntityResource {
    *   Thrown when the updated entity does not pass validation.
    */
   public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
-    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     // According to the specification, PATCH works a little bit different if the
     // relationship is to-one or to-many.
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
@@ -1272,7 +1272,6 @@ class EntityResource {
     if (!empty($link_context['total_count']) && !$total = (int) $link_context['total_count']) {
       return $pager_links;
     }
-    /** @var \Drupal\jsonapi\Query\OffsetPage $page_param */
     $offset = $page_param->getOffset();
     $size = $page_param->getSize();
     if ($size <= 0) {
