@@ -518,6 +518,17 @@ class ImageItem extends FileItem {
         $min_resolution,
       ];
     }
+
+    if (isset($upload_validators['file_validate_extensions'])) {
+      $extensions = $this->getSetting('file_extensions');
+      $supported_extensions = \Drupal::service('image.factory')->getSupportedExtensions();
+
+      // If using custom extension validation, ensure that the extensions are
+      // supported by the current image toolkit. Otherwise, validate against all
+      // toolkit supported extensions.
+      $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
+      $upload_validators['file_validate_extensions'][0] = implode(' ', $extensions);
+    }
     return $upload_validators;
   }
 

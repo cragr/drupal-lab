@@ -145,15 +145,6 @@ class ImageWidget extends FileWidget {
 
     $field_settings = $this->getFieldSettings();
 
-    $extensions = $field_settings['file_extensions'];
-    $supported_extensions = $this->imageFactory->getSupportedExtensions();
-
-    // If using custom extension validation, ensure that the extensions are
-    // supported by the current image toolkit. Otherwise, validate against all
-    // toolkit supported extensions.
-    $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
-    $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
-
     // Add mobile device image capture acceptance.
     $element['#accept'] = 'image/*';
 
