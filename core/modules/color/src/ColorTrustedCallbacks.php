@@ -35,10 +35,22 @@ class ColorTrustedCallbacks implements TrustedCallbackInterface {
   }
 
   /**
+   * Implements schemeFormValidate for color.module.
+   */
+  public static function schemeFormValidate(array $form, FormStateInterface $form_state) {
+    // Only accept hexadecimal CSS color strings to avoid XSS upon use.
+    foreach ($form_state->getValue('palette') as $key => $color) {
+      if (!color_valid_hexadecimal_string($color)) {
+        $form_state->setErrorByName('palette][' . $key, t('You must enter a valid hexadecimal color value for %name.', ['%name' => $form['color']['palette'][$key]['#title']]));
+      }
+    }
+  }
+
+  /**
    * {@inheritDoc}
    */
   public static function trustedCallbacks() {
-    return ['paletteColorValue'];
+    return ['paletteColorValue', 'schemeFormValidate'];
   }
 
 }

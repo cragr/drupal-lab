@@ -25,7 +25,7 @@ class LanguageTrustedCallbacks implements TrustedCallbackInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public static function trustedCallbacks() {
     return ['languageSelectProcess'];

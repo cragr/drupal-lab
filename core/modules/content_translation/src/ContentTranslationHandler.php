@@ -812,7 +812,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['entityFormSharedElements'];
+    return ['entityFormSharedElements', 'entityFormValidate'];
   }
 
 }

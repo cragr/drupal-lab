@@ -1449,7 +1449,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['renderPlaceholderFormAction', 'renderFormTokenPlaceholder'];
+    return [
+      'renderPlaceholderFormAction',
+      'renderFormTokenPlaceholder',
+      'validateForm',
+    ];
   }
 
   /**

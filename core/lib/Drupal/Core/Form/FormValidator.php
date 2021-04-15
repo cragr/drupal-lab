@@ -94,7 +94,12 @@ class FormValidator implements FormValidatorInterface {
     }
 
     foreach ($handlers as $callback) {
-      call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+      $this->doCallback(
+        $form_state,
+        '#validate',
+        $callback,
+        [&$form, &$form_state]
+      );
     }
   }
 
