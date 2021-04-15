@@ -49,7 +49,7 @@ class MediaLibraryImageUploadTest extends MediaLibraryTestBase {
     $this->assertNotEmpty($image_path);
     $this->assertFileExists($image_path);
 
-    $this->getSession()->getPage()->attachFileToField('Add file', $image_path);
+    $this->waitForFieldExists('Add file')->attachFile($image_path);
     $this->waitForText('The image was resized to fit within the maximum allowed dimensions of 16x16 pixels.');
   }
 
