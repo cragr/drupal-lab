@@ -324,7 +324,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
       // order. Reverse order is important so that when a parallel relationship
       // is encountered, it will have the highest arity value so the current
       // relationship's arity value can simply be incremented by one.
-      /** @var self $existing */
+      /** @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifier $existing */
       foreach (array_reverse($relationships, TRUE) as $index => $existing) {
         $is_parallel = static::isParallel($existing, $relationship);
         if ($is_parallel) {

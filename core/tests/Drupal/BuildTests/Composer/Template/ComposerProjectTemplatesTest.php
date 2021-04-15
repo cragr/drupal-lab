@@ -39,10 +39,10 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    */
   public function getPathReposForType($workspace_directory, $subdir) {
     // Find the Composer items that we want to be path repos.
+    /** @var \SplFileInfo[] $path_repos */
     $path_repos = Composer::composerSubprojectPaths($workspace_directory, $subdir);
 
     $data = [];
-    /** @var \SplFileInfo $path_repo */
     foreach ($path_repos as $path_repo) {
       $json_file = new JsonFile($path_repo->getPathname());
       $json = $json_file->read();
