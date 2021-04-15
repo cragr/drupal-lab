@@ -318,7 +318,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // - Removing the namespace directories from the path.
       // - Getting the path to the directory two levels up from the path
       //   determined in the previous step.
-      return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+      define('DRUPAL_ROOT', dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2));
     }
 
     return DRUPAL_ROOT;
