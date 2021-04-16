@@ -4,7 +4,6 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

@@ -5,7 +5,6 @@ namespace Drupal\form_test\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * A multistep form for testing the form storage.

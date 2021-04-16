@@ -5,7 +5,6 @@ namespace Drupal\user\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
