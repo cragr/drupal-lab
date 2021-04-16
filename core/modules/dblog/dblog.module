@@ -31,7 +31,7 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Debugging site problems') . '</dt>';
       $output .= '<dd>' . t('In case of errors or problems with the site, the <a href=":dblog">Recent log messages</a> page can be useful for debugging, since it shows the sequence of events. The log messages include usage information, warnings, and errors.', [':dblog' => Url::fromRoute('dblog.overview')->toString()]) . '</dd>';
       $output .= '<dt>' . t('This log is not persistent') . '</dt>';
-      $output .= '<dd>' . t('Database Logging will not allow you to see logs if your site is not accessible. Also, the Database logging module writes logs to the database which can slow down the website. By using Syslog you can improve the performance of the site. Syslog, helps you to see the logs and troubleshoot even if site is not accessible.', [':audit_trail_wiki' => 'https://en.wikipedia.org/wiki/Audit_trail']) . '</dd>';
+      $output .= '<dd>' . t('The Database Logging module logs may be cleared by administrators and automated cron tasks, so they should not be used for <a href=":audit_trail_wiki">forensic logging</a>. For forensic purposes, use the Syslog module.', [':audit_trail_wiki' => 'https://en.wikipedia.org/wiki/Audit_trail']) . '</dd>';
       $output .= '</dl>';
       return $output;
 
