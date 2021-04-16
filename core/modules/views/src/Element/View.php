@@ -42,7 +42,7 @@ class View extends RenderElement {
     if (!isset($element['#view'])) {
       $view = Views::getView($element['#name']);
       if (!$view) {
-        throw new InvalidViewException("Invalid View name (${$element['#name']}) given.");
+        throw new InvalidViewException("Invalid View name ({$element['#name']}) given.");
       }
     }
     else {
