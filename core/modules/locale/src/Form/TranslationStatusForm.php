@@ -160,7 +160,7 @@ class TranslationStatusForm extends FormBase {
       '#required' => TRUE,
       '#not_found' => $languages_not_found,
       '#after_build' => [
-        [TrustedFormCallbacks::class, 'translationLanguageTable'],
+        [LocaleTrustedFormCallbacks::class, 'translationLanguageTable'],
       ],
     ];
 

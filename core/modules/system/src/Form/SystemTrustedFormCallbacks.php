@@ -11,7 +11,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @package Drupal\system\Form
  */
-class TrustedFormCallbacks implements TrustedCallbackInterface {
+class SystemTrustedFormCallbacks implements TrustedCallbackInterface {
 
   /**
    * Implements #after_build callback for the function listed below.

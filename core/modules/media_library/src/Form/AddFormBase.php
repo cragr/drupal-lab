@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a base class for creating media items from within the media library.
  */
-abstract class AddFormBase extends FormBase implements BaseFormIdInterface, TrustedCallbackInterface {
+abstract class AddFormBase extends FormBase implements BaseFormIdInterface {
 
   /**
    * The entity type manager.
@@ -342,7 +342,9 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['preRenderAddedMedia'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'preRenderAddedMedia';
+    return $callbacks;
   }
 
   /**

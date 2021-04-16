@@ -10,7 +10,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @package Drupal\locale\Form
  */
-class TrustedFormCallbacks implements TrustedCallbackInterface {
+class LocaleTrustedFormCallbacks implements TrustedCallbackInterface {
 
   /**
    * Implements #after_build callback for TranslationStatusForm::buildForm.

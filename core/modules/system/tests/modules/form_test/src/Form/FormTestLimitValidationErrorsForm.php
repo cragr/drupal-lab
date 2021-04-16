@@ -11,7 +11,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @internal
  */
-class FormTestLimitValidationErrorsForm extends FormBase implements TrustedCallbackInterface {
+class FormTestLimitValidationErrorsForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -113,7 +113,9 @@ class FormTestLimitValidationErrorsForm extends FormBase implements TrustedCallb
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['elementValidateLimitValidationErrors'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementValidateLimitValidationErrors';
+    return $callbacks;
   }
 
 }

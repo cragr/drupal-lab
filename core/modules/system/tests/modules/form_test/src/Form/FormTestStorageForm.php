@@ -17,7 +17,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @internal
  */
-class FormTestStorageForm extends FormBase implements TrustedCallbackInterface {
+class FormTestStorageForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -149,7 +149,9 @@ class FormTestStorageForm extends FormBase implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['elementValidateValueCached'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementValidateValueCached';
+    return $callbacks;
   }
 
 }

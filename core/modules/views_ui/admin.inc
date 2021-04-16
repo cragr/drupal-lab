@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\views_ui\Form\TrustedFormCallbacks;
+use Drupal\views_ui\Form\ViewsUiTrustedFormCallbacks;
 
 /**
  * Converts a form element in the add view wizard to be AJAX-enabled.
@@ -71,14 +71,14 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
     // form API has added the #parents property to the triggering element for
     // us, we don't have any (easy) way to find out where its submitted values
     // will eventually appear in $form_state->getValues().
-    '#process' => array_merge([[TrustedFormCallbacks::class, 'addLimitedValidation']], $element_info->getInfoProperty('submit', '#process', [])),
+    '#process' => array_merge([[ViewsUiTrustedFormCallbacks::class, 'addLimitedValidation']], $element_info->getInfoProperty('submit', '#process', [])),
     // Add an after-build function that inserts a wrapper around the region of
     // the form that needs to be refreshed by AJAX (so that the AJAX system can
     // detect and dynamically update it). This is done in #after_build because
     // it's a convenient place where we have automatic access to the complete
     // form array, but also to minimize the chance that the HTML we add will
     // get clobbered by code that runs after we have added it.
-    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', []), [[TrustedFormCallbacks::class, 'addAjaxWrapper']]),
+    '#after_build' => array_merge($element_info->getInfoProperty('submit', '#after_build', []), [[ViewsUiTrustedFormCallbacks::class, 'addAjaxWrapper']]),
   ];
   // Copy #weight and #access from the triggering element to the button, so
   // that the two elements will be displayed together.
@@ -127,7 +127,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
  * @todo correct [at]see to use change record url above.
  */
 function views_ui_add_limited_validation(&$element, FormStateInterface $form_state, $form) {
-  return TrustedFormCallbacks::addLimitedValidation($element, $form_state, $form);
+  return ViewsUiTrustedFormCallbacks::addLimitedValidation($element, $form_state, $form);
 }
 
 /**
@@ -140,7 +140,7 @@ function views_ui_add_limited_validation(&$element, FormStateInterface $form_sta
  * @todo correct [at]see to use change record url above.
  */
 function views_ui_add_ajax_wrapper(array &$element, FormStateInterface $form_state) {
-  return TrustedFormCallbacks::addAjaxWrapper($element, $form_state);
+  return ViewsUiTrustedFormCallbacks::addAjaxWrapper($element, $form_state);
 }
 
 /**
@@ -272,5 +272,5 @@ function views_ui_build_form_url(FormStateInterface $form_state) {
  * @todo correct [at]see to use change record url above.
  */
 function views_ui_form_button_was_clicked(&$element, FormStateInterface $form_state, &$form) {
-  return TrustedFormCallbacks::formButtonClicked($element, $form_state, $form);
+  return ViewsUiTrustedFormCallbacks::formButtonClicked($element, $form_state, $form);
 }

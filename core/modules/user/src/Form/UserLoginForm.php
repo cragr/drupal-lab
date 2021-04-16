@@ -5,6 +5,7 @@ namespace Drupal\user\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
@@ -130,6 +131,17 @@ class UserLoginForm extends FormBase {
     $this->renderer->addCacheableDependency($form, $config);
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'validateName';
+    $callbacks[] = 'validateAuthentication';
+    $callbacks[] = 'validateFinal';
+    return $callbacks;
   }
 
   /**

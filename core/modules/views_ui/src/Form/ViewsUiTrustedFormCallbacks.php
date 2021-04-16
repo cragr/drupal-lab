@@ -11,7 +11,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @package Drupal\views_ui\Form
  */
-class TrustedFormCallbacks implements TrustedCallbackInterface {
+class ViewsUiTrustedFormCallbacks implements TrustedCallbackInterface {
 
   /**
    * Implements #process callback for ViewUI::getStandardButtons().

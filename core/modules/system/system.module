@@ -25,7 +25,7 @@ use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\system\Form\TrustedFormCallbacks;
+use Drupal\system\Form\SystemTrustedFormCallbacks;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -594,7 +594,7 @@ function system_page_attachments(array &$page) {
   }
 
   // Get the major Drupal version.
-  list($version,) = explode('.', \Drupal::VERSION);
+  [$version,] = explode('.', \Drupal::VERSION);
 
   // Attach default meta tags.
   $meta_default = [
@@ -813,7 +813,7 @@ function system_preprocess_block(&$variables) {
  * @todo correct [at]see to use change record url above.
  */
 function system_check_directory(array &$form_element, FormStateInterface $form_state) {
-  return TrustedFormCallbacks::checkDirectory($form_element, $form_state);
+  return SystemTrustedFormCallbacks::checkDirectory($form_element, $form_state);
 }
 
 /**

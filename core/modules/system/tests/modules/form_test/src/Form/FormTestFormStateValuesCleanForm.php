@@ -12,7 +12,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @internal
  */
-class FormTestFormStateValuesCleanForm extends FormBase implements TrustedCallbackInterface {
+class FormTestFormStateValuesCleanForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -69,7 +69,9 @@ class FormTestFormStateValuesCleanForm extends FormBase implements TrustedCallba
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['cleanValue'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'cleanValue';
+    return $callbacks;
   }
 
 }

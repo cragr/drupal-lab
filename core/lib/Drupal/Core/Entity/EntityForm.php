@@ -14,7 +14,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @ingroup entity_api
  */
-class EntityForm extends FormBase implements EntityFormInterface, TrustedCallbackInterface {
+class EntityForm extends FormBase implements EntityFormInterface {
 
   /**
    * The name of the current operation.
@@ -427,7 +427,10 @@ class EntityForm extends FormBase implements EntityFormInterface, TrustedCallbac
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['processForm', 'afterBuild'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'processForm';
+    $callbacks[] = 'afterBuild';
+    return $callbacks;
   }
 
 }

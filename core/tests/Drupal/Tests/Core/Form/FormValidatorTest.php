@@ -329,27 +329,21 @@ class FormValidatorTest extends UnitTestCase implements TrustedCallbackInterface
       ])
       ->setMethods(NULL)
       ->getMock();
-    $mock = $this->getMockBuilder('stdClass')
-      ->setMethods(['validate_handler', 'hash_validate'])
-      ->getMock();
-    $mock->expects($this->once())
-      ->method('validate_handler')
-      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
-    $mock->expects($this->once())
-      ->method('hash_validate')
-      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
+    $mock = new FormValidatorTestTrustedMock();
 
     $form = [];
     $form_state = new FormState();
     $form_validator->executeValidateHandlers($form, $form_state);
 
-    $form['#validate'][] = [$mock, 'hash_validate'];
+    $form['#validate'][] = [$mock, 'hashValidate'];
     $form_validator->executeValidateHandlers($form, $form_state);
+    $this->assertTrue($form['#form_validator_test_validate_hash']);
 
     // $form_state validate handlers will supersede $form handlers.
-    $validate_handlers[] = [$mock, 'validate_handler'];
+    $validate_handlers[] = [$mock, 'validateHandler'];
     $form_state->setValidateHandlers($validate_handlers);
     $form_validator->executeValidateHandlers($form, $form_state);
+    $this->assertTrue($form['#form_validator_test_validate_handler']);
   }
 
   /**
@@ -546,6 +540,9 @@ class FormValidatorTest extends UnitTestCase implements TrustedCallbackInterface
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function trustedCallbacks() {
     return ['validate'];
   }

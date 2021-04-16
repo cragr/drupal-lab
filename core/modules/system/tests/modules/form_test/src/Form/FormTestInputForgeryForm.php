@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @internal
  */
-class FormTestInputForgeryForm extends FormBase implements TrustedCallbackInterface {
+class FormTestInputForgeryForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -73,7 +73,9 @@ class FormTestInputForgeryForm extends FormBase implements TrustedCallbackInterf
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['postRender'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'postRender';
+    return $callbacks;
   }
 
 }

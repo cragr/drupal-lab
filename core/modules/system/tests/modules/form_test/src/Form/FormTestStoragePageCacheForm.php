@@ -11,7 +11,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @internal
  */
-class FormTestStoragePageCacheForm extends FormBase implements TrustedCallbackInterface {
+class FormTestStoragePageCacheForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -91,7 +91,9 @@ class FormTestStoragePageCacheForm extends FormBase implements TrustedCallbackIn
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['formTestStoragePageCacheOldBuildId'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'formTestStoragePageCacheOldBuildId';
+    return $callbacks;
   }
 
 }

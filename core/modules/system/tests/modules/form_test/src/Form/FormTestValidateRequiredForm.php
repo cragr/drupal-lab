@@ -11,7 +11,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  *
  * @internal
  */
-class FormTestValidateRequiredForm extends FormBase implements TrustedCallbackInterface {
+class FormTestValidateRequiredForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -92,7 +92,9 @@ class FormTestValidateRequiredForm extends FormBase implements TrustedCallbackIn
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['elementValidateRequired'];
+    $callbacks = parent::trustedCallbacks();
+    $callbacks[] = 'elementValidateRequired';
+    return $callbacks;
   }
 
 }
