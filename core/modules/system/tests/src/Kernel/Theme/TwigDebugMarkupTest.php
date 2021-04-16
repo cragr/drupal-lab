@@ -18,14 +18,13 @@ use Drupal\user\Entity\User;
 class TwigDebugMarkupTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['theme_test', 'node', 'system', 'user'];
 
   /**
-   * The twig config to apply during container rebuils.
+   * The Twig config to apply during container rebuilds.
+   *
    * @var array
    */
   protected $twigConfig = [
@@ -71,10 +70,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
     $user->save();
 
     // Enable debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
-    $parameters['debug'] = TRUE;
-    $this->twigConfig = $parameters;
-
+    $this->twigConfig['debug'] = TRUE;
     $kernel = $this->container->get('kernel');
     assert($kernel instanceof DrupalKernelInterface);
     $kernel->rebuildContainer();
@@ -158,10 +154,7 @@ TWIG;
     $this->assertStringContainsString($expected, $output, 'Suggested template files found in order and base template shown as current template.');
 
     // Disable debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
-    $parameters['debug'] = FALSE;
-    $this->twigConfig = $parameters;
-
+    $this->twigConfig['debug'] = FALSE;
     $kernel = $this->container->get('kernel');
     assert($kernel instanceof DrupalKernelInterface);
     $kernel->rebuildContainer();
