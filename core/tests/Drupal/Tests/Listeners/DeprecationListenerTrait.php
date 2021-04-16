@@ -137,10 +137,6 @@ trait DeprecationListenerTrait {
       'assertDirectoryNotIsWritable() is deprecated and will be removed in PHPUnit 10. Refactor your code to use assertDirectoryIsNotWritable() instead.',
       'assertFileNotIsWritable() is deprecated and will be removed in PHPUnit 10. Refactor your code to use assertFileIsNotWritable() instead.',
       'The at() matcher has been deprecated. It will be removed in PHPUnit 10. Please refactor your test to not rely on the order in which methods are invoked.',
-      // Deprecation introduced in Symfony 5.
-      'Since symfony/http-foundation 5.1: Retrieving a non-string value from "Symfony\Component\HttpFoundation\InputBag::get()" is deprecated, and will throw a "Symfony\Component\HttpFoundation\Exception\BadRequestException" exception in Symfony 6.0, use "Symfony\Component\HttpFoundation\InputBag::all($key)" instead.',
-      'Since symfony/http-foundation 5.1: Passing a non-string value as 2nd argument to "Symfony\Component\HttpFoundation\InputBag::get()" is deprecated, pass a string or null instead.',
-      'Since symfony/yaml 5.1: Support for parsing numbers prefixed with 0 as octal numbers. They will be parsed as strings as of 6.0.',
     ];
   }
 
