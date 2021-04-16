@@ -234,12 +234,12 @@ button.toolbar-icon {
 }
 .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle:hover::before,
 .toolbar .toolbar-icon.toolbar-handle:hover::before {
-  background-image: url(../../images/icons/0036B1/chevron-down.svg);
+  background-image: url(../../images/icons/0036b1/chevron-down.svg);
 }
 .toolbar .toolbar-icon.toolbar-handle.open::before,
 .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open::before {
   transform: rotate(180deg);
-  background-image: url(../../images/icons/0036B1/chevron-down.svg);
+  background-image: url(../../images/icons/0036b1/chevron-down.svg);
 }
 .toolbar .toolbar-icon.toolbar-handle.open:hover::before,
 .toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open:hover::before {

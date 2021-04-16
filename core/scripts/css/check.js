@@ -15,7 +15,7 @@ module.exports = (filePath) => {
         return;
       }
       if (code !== data.toString()) {
-        log(chalk.red(`'${filePath}' is not updated. \n FILE CONTENTS \n ${data.toString()} \n COMPARED AGAINST \n ${code}`));
+        log(chalk.red(`'${filePath}' is not updated.`));
         process.exitCode = 1;
       }
     });
