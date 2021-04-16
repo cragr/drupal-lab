@@ -3,6 +3,7 @@
 namespace Drupal\views\Element;
 
 use Drupal\Core\Render\Element\RenderElement;
+use Drupal\views\Exception\InvalidViewException;
 use Drupal\views\Views;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\views\Element;
+namespace Drupal\views\Exception;
 
 /**
  * Exception thrown when an element misses a valid name value.

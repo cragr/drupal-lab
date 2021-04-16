@@ -3,7 +3,7 @@
 namespace Drupal\Tests\views\Kernel\Element;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\views\Element\InvalidViewException;
+use Drupal\views\Exception\InvalidViewException;
 
 /**
  * Tests the view render element.
