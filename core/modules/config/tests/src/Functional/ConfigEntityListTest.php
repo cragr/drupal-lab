@@ -174,9 +174,9 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 3);
 
     // Test the contents of each th cell.
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Label');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Machine name');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Label');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Machine name');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Check the number of table row cells.
     $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td', 3);
@@ -184,8 +184,8 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', 'Default');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[2]', 'dotted.default');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', 'Default');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[2]', 'dotted.default');
     $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[3]//ul');
 
     // Add a new entity using the operations link.

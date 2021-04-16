@@ -572,7 +572,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//input[@value="_none"]');
     // Verify that a test radio button has a "N/A" choice..
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]');
-    $this->assertSession()->elementTextContains('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]', "N/A");
+    $this->assertSession()->elementTextEquals('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]', "N/A");
 
     // Change it to the select widget.
     $display_repository->getFormDisplay('entity_test', 'entity_test')

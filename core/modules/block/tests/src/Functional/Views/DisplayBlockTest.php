@@ -262,7 +262,7 @@ class DisplayBlockTest extends ViewTestBase {
     $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', ['label' => 'test_view_block-block_1:1', 'views_label' => 'Custom title']);
     $this->drupalGet('');
 
-    $this->assertSession()->elementTextContains('xpath', '//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2', 'Custom title');
+    $this->assertSession()->elementTextEquals('xpath', '//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2', 'Custom title');
 
     // Don't override the title anymore.
     $plugin = $block->getPlugin();
@@ -270,7 +270,7 @@ class DisplayBlockTest extends ViewTestBase {
     $block->save();
 
     $this->drupalGet('');
-    $this->assertSession()->elementTextContains('xpath', '//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2', 'test_view_block');
+    $this->assertSession()->elementTextEquals('xpath', '//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2', 'test_view_block');
 
     // Hide the title.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);

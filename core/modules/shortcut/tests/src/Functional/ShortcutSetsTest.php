@@ -71,9 +71,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 3);
 
     // Test the contents of each th cell.
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Name');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Weight');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Name');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Weight');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Look for test shortcuts in the table.
     $weight = count($shortcuts);

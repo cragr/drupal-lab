@@ -54,10 +54,10 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 4);
 
     // Test the contents of each th cell.
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Block description');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Block type');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Updated Sort ascending');
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/thead/tr/th[4]', 'Operations');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Block description');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Block type');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Updated Sort ascending');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[4]', 'Operations');
 
     $label = 'Antelope';
     $new_label = 'Albatross';
@@ -80,7 +80,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertSession()->elementTextContains('xpath', '//div[@class="layout-content"]//table/tbody/tr/td/a', $label);
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr/td/a', $label);
 
     // Edit the entity using the operations link.
     $blocks = $this->container

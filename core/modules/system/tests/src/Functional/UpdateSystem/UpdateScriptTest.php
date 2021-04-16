@@ -420,7 +420,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Make sure there are no pending updates (or uncaught exceptions).
     $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Status message"]', 'No pending updates.');
     // Verify that we warn the admin about this situation.
-    $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module my_already_removed_module has an entry in the system.schema key/value storage, but is missing from your site. More information about this error.');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module my_already_removed_module has an entry in the system.schema key/value storage, but is missing from your site. More information about this error.');
 
     // Try again with another orphaned entry, this time for a test module that
     // does exist in the filesystem.
@@ -432,7 +432,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // There should not be any pending updates.
     $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Status message"]', 'No pending updates.');
     // But verify that we warn the admin about this situation.
-    $this->assertSession()->elementTextContains('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.');
 
     // Finally, try with both kinds of orphans and make sure we get both warnings.
     \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);

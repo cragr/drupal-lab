@@ -136,7 +136,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementTextContains('xpath', "//article[contains(concat(' ', normalize-space(@class), ' '), ' node ')]//div[contains(concat(' ', normalize-space(@class), ' '), 'node__content')]/descendant::p", $node->body->value);
+    $this->assertSession()->elementTextEquals('xpath', "//article[contains(concat(' ', normalize-space(@class), ' '), ' node ')]//div[contains(concat(' ', normalize-space(@class), ' '), 'node__content')]/descendant::p", $node->body->value);
   }
 
 }

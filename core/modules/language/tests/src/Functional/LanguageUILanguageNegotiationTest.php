@@ -464,10 +464,10 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Check that the language switcher active link matches the given browser
     // language.
     $href = Url::fromRoute('<front>')->toString() . $langcode_browser_fallback;
-    $this->assertSession()->elementTextContains('xpath', "//div[@id='block-test-language-block']//a[@class='language-link is-active' and starts-with(@href, '$href')]", $languages[$langcode_browser_fallback]->getName());
+    $this->assertSession()->elementTextEquals('xpath', "//div[@id='block-test-language-block']//a[@class='language-link is-active' and starts-with(@href, '$href')]", $languages[$langcode_browser_fallback]->getName());
 
     // Check that URLs are rewritten using the given browser language.
-    $this->assertSession()->elementTextContains('xpath', "//div[@class='site-name']/a[@rel='home' and @href='$href']", 'Drupal');
+    $this->assertSession()->elementTextEquals('xpath', "//div[@class='site-name']/a[@rel='home' and @href='$href']", 'Drupal');
   }
 
   /**

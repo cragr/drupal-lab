@@ -104,7 +104,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     // Browse to the entity and verify that the attribute is rendered in the
     // field item HTML markup.
     $this->drupalGet('entity_test/' . $entity->id());
-    $this->assertSession()->elementTextContains('xpath', '//div[@data-field-item-attr="foobar"]/p', $test_value);
+    $this->assertSession()->elementTextEquals('xpath', '//div[@data-field-item-attr="foobar"]/p', $test_value);
 
     // Enable the RDF module to ensure that two modules can add attributes to
     // the same field item.
@@ -120,7 +120,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     // Browse to the entity and verify that the attributes from both modules
     // are rendered in the field item HTML markup.
     $this->drupalGet('entity_test/' . $entity->id());
-    $this->assertSession()->elementTextContains('xpath', '//div[@data-field-item-attr="foobar" and @property="schema:text"]/p', $test_value);
+    $this->assertSession()->elementTextEquals('xpath', '//div[@data-field-item-attr="foobar" and @property="schema:text"]/p', $test_value);
   }
 
   /**

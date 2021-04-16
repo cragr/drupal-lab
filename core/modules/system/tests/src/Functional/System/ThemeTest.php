@@ -133,9 +133,9 @@ class ThemeTest extends BrowserTestBase {
         $local_file = PublicStream::basePath() . '/' . $input;
       }
       $xpath = "//div[contains(@class, 'js-form-item-logo-path')]/div[@class='description']/code";
-      $this->assertSession()->elementTextContains('xpath', "{$xpath}[1]", $implicit_public_file);
-      $this->assertSession()->elementTextContains('xpath', "{$xpath}[2]", $explicit_file);
-      $this->assertSession()->elementTextContains('xpath', "{$xpath}[3]", $local_file);
+      $this->assertSession()->elementTextEquals('xpath', "{$xpath}[1]", $implicit_public_file);
+      $this->assertSession()->elementTextEquals('xpath', "{$xpath}[2]", $explicit_file);
+      $this->assertSession()->elementTextEquals('xpath', "{$xpath}[3]", $local_file);
 
       // Verify the actual 'src' attribute of the logo being output in a site
       // branding block.
