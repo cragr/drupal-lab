@@ -13,7 +13,7 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.timestampAsTimeDiff = {
-    attach: (context) => {
+    attach(context) {
       // Fill once a list with all intervals (['year', 'month', ...]).
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(
         Drupal.dateFormatter.intervals,
@@ -28,7 +28,7 @@
         Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
       });
     },
-    detach: (context, settings, trigger) => {
+    detach(context, settings, trigger) {
       if (trigger === 'unload') {
         const elements = once.remove(
           'time-diff',
