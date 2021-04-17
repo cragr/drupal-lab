@@ -55,18 +55,15 @@
     );
 
     const now = Date.now();
+    const diff = Math.round((timestamp - now) / 1000);
     const options = { granularity: timeDiffSettings.granularity };
-    let timeDiff;
-    let format;
-
-    if (timestamp > now) {
-      timeDiff = Drupal.dateFormatter.formatDiff(now, timestamp, options);
-      format = timeDiffSettings.format.future;
-    } else {
-      timeDiff = Drupal.dateFormatter.formatDiff(timestamp, now, options);
-      format = timeDiffSettings.format.past;
-    }
-    $($timeElement).text(Drupal.t(format, { '@interval': timeDiff.formatted }));
+    const timeDiff = Drupal.dateFormatter.formatDiff(diff, options);
+    const format = diff > 0 ? 'future' : 'past';
+    $($timeElement).text(
+      Drupal.t(timeDiffSettings.format[format], {
+        '@interval': timeDiff.formatted,
+      }),
+    );
 
     if (timeDiffSettings.refresh > 0) {
       const refreshInterval = Drupal.timestampAsTimeDiff.refreshInterval(
@@ -178,40 +175,37 @@
   /**
    * Formats a time interval between two timestamps.
    *
-   * @param {number} from
-   *   A UNIX timestamp, defining the from date and time.
-   * @param {number} to
-   *   A UNIX timestamp, defining the to date and time.
+   * @param {number} diff
+   *   A UNIX timestamps difference in seconds.
    * @param {object} [options]
    *   An optional object with additional options.
    * @param {number} [options.granularity=2]
    *   An integer value that signals how many different units to display in the
    *   string. Defaults to 2.
-   * @param {boolean} [options.strict=true]
-   *   A boolean value indicating whether or not the 'from' timestamp can be
-   *   after the 'to' timestamp. If true (default) and 'from' is after to', the
-   *   result string will be "0 seconds". If false and 'from' is after 'to', the
-   *   result string will be the formatted time difference.
+   * @param {boolean} [options.strict=false]
+   *   A boolean value indicating whether or not, a negative diff should be
+   *   rendered as "0 seconds". If the time difference is negative (i.e. the
+   *   timestamp is in the past) and this option is false (default) the result
+   *   string will be the formatted time difference. If the option os true the
+   *   result string will be "0 seconds".
    *
    * @return {timeDiff}
    *   A time difference type object.
    */
-  Drupal.dateFormatter.formatDiff = (from, to, options) => {
+  Drupal.dateFormatter.formatDiff = (diff, options) => {
     // Provide sane defaults.
     options = options || {};
-    options = $.extend({ granularity: 2, strict: true }, options);
+    options = $.extend({ granularity: 2, strict: false }, options);
 
-    if (options.strict && from > to) {
+    if (options.strict && diff < 0) {
       return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
     }
+    diff = Math.abs(diff);
 
     const output = [];
     const value = {};
     let units;
     let { granularity } = options;
-
-    // Compute the difference in seconds.
-    let diff = Math.round(Math.abs(to - from) / 1000);
 
     $.each(Drupal.dateFormatter.intervals, (interval, duration) => {
       units = Math.floor(diff / duration);

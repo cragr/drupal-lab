@@ -30,21 +30,13 @@
     var timestamp = new Date($($timeElement).attr('datetime')).getTime();
     var timeDiffSettings = JSON.parse($($timeElement).attr('data-drupal-time-diff'));
     var now = Date.now();
+    var diff = Math.round((timestamp - now) / 1000);
     var options = {
       granularity: timeDiffSettings.granularity
     };
-    var timeDiff;
-    var format;
-
-    if (timestamp > now) {
-      timeDiff = Drupal.dateFormatter.formatDiff(now, timestamp, options);
-      format = timeDiffSettings.format.future;
-    } else {
-      timeDiff = Drupal.dateFormatter.formatDiff(timestamp, now, options);
-      format = timeDiffSettings.format.past;
-    }
-
-    $($timeElement).text(Drupal.t(format, {
+    var timeDiff = Drupal.dateFormatter.formatDiff(diff, options);
+    var format = diff > 0 ? 'future' : 'past';
+    $($timeElement).text(Drupal.t(timeDiffSettings.format[format], {
       '@interval': timeDiff.formatted
     }));
 
@@ -78,14 +70,14 @@
     return refresh;
   };
 
-  Drupal.dateFormatter.formatDiff = function (from, to, options) {
+  Drupal.dateFormatter.formatDiff = function (diff, options) {
     options = options || {};
     options = $.extend({
       granularity: 2,
-      strict: true
+      strict: false
     }, options);
 
-    if (options.strict && from > to) {
+    if (options.strict && diff < 0) {
       return {
         formatted: Drupal.t('0 seconds'),
         value: {
@@ -94,12 +86,12 @@
       };
     }
 
+    diff = Math.abs(diff);
     var output = [];
     var value = {};
     var units;
     var _options = options,
         granularity = _options.granularity;
-    var diff = Math.round(Math.abs(to - from) / 1000);
     $.each(Drupal.dateFormatter.intervals, function (interval, duration) {
       units = Math.floor(diff / duration);
 
