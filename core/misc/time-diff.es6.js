@@ -4,8 +4,8 @@
  */
 
 (($, Drupal) => {
-  Drupal.timestampAsTimeDiff = Drupal.timestampAsTimeDiff || {};
-  Drupal.dateFormatter = Drupal.dateFormatter || {};
+  Drupal.timestampAsTimeDiff = {};
+  Drupal.dateFormatter = {};
 
   /**
    * Fills all .js-time-diff time elements with a refreshing time difference.

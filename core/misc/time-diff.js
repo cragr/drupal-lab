@@ -6,8 +6,8 @@
 **/
 
 (function ($, Drupal) {
-  Drupal.timestampAsTimeDiff = Drupal.timestampAsTimeDiff || {};
-  Drupal.dateFormatter = Drupal.dateFormatter || {};
+  Drupal.timestampAsTimeDiff = {};
+  Drupal.dateFormatter = {};
   Drupal.behaviors.timestampAsTimeDiff = {
     attach: function attach() {
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
