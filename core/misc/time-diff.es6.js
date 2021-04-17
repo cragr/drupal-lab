@@ -195,7 +195,7 @@
   Drupal.dateFormatter.formatDiff = (diff, options) => {
     // Provide sane defaults.
     options = options || {};
-    options = $.extend({ granularity: 2, strict: false }, options);
+    options = { granularity: 2, strict: false, ...options };
 
     if (options.strict && diff < 0) {
       return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
