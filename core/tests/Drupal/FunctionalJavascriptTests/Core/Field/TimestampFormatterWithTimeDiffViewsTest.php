@@ -19,6 +19,11 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
   protected static $modules = ['entity_test', 'views_test_formatter'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Views used in test.
    *
    * @var string[]

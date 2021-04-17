@@ -23,7 +23,12 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     FieldStorageConfig::create([
@@ -100,10 +105,11 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
 
     // Test the UI.
     $time_element = $this->getSession()->getPage()->find('css', 'time');
+
     $time_diff = $time_element->getText();
     list($seconds_value,) = explode(' ', $time_diff, 2);
 
-    // Wait at least 1 second + 1 milisecond to make sure that the last time
+    // Wait at least 1 second + 1 millisecond to make sure that the last time
     // difference value has been refreshed.
     $this->assertJsCondition("jQuery('time').text() != '$time_diff'", 1001);
     $time_diff = $time_element->getText();
