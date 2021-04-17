@@ -85,14 +85,15 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     foreach ($this->getFormatDiffTestCases() as $case) {
       $from = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['from'])->getTimestamp() * 1000;
       $to = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['to'])->getTimestamp() * 1000;
+      $diff = ($to - $from) / 1000;
       $options = json_encode($case['options']);
       $expected_value = json_encode($case['expected_value']);
       $expected_formatted_value = $case['expected_formatted_value'];
 
       // Test the returned value.
-      $this->assertJsCondition("JSON.stringify(Drupal.dateFormatter.formatDiff($from, $to, $options).value) === '$expected_value'");
+      $this->assertJsCondition("JSON.stringify(Drupal.dateFormatter.formatDiff($diff, $options).value) === '$expected_value'");
       // Test the returned formatted value.
-      $this->assertJsCondition("Drupal.dateFormatter.formatDiff($from, $to, $options).formatted === '$expected_formatted_value'");
+      $this->assertJsCondition("Drupal.dateFormatter.formatDiff($diff, $options).formatted === '$expected_formatted_value'");
     }
 
     // Unit testing Drupal.timestampAsTimeDiff.refreshInterval(). Not using
@@ -138,6 +139,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
         'to' => '2010-02-16T14:00:00+00:00',
         'options' => [
           'granularity' => 2,
+          'strict' => TRUE,
         ],
         'expected_value' => [
           'day' => 5,
@@ -150,6 +152,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
         'to' => '2010-02-11T10:00:00+00:00',
         'options' => [
           'granularity' => 2,
+          'strict' => TRUE,
         ],
         'expected_value' => [
           'second' => 0,
@@ -173,7 +176,6 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
         'to' => '2010-02-11T10:00:00+00:00',
         'options' => [
           'granularity' => 2,
-          'strict' => FALSE,
         ],
         'expected_value' => [
           'day' => 5,
@@ -186,6 +188,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
         'to' => '2011-06-24T11:37:02+00:00',
         'options' => [
           'granularity' => 7,
+          'strict' => TRUE,
         ],
         'expected_value' => [
           'year' => 1,
@@ -203,6 +206,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
         'to' => '2010-02-02T11:30:46+00:00',
         'options' => [
           'granularity' => 3,
+          'strict' => TRUE,
         ],
         'expected_value' => [
           'hour' => 1,
@@ -214,6 +218,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
         'to' => '2010-02-02T11:30:45+00:00',
         'options' => [
           'granularity' => 2,
+          'strict' => TRUE,
         ],
         'expected_value' => [
           'hour' => 1,

@@ -23,8 +23,8 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-8.timestamp-formatter-settings-2921810.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.timestamp-formatter-settings-2921810.php',
     ];
   }
 
