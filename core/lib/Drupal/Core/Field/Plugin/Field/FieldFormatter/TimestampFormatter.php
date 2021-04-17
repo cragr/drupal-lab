@@ -289,7 +289,7 @@ class TimestampFormatter extends FormatterBase {
         ],
       ];
       if ($time_diff['enabled']) {
-        $elements[$delta]['#attributes']['class'][] = 'js-time-diff';
+        $elements[$delta]['#attributes']['class'][] = 'time-diff';
         $settings = [
           'format' => [
             'future' => $time_diff['future_format'],

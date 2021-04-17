@@ -11,14 +11,14 @@
   Drupal.behaviors.timestampAsTimeDiff = {
     attach: function attach(context) {
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
-      var elements = once('time-diff', 'time.js-time-diff', context);
+      var elements = once('time-diff', 'time[data-drupal-time-diff]', context);
       $(elements).each(function (index, $timeElement) {
         Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
       });
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        var elements = once.remove('time-diff', 'time.js-time-diff', context);
+        var elements = once.remove('time-diff', 'time[data-drupal-time-diff]', context);
         $(elements).each(function (index, $timeElement) {
           clearInterval($timeElement.timer);
         });

@@ -8,7 +8,7 @@
   Drupal.dateFormatter = {};
 
   /**
-   * Fills all .js-time-diff time elements with a refreshing time difference.
+   * Fills all time[data-drupal-time-diff] elements with a refreshing time diff.
    *
    * @type {Drupal~behavior}
    */
@@ -19,15 +19,22 @@
         Drupal.dateFormatter.intervals,
       );
       // Replace each <time> element text with a time difference representation.
-      const elements = once('time-diff', 'time.js-time-diff', context);
+      const elements = once(
+        'time-diff',
+        'time[data-drupal-time-diff]',
+        context,
+      );
       $(elements).each((index, $timeElement) => {
         Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
       });
     },
     detach: (context, settings, trigger) => {
       if (trigger === 'unload') {
-        // const elements = $(context).find('time.js-time-diff');
-        const elements = once.remove('time-diff', 'time.js-time-diff', context);
+        const elements = once.remove(
+          'time-diff',
+          'time[data-drupal-time-diff]',
+          context,
+        );
         $(elements).each((index, $timeElement) => {
           clearInterval($timeElement.timer);
         });
