@@ -83,8 +83,8 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     // Unit testing Drupal.dateFormatter.formatDiff(). Not using @dataProvider
     // mechanism here in order to avoid installing the site for each case.
     foreach ($this->getFormatDiffTestCases() as $case) {
-      $from = \DateTime::createFromFormat(\DateTime::RFC3339, $case['from'])->getTimestamp() * 1000;
-      $to = \DateTime::createFromFormat(\DateTime::RFC3339, $case['to'])->getTimestamp() * 1000;
+      $from = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['from'])->getTimestamp() * 1000;
+      $to = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['to'])->getTimestamp() * 1000;
       $options = json_encode($case['options']);
       $expected_value = json_encode($case['expected_value']);
       $expected_formatted_value = $case['expected_formatted_value'];

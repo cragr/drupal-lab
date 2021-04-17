@@ -276,7 +276,7 @@ class TimestampFormatter extends FormatterBase {
         '#attributes' => [
           // The representation of the date/time as RFC3339 "date-time".
           // @see https://www.ietf.org/rfc/rfc3339.txt
-          'datetime' => $this->dateFormatter->format($item->value, 'custom', \DateTime::RFC3339, $timezone),
+          'datetime' => $this->dateFormatter->format($item->value, 'custom', \DateTimeInterface::RFC3339, $timezone),
           // Show a tooltip on mouse hover as title. When the time is displayed
           // as time difference, it helps the user to read the exact date.
           'title' => $this->dateFormatter->format($item->value, $tooltip['date_format'], $tooltip['custom_date_format'], $timezone, $langcode),
