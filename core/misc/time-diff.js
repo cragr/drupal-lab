@@ -8,11 +8,9 @@
 (function ($, Drupal) {
   Drupal.timestampAsTimeDiff = Drupal.timestampAsTimeDiff || {};
   Drupal.dateFormatter = Drupal.dateFormatter || {};
-
   Drupal.behaviors.timestampAsTimeDiff = {
     attach: function attach() {
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
-
       $('time.js-time-diff').once('time-diff').each(function (index, $timeElement) {
         Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
       });
@@ -31,11 +29,12 @@
   Drupal.timestampAsTimeDiff.showTimeDiff = function ($timeElement) {
     var timestamp = new Date($($timeElement).attr('datetime')).getTime();
     var timeDiffSettings = JSON.parse($($timeElement).attr('data-drupal-time-diff'));
-
     var now = Date.now();
-    var options = { granularity: timeDiffSettings.granularity };
-    var timeDiff = void 0;
-    var format = void 0;
+    var options = {
+      granularity: timeDiffSettings.granularity
+    };
+    var timeDiff;
+    var format;
 
     if (timestamp > now) {
       timeDiff = Drupal.dateFormatter.formatDiff(now, timestamp, options);
@@ -44,7 +43,10 @@
       timeDiff = Drupal.dateFormatter.formatDiff(timestamp, now, options);
       format = timeDiffSettings.format.past;
     }
-    $($timeElement).text(Drupal.t(format, { '@interval': timeDiff.formatted }));
+
+    $($timeElement).text(Drupal.t(format, {
+      '@interval': timeDiff.formatted
+    }));
 
     if (timeDiffSettings.refresh > 0) {
       var refreshInterval = Drupal.timestampAsTimeDiff.refreshInterval(timeDiff.value, timeDiffSettings.refresh, timeDiffSettings.granularity);
@@ -72,54 +74,70 @@
       var nextInterval = Drupal.timestampAsTimeDiff.allIntervals[lastIntervalIndex + 1];
       refresh = Drupal.dateFormatter.intervals[nextInterval];
     }
+
     return refresh;
   };
 
   Drupal.dateFormatter.formatDiff = function (from, to, options) {
     options = options || {};
-    options = $.extend({ granularity: 2, strict: true }, options);
+    options = $.extend({
+      granularity: 2,
+      strict: true
+    }, options);
 
     if (options.strict && from > to) {
-      return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
+      return {
+        formatted: Drupal.t('0 seconds'),
+        value: {
+          second: 0
+        }
+      };
     }
 
     var output = [];
     var value = {};
-    var units = void 0;
+    var units;
     var _options = options,
         granularity = _options.granularity;
-
     var diff = Math.round(Math.abs(to - from) / 1000);
-
     $.each(Drupal.dateFormatter.intervals, function (interval, duration) {
       units = Math.floor(diff / duration);
+
       if (units > 0) {
         diff %= units * duration;
+
         switch (interval) {
           case 'year':
             output.push(Drupal.formatPlural(units, '1 year', '@count years'));
             break;
+
           case 'month':
             output.push(Drupal.formatPlural(units, '1 month', '@count months'));
             break;
+
           case 'week':
             output.push(Drupal.formatPlural(units, '1 week', '@count weeks'));
             break;
+
           case 'day':
             output.push(Drupal.formatPlural(units, '1 day', '@count days'));
             break;
+
           case 'hour':
             output.push(Drupal.formatPlural(units, '1 hour', '@count hours'));
             break;
+
           case 'minute':
             output.push(Drupal.formatPlural(units, '1 minute', '@count minutes'));
             break;
+
           default:
             output.push(Drupal.formatPlural(units, '1 second', '@count seconds'));
         }
-        value[interval] = units;
 
+        value[interval] = units;
         granularity -= 1;
+
         if (granularity <= 0) {
           return false;
         }
@@ -129,9 +147,18 @@
     });
 
     if (output.length === 0) {
-      return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
+      return {
+        formatted: Drupal.t('0 seconds'),
+        value: {
+          second: 0
+        }
+      };
     }
-    return { formatted: output.join(' '), value: value };
+
+    return {
+      formatted: output.join(' '),
+      value: value
+    };
   };
 
   Drupal.dateFormatter.intervals = {

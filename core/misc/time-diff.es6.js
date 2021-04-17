@@ -42,7 +42,7 @@
    * @param {object} $timeElement
    *   The time element as jQuery representation.
    */
-  Drupal.timestampAsTimeDiff.showTimeDiff = $timeElement => {
+  Drupal.timestampAsTimeDiff.showTimeDiff = ($timeElement) => {
     const timestamp = new Date($($timeElement).attr('datetime')).getTime();
     const timeDiffSettings = JSON.parse(
       $($timeElement).attr('data-drupal-time-diff'),
