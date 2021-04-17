@@ -6,12 +6,13 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 
 /**
  * Implements hook_removed_post_updates().
@@ -188,4 +189,31 @@ function system_post_update_remove_key_value_expire_all_index() {
   if ($schema->tableExists('key_value_expire')) {
     $schema->dropIndex('key_value_expire', 'all');
   }
+}
+
+/**
+ * Update timestamp formatter settings.
+ */
+function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
+  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $entity_view_display) use ($field_formatter_manager): bool {
+    foreach ($entity_view_display->getComponents() as $component) {
+      if (empty($component['type'])) {
+        continue;
+      }
+
+      $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
+      // Check also potential plugins that extends TimestampFormatter.
+      if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+        continue;
+      }
+
+      if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  });
 }
