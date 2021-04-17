@@ -13,23 +13,22 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.timestampAsTimeDiff = {
-    attach: () => {
+    attach: (context) => {
       // Fill once a list with all intervals (['year', 'month', ...]).
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(
         Drupal.dateFormatter.intervals,
       );
       // Replace each <time> element text with a time difference representation.
-      $('time.js-time-diff')
-        .once('time-diff')
-        .each((index, $timeElement) => {
-          Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
-        });
+      const elements = once('time-diff', 'time.js-time-diff', context);
+      $(elements).each((index, $timeElement) => {
+        Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
+      });
     },
     detach: (context, settings, trigger) => {
       if (trigger === 'unload') {
-        const elements = $(context).find('time.js-time-diff');
-        elements.removeOnce('time-diff');
-        elements.each((index, $timeElement) => {
+        // const elements = $(context).find('time.js-time-diff');
+        const elements = once.remove('time-diff', 'time.js-time-diff', context);
+        $(elements).each((index, $timeElement) => {
           clearInterval($timeElement.timer);
         });
       }

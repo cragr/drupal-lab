@@ -9,17 +9,17 @@
   Drupal.timestampAsTimeDiff = {};
   Drupal.dateFormatter = {};
   Drupal.behaviors.timestampAsTimeDiff = {
-    attach: function attach() {
+    attach: function attach(context) {
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
-      $('time.js-time-diff').once('time-diff').each(function (index, $timeElement) {
+      var elements = once('time-diff', 'time.js-time-diff', context);
+      $(elements).each(function (index, $timeElement) {
         Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
       });
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        var elements = $(context).find('time.js-time-diff');
-        elements.removeOnce('time-diff');
-        elements.each(function (index, $timeElement) {
+        var elements = once.remove('time-diff', 'time.js-time-diff', context);
+        $(elements).each(function (index, $timeElement) {
           clearInterval($timeElement.timer);
         });
       }
