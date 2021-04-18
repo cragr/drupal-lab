@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains database additions to drupal-8.4.0.bare.standard.php.gz for testing
+ * Contains database additions to drupal-9.0.0.bare.standard.php.gz for testing
  * the upgrade path of https://www.drupal.org/project/drupal/issues/2921810.
  */
 
