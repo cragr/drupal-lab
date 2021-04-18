@@ -16,7 +16,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   Drupal.dateFormatter = {};
   Drupal.behaviors.timestampAsTimeDiff = {
     attach: function attach(context) {
-      Drupal.timestampAsTimeDiff.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
       once('time-diff', 'time[data-drupal-time-diff]', context).forEach(function (timeElement) {
         Drupal.timestampAsTimeDiff.showTimeDiff(timeElement);
       });
@@ -57,7 +56,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     if (lastUnit !== 'second') {
       if (unitsCount === granularity) {
-        Drupal.timestampAsTimeDiff.allIntervals.every(function (interval) {
+        Drupal.dateFormatter.getAllIntervals().every(function (interval) {
           var duration = Drupal.dateFormatter.intervals[interval];
 
           if (interval === lastUnit) {
@@ -70,8 +69,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return refresh;
       }
 
-      var lastIntervalIndex = Drupal.timestampAsTimeDiff.allIntervals.indexOf(lastUnit);
-      var nextInterval = Drupal.timestampAsTimeDiff.allIntervals[lastIntervalIndex + 1];
+      var lastIntervalIndex = Drupal.dateFormatter.getAllIntervals().indexOf(lastUnit);
+      var nextInterval = Drupal.dateFormatter.getAllIntervals()[lastIntervalIndex + 1];
       refresh = Drupal.dateFormatter.intervals[nextInterval];
     }
 
@@ -100,7 +99,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var units;
     var _options = options,
         granularity = _options.granularity;
-    Drupal.timestampAsTimeDiff.allIntervals.every(function (interval) {
+    Drupal.dateFormatter.getAllIntervals().every(function (interval) {
       var duration = Drupal.dateFormatter.intervals[interval];
       units = Math.floor(diff / duration);
 
@@ -162,6 +161,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       formatted: output.join(' '),
       value: value
     };
+  };
+
+  Drupal.dateFormatter.getAllIntervals = function () {
+    if (typeof Drupal.dateFormatter.allIntervals === 'undefined') {
+      Drupal.dateFormatter.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
+    }
+
+    return Drupal.dateFormatter.allIntervals;
   };
 
   Drupal.dateFormatter.intervals = {

@@ -14,10 +14,6 @@
    */
   Drupal.behaviors.timestampAsTimeDiff = {
     attach(context) {
-      // Fill once a list with all intervals (['year', 'month', ...]).
-      Drupal.timestampAsTimeDiff.allIntervals = Object.keys(
-        Drupal.dateFormatter.intervals,
-      );
       // Replace each <time> element text with a time difference representation.
       once('time-diff', 'time[data-drupal-time-diff]', context).forEach(
         (timeElement) => {
@@ -130,7 +126,7 @@
       // '1 hour 32 minutes', do not refresh every 10 seconds but every one
       // minute (60 seconds).
       if (unitsCount === granularity) {
-        Drupal.timestampAsTimeDiff.allIntervals.every((interval) => {
+        Drupal.dateFormatter.getAllIntervals().every((interval) => {
           const duration = Drupal.dateFormatter.intervals[interval];
           if (interval === lastUnit) {
             refresh = refresh < duration ? duration : refresh;
@@ -148,11 +144,12 @@
       // difference will be '1 hour' (because minutes are 0, therefore are not
       // shown) but we want the next refresh to occur, not in one hour, but in
       // one minute.
-      const lastIntervalIndex = Drupal.timestampAsTimeDiff.allIntervals.indexOf(
-        lastUnit,
-      );
-      const nextInterval =
-        Drupal.timestampAsTimeDiff.allIntervals[lastIntervalIndex + 1];
+      const lastIntervalIndex = Drupal.dateFormatter
+        .getAllIntervals()
+        .indexOf(lastUnit);
+      const nextInterval = Drupal.dateFormatter.getAllIntervals()[
+        lastIntervalIndex + 1
+      ];
       refresh = Drupal.dateFormatter.intervals[nextInterval];
     }
     return refresh;
@@ -202,7 +199,7 @@
     let units;
     let { granularity } = options;
 
-    Drupal.timestampAsTimeDiff.allIntervals.every((interval) => {
+    Drupal.dateFormatter.getAllIntervals().every((interval) => {
       const duration = Drupal.dateFormatter.intervals[interval];
       units = Math.floor(diff / duration);
       if (units > 0) {
@@ -252,6 +249,21 @@
       return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
     }
     return { formatted: output.join(' '), value };
+  };
+
+  /**
+   * Returns and statically caches all intervals, without their durations.
+   *
+   * @return {Array}
+   *   Returns an array containing all intervals.
+   */
+  Drupal.dateFormatter.getAllIntervals = () => {
+    if (typeof Drupal.dateFormatter.allIntervals === 'undefined') {
+      Drupal.dateFormatter.allIntervals = Object.keys(
+        Drupal.dateFormatter.intervals,
+      );
+    }
+    return Drupal.dateFormatter.allIntervals;
   };
 
   /**
