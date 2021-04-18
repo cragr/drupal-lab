@@ -1332,7 +1332,7 @@ function system_entity_view_display_presave(EntityViewDisplayInterface $entity_v
     }
 
     if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
-      @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:8.9.0 and will be mandatory in Drupal 10.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
+      @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:9.2.0 and will be mandatory in Drupal 10.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
       $entity_view_display->setComponent($name, $component);
     }
   }
