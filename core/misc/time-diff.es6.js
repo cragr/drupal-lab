@@ -3,7 +3,7 @@
  * Dynamic time difference formatting.
  */
 
-(($, Drupal) => {
+((Drupal) => {
   Drupal.timestampAsTimeDiff = {};
   Drupal.dateFormatter = {};
 
@@ -19,25 +19,19 @@
         Drupal.dateFormatter.intervals,
       );
       // Replace each <time> element text with a time difference representation.
-      const elements = once(
-        'time-diff',
-        'time[data-drupal-time-diff]',
-        context,
+      once('time-diff', 'time[data-drupal-time-diff]', context).forEach(
+        (timeElement) => {
+          Drupal.timestampAsTimeDiff.showTimeDiff(timeElement);
+        },
       );
-      $(elements).each((index, $timeElement) => {
-        Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
-      });
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const elements = once.remove(
-          'time-diff',
-          'time[data-drupal-time-diff]',
-          context,
-        );
-        $(elements).each((index, $timeElement) => {
-          clearInterval($timeElement.timer);
-        });
+        once
+          .remove('time-diff', 'time[data-drupal-time-diff]', context)
+          .forEach((timeElement) => {
+            clearInterval(timeElement.timer);
+          });
       }
     },
   };
@@ -45,13 +39,14 @@
   /**
    * Fills a HTML5 time element text with a computed time difference string.
    *
-   * @param {object} $timeElement
-   *   The time element as jQuery representation.
+   * @param {Element} timeElement
+   *   The time DOM element.
    */
-  Drupal.timestampAsTimeDiff.showTimeDiff = ($timeElement) => {
-    const timestamp = new Date($($timeElement).attr('datetime')).getTime();
+  Drupal.timestampAsTimeDiff.showTimeDiff = (timeElement) => {
+    // const timestamp = new Date($($timeElement).attr('datetime')).getTime();
+    const timestamp = new Date(timeElement.getAttribute('datetime')).getTime();
     const timeDiffSettings = JSON.parse(
-      $($timeElement).attr('data-drupal-time-diff'),
+      timeElement.getAttribute('data-drupal-time-diff'),
     );
 
     const now = Date.now();
@@ -59,11 +54,9 @@
     const options = { granularity: timeDiffSettings.granularity };
     const timeDiff = Drupal.dateFormatter.formatDiff(diff, options);
     const format = diff > 0 ? 'future' : 'past';
-    $($timeElement).text(
-      Drupal.t(timeDiffSettings.format[format], {
-        '@interval': timeDiff.formatted,
-      }),
-    );
+    timeElement.textContent = Drupal.t(timeDiffSettings.format[format], {
+      '@interval': timeDiff.formatted,
+    });
 
     if (timeDiffSettings.refresh > 0) {
       const refreshInterval = Drupal.timestampAsTimeDiff.refreshInterval(
@@ -71,10 +64,10 @@
         timeDiffSettings.refresh,
         timeDiffSettings.granularity,
       );
-      $timeElement.timer = setTimeout(
+      timeElement.timer = setTimeout(
         Drupal.timestampAsTimeDiff.showTimeDiff,
         refreshInterval * 1000,
-        $timeElement,
+        timeElement,
       );
     }
   };
@@ -137,11 +130,13 @@
       // '1 hour 32 minutes', do not refresh every 10 seconds but every one
       // minute (60 seconds).
       if (unitsCount === granularity) {
-        $.each(Drupal.dateFormatter.intervals, (interval, duration) => {
+        Drupal.timestampAsTimeDiff.allIntervals.every((interval) => {
+          const duration = Drupal.dateFormatter.intervals[interval];
           if (interval === lastUnit) {
             refresh = refresh < duration ? duration : refresh;
             return false;
           }
+          return true;
         });
         return refresh;
       }
@@ -186,7 +181,7 @@
    *   A boolean value indicating whether or not, a negative diff should be
    *   rendered as "0 seconds". If the time difference is negative (i.e. the
    *   timestamp is in the past) and this option is false (default) the result
-   *   string will be the formatted time difference. If the option os true the
+   *   string will be the formatted time difference. If the option is true the
    *   result string will be "0 seconds".
    *
    * @return {timeDiff}
@@ -207,7 +202,8 @@
     let units;
     let { granularity } = options;
 
-    $.each(Drupal.dateFormatter.intervals, (interval, duration) => {
+    Drupal.timestampAsTimeDiff.allIntervals.every((interval) => {
+      const duration = Drupal.dateFormatter.intervals[interval];
       units = Math.floor(diff / duration);
       if (units > 0) {
         diff %= units * duration;
@@ -249,6 +245,7 @@
         // to avoid skipping levels and getting output like "1 year 1 second".
         return false;
       }
+      return true;
     });
 
     if (output.length === 0) {
@@ -283,4 +280,4 @@
     minute: 60,
     second: 1,
   };
-})(jQuery, Drupal);
+})(Drupal);

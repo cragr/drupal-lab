@@ -831,6 +831,5 @@ drupal.time-diff:
     misc/time-diff.js:
       defer: true
   dependencies:
-    - core/jquery
     - core/drupal
     - core/once

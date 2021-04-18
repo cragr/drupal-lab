@@ -11,30 +11,28 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-(function ($, Drupal) {
+(function (Drupal) {
   Drupal.timestampAsTimeDiff = {};
   Drupal.dateFormatter = {};
   Drupal.behaviors.timestampAsTimeDiff = {
     attach: function attach(context) {
       Drupal.timestampAsTimeDiff.allIntervals = Object.keys(Drupal.dateFormatter.intervals);
-      var elements = once('time-diff', 'time[data-drupal-time-diff]', context);
-      $(elements).each(function (index, $timeElement) {
-        Drupal.timestampAsTimeDiff.showTimeDiff($timeElement);
+      once('time-diff', 'time[data-drupal-time-diff]', context).forEach(function (timeElement) {
+        Drupal.timestampAsTimeDiff.showTimeDiff(timeElement);
       });
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        var elements = once.remove('time-diff', 'time[data-drupal-time-diff]', context);
-        $(elements).each(function (index, $timeElement) {
-          clearInterval($timeElement.timer);
+        once.remove('time-diff', 'time[data-drupal-time-diff]', context).forEach(function (timeElement) {
+          clearInterval(timeElement.timer);
         });
       }
     }
   };
 
-  Drupal.timestampAsTimeDiff.showTimeDiff = function ($timeElement) {
-    var timestamp = new Date($($timeElement).attr('datetime')).getTime();
-    var timeDiffSettings = JSON.parse($($timeElement).attr('data-drupal-time-diff'));
+  Drupal.timestampAsTimeDiff.showTimeDiff = function (timeElement) {
+    var timestamp = new Date(timeElement.getAttribute('datetime')).getTime();
+    var timeDiffSettings = JSON.parse(timeElement.getAttribute('data-drupal-time-diff'));
     var now = Date.now();
     var diff = Math.round((timestamp - now) / 1000);
     var options = {
@@ -42,13 +40,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
     var timeDiff = Drupal.dateFormatter.formatDiff(diff, options);
     var format = diff > 0 ? 'future' : 'past';
-    $($timeElement).text(Drupal.t(timeDiffSettings.format[format], {
+    timeElement.textContent = Drupal.t(timeDiffSettings.format[format], {
       '@interval': timeDiff.formatted
-    }));
+    });
 
     if (timeDiffSettings.refresh > 0) {
       var refreshInterval = Drupal.timestampAsTimeDiff.refreshInterval(timeDiff.value, timeDiffSettings.refresh, timeDiffSettings.granularity);
-      $timeElement.timer = setTimeout(Drupal.timestampAsTimeDiff.showTimeDiff, refreshInterval * 1000, $timeElement);
+      timeElement.timer = setTimeout(Drupal.timestampAsTimeDiff.showTimeDiff, refreshInterval * 1000, timeElement);
     }
   };
 
@@ -59,11 +57,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     if (lastUnit !== 'second') {
       if (unitsCount === granularity) {
-        $.each(Drupal.dateFormatter.intervals, function (interval, duration) {
+        Drupal.timestampAsTimeDiff.allIntervals.every(function (interval) {
+          var duration = Drupal.dateFormatter.intervals[interval];
+
           if (interval === lastUnit) {
             refresh = refresh < duration ? duration : refresh;
             return false;
           }
+
+          return true;
         });
         return refresh;
       }
@@ -98,7 +100,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var units;
     var _options = options,
         granularity = _options.granularity;
-    $.each(Drupal.dateFormatter.intervals, function (interval, duration) {
+    Drupal.timestampAsTimeDiff.allIntervals.every(function (interval) {
+      var duration = Drupal.dateFormatter.intervals[interval];
       units = Math.floor(diff / duration);
 
       if (units > 0) {
@@ -142,6 +145,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else if (output.length > 0) {
         return false;
       }
+
+      return true;
     });
 
     if (output.length === 0) {
@@ -168,4 +173,4 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     minute: 60,
     second: 1
   };
-})(jQuery, Drupal);
+})(Drupal);
