@@ -3,6 +3,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -316,7 +317,7 @@ class TimestampFormatter extends FormatterBase {
    * @return array[]
    *   The #states array.
    */
-  protected function buildStates(array $path, array $conditions) {
+  protected function buildStates(array $path, array $conditions): array {
     $path = '[' . implode('][', $path) . ']';
     return [
       'visible' => [
@@ -330,10 +331,10 @@ class TimestampFormatter extends FormatterBase {
   /**
    * Returns the refresh interval options for the time difference display.
    *
-   * @return array
+   * @return \Drupal\Component\Render\MarkupInterface[]
    *   A list of refresh time intervals.
    */
-  protected function getRefreshIntervals() {
+  protected function getRefreshIntervals(): array {
     return [
       0 => $this->t('No refresh'),
       1 => $this->formatPlural(1, '1 second', '@count seconds'),

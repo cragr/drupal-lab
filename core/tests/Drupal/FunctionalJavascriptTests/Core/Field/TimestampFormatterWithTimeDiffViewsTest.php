@@ -33,7 +33,7 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
   /**
    * Tests the timestamp formatter used with time difference setting in views.
    */
-  public function testTimestampFormatterWithTimeDiff() {
+  public function testTimestampFormatterWithTimeDiff(): void {
     ViewTestData::createTestViews(self::class, ['views_test_formatter']);
 
     $data = $this->getRowData();
@@ -68,10 +68,10 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
   /**
    * Provides data for view rows.
    *
-   * @return array
+   * @return array[]
    *   A list of row data.
    */
-  protected function getRowData() {
+  protected function getRowData(): array {
     $now = \Drupal::time()->getRequestTime();
     return [
       // One year ago.

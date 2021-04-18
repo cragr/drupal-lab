@@ -70,7 +70,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   /**
    * Tests the 'timestamp' formatter when is used with time difference setting.
    */
-  public function testTimestampFormatterWithTimeDiff() {
+  public function testTimestampFormatterWithTimeDiff(): void {
     $entity = EntityTest::create([
       'type' => 'entity_test',
       'name' => $this->randomString(),
@@ -108,31 +108,31 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $time_element = $this->getSession()->getPage()->find('css', 'time');
 
     $time_diff = $time_element->getText();
-    list($seconds_value,) = explode(' ', $time_diff, 2);
+    [$seconds_value,] = explode(' ', $time_diff, 2);
 
     // Wait at least 1 second + 1 millisecond to make sure that the last time
     // difference value has been refreshed.
     $this->assertJsCondition("document.getElementsByTagName('time')[0].textContent != '$time_diff'", 1001);
     $time_diff = $time_element->getText();
-    list($new_seconds_value,) = explode(' ', $time_diff, 2);
+    [$new_seconds_value,] = explode(' ', $time_diff, 2);
     $this->assertGreaterThan($seconds_value, $new_seconds_value);
 
     // Once again.
     $this->assertJsCondition("document.getElementsByTagName('time')[0].textContent != '$time_diff'", 1001);
     $time_diff = $time_element->getText();
     $seconds_value = $new_seconds_value;
-    list($new_seconds_value,) = explode(' ', $time_diff, 2);
+    [$new_seconds_value,] = explode(' ', $time_diff, 2);
     $this->assertGreaterThan($seconds_value, $new_seconds_value);
   }
 
   /**
    * Provides test cases for unit testing Drupal.dateFormatter.formatDiff().
    *
-   * @return array
+   * @return array[]
    *   A list of of test cases, each representing parameters to be passed to the
-   *   javascript function.
+   *   JavaScript function.
    */
-  protected function getFormatDiffTestCases() {
+  protected function getFormatDiffTestCases(): array {
     return [
       'normal, granularity: 2' => [
         'from' => '2010-02-11T10:00:00+00:00',
@@ -231,11 +231,11 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   /**
    * Provides test cases for unit testing Drupal.timestampAsTimeDiff.timeout().
    *
-   * @return array
+   * @return array[]
    *   A list  of of test cases, each representing parameters to be passed to the
    *   javascript function.
    */
-  protected function getTimeoutTestCases() {
+  protected function getTimeoutTestCases(): array {
     return [
       'passed timeout is not altered' => [
         'time_diff' => [

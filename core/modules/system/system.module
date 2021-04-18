@@ -1316,7 +1316,7 @@ function system_theme_registry_alter(array &$theme_registry) {
  *
  * @todo Remove this BC layer in drupal:10.0.0.
  */
-function system_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display) {
+function system_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
   /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
   $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
 

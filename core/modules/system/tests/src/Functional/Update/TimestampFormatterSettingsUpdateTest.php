@@ -21,7 +21,7 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.timestamp-formatter-settings-2921810.php',
@@ -33,7 +33,7 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
    *
    * @see system_post_update_timestamp_formatter()
    */
-  public function testPostUpdateTimestampFormatter() {
+  public function testPostUpdateTimestampFormatter(): void {
     $config_factory = \Drupal::configFactory();
     $name = 'core.entity_view_display.node.page.default';
     $trail = 'content.field_foo.settings';
