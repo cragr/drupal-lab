@@ -164,8 +164,7 @@ class TimestampFormatter extends FormatterBase {
     $form['time_diff']['#tree'] = TRUE;
     $form['time_diff']['enabled'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t("Display as a time difference"),
-      '#description' => $this->t("Show the difference in time between the timestamp and the current time, e.g. '6 months ago'."),
+      '#title' => $this->t("Display as a time difference (e.g. '6 months ago')"),
       '#default_value' => $time_diff['enabled'],
     ];
 
