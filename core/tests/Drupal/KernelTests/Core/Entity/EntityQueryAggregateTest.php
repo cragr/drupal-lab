@@ -169,6 +169,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
 
     // Apply aggregation and a condition which matches.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
+      ->accessCheck(FALSE)
       ->aggregate('id', 'count')
       ->groupBy('id')
       ->conditionAggregate('id', 'COUNT', 6)
