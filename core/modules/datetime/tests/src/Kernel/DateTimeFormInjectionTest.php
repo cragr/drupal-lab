@@ -119,7 +119,7 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface,
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['process'];
+    return ['process', 'validateForm'];
   }
 
 }

@@ -5,12 +5,13 @@ namespace Drupal\condition_test;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Condition\ConditionManager;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\node\Entity\Node;
 
 /**
  * Routing controller class for condition_test testing of condition forms.
  */
-class FormController implements FormInterface {
+class FormController implements FormInterface, TrustedCallbackInterface {
 
   /**
    * The condition plugin we will be working with.
@@ -69,5 +70,13 @@ class FormController implements FormInterface {
       \Drupal::messenger()->addStatus(t('Executed successfully.'));
     }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['validateForm'];
+  }
+
 
 }

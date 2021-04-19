@@ -4,6 +4,7 @@ namespace Drupal\editor\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Form\SubformState;
 
 /**
  * Implements Trusted Callbacks for editor module.
