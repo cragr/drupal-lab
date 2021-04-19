@@ -78,5 +78,4 @@ class FormController implements FormInterface, TrustedCallbackInterface {
     return ['validateForm'];
   }
 
-
 }
