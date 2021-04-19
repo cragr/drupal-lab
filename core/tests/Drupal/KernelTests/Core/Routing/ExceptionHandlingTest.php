@@ -74,7 +74,7 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     $this->assertEqual(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     $this->assertEqual('application/json', $response->headers->get('Content-type'));
-    $this->assertEqual('{"message":"No route found for \\u0022GET \\/not-found\\u0022"}', $response->getContent());
+    $this->assertEqual('{"message":"No route found for \\u0022GET http:\\/\\/localhost\\/not-found\\u0022"}', $response->getContent());
   }
 
   /**
