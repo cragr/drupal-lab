@@ -39,7 +39,6 @@
    *   The time DOM element.
    */
   Drupal.timestampAsTimeDiff.showTimeDiff = (timeElement) => {
-    // const timestamp = new Date($($timeElement).attr('datetime')).getTime();
     const timestamp = new Date(timeElement.getAttribute('datetime')).getTime();
     const timeDiffSettings = JSON.parse(
       timeElement.getAttribute('data-drupal-time-diff'),
