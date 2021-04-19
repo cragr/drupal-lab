@@ -66,7 +66,7 @@
     float: right; /* LTR */
     width: 22.5rem;
   }
-  [dir="rtl"] .layout-region-node-secondary {
+  [dir="rtl"] .layout-region--node-secondary {
     float: left;
   }
 }
