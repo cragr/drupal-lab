@@ -64,7 +64,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
 
     // Assert that the module "driver_test" has been installed.
-    $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml', 'driver_test.module'));
+    $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml'));
 
     // Change the default database connection to use the database driver from
     // the module "driver_test".
@@ -88,11 +88,6 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Restore the old database connection.
     Database::addConnectionInfo('default', 'default', $connection_info['default']);
-
-    \Drupal::service('module_installer')->install(['views']);
-    // Test that the hook DATABASEMODULE_views_data_DATABASEDRIVER_alter() is
-    // called.
-    $this->assertTrue(\Drupal::state()->get('driver_test_views_data_drivertest_alter'));
   }
 
 }
