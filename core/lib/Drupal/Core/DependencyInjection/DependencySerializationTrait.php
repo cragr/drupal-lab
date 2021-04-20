@@ -15,6 +15,9 @@ trait DependencySerializationTrait {
    *
    * @var array
    */
+  // The property $_serviceIds is a special property relating to serialization.
+  // It can't be renamed without a BC layer.
+  // phpcs:ignore Drupal.Classes.PropertyDeclaration
   protected $_serviceIds = [];
 
   /**
@@ -22,6 +25,9 @@ trait DependencySerializationTrait {
    *
    * @var array
    */
+  // The property $_entityStorages is a special property relating to
+  // serialization. It can't be renamed without a BC layer.
+  // phpcs:ignore Drupal.Classes.PropertyDeclaration
   protected $_entityStorages = [];
 
   /**

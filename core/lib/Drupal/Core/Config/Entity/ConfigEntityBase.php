@@ -91,6 +91,9 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    *
    * @var array
    */
+  // The property $_core is used for the _core property in exported config
+  // entities, so it can't be easily renamed.
+  // phpcs:ignore Drupal.Classes.PropertyDeclaration
   protected $_core = [];
 
   /**
