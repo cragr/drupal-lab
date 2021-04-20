@@ -71,11 +71,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setAlwaysProcess
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $always_process
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setAlwaysProcess() $always_process
-   *   argument.
    */
   public function testSetAlwaysProcess($always_process) {
     $this->decoratedFormState->setAlwaysProcess($always_process)
@@ -88,10 +83,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::getAlwaysProcess
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $always_process
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::getAlwaysProcess()'s return value.
    */
   public function testGetAlwaysProcess($always_process) {
     $this->decoratedFormState->getAlwaysProcess()
@@ -134,10 +125,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setCached
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $cache
-   *   Any valid value for \Drupal\Core\Form\FormStateInterface::setCached()
-   *   $cache argument.
    */
   public function testSetCached($cache) {
     $this->decoratedFormState->setCached($cache)
@@ -150,10 +137,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isCached
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $cache
-   *   Any valid value for \Drupal\Core\Form\FormStateInterface::isCached()'s
-   *   return value.
    */
   public function testIsCached($cache) {
     $this->decoratedFormState->isCached()
@@ -166,10 +149,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setCached
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $cache
-   *   Any valid value for \Drupal\Core\Form\FormStateInterface::setCached()
-   *   $cache argument.
    */
   public function testSetCachedWithLogicException($cache) {
     $this->decoratedFormState->setCached($cache)
@@ -253,11 +232,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setHasFileElement
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $has_file_element
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setHasFileElement()
-   *   $has_file_element argument.
    */
   public function testSetHasFileElement($has_file_element) {
     $this->decoratedFormState->setHasFileElement($has_file_element)
@@ -270,10 +244,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::hasFileElement
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $has_file_element
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::hasFileElement()'s return value.
    */
   public function testHasFileElement($has_file_element) {
     $this->decoratedFormState->hasFileElement()
@@ -287,11 +257,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setLimitValidationErrors
    *
    * @dataProvider providerLimitValidationErrors
-   *
-   * @param array[]|null $limit_validation_errors
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setLimitValidationErrors()'s
-   *   $limit_validation_errors argument.
    */
   public function testSetLimitValidationErrors($limit_validation_errors) {
     $this->decoratedFormState->setLimitValidationErrors($limit_validation_errors)
@@ -304,11 +269,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::getLimitValidationErrors
    *
    * @dataProvider providerLimitValidationErrors
-   *
-   * @param array[]|null $limit_validation_errors
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::getLimitValidationErrors()'s
-   *   return value.
    */
   public function testGetLimitValidationErrors($limit_validation_errors) {
     $this->decoratedFormState->getLimitValidationErrors()
@@ -336,10 +296,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setMethod
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $method
-   *   Any valid value for \Drupal\Core\Form\FormStateInterface::setMethod()'s
-   *   $method argument.
    */
   public function testSetMethod($method) {
     $this->decoratedFormState->setMethod($method)
@@ -352,12 +308,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isMethodType
    *
    * @dataProvider providerIsMethodType
-   *
-   * @param bool $expected_return_value
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isMethodType()'s return value.
-   * @param string $method_type
-   *   Either "GET" or "POST".
    */
   public function testIsMethodType($expected_return_value, $method_type) {
     $this->decoratedFormState->isMethodType($method_type)
@@ -383,11 +333,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setRequestMethod
    *
    * @dataProvider providerSetRequestMethod
-   *
-   * @param bool $method
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setRequestMethod()'s $method
-   *   argument.
    */
   public function testSetRequestMethod($method) {
     $this->decoratedFormState->setRequestMethod($method)
@@ -410,11 +355,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setValidationEnforced
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $must_validate
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setValidationEnforced()'s
-   *   $must_validate argument.
    */
   public function testSetValidationEnforced($must_validate) {
     $this->decoratedFormState->setValidationEnforced($must_validate)
@@ -427,11 +367,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isValidationEnforced
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $must_validate
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isValidationEnforced()'s return
-   *   value.
    */
   public function testIsValidationEnforced($must_validate) {
     $this->decoratedFormState->isValidationEnforced()
@@ -445,11 +380,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::disableRedirect
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $no_redirect
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::disableRedirect()'s $no_redirect
-   *   argument.
    */
   public function testDisableRedirect($no_redirect) {
     $this->decoratedFormState->disableRedirect($no_redirect)
@@ -462,11 +392,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isRedirectDisabled
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $no_redirect
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isRedirectDisabled()'s return
-   *   value.
    */
   public function testIsRedirectDisabled($no_redirect) {
     $this->decoratedFormState->isRedirectDisabled()
@@ -480,11 +405,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setProcessInput
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $process_input
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setProcessInput()'s $process_input
-   *   argument.
    */
   public function testSetProcessInput($process_input) {
     $this->decoratedFormState->setProcessInput($process_input)
@@ -497,11 +417,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isProcessingInput
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $process_input
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isProcessingInput()'s return
-   *   value.
    */
   public function testIsProcessingInput($process_input) {
     $this->decoratedFormState->isProcessingInput()
@@ -515,11 +430,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setProgrammed
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $programmed
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setProgrammed()'s $programmed
-   *   argument.
    */
   public function testSetProgrammed($programmed) {
     $this->decoratedFormState->setProgrammed($programmed)
@@ -532,11 +442,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isProgrammed
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $programmed
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isProgrammed()'s return
-   *   value.
    */
   public function testIsProgrammed($programmed) {
     $this->decoratedFormState->isProgrammed()
@@ -550,11 +455,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setProgrammedBypassAccessCheck
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $programmed_bypass_access_check
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setProgrammedBypassAccessCheck()'s
-   *   $programmed_bypass_access_check argument.
    */
   public function testSetProgrammedBypassAccessCheck($programmed_bypass_access_check) {
     $this->decoratedFormState->setProgrammedBypassAccessCheck($programmed_bypass_access_check)
@@ -567,11 +467,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isBypassingProgrammedAccessChecks
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $programmed_bypass_access_check
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isBypassingProgrammedAccessChecks()'s
-   *   return value.
    */
   public function testIsBypassingProgrammedAccessChecks($programmed_bypass_access_check) {
     $this->decoratedFormState->isBypassingProgrammedAccessChecks()
@@ -1498,10 +1393,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::isRebuilding
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $rebuild
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::isRebuilding()'s return value.
    */
   public function testIsRebuilding($rebuild) {
     $this->decoratedFormState->isRebuilding()
@@ -1515,27 +1406,18 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::setInvalidToken
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $invalidToken
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::setInvalidToken()'s $invalidToken
-   *   argument.
    */
-  public function testSetInvalidToken($invalidToken) {
-    $this->decoratedFormState->setInvalidToken($invalidToken)
+  public function testSetInvalidToken($expected) {
+    $this->decoratedFormState->setInvalidToken($expected)
       ->shouldBeCalled();
 
-    $this->assertSame($this->formStateDecoratorBase, $this->formStateDecoratorBase->setInvalidToken($invalidToken));
+    $this->assertSame($this->formStateDecoratorBase, $this->formStateDecoratorBase->setInvalidToken($expected));
   }
 
   /**
    * @covers ::hasInvalidToken
    *
    * @dataProvider providerSingleBooleanArgument
-   *
-   * @param bool $expected
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::hasInvalidToken()'s return value.
    */
   public function testHasInvalidToken($expected) {
     $this->decoratedFormState->hasInvalidToken()
@@ -1549,14 +1431,6 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    * @covers ::prepareCallback
    *
    * @dataProvider providerPrepareCallback
-   *
-   * @param string|callable $unprepared_callback
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::prepareCallback()'s $callback
-   *   argument.
-   * @param callable $prepared_callback
-   *   Any valid value for
-   *   \Drupal\Core\Form\FormStateInterface::prepareCallback()'s return value.
    */
   public function testPrepareCallback($unprepared_callback, callable $prepared_callback) {
     $this->decoratedFormState->prepareCallback(Argument::is($unprepared_callback))
