@@ -1,11 +1,11 @@
 <?php
 
-// cspell:ignore databasemodule databasedriver
-
 /**
  * @file
  * Driver test module.
  */
+
+// cspell:ignore databasemodule databasedriver
 
 /**
  * Implements DATABASEMODULE_views_data_DATABASEDRIVER_alter().
