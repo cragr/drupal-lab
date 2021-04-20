@@ -15,7 +15,7 @@ class RequestStack extends SymfonyRequestStack {
   /**
    * Gets the main request.
    *
-   * @return Request|null
+   * @return \Symfony\Component\HttpFoundation\Request|null
    *   The main request.
    */
   public function getMainRequest(): ?Request {
