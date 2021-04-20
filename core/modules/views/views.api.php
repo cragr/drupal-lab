@@ -10,6 +10,8 @@ use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewExecutable;
 
+// cspell:ignore databasemodule databasedriver
+
 /**
  * @defgroup views_overview Views overview
  * @{
@@ -505,7 +507,7 @@ function hook_views_data_alter(array &$data) {
  *
  * This hook is called after hook_views_data_alter and gives the module that is
  * providing the database driver the chance to change the views data after all
- * other modules have done the same. 
+ * other modules have done the same.
  *
  * @param array $data
  *   An array of all information about Views tables and fields, collected from
@@ -514,7 +516,8 @@ function hook_views_data_alter(array &$data) {
  *
  * @see hook_views_data_alter()
  */
-function DATABASEMODULE_views_data_DATABASEDRIVER_alter(array &$data) {}
+function DATABASEMODULE_views_data_DATABASEDRIVER_alter(array &$data) {
+}
 
 /**
  * Override the default Views data for a Field API field.
