@@ -1053,8 +1053,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test that the properties can be queried directly.
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
-      ->accessCheck(FALSE)
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('description.value', 'description1')
       ->execute();
     $this->assertCount(1, $ids);
