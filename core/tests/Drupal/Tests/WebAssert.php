@@ -984,24 +984,6 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
-   * Asserts a specific element's text does not equal an expected text.
-   *
-   * @param string $selectorType
-   *   Element selector type (css, xpath).
-   * @param string|array $selector
-   *   Element selector.
-   * @param string $text
-   *   Expected text.
-   */
-  public function elementTextDoesNotEqual(string $selectorType, $selector, string $text): void {
-    $message = "Failed asserting that the text of the element identified by '$selector' does not equal '$text'.";
-    $constraint = new LogicalNot(
-      new IsEqual($text)
-    );
-    Assert::assertThat($this->elementExists($selectorType, $selector)->getText(), $constraint, $message);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function elementTextContains($selectorType, $selector, $text) {
