@@ -444,7 +444,7 @@ class NumberFieldTest extends BrowserTestBase {
    */
   public function assertSetMinimumValue($field, $minimum_value) {
     $field_configuration_url = 'entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field->getName();
-
+    $this->drupalGet($field_configuration_url);
     // Set the minimum value.
     $edit = [
       'settings[min]' => $minimum_value,
