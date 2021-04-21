@@ -1345,8 +1345,8 @@ function system_page_top() {
           // the page, they must all be warnings or all be errors. If any
           // advisories are not public service announcements, then display all
           // the messages as errors because security advisories already tied to
-          // a specific release advisories are immediately actionable by
-          // upgrading to a secure version of a project.
+          // a specific release are immediately actionable by upgrading to a
+          // secure version of a project.
           $display_as_errors = $display_as_errors ? TRUE : !$advisory->isPsa();
           $links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
         }
