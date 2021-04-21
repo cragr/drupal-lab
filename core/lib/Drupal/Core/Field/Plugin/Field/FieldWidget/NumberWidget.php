@@ -73,12 +73,13 @@ class NumberWidget extends WidgetBase {
       '#type' => 'number',
       '#default_value' => $value,
       '#placeholder' => $this->getSetting('placeholder'),
+      '#number_type' => $this->fieldDefinition->getType(),
     ];
 
     // Set the step for floating point and decimal numbers.
     switch ($this->fieldDefinition->getType()) {
       case 'decimal':
-        $element['#step'] = pow(0.1, $field_settings['scale']);
+        $element['#step'] = number_format(pow(0.1, $field_settings['scale']), $field_settings['scale'], '.', '');
         break;
 
       case 'float':

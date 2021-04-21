@@ -44,11 +44,13 @@ class NumberFieldTest extends BrowserTestBase {
   public function testNumberDecimalField() {
     // Create a field with settings to validate.
     $field_name = mb_strtolower($this->randomMachineName());
+    // Having precision = 10 and scale = 4 means 6 numbers before the decimal
+    // point and 4 after.
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'decimal',
-      'settings' => ['precision' => 8, 'scale' => 4],
+      'settings' => ['precision' => 10, 'scale' => 4],
     ])->save();
     FieldConfig::create([
       'field_name' => $field_name,
@@ -76,18 +78,31 @@ class NumberFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
-    $this->assertRaw('placeholder="0.00"');
+    $this->assertSession()->responseContains('placeholder="0.00"');
 
-    // Submit a signed decimal value within the allowed precision and scale.
-    $value = '-1234.5678';
-    $edit = [
-      "{$field_name}[0][value]" => $value,
+    // Submit decimal values within the allowed precision and scale.
+    $valid_entries = [
+      '-1234.5678',
+      '19999.0000',
+      '99999.0000',
+      '909888.96',
+      '909888.99',
+      '988999.0096',
+      '988999.0099',
     ];
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
-    $this->assertRaw($value);
+
+    foreach ($valid_entries as $valid_entry) {
+      $this->drupalGet('entity_test/add');
+      $edit = [
+        "{$field_name}[0][value]" => $valid_entry,
+      ];
+      $this->drupalPostForm(NULL, $edit, t('Save'));
+      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+      $id = $match[1];
+      $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
+      $this->assertSession()->responseContains($valid_entry);
+      $this->assertSession()->responseNotContains(t('%name is not a valid number.', ['%name' => $field_name]));
+    }
 
     // Try to create entries with more than one decimal separator; assert fail.
     $wrong_entries = [
@@ -104,7 +119,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->responseContains(t('%name must be a number.', ['%name' => $field_name]));
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -122,7 +137,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->responseContains(t('%name must be a number.', ['%name' => $field_name]));
     }
   }
 
@@ -191,7 +206,7 @@ class NumberFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
-    $this->assertRaw('placeholder="4"');
+    $this->assertSession()->responseContains('placeholder="4"');
 
     // Submit a valid integer
     $value = rand($minimum, $maximum);
@@ -209,7 +224,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => $minimum - 1,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name must be higher than or equal to %minimum.', ['%name' => $field_name, '%minimum' => $minimum]));
+    $this->assertSession()->responseContains(t('%name must be higher than or equal to %minimum.', ['%name' => $field_name, '%minimum' => $minimum]));
 
     // Try to set a decimal value
     $this->drupalGet('entity_test/add');
@@ -217,7 +232,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => 1.5,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name is not a valid number.', ['%name' => $field_name]));
+    $this->assertSession()->responseContains(t('%name is not a valid number.', ['%name' => $field_name]));
 
     // Try to set a value above the maximum value
     $this->drupalGet('entity_test/add');
@@ -225,7 +240,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => $maximum + 1,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name must be lower than or equal to %maximum.', ['%name' => $field_name, '%maximum' => $maximum]));
+    $this->assertSession()->responseContains(t('%name must be lower than or equal to %maximum.', ['%name' => $field_name, '%maximum' => $maximum]));
 
     // Try to set a wrong integer value.
     $this->drupalGet('entity_test/add');
@@ -233,7 +248,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => '20-40',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+    $this->assertSession()->responseContains(t('%name must be a number.', ['%name' => $field_name]));
 
     // Test with valid entries.
     $valid_entries = [
@@ -251,7 +266,7 @@ class NumberFieldTest extends BrowserTestBase {
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertText('entity_test ' . $id . ' has been created.');
-      $this->assertRaw($valid_entry);
+      $this->assertSession()->responseContains($valid_entry);
       // Verify that the "content" attribute is not present since the Prefix is
       // not being displayed.
       $this->assertSession()->elementNotExists('xpath', '//div[@content="' . $valid_entry . '"]');
@@ -320,7 +335,7 @@ class NumberFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
-    $this->assertRaw('placeholder="0.00"');
+    $this->assertSession()->responseContains('placeholder="0.00"');
 
     // Submit a signed decimal value within the allowed precision and scale.
     $value = '-1234.5678';
@@ -335,7 +350,7 @@ class NumberFieldTest extends BrowserTestBase {
     // Ensure that the 'number_decimal' formatter displays the number with the
     // expected rounding.
     $this->drupalGet('entity_test/' . $id);
-    $this->assertRaw(round($value, 2));
+    $this->assertSession()->responseContains(round($value, 2));
 
     // Try to create entries with more than one decimal separator; assert fail.
     $wrong_entries = [
@@ -352,7 +367,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->responseContains(t('%name must be a number.', ['%name' => $field_name]));
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -370,7 +385,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
+      $this->assertSession()->responseContains(t('%name must be a number.', ['%name' => $field_name]));
     }
   }
 
@@ -436,9 +451,9 @@ class NumberFieldTest extends BrowserTestBase {
     ];
     $this->drupalPostForm($field_configuration_url, $edit, 'Save settings');
     // Check if an error message is shown.
-    $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]));
+    $this->assertSession()->responseNotContains(t('%name is not a valid number.', ['%name' => t('Minimum')]));
     // Check if a success message is shown.
-    $this->assertRaw(t('Saved %label configuration.', ['%label' => $field->getLabel()]));
+    $this->assertSession()->responseContains(t('Saved %label configuration.', ['%label' => $field->getLabel()]));
     // Check if the minimum value was actually set.
     $this->drupalGet($field_configuration_url);
     $this->assertSession()->fieldValueEquals('edit-settings-min', $minimum_value);
