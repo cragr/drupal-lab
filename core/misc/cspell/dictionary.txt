@@ -660,7 +660,6 @@ giggabyte
 gitattributes
 gitignored
 gloop
-gnomovision
 gnumeric
 goldfinger
 gonner
@@ -1496,6 +1495,7 @@ ssess
 ssid
 stardivision
 starrrrr
+starterkit
 startpunt
 starzzzz
 statuscode
@@ -1968,7 +1968,6 @@ yourbackend
 yourmodule
 youtube
 yowser
-yoyodyne
 yygroup
 yyyymm
 zartan
@@ -1984,3 +1983,4 @@ zwei
 zxvf
 zzgroup
 übersetzung
+tuvan
