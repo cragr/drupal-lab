@@ -42,10 +42,10 @@ class PositionShimTestPortedJqueryTestsController extends ControllerBase {
           'style' => 'position: absolute; width: 12px; height: 12px; top: 2px; left: 0px;',
         ],
       ],
-      'scrollx' => [
+      'scrollX' => [
         '#type' => 'container',
         '#attributes' => [
-          'id' => 'scrollx',
+          'id' => 'scrollX',
           'style' => 'position: absolute; top: 0px; left: 0px;',
         ],
         'elx' => [
@@ -55,27 +55,27 @@ class PositionShimTestPortedJqueryTestsController extends ControllerBase {
             'style' => 'position: absolute; width: 10px; height: 10px;',
           ],
         ],
-        'parentx' => [
+        'parentX' => [
           '#type' => 'container',
           '#attributes' => [
-            'id' => 'parentx',
+            'id' => 'parentX',
             'style' => 'position: absolute; width: 20px; height: 20px; top: 40px; left: 40px;',
           ],
         ],
       ],
-      'largebox' => [
+      'largeBox' => [
         '#type' => 'container',
         '#attributes' => [
           'style' => 'position: absolute; height: 5000px; width: 5000px;',
         ],
       ],
-      'fractionsparent' => [
+      'fractionsParent' => [
         '#type' => 'container',
         '#attributes' => [
           'id' => 'fractions-parent',
           'style' => 'position: absolute; left: 10.7432222px; top: 10.532325px; height: 30px; width: 201px;',
         ],
-        'fractionselement' => [
+        'fractionsElement' => [
           '#type' => 'container',
           '#attributes' => [
             'id' => 'fractions-element',
@@ -95,14 +95,14 @@ class PositionShimTestPortedJqueryTestsController extends ControllerBase {
           ],
         ],
       ],
-      'bug8710withinsmaller' => [
+      'bug8710withinSmaller' => [
         '#type' => 'container',
         '#attributes' => [
           'id' => 'bug-8710-within-smaller',
           'style' => 'position: absolute; width: 100px; height: 99px; top: 0px; left: 0px;',
         ],
       ],
-      'bug8710withinbugger' => [
+      'bug8710withinBigger' => [
         '#type' => 'container',
         '#attributes' => [
           'id' => 'bug-8710-within-bigger',

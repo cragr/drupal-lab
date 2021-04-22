@@ -9,15 +9,15 @@
   var cachedScrollbarWidth = null;
   var max = Math.max,
       abs = Math.abs;
-  var rhorizontal = /left|center|right/;
-  var rvertical = /top|center|bottom/;
-  var roffset = /[+-]\d+(\.[\d]+)?%?/;
-  var rposition = /^\w+/;
-  var rpercent = /%$/;
+  var regexHorizontal = /left|center|right/;
+  var regexVertical = /top|center|bottom/;
+  var regexOffset = /[+-]\d+(\.[\d]+)?%?/;
+  var regexPosition = /^\w+/;
+  var regexPercent = /%$/;
   var _position = $.fn.position;
 
   function getOffsets(offsets, width, height) {
-    return [parseFloat(offsets[0]) * (rpercent.test(offsets[0]) ? width / 100 : 1), parseFloat(offsets[1]) * (rpercent.test(offsets[1]) ? height / 100 : 1)];
+    return [parseFloat(offsets[0]) * (regexPercent.test(offsets[0]) ? width / 100 : 1), parseFloat(offsets[1]) * (regexPercent.test(offsets[1]) ? height / 100 : 1)];
   }
 
   function parseCss(element, property) {
@@ -185,7 +185,7 @@
         }
       }
     },
-    flipfit: {
+    flipFit: {
       left: function left() {
         for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
@@ -281,15 +281,15 @@
       var pos = (options[this] || '').split(' ');
 
       if (pos.length === 1) {
-        pos = rhorizontal.test(pos[0]) ? pos.concat(['center']) : rvertical.test(pos[0]) ? ['center'].concat(pos) : ['center', 'center'];
+        pos = regexHorizontal.test(pos[0]) ? pos.concat(['center']) : regexVertical.test(pos[0]) ? ['center'].concat(pos) : ['center', 'center'];
       }
 
-      pos[0] = rhorizontal.test(pos[0]) ? pos[0] : 'center';
-      pos[1] = rvertical.test(pos[1]) ? pos[1] : 'center';
-      var horizontalOffset = roffset.exec(pos[0]);
-      var verticalOffset = roffset.exec(pos[1]);
+      pos[0] = regexHorizontal.test(pos[0]) ? pos[0] : 'center';
+      pos[1] = regexVertical.test(pos[1]) ? pos[1] : 'center';
+      var horizontalOffset = regexOffset.exec(pos[0]);
+      var verticalOffset = regexOffset.exec(pos[1]);
       offsets[this] = [horizontalOffset ? horizontalOffset[0] : 0, verticalOffset ? verticalOffset[0] : 0];
-      options[this] = [rposition.exec(pos[0])[0], rposition.exec(pos[1])[0]];
+      options[this] = [regexPosition.exec(pos[0])[0], regexPosition.exec(pos[1])[0]];
     });
 
     if (collision.length === 1) {

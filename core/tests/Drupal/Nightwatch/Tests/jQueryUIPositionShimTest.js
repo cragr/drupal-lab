@@ -1,4 +1,3 @@
-/* cSpell:disable */
 /**
  * The testScenarios object is for testing a wide range of jQuery UI position
  * configuration options. The object properties are:
@@ -822,34 +821,34 @@ module.exports = {
            *   The horizontal and vertical alignment and offset values for the element.
            */
           const parseOffset = (offset, element) => {
-            const rhorizontal = /left|center|right/;
-            const rvertical = /top|center|bottom/;
-            const roffset = /[+-]\d+(\.[\d]+)?%?/;
-            const rposition = /^\w+/;
-            const rpercent = /%$/;
+            const regexHorizontal = /left|center|right/;
+            const regexVertical = /top|center|bottom/;
+            const regexOffset = /[+-]\d+(\.[\d]+)?%?/;
+            const regexPosition = /^\w+/;
+            const regexPercent = /%$/;
             let positions = offset.split(' ');
             if (positions.length === 1) {
-              if (rhorizontal.test(positions[0])) {
+              if (regexHorizontal.test(positions[0])) {
                 positions.push('center');
-              } else if (rvertical.test(positions[0])) {
+              } else if (regexVertical.test(positions[0])) {
                 positions = ['center'].concat(positions);
               }
             }
 
-            const horizontalOffset = roffset.exec(positions[0]);
-            const verticalOffset = roffset.exec(positions[1]);
-            positions = positions.map((pos) => rposition.exec(pos)[0]);
+            const horizontalOffset = regexOffset.exec(positions[0]);
+            const verticalOffset = regexOffset.exec(positions[1]);
+            positions = positions.map((pos) => regexPosition.exec(pos)[0]);
 
             return {
               horizontalOffset: horizontalOffset
                 ? parseFloat(horizontalOffset[0]) *
-                  (rpercent.test(horizontalOffset[0])
+                  (regexPercent.test(horizontalOffset[0])
                     ? element.offsetWidth / 100
                     : 1)
                 : 0,
               verticalOffset: verticalOffset
                 ? parseFloat(verticalOffset[0]) *
-                  (rpercent.test(verticalOffset[0])
+                  (regexPercent.test(verticalOffset[0])
                     ? element.offsetWidth / 100
                     : 1)
                 : 0,
@@ -993,7 +992,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left top',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn['left top, left top'] = {
@@ -1003,7 +1002,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn['left top, left bottom'] = {
@@ -1013,7 +1012,7 @@ module.exports = {
         $elx.position({
           my: 'left',
           at: 'bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn['left, bottom'] = {
@@ -1023,7 +1022,7 @@ module.exports = {
         $elx.position({
           my: 'left foo',
           at: 'bar baz',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn['left foo, bar baz'] = {
@@ -1137,7 +1136,7 @@ module.exports = {
         const $ = jQuery;
         const toReturn = {};
         const $elx = $('#elx');
-        const $parentx = $('#parentx');
+        const $parentX = $('#parentX');
         const win = $(window);
         let event;
 
@@ -1155,7 +1154,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left top',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn.selector = {
@@ -1166,7 +1165,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left bottom',
-          of: $parentx,
+          of: $parentX,
           collision: 'none',
         });
         toReturn['jQuery object'] = {
@@ -1177,7 +1176,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left top',
-          of: $parentx[0],
+          of: $parentX[0],
           collision: 'none',
         });
         toReturn['DOM element'] = {
@@ -1321,7 +1320,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left+10 bottom+10',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn.deepEquals['offsets in at'] = {
@@ -1332,7 +1331,7 @@ module.exports = {
         $elx.position({
           my: 'left+10 top-10',
           at: 'left bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn.deepEquals['offsets in my'] = {
@@ -1343,7 +1342,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           at: 'left+50% bottom-10%',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn.deepEquals['percentage offsets in at'] = {
@@ -1354,7 +1353,7 @@ module.exports = {
         $elx.position({
           my: 'left-30% top+50%',
           at: 'left bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn.deepEquals['percentage offsets in my'] = {
@@ -1365,7 +1364,7 @@ module.exports = {
         $elx.position({
           my: 'left-30.001% top+50.0%',
           at: 'left bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         offset = $elx.offset();
@@ -1377,7 +1376,7 @@ module.exports = {
         $elx.position({
           my: 'left+10.4 top-10.6',
           at: 'left bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         offset = $elx.offset();
@@ -1389,7 +1388,7 @@ module.exports = {
         $elx.position({
           my: 'left+right top-left',
           at: 'left-top bottom-bottom',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'none',
         });
         toReturn.deepEquals['invalid offsets'] = {
@@ -1420,7 +1419,7 @@ module.exports = {
         const toReturn = {};
         let count = 0;
         const elems = $('#el1, #el2');
-        const of = $('#parentx');
+        const of = $('#parentX');
         const expectedPosition = { top: 60, left: 60 };
         const expectedFeedback = {
           target: {
@@ -1444,7 +1443,7 @@ module.exports = {
           .position({
             my: 'right bottom',
             at: 'right bottom',
-            of: '#parentx',
+            of: '#parentX',
             collision: 'none',
           })
           .offset();
@@ -1452,7 +1451,7 @@ module.exports = {
         elems.position({
           my: 'left top',
           at: 'center+10 bottom',
-          of: '#parentx',
+          of: '#parentX',
           using(position, feedback) {
             toReturn[`correct context for call #${count}`] = {
               actual: this,
@@ -1722,7 +1721,7 @@ module.exports = {
       },
     );
   },
-  'collision: flipfit, no collision': (browser) => {
+  'collision: flipFit, no collision': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
@@ -1733,7 +1732,7 @@ module.exports = {
           my: 'left top',
           at: 'right bottom',
           of: '#parent',
-          collision: 'flipfit',
+          collision: 'flipFit',
         });
 
         toReturn['no offset'] = {
@@ -1748,7 +1747,7 @@ module.exports = {
           my: 'left top',
           at: 'right+2 bottom+3',
           of: '#parent',
-          collision: 'flipfit',
+          collision: 'flipFit',
         });
 
         toReturn['with offset'] = {
@@ -1771,7 +1770,7 @@ module.exports = {
       },
     );
   },
-  'collision: flipfit, collision': (browser) => {
+  'collision: flipFit, collision': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
@@ -1782,7 +1781,7 @@ module.exports = {
           my: 'right bottom',
           at: 'left top',
           of: '#parent',
-          collision: 'flipfit',
+          collision: 'flipFit',
         });
 
         toReturn['no offset'] = {
@@ -1797,7 +1796,7 @@ module.exports = {
           my: 'right bottom',
           at: 'left+2 top+3',
           of: '#parent',
-          collision: 'flipfit',
+          collision: 'flipFit',
         });
 
         toReturn['with offset'] = {
@@ -2129,10 +2128,10 @@ module.exports = {
           at: 'right bottom',
           of: '#parent',
           within: '#within',
-          collision: 'flipfit',
+          collision: 'flipFit',
         });
 
-        toReturn['flipfit - right bottom'] = {
+        toReturn['flipFit - right bottom'] = {
           actual: $elx.offset(),
           expected: {
             top: 4,
@@ -2145,10 +2144,10 @@ module.exports = {
           at: 'left top',
           of: '#parent',
           within: '#within',
-          collision: 'flipfit',
+          collision: 'flipFit',
         });
 
-        toReturn['flipfit - left top'] = {
+        toReturn['flipFit - left top'] = {
           actual: $elx.offset(),
           expected: {
             top: 4,
@@ -2243,7 +2242,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           within: '#bug-8710-within-smaller',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'flip',
           at: 'right bottom+30',
         });
@@ -2259,7 +2258,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           within: '#bug-8710-within-smaller',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'flip',
           at: 'right bottom+32',
         });
@@ -2274,7 +2273,7 @@ module.exports = {
         $elx.position({
           my: 'left top',
           within: '#bug-8710-within-bigger',
-          of: '#parentx',
+          of: '#parentX',
           collision: 'flip',
           at: 'right bottom+32',
         });

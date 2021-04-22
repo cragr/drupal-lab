@@ -14,17 +14,17 @@
 (($) => {
   let cachedScrollbarWidth = null;
   const { max, abs } = Math;
-  const rhorizontal = /left|center|right/;
-  const rvertical = /top|center|bottom/;
-  const roffset = /[+-]\d+(\.[\d]+)?%?/;
-  const rposition = /^\w+/;
-  const rpercent = /%$/;
+  const regexHorizontal = /left|center|right/;
+  const regexVertical = /top|center|bottom/;
+  const regexOffset = /[+-]\d+(\.[\d]+)?%?/;
+  const regexPosition = /^\w+/;
+  const regexPercent = /%$/;
   const _position = $.fn.position;
 
   function getOffsets(offsets, width, height) {
     return [
-      parseFloat(offsets[0]) * (rpercent.test(offsets[0]) ? width / 100 : 1),
-      parseFloat(offsets[1]) * (rpercent.test(offsets[1]) ? height / 100 : 1),
+      parseFloat(offsets[0]) * (regexPercent.test(offsets[0]) ? width / 100 : 1),
+      parseFloat(offsets[1]) * (regexPercent.test(offsets[1]) ? height / 100 : 1),
     ];
   }
 
@@ -272,7 +272,7 @@
         }
       },
     },
-    flipfit: {
+    flipFit: {
       left(...args) {
         collisions.flip.left.apply(this, args);
         collisions.fit.left.apply(this, args);
@@ -386,25 +386,25 @@
 
       if (pos.length === 1) {
         // eslint-disable-next-line no-nested-ternary
-        pos = rhorizontal.test(pos[0])
+        pos = regexHorizontal.test(pos[0])
           ? pos.concat(['center'])
-          : rvertical.test(pos[0])
+          : regexVertical.test(pos[0])
           ? ['center'].concat(pos)
           : ['center', 'center'];
       }
-      pos[0] = rhorizontal.test(pos[0]) ? pos[0] : 'center';
-      pos[1] = rvertical.test(pos[1]) ? pos[1] : 'center';
+      pos[0] = regexHorizontal.test(pos[0]) ? pos[0] : 'center';
+      pos[1] = regexVertical.test(pos[1]) ? pos[1] : 'center';
 
       // Calculate offsets
-      const horizontalOffset = roffset.exec(pos[0]);
-      const verticalOffset = roffset.exec(pos[1]);
+      const horizontalOffset = regexOffset.exec(pos[0]);
+      const verticalOffset = regexOffset.exec(pos[1]);
       offsets[this] = [
         horizontalOffset ? horizontalOffset[0] : 0,
         verticalOffset ? verticalOffset[0] : 0,
       ];
 
       // Reduce to just the positions without the offsets
-      options[this] = [rposition.exec(pos[0])[0], rposition.exec(pos[1])[0]];
+      options[this] = [regexPosition.exec(pos[0])[0], regexPosition.exec(pos[1])[0]];
     });
 
     // Normalize collision option
