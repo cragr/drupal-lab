@@ -72,8 +72,6 @@ assertable
 asterix
 asubject
 atomentry
-atomfeed
-atomrendererfeed
 atsign
 attrval
 attrvals
@@ -301,8 +299,6 @@ conneg
 contaynz
 contentblock
 contenteditable
-contententry
-contentrendererentry
 contextual's
 contextuals
 contrained
@@ -400,7 +396,6 @@ dependening
 depenencies
 deprioritize
 dequeues
-derivedfrom
 derp
 desaturate
 desaturated
@@ -478,10 +473,6 @@ drupalunlink
 druplicon
 drush
 drépal
-dublincoreentry
-dublincorefeed
-dublincorerendererentry
-dublincorerendererfeed
 défaut
 détruire
 eacute
@@ -772,10 +763,6 @@ isinstallable
 items's
 itoa
 itok
-itunesentry
-itunesfeed
-itunesrendererentry
-itunesrendererfeed
 ized
 j'aime
 jamo
@@ -813,7 +800,6 @@ keyname
 keypresses
 keyvalue
 killswitch
-kinberg
 kitt
 kolkata
 kontex
@@ -852,7 +838,6 @@ linebreaks
 linecap
 linefeeds
 linkability
-linkback
 linkgenerator
 linkification
 linksby
@@ -877,7 +862,6 @@ loremipsumloremipsum
 lowercased
 lowlevel
 lowline
-lrdd
 lspeak
 lsquo
 lstitle
@@ -1172,7 +1156,6 @@ phpunit's
 pianura
 pickable
 picturefill
-pingback
 pioggia
 pjpeg
 placeholdered
@@ -1183,8 +1166,6 @@ pluggable
 plugins's
 pluralforms
 plusthick
-podcastentry
-podcastfeed
 poink
 pommes
 ponedjeljak
@@ -1212,7 +1193,6 @@ precache
 precompiled
 preconfigure
 preconfigured
-preconnect
 precreated
 predelete
 prefetches
@@ -1304,7 +1284,6 @@ recolorable
 redirections
 redstrawberryhiddenfield
 refactorings
-refback
 referenceable
 referenceables
 referencer
@@ -1384,7 +1363,6 @@ sameorigin
 sapere
 sata
 savepoints
-sayre
 scaffol
 scarlett
 schemaapi
@@ -1437,8 +1415,6 @@ skos
 skynet
 slackjaw
 slashentry
-slashrendererentry
-slatkin
 sloopal
 smacss
 smalldatetime
@@ -1657,15 +1633,11 @@ theseer
 theseparator
 thingie
 thirdcolumn
-threadentry
-threadingrendererentry
 threecol
 throttleable
 tids
 timecurrent
 timeframe
-timegate
-timemap
 timepicker
 timespan
 timetime
@@ -1696,7 +1668,6 @@ totranslate
 touchevent
 touchevents
 tparams
-trackback
 trailingslash
 transferthick
 transitionend
@@ -1883,15 +1854,12 @@ webfonts
 webheads
 webhosting
 webm
-webmention
 webmozart
 webroot
 webserver
 webservers
 webtest
 webuser
-wellformedwebentry
-wellformedwebrendererentry
 whitespaces
 whois
 whos
