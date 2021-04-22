@@ -1095,9 +1095,9 @@ module.exports = {
         const el = $('#el1');
 
         $.each([0, 1], (my) => {
-          $.each(['top', 'center', 'bottom'], (vindex, vertical) => {
+          $.each(['top', 'center', 'bottom'], (vIndex, vertical) => {
             // eslint-disable-next-line max-nested-callbacks
-            $.each(['left', 'center', 'right'], (hindex, horizontal) => {
+            $.each(['left', 'center', 'right'], (hIndex, horizontal) => {
               const _my = my ? `${horizontal} ${vertical}` : 'left top';
               const _at = !my ? `${horizontal} ${vertical}` : 'left top';
               el.position({

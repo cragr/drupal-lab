@@ -23,8 +23,10 @@
 
   function getOffsets(offsets, width, height) {
     return [
-      parseFloat(offsets[0]) * (regexPercent.test(offsets[0]) ? width / 100 : 1),
-      parseFloat(offsets[1]) * (regexPercent.test(offsets[1]) ? height / 100 : 1),
+      parseFloat(offsets[0]) *
+        (regexPercent.test(offsets[0]) ? width / 100 : 1),
+      parseFloat(offsets[1]) *
+        (regexPercent.test(offsets[1]) ? height / 100 : 1),
     ];
   }
 
@@ -404,7 +406,10 @@
       ];
 
       // Reduce to just the positions without the offsets
-      options[this] = [regexPosition.exec(pos[0])[0], regexPosition.exec(pos[1])[0]];
+      options[this] = [
+        regexPosition.exec(pos[0])[0],
+        regexPosition.exec(pos[1])[0],
+      ];
     });
 
     // Normalize collision option
