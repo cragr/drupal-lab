@@ -70,12 +70,12 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test vocabulary name translation for overview page and Reset Page
+   * Test vocabulary name translation for overview page and Reset Page.
    */
   public function testVocabularyTitleLabelTranslation() {
     // Getting taxonomy vocabulary add form
     $this->drupalGet('admin/structure/taxonomy/add');
-    
+
     // Create the vocabulary.
     $vid = mb_strtolower($this->randomMachineName());
     $edit['name'] = $this->randomMachineName();
@@ -94,7 +94,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
 
     // Translate the name label.
     $this->drupalPostForm(NULL, ["translation[config_names][taxonomy.vocabulary.$vid][name]" => $translated_vid_name], t('Save translation'));
-    
+
     // Assert that the right name label is displayed on the taxonomy term overview page. The
     // translations are created in this test; therefore, the assertions do not
     // use t(). If t() were used then the correct langcodes would need to be
