@@ -2189,7 +2189,7 @@ module.exports = {
           collision: 'fit',
         });
 
-        toReturn['visible'] = {
+        toReturn.visible = {
           actual: $elx.offset(),
           expected: {
             top: 90,
@@ -2209,7 +2209,7 @@ module.exports = {
           at: 'right bottom',
         });
 
-        toReturn['scroll'] = {
+        toReturn.scroll = {
           actual: $elx.offset(),
           expected: {
             top: 90 - scrollbarInfo.height,
