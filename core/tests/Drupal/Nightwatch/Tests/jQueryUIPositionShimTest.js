@@ -1721,7 +1721,7 @@ module.exports = {
       },
     );
   },
-  'collision: flipFit, no collision': (browser) => {
+  'collision: flipfit, no collision': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
@@ -1732,7 +1732,7 @@ module.exports = {
           my: 'left top',
           at: 'right bottom',
           of: '#parent',
-          collision: 'flipFit',
+          collision: 'flipfit',
         });
 
         toReturn['no offset'] = {
@@ -1747,7 +1747,7 @@ module.exports = {
           my: 'left top',
           at: 'right+2 bottom+3',
           of: '#parent',
-          collision: 'flipFit',
+          collision: 'flipfit',
         });
 
         toReturn['with offset'] = {
@@ -1770,7 +1770,7 @@ module.exports = {
       },
     );
   },
-  'collision: flipFit, collision': (browser) => {
+  'collision: flipfit, collision': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
@@ -1781,7 +1781,7 @@ module.exports = {
           my: 'right bottom',
           at: 'left top',
           of: '#parent',
-          collision: 'flipFit',
+          collision: 'flipfit',
         });
 
         toReturn['no offset'] = {
@@ -1796,7 +1796,7 @@ module.exports = {
           my: 'right bottom',
           at: 'left+2 top+3',
           of: '#parent',
-          collision: 'flipFit',
+          collision: 'flipfit',
         });
 
         toReturn['with offset'] = {
@@ -2128,10 +2128,10 @@ module.exports = {
           at: 'right bottom',
           of: '#parent',
           within: '#within',
-          collision: 'flipFit',
+          collision: 'flipfit',
         });
 
-        toReturn['flipFit - right bottom'] = {
+        toReturn['flipfit - right bottom'] = {
           actual: $elx.offset(),
           expected: {
             top: 4,
@@ -2144,10 +2144,10 @@ module.exports = {
           at: 'left top',
           of: '#parent',
           within: '#within',
-          collision: 'flipFit',
+          collision: 'flipfit',
         });
 
-        toReturn['flipFit - left top'] = {
+        toReturn['flipfit - left top'] = {
           actual: $elx.offset(),
           expected: {
             top: 4,
@@ -2161,6 +2161,102 @@ module.exports = {
         browser.assert.equal(Object.keys(result.value).length, 7);
         Object.entries(result.value).forEach(([key, value]) => {
           browser.assert.equal(typeof value, 'object');
+          browser.assert.deepEqual(value.actual, value.expected, key);
+        });
+      },
+    );
+  },
+  'with scrollbars': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+
+        const $scrollX = $('#scrollX');
+        $scrollX.css({
+          width: 100,
+          height: 100,
+          left: 0,
+          top: 0,
+        });
+
+        const $elx = $('#elx').position({
+          my: 'left top',
+          at: 'right bottom',
+          of: '#scrollX',
+          within: '#scrollX',
+          collision: 'fit',
+        });
+
+        toReturn['visible'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 90,
+            left: 90,
+          },
+        };
+
+        const scrollbarInfo = $.position.getScrollInfo(
+          $.position.getWithinInfo($('#scrollX')),
+        );
+
+        $elx.position({
+          of: '#scrollX',
+          collision: 'fit',
+          within: '#scrollX',
+          my: 'left top',
+          at: 'right bottom',
+        });
+
+        toReturn['scroll'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 90 - scrollbarInfo.height,
+            left: 90 - scrollbarInfo.width,
+          },
+        };
+
+        $scrollX.css({
+          overflow: 'auto',
+        });
+
+        toReturn['auto, no scroll"'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 90,
+            left: 90,
+          },
+        };
+
+        $scrollX
+          .css({
+            overflow: 'auto',
+          })
+          .append($('<div>').height(300).width(300));
+
+        $elx.position({
+          of: '#scrollX',
+          collision: 'fit',
+          within: '#scrollX',
+          my: 'left top',
+          at: 'right bottom',
+        });
+
+        toReturn['auto, with scroll'] = {
+          actual: $elx.offset(),
+          expected: {
+            top: 90 - scrollbarInfo.height,
+            left: 90 - scrollbarInfo.width,
+          },
+        };
+
+        return toReturn;
+      },
+      [],
+      (result) => {
+        browser.assert.equal(Object.keys(result.value).length, 4);
+        Object.entries(result.value).forEach((key, value) => {
           browser.assert.deepEqual(value.actual, value.expected, key);
         });
       },

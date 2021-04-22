@@ -274,7 +274,7 @@
         }
       },
     },
-    flipFit: {
+    flipfit: {
       left(...args) {
         collisions.flip.left.apply(this, args);
         collisions.fit.left.apply(this, args);
