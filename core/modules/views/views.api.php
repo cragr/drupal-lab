@@ -517,6 +517,9 @@ function hook_views_data_alter(array &$data) {
  * @see hook_views_data_alter()
  */
 function DATABASEMODULE_views_data_DATABASEDRIVER_alter(array &$data) {
+  // This hook works the same as hook_views_data_alter(). The only difference is
+  // that this hook is called after hook_views_data_alter(). For code examples,
+  // please look at the code examples of hook_views_data_alter().
 }
 
 /**
