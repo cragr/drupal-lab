@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -126,7 +127,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#weight' => $event->getComponent()->getWeight(),
         '#attributes' => isset($content['#attributes']) ? $content['#attributes'] : [],
         'content' => $content,
-        '#contextual_links' => isset($content['#contextual_links']) ? $content['#contextual_links'] : [],
+        '#contextual_links' => isset($content['#contextual_links']) && !($block instanceof InlineBlock) ? $content['#contextual_links'] : [],
       ];
       if (!$is_content_empty) {
         // Place the $content returned by the block plugin into a 'content'
