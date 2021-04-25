@@ -121,6 +121,7 @@ class TermParentsTest extends BrowserTestBase {
 
     $result = $this->termStorage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('name', $name)
       ->execute();
     /* @var \Drupal\taxonomy\TermInterface $term_1 */
@@ -187,7 +188,7 @@ class TermParentsTest extends BrowserTestBase {
   }
 
   /**
-   * Performs tests that edit terms with a single parent
+   * Performs tests that edit terms with a single parent.
    *
    * @return \Drupal\taxonomy\TermInterface[]
    *   A list of terms created for testing.
