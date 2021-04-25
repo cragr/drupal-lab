@@ -131,7 +131,6 @@ class Select extends Query implements SelectInterface {
    *   Array of query options.
    */
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
-    $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
     $this->condition = $this->connection->condition($conjunction);

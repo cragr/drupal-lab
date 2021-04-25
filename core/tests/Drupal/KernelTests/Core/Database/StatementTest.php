@@ -24,7 +24,6 @@ class StatementTest extends DatabaseTestBase {
       ':age' => '30',
     ];
     $options = [
-      'return' => Database::RETURN_STATEMENT,
       'allow_square_brackets' => FALSE,
     ];
 

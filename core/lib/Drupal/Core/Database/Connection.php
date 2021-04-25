@@ -794,12 +794,11 @@ abstract class Connection {
    *   - If $options['return'] === self::RETURN_AFFECTED,
    *     returns the number of rows affected by the query
    *     (not the number matched).
-   *   - (deprecated) If $options['return'] === self::RETURN_INSERT_ID, returns
-   *     the generated insert ID of the last query as a string.
-   *   - (deprecated) If $options['return'] === self::RETURN_NULL, returns
-   *     NULL.
-   *   - If an exception occurs and $options['throw_exception'] evaluates to
-   *     FALSE, returns NULL.
+   *   - If $options['return'] === self::RETURN_INSERT_ID,
+   *     returns the generated insert ID of the last query as a string.
+   *   - If either $options['return'] === self::RETURN_NULL, or
+   *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
+   *     returns NULL.
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException

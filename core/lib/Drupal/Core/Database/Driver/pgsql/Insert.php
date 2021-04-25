@@ -96,7 +96,7 @@ class Insert extends QueryInsert {
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
-      return $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.

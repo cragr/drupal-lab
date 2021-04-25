@@ -137,10 +137,6 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
-    if (!isset($options['return'])) {
-      $options['return'] = Database::RETURN_STATEMENT;
-    }
-
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object

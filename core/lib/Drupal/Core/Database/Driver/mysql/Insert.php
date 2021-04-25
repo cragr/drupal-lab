@@ -38,7 +38,7 @@ class Insert extends QueryInsert {
       $last_insert_id = $this->connection->lastInsertId();
     }
     catch (\Exception $e) {
-      return $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.
