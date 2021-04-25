@@ -328,12 +328,12 @@ abstract class Connection {
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
    *   See http://php.net/manual/pdostatement.fetch.php
-   * - return: Depending on the type of query, different return values may be
-   *   meaningful. This directive instructs the system which type of return
-   *   value is desired. The system will generally set the correct value
-   *   automatically, so it is extremely rare that a module developer will ever
-   *   need to specify this value. Setting it incorrectly will likely lead to
-   *   unpredictable results or fatal errors. Legal values include:
+   * - return: (deprecated) Depending on the type of query, different return
+   *   values may be meaningful. This directive instructs the system which type
+   *   of return value is desired. The system will generally set the correct
+   *   value automatically, so it is extremely rare that a module developer will
+   *   ever need to specify this value. Setting it incorrectly will likely lead
+   *   to unpredictable results or fatal errors. Legal values include:
    *   - Database::RETURN_STATEMENT: Return the prepared statement object for
    *     the query. This is usually only meaningful for SELECT queries, where
    *     the statement object is how one accesses the result set returned by the
@@ -341,11 +341,11 @@ abstract class Connection {
    *   - Database::RETURN_AFFECTED: Return the number of rows affected by an
    *     UPDATE or DELETE query. Be aware that means the number of rows actually
    *     changed, not the number of rows matched by the WHERE clause.
-   *   - (deprecated) Database::RETURN_INSERT_ID: Return the sequence ID
-   *     (primary key) created by an INSERT statement on a table that contains a
-   *     serial column.
-   *   - (deprecated) Database::RETURN_NULL: Do not return anything, as there is
-   *     no meaningful value to return. That is the case for INSERT queries on
+   *   - Database::RETURN_INSERT_ID: Return the sequence ID (primary key)
+   *     created by an INSERT statement on a table that contains a serial
+   *     column.
+   *   - Database::RETURN_NULL: Do not return anything, as there is no
+   *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
    * - throw_exception: By default, the database system will catch any errors
    *   on a query as an Exception, log it, and then rethrow it so that code
@@ -375,7 +375,6 @@ abstract class Connection {
   protected function defaultOptions() {
     return [
       'fetch' => \PDO::FETCH_OBJ,
-      'return' => Database::RETURN_STATEMENT,
       'throw_exception' => TRUE,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
@@ -550,6 +549,10 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function prepareStatement(string $query, array $options): StatementInterface {
+    if (isset($options['return'])) {
+      @trigger_error('Passing "return" option to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. @todo. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+    }
+
     $query = $this->prefixTables($query);
     if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
@@ -807,6 +810,11 @@ abstract class Connection {
   public function query($query, array $args = [], $options = []) {
     // Use default values if not already set.
     $options += $this->defaultOptions();
+
+    if (isset($options['return'])) {
+      @trigger_error('Passing "return" option to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. @todo. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
+    }
+
     assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     // We allow either a pre-bound statement object (deprecated) or a literal
@@ -853,7 +861,7 @@ abstract class Connection {
       // Depending on the type of query we may need to return a different value.
       // See DatabaseConnection::defaultOptions() for a description of each
       // value.
-      switch ($options['return']) {
+      switch ($options['return'] ?? Database::RETURN_STATEMENT) {
         case Database::RETURN_STATEMENT:
           return $stmt;
 
@@ -862,12 +870,10 @@ abstract class Connection {
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:
-          @trigger_error(' Passing Database::RETURN_INSERT_ID as value for $options[\'return\'] to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
           $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
           return $this->connection->lastInsertId($sequence_name);
 
         case Database::RETURN_NULL:
-          @trigger_error(' Passing Database::RETURN_NULL as value for $options[\'return\'] to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use Connection::insert() instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
           return NULL;
 
         default:

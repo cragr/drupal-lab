@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 /**
@@ -35,43 +33,35 @@ class Insert extends QueryInsert {
     // In SQLite, this is also a notable performance boost.
     $transaction = $this->connection->startTransaction();
 
-    try {
-      if (count($this->insertFields)) {
-        $last_insert_id = 0;
-
-        // Each insert happens in its own query.
-        $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
-        foreach ($this->insertValues as $insert_values) {
+    if (count($this->insertFields)) {
+      // Each insert happens in its own query.
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      foreach ($this->insertValues as $insert_values) {
+        try {
           $stmt->execute($insert_values, $this->queryOptions);
-          $last_insert_id = $this->connection->lastInsertId();
         }
-
-        // Re-initialize the values array so that we can re-use this query.
-        $this->insertValues = [];
-
-        // Transaction commits here when $transaction looses scope.
-        return $last_insert_id;
+        catch (\Exception $e) {
+          // One of the INSERTs failed, rollback the whole batch.
+          $transaction->rollBack();
+          $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $insert_values, $this->queryOptions);
+        }
       }
-      else {
-        $stmt = $this->connection->prepareStatement('INSERT INTO {' . $this->table . '} DEFAULT VALUES', $this->queryOptions);
+      // Re-initialize the values array so that we can re-use this query.
+      $this->insertValues = [];
+    }
+    else {
+      $stmt = $this->connection->prepareStatement("INSERT INTO {{$this->table}} DEFAULT VALUES", $this->queryOptions);
+      try {
         $stmt->execute(NULL, $this->queryOptions);
-        return $this->connection->lastInsertId();
+      }
+      catch (\Exception $e) {
+        $transaction->rollBack();
+        $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
       }
     }
-    catch (\PDOException $e) {
-      // One of the INSERTs failed, rollback the whole batch.
-      $transaction->rollBack();
 
-      $message = $e->getMessage() . ": " . (string) $this;
-      $code = is_int($e->getCode()) ? $e->getCode() : 0;
-
-      // SQLSTATE 23xxx errors indicate an integrity constraint violation.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $code, $e);
-      }
-
-      throw new DatabaseExceptionWrapper($message, $code, $e);
-    }
+    // Transaction commits here when $transaction looses scope.
+    return $this->connection->lastInsertId();
   }
 
   public function __toString() {

@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 /**
@@ -34,26 +32,13 @@ class Insert extends QueryInsert {
       $values = $this->fromQuery->getArguments();
     }
 
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
       $stmt->execute($values, $this->queryOptions);
       $last_insert_id = $this->connection->lastInsertId();
     }
-    catch (\PDOException $e) {
-      $message = $e->getMessage() . ": " . (string) $this;
-      $code = is_int($e->getCode()) ? $e->getCode() : 0;
-
-      // SQLSTATE 23xxx errors indicate an integrity constraint violation. Also,
-      // in case of attempted INSERT of a record with an undefined column and no
-      // default value indicated in schema, MySql returns a 1364 error code.
-      if (
-        substr($e->getCode(), -6, -3) == '23' ||
-        ($e->errorInfo[1] ?? NULL) === 1364
-      ) {
-        throw new IntegrityConstraintViolationException($message, $code, $e);
-      }
-
-      throw new DatabaseExceptionWrapper($message, $code, $e);
+    catch (\Exception $e) {
+      return $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.

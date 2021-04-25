@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 // cSpell:ignore nextval setval
@@ -95,22 +94,9 @@ class Insert extends QueryInsert {
       }
       $this->connection->releaseSavepoint();
     }
-    catch (\PDOException $e) {
-      $this->connection->rollbackSavepoint();
-
-      $message = $e->getMessage() . ": " . (string) $this;
-      $code = is_int($e->getCode()) ? $e->getCode() : 0;
-
-      // SQLSTATE 23xxx errors indicate an integrity constraint violation.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $code, $e);
-      }
-
-      throw new DatabaseExceptionWrapper($message, $code, $e);
-    }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
-      throw $e;
+      return $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.
