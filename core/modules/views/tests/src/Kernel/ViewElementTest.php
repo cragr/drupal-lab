@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel;
 
-use Drupal\views\Exception\InvalidViewException;
+use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
 
 /**
@@ -140,7 +140,7 @@ class ViewElementTest extends ViewsKernelTestBase {
       '#name' => 'invalid_view_name',
       '#embed' => FALSE,
     ];
-    $this->expectException(InvalidViewException::class);
+    $this->expectException(ViewRenderElementException::class);
     $this->expectExceptionMessage("Invalid View name ({$render_element['#name']}) given.");
     $renderer->renderRoot($render_element);
   }

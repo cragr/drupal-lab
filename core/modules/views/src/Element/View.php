@@ -3,7 +3,7 @@
 namespace Drupal\views\Element;
 
 use Drupal\Core\Render\Element\RenderElement;
-use Drupal\views\Exception\InvalidViewException;
+use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
 
 /**
@@ -43,7 +43,7 @@ class View extends RenderElement {
     if (!isset($element['#view'])) {
       $view = Views::getView($element['#name']);
       if (!$view) {
-        throw new InvalidViewException("Invalid View name ({$element['#name']}) given.");
+        throw new ViewRenderElementException("Invalid View name ({$element['#name']}) given.");
       }
     }
     else {
