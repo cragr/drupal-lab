@@ -12,7 +12,9 @@ source:
   constants:
     # The tool configuring this migration must set source_base_path. It
     # represents the fully qualified path relative to which URIs in the files
-    # table are specified. See source_full_path configuration in this
+    # table are specified. This can be a local file directory containing the
+    # source site, e.g. /var/www/docroot, or the site address,
+    # e.g. http://example.com. See source_full_path configuration in this
     # migration's process pipeline as an example.
     source_base_path: ''
 process:

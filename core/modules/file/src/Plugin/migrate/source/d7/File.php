@@ -8,14 +8,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 file source from database.
  *
- * Available constants:
- * - source_base_path: (required) The location of the source Drupal 7 files.
- *   This can be a local file directory containing the source site
- *   (e.q. /var/www/docroot), or the site address (e.q. http://example.com).
  * Available configuration keys:
- * - scheme: (optional) The file scheme, like 'public' or 'private' to get from
+ * - scheme: (optional) The file scheme, like 'public' or 'private', to get from
  *   the source. Can be a string or an array of schemes. The 'temporary' scheme
- *   is not supported. If omitted, all files are retrieved.
+ *   is not supported. If omitted, all files are retrieved in supported schemes
+ *   are retrieved.
  *
  * Example:
  *
@@ -23,14 +20,10 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * source:
  *   plugin: d7_file
  *   scheme: public
- *   constants:
- *     source_base_path: 'https://example.com'
  * @endcode
  *
- * In this example the public files are retrieved from the source database and
- * the files are downloaded from 'https://example.com' site. The full path to
- * the file should be generated in the process plugin. See complete example in
- * core/modules/file/migrations/d7_file.yml.
+ * In this example the public files are retrieved from the source database.
+ * See core/modules/file/migrations/d7_file.yml for complete migration.
  *
  * For additional configuration keys, refer to the parent classes:
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
@@ -128,8 +121,7 @@ class File extends DrupalSqlBase {
       'fid' => $this->t('File ID'),
       'uid' => $this->t('The {users}.uid who added the file. If set to 0, this file was added by an anonymous user.'),
       'filename' => $this->t('File name'),
-      'uri' => $this->t('The URI to access the file (prefixed with scheme).'),
-      'filepath' => $this->t('File path relative to the document root.'),
+      'filepath' => $this->t('File path'),
       'filemime' => $this->t('File MIME Type'),
       'status' => $this->t('The published status of a file.'),
       'timestamp' => $this->t('The time that the file was added.'),
