@@ -7,10 +7,22 @@
  * provided by jQuery UI position, but refactored to meet Drupal coding
  * standards, and restructured so it extends jQuery core instead of jQuery UI.
  *
+ * For most positioning needs, the core/popperjs library should be used instead
+ * of the functionality provided here. This is provided to support pre-existing
+ * code that expects the jQuery position API.
+ *
  * @see https://github.com/jquery/jquery-ui/blob/1.12.1/LICENSE.txt
  * @see https://raw.githubusercontent.com/jquery/jquery-ui/1.12.1/ui/position.js
  */
 
+/**
+ * This provides ported version of jQuery UI position, refactored to not depend
+ * on jQuery UI and to meet Drupal JavaScript coding standards. Functionality
+ * and usage is identical. It positions an element relative to another. The
+ * `position()` function can be called by any jQuery object. Additional details
+ * on using `position()` are provided in this file in the docblock for
+ * $.fn.position.
+ */
 (($) => {
   let cachedScrollbarWidth = null;
   const { max, abs } = Math;
@@ -352,6 +364,62 @@
   };
 
   // eslint-disable-next-line func-names
+  /**
+   * Positions an element relative to another.
+   *
+   * The following documentation is originally from
+   * {@link https://api.jqueryui.com/position/}.
+   *
+   * @param {Object} options - the options object.
+   * @param {string} options.my - Defines which position on the element being
+   *   positioned to align with the target element: "horizontal vertical"
+   *   alignment. A single value such as "right" will be normalized to "right
+   *   center", "top" will be normalized to "center top" (following CSS
+   *   convention). Acceptable horizontal values: "left", "center", "right".
+   *   Acceptable vertical values: "top", "center", "bottom". Example: "left
+   *   top" or "center center". Each dimension can also contain offsets, in
+   *   pixels or percent, e.g., "right+10 top-25%". Percentage offsets are
+   *   relative to the element being positioned. Default value is "center".
+   * @param {string} options.at - Defines which position on the target element
+   *   to align the positioned element against: "horizontal vertical" alignment.
+   *   See the `my` option for full details on possible values. Percentage
+   *   offsets are relative to the target element. Default value is "center".
+   * @param {string|Element|jQuery|Event|null} options.of - Which element to
+   *   position against. If you provide a selector or jQuery object, the first
+   *   matching element will be used. If you provide an event object, the pageX
+   *   and pageY properties will be used. Example: "#top-menu". Default value is
+   *   null.
+   * @param {string} options.collision - When the positioned element overflows
+   *   the window in some direction, move it to an alternative position. Similar
+   *   to `my` and `at`, this accepts a single value or a pair for
+   *   horizontal/vertical, e.g., "flip", "fit", "fit flip", "fit none". Default
+   *   value is "flip". The options work as follows:
+   *   - "flip": Flips the element to the opposite side of the target and the
+   *     collision detection is run again to see if it will fit. Whichever side
+   *     allows more of the element to be visible will be used.
+   *   - "fit": Shift the element away from the edge of the window.
+   *   - "flipfit": First applies the flip logic, placing the element on
+   *     whichever side allows more of the element to be visible. Then the fit
+   *     logic is applied to ensure as much of the element is visible as
+   *     possible.
+   *     "none": Does not apply any collision detection.
+   * @param {function|null} options.using - When specified, the actual property
+   *   setting is delegated to this callback. Receives two parameters: The first
+   *   is a hash of top and left values for the position that should be set and
+   *   can be forwarded to .css() or .animate().The second provides feedback
+   *   about the position and dimensions of both elements, as well as
+   *   calculations to their relative position. Both target and element have
+   *   these properties: element, left, top, width, height. In addition, there's
+   *   horizontal, vertical and important, providing twelve potential directions
+   *   like { horizontal: "center", vertical: "left", important: "horizontal" }.
+   *   Default value is null.
+   * @param {string|Element|jQuery} options.within - Element to position within,
+   *   affecting collision detection. If you provide a selector or jQuery
+   *   object, the first matching element will be used. Default value is window.
+   *
+   * @return {jQuery}
+   *  The jQuery object that called called this function.
+   */
   $.fn.position = function (options) {
     if (!options || !options.of) {
       // eslint-disable-next-line prefer-rest-params
@@ -545,4 +613,13 @@
       elem.offset($.extend(position, { using }));
     });
   };
+
+  // Although $.ui.position is not built to be called directly, some legacy code
+  // may have checks for the presence of $.ui.position, which can be used to
+  // confirm the presence of jQuery UI position's API, as opposed to the more
+  // limited version provided by jQuery.
+  if (!$.hasOwnProperty('ui')) {
+    $.ui = {};
+  }
+  $.ui.position = collisions;
 })(jQuery);

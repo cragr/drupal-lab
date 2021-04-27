@@ -656,13 +656,11 @@ jquery.ui.mouse:
   deprecated: *jquery_ui_unused_deprecated
 
 drupal.jquery.position:
-  # This is a modified version of jQuery UI position for that does not require
-  # any jQuery UI assets, only jQuery. It is still effectively jQuery UI code,
-  # so that is the license referenced here.
-  license:
-    name: Public Domain
-    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.12.1/LICENSE.txt
-    gpl-compatible: true
+  # For most positioning needs, the core/popperjs library should be used. This
+  # is a modified version of jQuery UI position for that does not require any
+  # jQuery UI assets, only jQuery. It is provided by core for use with
+  # pre-existing libraries that expect the jQuery UI position API. Popperjs is
+  # recommended for any new uses.
   version: VERSION
   js:
     misc/position.js: {}

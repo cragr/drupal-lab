@@ -408,4 +408,10 @@
       }));
     });
   };
+
+  if (!$.hasOwnProperty('ui')) {
+    $.ui = {};
+  }
+
+  $.ui.position = collisions;
 })(jQuery);
