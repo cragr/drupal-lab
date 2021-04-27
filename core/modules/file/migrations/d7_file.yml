@@ -14,8 +14,8 @@ source:
     # represents the fully qualified path relative to which URIs in the files
     # table are specified. This can be a local file directory containing the
     # source site, e.g. /var/www/docroot, or the site address,
-    # e.g. http://example.com. See source_full_path configuration in this
-    # migration's process pipeline as an example.
+    # e.g. http://example.com. See the configuration for the source_full_path
+    # property in the process section below.
     source_base_path: ''
 process:
   # If you are using this file to build a custom migration consider removing
