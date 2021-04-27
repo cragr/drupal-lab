@@ -179,7 +179,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
    * @param string[] $pieces
    *   Fragments of the file path.
    * @param string $content
-   *   The content.
+   *   The contents of the file.
    */
   protected function addFileToFilesystemStructure(array &$filesystem_structure, array $pieces, $content) {
     $piece = array_shift($pieces);
