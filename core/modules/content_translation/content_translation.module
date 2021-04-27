@@ -408,7 +408,7 @@ function content_translation_entity_access(EntityInterface $entity, $operation, 
 
   $has_entity_type_access = $account->hasPermission('translate any entity');
   if (!$has_entity_type_access) {
-    $entity_type_access_permission = $entity_type->getPermissionGranularity() == 'bundle'
+    $entity_type_access_permission = $entity_type->getPermissionGranularity() === 'bundle'
       ? "translate {$entity->bundle()} $entity_type_id"
       : "translate $entity_type_id";
     $has_entity_type_access = $account->hasPermission($entity_type_access_permission);
