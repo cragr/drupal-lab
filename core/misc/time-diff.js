@@ -39,8 +39,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (lastUnit !== 'second') {
         if (unitsCount === granularity) {
-          Drupal.dateFormatter.getAllIntervals().every(function (interval) {
-            var duration = Drupal.dateFormatter.intervals[interval];
+          Drupal.timeDiff.getAllIntervals().every(function (interval) {
+            var duration = Drupal.timeDiff.intervals[interval];
 
             if (interval === lastUnit) {
               refresh = refresh < duration ? duration : refresh;
@@ -52,9 +52,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return refresh;
         }
 
-        var lastIntervalIndex = Drupal.dateFormatter.getAllIntervals().indexOf(lastUnit);
-        var nextInterval = Drupal.dateFormatter.getAllIntervals()[lastIntervalIndex + 1];
-        refresh = Drupal.dateFormatter.intervals[nextInterval];
+        var lastIntervalIndex = Drupal.timeDiff.getAllIntervals().indexOf(lastUnit);
+        var nextInterval = Drupal.timeDiff.getAllIntervals()[lastIntervalIndex + 1];
+        refresh = Drupal.timeDiff.intervals[nextInterval];
       }
 
       return refresh;
@@ -81,8 +81,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var units;
       var _options = options,
           granularity = _options.granularity;
-      Drupal.dateFormatter.getAllIntervals().every(function (interval) {
-        var duration = Drupal.dateFormatter.intervals[interval];
+      Drupal.timeDiff.getAllIntervals().every(function (interval) {
+        var duration = Drupal.timeDiff.intervals[interval];
         units = Math.floor(diff / duration);
 
         if (units > 0) {

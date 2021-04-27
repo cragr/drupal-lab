@@ -107,8 +107,8 @@
         // '1 hour 32 minutes', do not refresh every 10 seconds but every one
         // minute (60 seconds).
         if (unitsCount === granularity) {
-          Drupal.dateFormatter.getAllIntervals().every((interval) => {
-            const duration = Drupal.dateFormatter.intervals[interval];
+          Drupal.timeDiff.getAllIntervals().every((interval) => {
+            const duration = Drupal.timeDiff.intervals[interval];
             if (interval === lastUnit) {
               refresh = refresh < duration ? duration : refresh;
               return false;
@@ -125,13 +125,13 @@
         // difference will be '1 hour' (because minutes are 0, therefore are not
         // shown) but we want the next refresh to occur, not in one hour, but in
         // one minute.
-        const lastIntervalIndex = Drupal.dateFormatter
+        const lastIntervalIndex = Drupal.timeDiff
           .getAllIntervals()
           .indexOf(lastUnit);
-        const nextInterval = Drupal.dateFormatter.getAllIntervals()[
+        const nextInterval = Drupal.timeDiff.getAllIntervals()[
           lastIntervalIndex + 1
         ];
-        refresh = Drupal.dateFormatter.intervals[nextInterval];
+        refresh = Drupal.timeDiff.intervals[nextInterval];
       }
       return refresh;
     },
@@ -171,8 +171,8 @@
       let units;
       let { granularity } = options;
 
-      Drupal.dateFormatter.getAllIntervals().every((interval) => {
-        const duration = Drupal.dateFormatter.intervals[interval];
+      Drupal.timeDiff.getAllIntervals().every((interval) => {
+        const duration = Drupal.timeDiff.intervals[interval];
         units = Math.floor(diff / duration);
         if (units > 0) {
           diff %= units * duration;
