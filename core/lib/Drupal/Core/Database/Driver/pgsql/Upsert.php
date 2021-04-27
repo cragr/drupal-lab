@@ -85,7 +85,7 @@ class Upsert extends QueryUpsert {
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
-      throw $e;
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $options);
     }
 
     return TRUE;

@@ -119,7 +119,7 @@ class Log {
       $this->queryLog[$key][] = [
         'query' => $statement->getQueryString(),
         'args' => $args,
-        'target' => $statement->dbh->getTarget(),
+        'target' => $statement->getConnectionTarget(),
         'caller' => $this->findCaller(),
         'time' => $time,
         'start' => $start,
