@@ -118,9 +118,9 @@ class QueueTest extends KernelTestBase {
   /**
    * Set the expiration for different queues.
    *
-   * @param $queue
+   * @param \Drupal\Core\Queue\QueueInterface $queue
    *   The queue for which to alter the expiration.
-   * @param $expire
+   * @param int $expire
    *   The new expiration time.
    *
    * @throws \ReflectionException

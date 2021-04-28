@@ -131,7 +131,8 @@ class CronQueueTest extends KernelTestBase {
     $this->cron->run();
     $this->assertEqual(\Drupal::state()->get('cron_queue_test_lease_time'), 1);
 
-    // Set the expiration time to 3 seconds ago, so the lease should automaticall y expire.
+    // Set the expiration time to 3 seconds ago, so the lease should
+    // automatically expire.
     \Drupal::database()
       ->update(DatabaseQueue::TABLE_NAME)
       ->fields(['expire' => time() - 3])
