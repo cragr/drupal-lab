@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
+(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage, Modernizr) {
   var options = $.extend(drupalSettings.contextual, {
     strings: {
       open: Drupal.t('Open'),
@@ -60,28 +60,9 @@
       var glue = url.indexOf('?') === -1 ? '?' : '&';
       this.setAttribute('href', url + glue + destination);
     });
-    var model = new contextual.StateModel({
-      title: $region.find('h2').eq(0).text().trim()
-    });
-    var viewOptions = $.extend({
-      el: $contextual,
-      model: model
-    }, options);
-    contextual.views.push({
-      visual: new contextual.VisualView(viewOptions),
-      aural: new contextual.AuralView(viewOptions),
-      keyboard: new contextual.KeyboardView(viewOptions)
-    });
-    contextual.regionViews.push(new contextual.RegionView($.extend({
-      el: $region,
-      model: model
-    }, options)));
-    contextual.collection.add(model);
-    $(document).trigger('drupalContextualLinkAdded', {
-      $el: $contextual,
-      $region: $region,
-      model: model
-    });
+    options.title = $region.find('h2').eq(0).text().trim();
+    var contextualModelView = new Drupal.contextual.ContextualModelView($contextual, $region, options);
+    contextual.instances.push(contextualModelView);
     adjustIfNestedAndOverlapping($contextual);
   }
 
@@ -145,11 +126,16 @@
   };
   Drupal.contextual = {
     views: [],
-    regionViews: []
+    regionViews: [],
+    instances: new Proxy([], {
+      set: function set(obj, prop, value) {
+        obj[prop] = value;
+        window.dispatchEvent(new Event('contextual-instances-added'));
+        return true;
+      }
+    }),
+    ContextualModelView: {}
   };
-  Drupal.contextual.collection = new Backbone.Collection([], {
-    model: Drupal.contextual.StateModel
-  });
 
   Drupal.theme.contextualTrigger = function () {
     return '<button class="trigger visually-hidden focusable" type="button"></button>';
@@ -158,4 +144,4 @@
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     Drupal.ajax.bindAjaxLinks(data.$el[0]);
   });
-})(jQuery, Drupal, drupalSettings, _, Backbone, window.JSON, window.sessionStorage);
+})(jQuery, Drupal, drupalSettings, _, Backbone, window.JSON, window.sessionStorage, Modernizr);

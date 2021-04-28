@@ -3,7 +3,7 @@
  * Attaches behaviors for the Contextual module.
  */
 
-(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
+(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage, Modernizr) {
   const options = $.extend(
     drupalSettings.contextual,
     // Merge strings on top of drupalSettings so that they are not mutable.
@@ -87,7 +87,6 @@
   function initContextual($contextual, html) {
     const $region = $contextual.closest('.contextual-region');
     const contextual = Drupal.contextual;
-
     $contextual
       // Update the placeholder to contain its rendered contextual links.
       .html(html)
@@ -108,30 +107,14 @@
     });
 
     // Create a model and the appropriate views.
-    const model = new contextual.StateModel({
-      title: $region.find('h2').eq(0).text().trim(),
-    });
-    const viewOptions = $.extend({ el: $contextual, model }, options);
-    contextual.views.push({
-      visual: new contextual.VisualView(viewOptions),
-      aural: new contextual.AuralView(viewOptions),
-      keyboard: new contextual.KeyboardView(viewOptions),
-    });
-    contextual.regionViews.push(
-      new contextual.RegionView($.extend({ el: $region, model }, options)),
-    );
+    options.title = $region.find('h2').eq(0).text().trim();
 
-    // Add the model to the collection. This must happen after the views have
-    // been associated with it, otherwise collection change event handlers can't
-    // trigger the model change event handler in its views.
-    contextual.collection.add(model);
-
-    // Let other JavaScript react to the adding of a new contextual link.
-    $(document).trigger('drupalContextualLinkAdded', {
-      $el: $contextual,
+    const contextualModelView = new Drupal.contextual.ContextualModelView(
+      $contextual,
       $region,
-      model,
-    });
+      options,
+    );
+    contextual.instances.push(contextualModelView);
 
     // Fix visual collisions between contextual link triggers.
     adjustIfNestedAndOverlapping($contextual);
@@ -252,16 +235,17 @@
      * @type {Array}
      */
     regionViews: [],
+    // Instances is instantiated as a proxy so an event can be triggered when
+    // items are added.
+    instances: new Proxy([], {
+      set(obj, prop, value) {
+        obj[prop] = value;
+        window.dispatchEvent(new Event('contextual-instances-added'));
+        return true;
+      },
+    }),
+    ContextualModelView: {},
   };
-
-  /**
-   * A Backbone.Collection of {@link Drupal.contextual.StateModel} instances.
-   *
-   * @type {Backbone.Collection}
-   */
-  Drupal.contextual.collection = new Backbone.Collection([], {
-    model: Drupal.contextual.StateModel,
-  });
 
   /**
    * A trigger is an interactive element often bound to a click handler.
@@ -294,4 +278,5 @@
   Backbone,
   window.JSON,
   window.sessionStorage,
+  Modernizr,
 );

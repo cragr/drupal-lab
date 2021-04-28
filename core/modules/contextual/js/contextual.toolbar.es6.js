@@ -21,32 +21,19 @@
    *   A contextual links DOM element as rendered by the server.
    */
   function initContextualToolbar(context) {
-    if (!Drupal.contextual || !Drupal.contextual.collection) {
+    if (!Drupal.contextual || !Drupal.contextual.instances) {
       return;
     }
 
-    const contextualToolbar = Drupal.contextualToolbar;
-    contextualToolbar.model = new contextualToolbar.StateModel(
-      {
-        // Checks whether localStorage indicates we should start in edit mode
-        // rather than view mode.
-        // @see Drupal.contextualToolbar.VisualView.persist
-        isViewing:
-          localStorage.getItem('Drupal.contextualToolbar.isViewing') !==
-          'false',
-      },
-      {
-        contextualCollection: Drupal.contextual.collection,
-      },
-    );
+    const { contextualToolbar } = Drupal;
 
     const viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
-      model: contextualToolbar.model,
       strings,
     };
-    new contextualToolbar.VisualView(viewOptions);
-    new contextualToolbar.AuralView(viewOptions);
+    contextualToolbar.model = new Drupal.contextual.ContextualToolbarModelView(
+      viewOptions,
+    );
   }
 
   /**
