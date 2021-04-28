@@ -1,0 +1,5 @@
+services:
+  entity_test_event.event_subscriber:
+    class: \Drupal\entity_test_event\EventSubscriber\TestEventSubscriber
+    tags:
+      - { name: event_subscriber }

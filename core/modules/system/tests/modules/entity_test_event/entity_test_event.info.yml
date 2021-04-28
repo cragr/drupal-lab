@@ -1,0 +1,5 @@
+name: 'Entity test event'
+type: module
+description: 'Provides entity events.'
+package: Testing
+version: VERSION

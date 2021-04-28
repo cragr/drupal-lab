@@ -778,26 +778,28 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   }
 
   /**
-   * {@inheritdoc}
+   * Invokes a hook on behalf of the entity.
+   *
+   * @param string $hook
+   *   A content entity hook name.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    */
   protected function invokeHook($hook, EntityInterface $entity) {
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-
-    switch ($hook) {
-      case 'presave':
-        $this->invokeFieldMethod('preSave', $entity);
-        break;
-
-      case 'insert':
-        $this->invokeFieldPostSave($entity, FALSE);
-        break;
-
-      case 'update':
-        $this->invokeFieldPostSave($entity, TRUE);
-        break;
+    $deprecated_hooks = [
+      'create',
+      'delete',
+      'insert',
+      'predelete',
+      'presave',
+      'update',
+    ];
+    if (!in_array($hook, $deprecated_hooks)) {
+      // Invoke the hook.
+      $this->moduleHandler->invokeAll($this->entityTypeId . '_' . $hook, [$entity]);
+      // Invoke the respective entity-level hook.
+      $this->moduleHandler->invokeAll('entity_' . $hook, [$entity, $this->entityTypeId]);
     }
-
-    parent::invokeHook($hook, $entity);
   }
 
   /**
@@ -814,7 +816,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   A multidimensional associative array of results, keyed by entity
    *   translation language code and field name.
    */
-  protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
+  public function invokeFieldMethod($method, ContentEntityInterface $entity) {
     $result = [];
     $args = array_slice(func_get_args(), 2);
     $langcodes = array_keys($entity->getTranslationLanguages());
@@ -863,7 +865,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @param bool $update
    *   Specifies whether the entity is being updated or created.
    */
-  protected function invokeFieldPostSave(ContentEntityInterface $entity, $update) {
+  public function invokeFieldPostSave(ContentEntityInterface $entity, $update) {
     // For each entity translation this returns an array of resave flags keyed
     // by field name, thus we merge them to obtain a list of fields to resave.
     $resave = [];

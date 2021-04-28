@@ -2,6 +2,12 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Event\EntityCreateEvent;
+use Drupal\Core\Entity\Event\EntityDeleteEvent;
+use Drupal\Core\Entity\Event\EntityInsertEvent;
+use Drupal\Core\Entity\Event\EntityPreDeleteEvent;
+use Drupal\Core\Entity\Event\EntityPreSaveEvent;
+use Drupal\Core\Entity\Event\EntityUpdateEvent;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 
@@ -186,22 +192,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   }
 
   /**
-   * Invokes a hook on behalf of the entity.
-   *
-   * @param string $hook
-   *   One of 'create', 'presave', 'insert', 'update', 'predelete', 'delete', or
-   *   'revision_delete'.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   */
-  protected function invokeHook($hook, EntityInterface $entity) {
-    // Invoke the hook.
-    $this->moduleHandler()->invokeAll($this->entityTypeId . '_' . $hook, [$entity]);
-    // Invoke the respective entity-level hook.
-    $this->moduleHandler()->invokeAll('entity_' . $hook, [$entity]);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function create(array $values = []) {
@@ -220,7 +210,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // Modules might need to add or change the data initially held by the new
     // entity object, for instance to fill-in default values.
-    $this->invokeHook('create', $entity);
+    $event = new EntityCreateEvent($entity);
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch($event);
 
     return $entity;
   }
@@ -415,8 +407,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // Allow code to run before deleting.
     $entity_class = $this->entityClass;
     $entity_class::preDelete($this, $keyed_entities);
+
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+
     foreach ($keyed_entities as $entity) {
-      $this->invokeHook('predelete', $entity);
+      $event = new EntityPreDeleteEvent($entity);
+      $event_dispatcher->dispatch($event);
     }
 
     // Perform the delete and reset the static cache for the deleted entities.
@@ -426,7 +422,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // Allow code to run after deleting.
     $entity_class::postDelete($this, $keyed_entities);
     foreach ($keyed_entities as $entity) {
-      $this->invokeHook('delete', $entity);
+      $event = new EntityDeleteEvent($entity);
+      $event_dispatcher->dispatch($event);
     }
   }
 
@@ -445,13 +442,13 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // Track if this entity is new.
     $is_new = $entity->isNew();
 
-    // Execute presave logic and invoke the related hooks.
+    // Execute presave logic and dispatch the related events.
     $id = $this->doPreSave($entity);
 
     // Perform the save and reset the static cache for the changed entity.
     $return = $this->doSave($id, $entity);
 
-    // Execute post save logic and invoke the related hooks.
+    // Execute post save logic and dispatch the related events.
     $this->doPostSave($entity, !$is_new);
 
     return $return;
@@ -492,7 +489,10 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // Allow code to run before saving.
     $entity->preSave($this);
-    $this->invokeHook('presave', $entity);
+
+    $event = new EntityPreSaveEvent($entity);
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch($event);
 
     return $id;
   }
@@ -527,7 +527,15 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // Allow code to run after saving.
     $entity->postSave($this, $update);
-    $this->invokeHook($update ? 'update' : 'insert', $entity);
+
+    if ($update) {
+      $event = new EntityUpdateEvent($entity);
+    }
+    else {
+      $event = new EntityInsertEvent($entity);
+    }
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch($event);
 
     // After saving, this is now the "original entity", and subsequent saves
     // will be updates instead of inserts, and updates must always be able to
