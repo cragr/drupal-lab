@@ -30,8 +30,11 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 
+// Store the Drupal root path.
+$root_path = dirname($_SERVER['SCRIPT_FILENAME'], 2);
+
 // Change the directory to the Drupal root.
-chdir('..');
+chdir($root_path);
 
 $autoloader = require_once 'autoload.php';
 
