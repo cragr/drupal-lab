@@ -42,12 +42,21 @@ class UserPasswordResetForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $user = NULL, $expiration_date = NULL, $timestamp = NULL, $hash = NULL) {
     if ($expiration_date) {
-      $form['message'] = ['#markup' => $this->t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', ['%user_name' => $user->getAccountName(), '%expiration_date' => $expiration_date])];
+      $form['message'] = [
+        '#markup' => $this->t('<p>This is a one-time login for %user_name_mask and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', [
+          '%user_name_mask' => $user->maskUsername(),
+          '%expiration_date' => $expiration_date,
+        ]),
+      ];
       $form['#title'] = $this->t('Reset password');
     }
     else {
       // No expiration for first time login.
-      $form['message'] = ['#markup' => $this->t('<p>This is a one-time login for %user_name.</p><p>Click on this button to log in to the site and change your password.</p>', ['%user_name' => $user->getAccountName()])];
+      $form['message'] = [
+        '#markup' => $this->t('<p>This is a one-time login for %user_name_mask.</p><p>Click on this button to log in to the site and change your password.</p>', [
+          '%user_name_mask' => $user->maskUsername(),
+        ]),
+      ];
       $form['#title'] = $this->t('Set password');
     }
 
