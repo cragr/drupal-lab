@@ -108,7 +108,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // It is necessary to do this globally rather than in our SUT composer.json
     // in order to ensure that Packagist is disabled during the
     // `composer create-project` command.
-    $this->executeCommand("COMPOSER_HOME=$composer_home composer config --no-interaction --global repo.packagist false");
+    $this->executeCommand("COMPOSER_HOME=$composer_home vendor/bin/composer config --no-interaction --global repo.packagist false");
     $this->assertCommandSuccessful();
 
     // Get the Drupal core version branch. For instance, this should be
