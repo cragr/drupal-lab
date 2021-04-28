@@ -6,8 +6,9 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that anonymous users are not served any JavaScript in the Standard
- * installation profile.
+ * Tests serving of Javascript in the Standard installation profile.
+ *
+ * Ensures that anonymous users are not served any JavaScript.
  *
  * @group Common
  */

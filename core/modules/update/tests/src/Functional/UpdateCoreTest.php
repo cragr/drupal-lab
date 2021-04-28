@@ -7,8 +7,9 @@ use Drupal\Core\Url;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
- * Tests the Update Manager module through a series of functional tests using
- * mock XML data.
+ * Tests the Update Manager module through a series of functional tests.
+ *
+ * Uses mock XML data to test this.
  *
  * @group update
  */

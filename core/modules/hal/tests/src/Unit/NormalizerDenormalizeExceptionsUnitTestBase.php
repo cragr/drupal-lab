@@ -5,6 +5,8 @@ namespace Drupal\Tests\hal\Unit;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Normalizer and denormalizeException Unit test base class.
+ *
  * Common ancestor for FieldItemNormalizerDenormalizeExceptionsUnitTest and
  * FieldNormalizerDenormalizeExceptionsUnitTest as they have the same
  * dataProvider.
@@ -12,8 +14,10 @@ use Drupal\Tests\UnitTestCase;
 abstract class NormalizerDenormalizeExceptionsUnitTestBase extends UnitTestCase {
 
   /**
-   * Provides data for FieldItemNormalizerDenormalizeExceptionsUnitTest::testFieldItemNormalizerDenormalizeExceptions()
-   * and for FieldNormalizerDenormalizeExceptionsUnitTest::testFieldNormalizerDenormalizeExceptions().
+   * Provides data for testing exceptions when creating a FieldNormalizer.
+   *
+   * @see \Drupal\Tests\hal\Unit\FieldItemNormalizerDenormalizeExceptionsUnitTest::testFieldItemNormalizerDenormalizeExceptions
+   * @see \Drupal\Tests\hal\Unit\FieldNormalizerDenormalizeExceptionsUnitTest::testFieldNormalizerDenormalizeExceptions
    *
    * @return array Test data.
    */

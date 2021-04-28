@@ -10,8 +10,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 
 /**
- * Generates text using placeholders for dummy content to check node token
- * replacement.
+ * Tests placement of node tokens.
  *
  * @group node
  */

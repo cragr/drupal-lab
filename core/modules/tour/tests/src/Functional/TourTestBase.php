@@ -11,8 +11,7 @@ use Drupal\Tests\BrowserTestBase;
 abstract class TourTestBase extends BrowserTestBase {
 
   /**
-   * Assert function to determine if tips rendered to the page
-   * have a corresponding page element.
+   * Assert that tips rendered to the page have a corresponding page element.
    *
    * @code
    * // Basic example.

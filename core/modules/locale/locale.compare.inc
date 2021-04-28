@@ -250,8 +250,7 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
 }
 
 /**
- * Helper function to construct batch operations checking remote translation
- * status.
+ * Helper to construct batch operations checking remote translation status.
  *
  * @param array $projects
  *   Array of project names to be processed.

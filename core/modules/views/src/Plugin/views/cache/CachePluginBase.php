@@ -62,8 +62,7 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Return a string to display as the clickable title for the
-   * access control.
+   * Return a string to display as the clickable title for the access control.
    */
   public function summaryTitle() {
     return $this->t('Unknown');
@@ -81,10 +80,11 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Determine expiration time in the cache table of the cache type
-   * or CACHE_PERMANENT if item shouldn't be removed automatically from cache.
+   * Determine cache expiration time.
    *
-   * Plugins must override this to implement expiration in the cache table.
+   * Plugins must override this to implement expiration in the cache table. The
+   * default is CACHE_PERMANENT, indicating that the item will not be removed
+   * automatically from cache.
    *
    * @param $type
    *   The cache type, either 'query', 'result'.

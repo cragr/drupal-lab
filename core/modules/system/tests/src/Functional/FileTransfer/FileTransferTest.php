@@ -7,8 +7,9 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that the jail is respected and that protocols using recursive file move
- * operations work.
+ * Tests that the jail is respected.
+ *
+ * Also tests that protocols using recursive file move operations work.
  *
  * @group FileTransfer
  */

@@ -110,8 +110,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the toolbar_modules_installed() and toolbar_modules_uninstalled() hook
-   * implementations.
+   * Tests toolbar_modules_installed() and toolbar_modules_uninstalled() hooks.
    */
   public function testModuleStatusChangeSubtreesHashCacheClear() {
     // Uninstall a module.
@@ -157,8 +156,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Exercises the toolbar_user_role_update() and toolbar_user_update() hook
-   * implementations.
+   * Tests toolbar_user_role_update() and toolbar_user_update() hooks.
    */
   public function testUserRoleUpdateSubtreesHashCacheClear() {
     // Find the new role ID.
@@ -221,6 +219,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
+   * Test non current user account updates.
+   *
    * Tests that changes to a user account by another user clears the changed
    * account's toolbar cached, not the user's who took the action.
    */
@@ -430,8 +430,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Asserts the subtrees hash on a fresh page GET is different from the hash
-   * from the previous page GET.
+   * Checks the subtree has of the current page with that of the previous page.
+   *
+   * Asserts that the subtrees hash on a fresh page GET is different from the
+   * subtree hash from the previous page GET.
    */
   private function assertDifferentHash() {
     // Request a new page to refresh the drupalSettings object.

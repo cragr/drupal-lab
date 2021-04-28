@@ -6,8 +6,10 @@ use Drupal\Core\Database\Database;
 use Drupal\node\NodeInterface;
 
 /**
- * Create a node with revisions and test viewing, saving, reverting, and
- * deleting revisions for user with access to all.
+ * Tests a node with revisions with a user with access to all.
+ *
+ * Test viewing, saving, reverting, and deleting revisions for user with access
+ * to all.
  *
  * @group node
  */
