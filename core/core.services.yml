@@ -1,3 +1,9 @@
+# cspell:ignore atomfeed atomrendererfeed contententry contentrendererentry
+# cspell:ignore dublincoreentry dublincorefeed dublincorerendererentry
+# cspell:ignore dublincorerendererfeed itunesentry itunesfeed
+# cspell:ignore itunesrendererentry itunesrendererfeed podcastentry podcastfeed
+# cspell:ignore slashrendererentry threadentry threadingrendererentry
+# cspell:ignore wellformedwebentry wellformedwebrendererentry
 parameters:
   # The app.root and site.path parameters are dynamically set by
   # \Drupal\Core\DrupalKernel::initializeContainer(). They are listed here to

@@ -1,5 +1,7 @@
 # Drupal core's extension relation types.
 # See https://tools.ietf.org/html/rfc5988#section-4.2.
+# cspell:ignore derivedfrom kinberg linkback lrdd pingback preconnect
+# cspell:ignore refback sayre slatkin timegate timemap trackback webmention
 add-form:
   uri: https://drupal.org/link-relations/add-form
   description: A form where a resource of this type can be created.
