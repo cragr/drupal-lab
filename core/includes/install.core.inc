@@ -459,6 +459,12 @@ function install_begin_request($class_loader, &$install_state) {
     if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
       $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
     }
+    // Ensure all profile directories are registered.
+    $profiles = \Drupal::service('extension.list.profile')->getAncestors($profile);
+    $profile_directories = array_map(function ($extension) {
+      return $extension->getPath();
+    }, $profiles);
+    $listing->setProfileDirectories($profile_directories);
   }
 
   // Before having installed the system module and being able to do a module
@@ -842,18 +848,22 @@ function install_tasks($install_state) {
 
   // Now add any tasks defined by the installation profile.
   if (!empty($install_state['parameters']['profile'])) {
-    // Load the profile install file, because it is not always loaded when
-    // hook_install_tasks() is invoked (e.g. batch processing).
-    $profile = $install_state['parameters']['profile'];
-    $profile_install_file = $install_state['profiles'][$profile]->getPath() . '/' . $profile . '.install';
-    if (file_exists($profile_install_file)) {
-      include_once \Drupal::root() . '/' . $profile_install_file;
-    }
-    $function = $install_state['parameters']['profile'] . '_install_tasks';
-    if (function_exists($function)) {
-      $result = $function($install_state);
-      if (is_array($result)) {
-        $tasks += $result;
+    $profiles = \Drupal::service('extension.list.profile')->getAncestors($install_state['parameters']['profile']);
+    foreach (array_keys($profiles) as $profile_name) {
+      $profile = $install_state['profiles'][$profile_name];
+      // Load the profile install file, because it is not always loaded when
+      // hook_install_tasks() is invoked (e.g. batch processing).
+      $profile_install_file = $profile->getPath() . '/' . $profile_name . '.install';
+      if (file_exists($profile_install_file)) {
+        include_once \Drupal::root() . '/' . $profile_install_file;
+      }
+      // If this is a base profile then the profile isn't loaded
+      $function = $profile_name . '_install_tasks';
+      if (function_exists($function)) {
+        $result = $function($install_state);
+        if (is_array($result)) {
+          $tasks += $result;
+        }
       }
     }
   }
@@ -871,11 +881,13 @@ function install_tasks($install_state) {
 
   // Allow the installation profile to modify the full list of tasks.
   if (!empty($install_state['parameters']['profile'])) {
-    $profile = $install_state['parameters']['profile'];
-    if ($install_state['profiles'][$profile]->load()) {
-      $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
-      if (function_exists($function)) {
-        $function($tasks, $install_state);
+    $profiles = \Drupal::service('extension.list.profile')->getAncestors($install_state['parameters']['profile']);
+    foreach (array_keys($profiles) as $profile_name) {
+      if ($install_state['profiles'][$profile_name]->load()) {
+        $function = $profile_name . '_install_tasks_alter';
+        if (function_exists($function)) {
+          $function($tasks, $install_state);
+        }
       }
     }
   }
@@ -1260,7 +1272,9 @@ function install_select_profile(&$install_state) {
  *   - For interactive installations via request query parameters.
  *   - For non-interactive installations via install_drupal() settings.
  * - One of the available profiles is a distribution. If multiple profiles are
- *   distributions, then the first discovered profile will be selected.
+ *   distributions, then the first discovered profile will be selected. If an
+ *   inherited profile is detected that is a distribution, it will be chosen
+ *   over its base profile.
  * - Only one visible profile is available.
  *
  * @param array $install_state
@@ -1285,12 +1299,9 @@ function _install_select_profile(&$install_state) {
       return $profile;
     }
   }
-  // If any of the profiles are distribution profiles, return the first one.
-  foreach ($install_state['profiles'] as $profile) {
-    $profile_info = install_profile_info($profile->getName());
-    if (!empty($profile_info['distribution'])) {
-      return $profile->getName();
-    }
+  // Check for a distribution profile.
+  if ($distribution = \Drupal::service('extension.list.profile')->selectDistribution(array_keys($install_state['profiles']))) {
+    return $distribution;
   }
   // Get all visible (not hidden) profiles.
   $visible_profiles = array_filter($install_state['profiles'], function ($profile) {
@@ -1518,7 +1529,9 @@ function _install_get_version_info($version) {
  */
 function install_load_profile(&$install_state) {
   $profile = $install_state['parameters']['profile'];
-  $install_state['profiles'][$profile]->load();
+  foreach (array_keys(\Drupal::service('extension.list.profile')->getAncestors($profile)) as $profile_id) {
+    $install_state['profiles'][$profile_id]->load();
+  }
   $install_state['profile_info'] = install_profile_info($profile, isset($install_state['parameters']['langcode']) ? $install_state['parameters']['langcode'] : 'en');
 
   $sync_directory = Settings::get('config_sync_directory');
@@ -1651,6 +1664,10 @@ function install_install_profile(&$install_state) {
   \Drupal::service('config.installer')->installOptionalConfig();
 
   \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
+
+  // Install all the profiles.
+  $profiles = \Drupal::service('extension.list.profile')->getAncestors();
+  \Drupal::service('module_installer')->install(array_keys($profiles), FALSE);
 
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()
