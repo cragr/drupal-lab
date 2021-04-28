@@ -473,7 +473,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // removal.
     $this->submitForm([], 'Import all');
     $validation_message = t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $node->getEntityType()->getLabel(), '%bundle_label' => $node->getEntityType()->getBundleLabel(), '%bundle' => $node_type->label()]);
-    $this->assertRaw($validation_message);
+    $this->assertSession()->pageTextContains($validation_message);
     $this->assertText('node.type.' . $node_type->id());
     $this->assertText('field.field.node.' . $node_type->id() . '.body');
     $this->assertText('core.entity_view_display.node.' . $node_type->id() . '.teaser');
@@ -483,7 +483,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Delete the node and try to import again.
     $node->delete();
     $this->submitForm([], 'Import all');
-    $this->assertNoRaw($validation_message);
+    $this->assertSession()->pageTextNotContains($validation_message);
     $this->assertText('There are no configuration changes to import.');
     $this->assertNoText('node.type.' . $node_type->id());
     $this->assertNoText('field.field.node.' . $node_type->id() . '.body');
