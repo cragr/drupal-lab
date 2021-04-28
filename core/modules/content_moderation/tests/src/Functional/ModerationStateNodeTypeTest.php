@@ -113,7 +113,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     // 'revision' is enforced and disabled.
     $this->drupalGet('admin/structure/types/manage/moderated');
     $this->drupalPostForm('admin/structure/types/manage/moderated', [
-     'options[promote]' => TRUE,
+      'options[promote]' => TRUE,
     ], 'Save content type');
     $this->drupalGet('admin/structure/types/manage/moderated');
     $this->assertSession()->checkboxChecked('options[promote]');

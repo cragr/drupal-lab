@@ -11,9 +11,9 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -218,10 +218,11 @@ class RendererTest extends RendererTestBase {
     $data[] = [
       [
         '#markup' => 'foo',
-        '#pre_render' => [function ($elements) {
-          $elements['#markup'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#markup'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'fooalert("bar");',
@@ -231,10 +232,11 @@ class RendererTest extends RendererTestBase {
       [
         '#markup' => 'foo',
         '#allowed_tags' => ['script'],
-        '#pre_render' => [function ($elements) {
-          $elements['#markup'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#markup'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'foo<script>alert("bar");</script>',
@@ -244,10 +246,11 @@ class RendererTest extends RendererTestBase {
     $data[] = [
       [
         '#plain_text' => 'foo',
-        '#pre_render' => [function ($elements) {
-          $elements['#plain_text'] .= '<script>alert("bar");</script>';
-          return $elements;
-        },
+        '#pre_render' => [
+          function ($elements) {
+            $elements['#plain_text'] .= '<script>alert("bar");</script>';
+            return $elements;
+          },
         ],
       ],
       'foo&lt;script&gt;alert(&quot;bar&quot;);&lt;/script&gt;',

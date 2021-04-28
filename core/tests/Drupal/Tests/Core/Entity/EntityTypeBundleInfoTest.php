@@ -196,12 +196,12 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
   public function providerTestGetBundleInfo() {
     return [
       ['apple', [
-          'apple' => ['label' => 'Apple'],
-        ],
+        'apple' => ['label' => 'Apple'],
+      ],
       ],
       ['banana', [
-          'banana' => ['label' => 'Banana'],
-        ],
+        'banana' => ['label' => 'Banana'],
+      ],
       ],
       ['pear', []],
     ];

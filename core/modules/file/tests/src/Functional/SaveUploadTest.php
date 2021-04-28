@@ -447,9 +447,9 @@ class SaveUploadTest extends FileManagedTestBase {
     // extensions.
     $extensions = 'foo ' . $this->imageExtension;
     $edit = [
-        'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
-        'extensions' => $extensions,
-      ];
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
+      'extensions' => $extensions,
+    ];
 
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
@@ -487,9 +487,9 @@ class SaveUploadTest extends FileManagedTestBase {
 
     $extensions = 'php ' . $this->imageExtension;
     $edit = [
-        'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
-        'extensions' => $extensions,
-      ];
+      'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
+      'extensions' => $extensions,
+    ];
 
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);

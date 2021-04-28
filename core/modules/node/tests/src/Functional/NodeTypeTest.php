@@ -270,8 +270,8 @@ class NodeTypeTest extends NodeTestBase {
     // Navigate to content type administration screen
     $this->drupalGet('admin/structure/types');
     $this->assertRaw(t('No content types available. <a href=":link">Add content type</a>.', [
-        ':link' => Url::fromRoute('node.type_add')->toString(),
-      ]));
+      ':link' => Url::fromRoute('node.type_add')->toString(),
+    ]));
 
     $bundle_info->clearCachedBundles();
     $this->assertCount(0, $bundle_info->getBundleInfo('node'), 'The bundle information service has 0 bundles for the Node entity type.');

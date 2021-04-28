@@ -142,8 +142,8 @@ class ThemeTest extends BrowserTestBase {
       $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
       $elements = $this->xpath('//header//a[@rel=:rel]/img', [
-          ':rel' => 'home',
-        ]
+        ':rel' => 'home',
+      ]
       );
       $this->assertEqual($expected['src'], $elements[0]->getAttribute('src'));
     }
@@ -193,8 +193,8 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
     $elements = $this->xpath('//header//a[@rel=:rel]/img', [
-        ':rel' => 'home',
-      ]
+      ':rel' => 'home',
+    ]
     );
     $this->assertEqual(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
 

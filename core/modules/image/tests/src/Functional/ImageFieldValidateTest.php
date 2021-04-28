@@ -146,7 +146,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       '%dimensions' => '50x50',
       '%width' => $image_that_is_too_small_file->getWidth(),
       '%height' => $image_that_is_too_small_file->getHeight(),
-      ]));
+    ]));
     $this->uploadNodeImage($image_that_is_too_big, $field_names[0], 'article');
     $this->assertText('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.');
     $this->uploadNodeImage($image_that_is_too_small, $field_names[1], 'article');

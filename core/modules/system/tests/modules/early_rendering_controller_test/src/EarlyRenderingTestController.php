@@ -59,10 +59,11 @@ class EarlyRenderingTestController extends ControllerBase {
 
   public function renderArray() {
     return [
-      '#pre_render' => [function () {
-        $elements = $this->earlyRenderContent();
-        return $elements;
-      },
+      '#pre_render' => [
+        function () {
+          $elements = $this->earlyRenderContent();
+          return $elements;
+        },
       ],
     ];
   }

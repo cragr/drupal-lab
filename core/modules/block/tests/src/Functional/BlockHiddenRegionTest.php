@@ -37,7 +37,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
       'administer blocks',
       'administer themes',
       'search content',
-      ]
+    ]
     );
 
     $this->drupalLogin($this->adminUser);

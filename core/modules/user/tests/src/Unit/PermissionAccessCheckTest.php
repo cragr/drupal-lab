@@ -80,7 +80,7 @@ class PermissionAccessCheckTest extends UnitTestCase {
           ['allowed', TRUE],
           ['denied', FALSE],
           ['other', FALSE],
-        ]
+      ]
       ));
     $route = new Route('', [], $requirements);
 
