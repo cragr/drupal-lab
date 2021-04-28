@@ -150,6 +150,12 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $this->user->save();
 
+    $this->anonUser = User::create([
+      'name' => 'anon',
+      'uid' => 0,
+    ]);
+    $this->anonUser->save();
+
     $term = Term::create([
       'vid' => $this->vocabulary,
       'name' => 'Apples',

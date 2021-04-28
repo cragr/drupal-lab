@@ -231,6 +231,12 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     if (!empty($this->configuration['bundle'])) {
       $query->condition($this->entityType->getKey('bundle'), $this->configuration['bundle']);
     }
+    // Exclude anonymous user account – follow user entity source plugins.
+    // @see \Drupal\user\Plugin\migrate\source\d6\User::query()
+    // @see \Drupal\user\Plugin\migrate\source\d7\User::query()
+    if ($this->entityType->id() === 'user') {
+      $query->condition($this->entityType->getKey('id'), '0', '<>');
+    }
     return $query;
   }
 
