@@ -17,6 +17,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class WebDriverTestBase extends BrowserTestBase {
 
   /**
+   * Determines if a test should fail on Javascript console errors.
+   *
+   * @var bool
+   *
+   * All core test will have this set to TRUE if they do not override this
+   * property.
+   *
+   * @see ::setUp()
+   */
+  protected $failOnJavascriptConsoleErrors = FALSE;
+
+  /**
    * Disables CSS animations in tests for more reliable testing.
    *
    * CSS animations are disabled by installing the css_disable_transitions_test
@@ -30,6 +42,21 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $class = get_class($this);
+
+    // Force core tests that do not have ::failOnJavascriptConsoleErrors set in
+    // in class to fail on Javascript console errors.
+    $prop_fail_on_javascript_console_errors = new \ReflectionProperty($class, 'failOnJavascriptConsoleErrors');
+    if ($prop_fail_on_javascript_console_errors->getDeclaringClass()->getName() === self::class && $this->isCoreTest()) {
+      $this->failOnJavascriptConsoleErrors = TRUE;
+    }
+  }
 
   /**
    * {@inheritdoc}
@@ -60,7 +87,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function installModulesFromClassProperty(ContainerInterface $container) {
-    self::$modules = ['js_deprecation_log_test'];
+    self::$modules = ['js_testing_log_test'];
     if ($this->disableCssAnimations) {
       self::$modules[] = 'css_disable_transitions_test';
     }
@@ -99,12 +126,18 @@ abstract class WebDriverTestBase extends BrowserTestBase {
         throw new \RuntimeException('Unfinished AJAX requests while tearing down a test');
       }
 
-      $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_deprecation_log_test.warnings') || JSON.stringify([]))");
+      $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
       foreach ($warnings as $warning) {
         if (strpos($warning, '[Deprecation]') === 0) {
           @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
         }
       }
+      if ($this->failOnJavascriptConsoleErrors) {
+        $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
+        $this->assertEquals([], $errors, 'Javascript errors found.');
+        // trigger_error("Javascript errors, ". implode('::', $errors), E_USER_WARNING);
+      }
+
     }
     parent::tearDown();
   }
@@ -201,6 +234,17 @@ EndOfScript;
   protected function getHtmlOutputHeaders() {
     // The webdriver API does not support fetching headers.
     return '';
+  }
+
+  /**
+   * Determines whether the current test is core test.
+   *
+   * @return bool
+   *   Returns TRUE if the current test is core test, otherwise FALSE.
+   */
+  protected function isCoreTest(): bool {
+    $class = new \ReflectionClass(self::class);
+    return strpos($class->getFileName(), '/core/') !== FALSE;
   }
 
 }
