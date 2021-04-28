@@ -28,6 +28,8 @@ class TipPluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+    // @todo change fourth param `Drupal\tour\TipPluginInterface` to
+    //   `Drupal\tour\TourTipPluginInterface` in https://drupal.org/node/3195193
     parent::__construct('Plugin/tour/tip', $namespaces, $module_handler, 'Drupal\tour\TipPluginInterface', 'Drupal\tour\Annotation\Tip');
 
     $this->alterInfo('tour_tips_info');
