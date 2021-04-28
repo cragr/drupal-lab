@@ -69,12 +69,11 @@ class ViewMode extends ViewModeBase {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    $this->dependencies = parent::calculateDependencies();
     if (isset($this->configuration['constants']['targetEntityType'])) {
       @trigger_error('The constant targetEntityType is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Use entity_type instead. See https://www.drupal.org/node/3208135', E_USER_DEPRECATED);
-      $this->addDependency('module', $this->entityTypeManager->getDefinition($this->configuration['constants']['targetEntityType'])->getProvider());
+      $this->configuration['constants']['entity_type'] = $this->configuration['constants']['targetEntityType'];
     }
-    return $this->dependencies;
+    return parent::calculateDependencies();
   }
 
 }
