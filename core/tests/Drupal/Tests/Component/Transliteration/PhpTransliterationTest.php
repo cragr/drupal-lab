@@ -157,8 +157,11 @@ class PhpTransliterationTest extends TestCase {
       'Test language overrides in Kyrgyz' => [
         'kg', $three_byte, 'ts',
       ],
-      'Test strings in some other languages' => [
+      'Test language overrides in Turkish' => [
         'tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.',
+      ],
+      'Test language overrides in Ukrainian' => [
+        'uk', 'На подушечці форми любої є й ґудзик щоб пірʼя геть жовте сховати.', 'Na podushechtsi formy lyuboyi ye y gudzyk shchob pirya het zhovte skhovaty.',
       ],
       'Max length' => [
         'de', $two_byte, 'Ae Oe Ue A O aeoe', '?', 17,
