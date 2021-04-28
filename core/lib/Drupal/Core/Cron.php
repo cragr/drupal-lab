@@ -25,6 +25,16 @@ use Psr\Log\NullLogger;
 class Cron implements CronInterface {
 
   /**
+   * The default time cron should execute each queue in seconds.
+   */
+  const DEFAULT_QUEUE_CRON_TIME = 15;
+
+  /**
+   * The default lease time an item in the queue should get when called from cron.
+   */
+  const DEFAULT_QUEUE_CRON_LEASE_TIME = 30;
+
+  /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -174,9 +184,9 @@ class Cron implements CronInterface {
         $this->queueFactory->get($queue_name)->createQueue();
 
         $queue_worker = $this->queueManager->createInstance($queue_name);
-        $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : 15);
+        $end = time() + (isset($info['cron']['time']) ? $info['cron']['time'] : static::DEFAULT_QUEUE_CRON_TIME);
         $queue = $this->queueFactory->get($queue_name);
-        $lease_time = isset($info['cron']['time']) ?: NULL;
+        $lease_time = isset($info['cron']['lease_time']) ? $info['cron']['lease_time'] : static::DEFAULT_QUEUE_CRON_LEASE_TIME;
         while (time() < $end && ($item = $queue->claimItem($lease_time))) {
           try {
             $queue_worker->processItem($item->data);

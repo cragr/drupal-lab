@@ -114,13 +114,19 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    * {@inheritdoc}
    */
   public function claimItem($lease_time = 30) {
+    if ($lease_time <= 0) {
+      throw new \InvalidArgumentException('The lease time should be a positive integer.');
+    }
     // Claim an item by updating its expire fields. If claim is not successful
     // another thread may have claimed the item in the meantime. Therefore loop
     // until an item is successfully claimed or we are reasonably sure there
     // are no unclaimed items left.
     while (TRUE) {
       try {
-        $item = $this->connection->queryRange('SELECT [data], [created], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE [expire] = 0 AND [name] = :name ORDER BY [created], [item_id] ASC', 0, 1, [':name' => $this->name])->fetchObject();
+        $item = $this->connection->queryRange('SELECT [data], [created], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE (([expire] = 0) OR (:now > [expire])) AND [name] = :name ORDER BY [created], [item_id] ASC', 0, 1, [
+          ':name' => $this->name,
+          ':now' => \Drupal::time()->getCurrentTime(),
+        ])->fetchObject();
       }
       catch (\Exception $e) {
         $this->catchException($e);
@@ -142,8 +148,8 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         ->fields([
           'expire' => \Drupal::time()->getCurrentTime() + $lease_time,
         ])
-        ->condition('item_id', $item->item_id)
-        ->condition('expire', 0);
+        ->condition('item_id', $item->item_id);
+
       // If there are affected rows, this update succeeded.
       if ($update->execute()) {
         $item->data = unserialize($item->data);
@@ -241,18 +247,8 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     try {
       // Clean up the queue for failed batches.
       $this->connection->delete(static::TABLE_NAME)
-        ->condition('created', REQUEST_TIME - 864000, '<')
+        ->condition('created', \Drupal::time()->getRequestTime() - 864000, '<')
         ->condition('name', 'drupal_batch:%', 'LIKE')
-        ->execute();
-
-      // Reset expired items in the default queue implementation table. If that's
-      // not used, this will simply be a no-op.
-      $this->connection->update(static::TABLE_NAME)
-        ->fields([
-          'expire' => 0,
-        ])
-        ->condition('expire', 0, '<>')
-        ->condition('expire', REQUEST_TIME, '<')
         ->execute();
     }
     catch (\Exception $e) {
