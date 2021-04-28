@@ -363,7 +363,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     foreach ($tokens as $token => $replacement) {
       // Twig wants a token replacement array stripped of curly-brackets.
       // Some Views tokens come with curly-braces, others do not.
-      // @todo: https://www.drupal.org/node/2544392
+      // @todo https://www.drupal.org/node/2544392
       if (strpos($token, '{{') !== FALSE) {
         // Twig wants a token replacement array stripped of curly-brackets.
         $token = trim(str_replace(['{{', '}}'], '', $token));
@@ -415,7 +415,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // Currently you cannot attach assets to tokens with
       // Renderer::renderPlain(). This may be unnecessarily limiting. Consider
       // using Renderer::executeInRenderContext() instead.
-      // @todo: https://www.drupal.org/node/2566621
+      // @todo https://www.drupal.org/node/2566621
       return (string) $this->getRenderer()->renderPlain($build);
     }
     else {

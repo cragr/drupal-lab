@@ -133,7 +133,7 @@ class DirectoryTest extends FileTestBase {
     $path = $file_system->createFilename($basename, $directory);
     $this->assertEqual($expected, $path, new FormattableMarkup('Creating a new filepath from %original equals %new (expected %expected).', ['%new' => $path, '%original' => $original, '%expected' => $expected]), 'File');
 
-    // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
+    // @todo Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
   }
 
   /**

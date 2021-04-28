@@ -452,7 +452,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertEqual('string', $name_definition->getPropertyDefinition('value')->getDataType());
 
     // Test introspecting an entity object.
-    // @todo: Add bundles and test bundles as well.
+    // @todo Add bundles and test bundles as well.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->create();
@@ -566,7 +566,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $strings = [];
     $this->getContainedStrings($entity->getTypedData(), 0, $strings);
 
-    // @todo: Once the user entity has defined properties this should contain
+    // @todo Once the user entity has defined properties this should contain
     // the user name and other user entity strings as well.
     $target_strings = [
       $entity->uuid->value,

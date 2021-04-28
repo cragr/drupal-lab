@@ -113,7 +113,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Delete the user and check that the file is also deleted.
     $user->delete();
-    // TODO: This seems like a bug in File API. Clearing the stat cache should
+    // @todo This seems like a bug in File API. Clearing the stat cache should
     // not be necessary here. The file really is deleted, but stream wrappers
     // doesn't seem to think so unless we clear the PHP file stat() cache.
     clearstatcache($node_file_r1->getFileUri());

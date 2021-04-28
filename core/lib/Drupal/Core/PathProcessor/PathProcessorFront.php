@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Processes the inbound path by resolving it to the front page if empty.
  *
- * @todo - remove ::processOutbound() when we remove UrlGenerator::fromPath().
+ * @todo remove ::processOutbound() when we remove UrlGenerator::fromPath().
  */
 class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 

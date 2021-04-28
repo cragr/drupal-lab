@@ -41,8 +41,8 @@ class FileCopyTest extends FileTestBase {
     $this->assertFileExists($newer_filepath);
     $this->assertFilePermissions($newer_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
 
-    // TODO: test copying to a directory (rather than full directory/file path)
-    // TODO: test copying normal files using normal paths (rather than only streams)
+    // @todo test copying to a directory (rather than full directory/file path)
+    // @todo test copying normal files using normal paths (rather than only streams)
   }
 
   /**

@@ -15,7 +15,7 @@ use Drupal\Core\Url;
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
- * @see https://www.drupal.org/project/drupal/issues/3032787
+ * @see https://www.drupal.org/node/3032787
  * @see jsonapi.api.php
  *
  * @see https://tools.ietf.org/html/rfc8288
@@ -43,7 +43,7 @@ final class Link implements CacheableDependencyInterface {
    *
    * @var string[]
    *
-   * @todo: change this type documentation to be a single string in
+   * @todo change this type documentation to be a single string in
    *   https://www.drupal.org/project/drupal/issues/3080467.
    */
   protected $rel;

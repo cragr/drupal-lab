@@ -6,9 +6,6 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\user\Entity\User;
 
-/**
- * @todo.
- */
 abstract class UserTestBase extends ViewTestBase {
 
   /**
