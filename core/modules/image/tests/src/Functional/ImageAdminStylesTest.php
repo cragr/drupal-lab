@@ -42,7 +42,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $file_path = \Drupal::service('file_system')->copy($file->uri, 'public://');
     }
 
-    return $style->buildUrl($file_path) ? $file_path : FALSE;
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($file_path);
+    return $pipeline->getDerivativeImageUrl() ? $file_path : FALSE;
   }
 
   /**
@@ -148,7 +151,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Ensure that third party settings were added to the config entity.
     // These are added by a hook_image_style_presave() implemented in
     // image_module_test module.
-    $this->assertEqual('bar', $style->getThirdPartySetting('image_module_test', 'foo'), 'Third party settings were added to the image style.');
+    $this->assertEquals('bar', $style->getThirdPartySetting('image_module_test', 'foo'), 'Third party settings were added to the image style.');
 
     // Ensure that the image style URI matches our expected path.
     $style_uri_path = $style->toUrl()->toString();
@@ -162,7 +165,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $uuids[$effect->getPluginId()] = $uuid;
       $effect_configuration = $effect->getConfiguration();
       foreach ($effect_edits[$effect->getPluginId()] as $field => $value) {
-        $this->assertEqual($effect_configuration['data'][$field], $value, new FormattableMarkup('The %field field in the %effect effect has the correct value of %value.', ['%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value]));
+        $this->assertEquals($effect_configuration['data'][$field], $value, new FormattableMarkup('The %field field in the %effect effect has the correct value of %value.', ['%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value]));
       }
     }
 
@@ -207,7 +210,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after saving.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
+    $this->assertEquals(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
 
     $this->drupalPostForm($style_path, $edit, 'Save');
 
@@ -225,7 +228,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
     // the old image directory has been deleted.
-    $this->assertEqual(0, $this->getImageCount($style), new FormattableMarkup('Image style %style was flushed after renaming the style and updating the order of effects.', ['%style' => $style->label()]));
+    $this->assertEquals(0, $this->getImageCount($style), new FormattableMarkup('Image style %style was flushed after renaming the style and updating the order of effects.', ['%style' => $style->label()]));
 
     // Load the style by the new name with the new weights.
     $style = ImageStyle::load($style_name);
@@ -246,7 +249,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after deleting an effect.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
+    $this->assertEquals(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
 
     // Delete the 'image_crop' effect from the style.
     $this->drupalPostForm($style_path . '/effects/' . $uuids['image_crop'] . '/delete', [], 'Delete');
@@ -338,7 +341,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomMachineName(10));
@@ -353,7 +359,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Reload the image style using the new name.
     $style = ImageStyle::load($new_style_name);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Delete the style and choose a replacement style.
     $edit = [
@@ -365,7 +374,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($replacement_style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($replacement_style)
+      ->setSourceImageUri($original_uri);
+    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
   }
 
   /**
@@ -435,9 +447,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Create an image to make sure it gets flushed.
     $files = $this->drupalGetTestFiles('image');
     $image_uri = $files[0]->uri;
-    $derivative_uri = $style->buildUri($image_uri);
-    $this->assertTrue($style->createDerivative($image_uri, $derivative_uri));
-    $this->assertEqual(1, $this->getImageCount($style));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($image_uri);
+    $this->assertTrue($pipeline->buildDerivativeImage());
+    $this->assertEquals($this->getImageCount($style), 1);
 
     // Go to image styles list page and check if the flush operation link
     // exists.
@@ -449,7 +463,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm($flush_path, [], 'Flush');
 
     // The derivative image file should have been deleted.
-    $this->assertEqual(0, $this->getImageCount($style));
+    $this->assertEquals(0, $this->getImageCount($style));
   }
 
   /**
@@ -484,7 +498,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $this->assertRaw(file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString()));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');
@@ -499,7 +516,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->configImporter()->import();
 
     $this->assertNull(ImageStyle::load($style_name), 'Style deleted after config import.');
-    $this->assertEqual(0, $this->getImageCount($style), 'Image style was flushed after being deleted by config import.');
+    $this->assertEquals(0, $this->getImageCount($style), 'Image style was flushed after being deleted by config import.');
   }
 
   /**
