@@ -66,9 +66,34 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
+   * Assert two colors are equal by RGBA.
+   *
+   * @param int[] $expected
+   *   The expected RGBA array.
+   * @param int[] $actual
+   *   The actual RGBA array.
+   * @param string $message
+   *   (optional) A message to display with the assertion.
+   */
+  protected function assertColorsAreEqual(array $expected, array $actual, string $message = ''): void {
+    // Fully transparent colors are equal, regardless of RGB.
+    if ($actual[3] == 127 && $expected[3] == 127) {
+      return;
+    }
+    // Colors are equal when their RGBA components are the same.
+    $this->assertSame($expected, $actual, $message);
+  }
+
+  /**
    * Function to compare two colors by RGBa.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   ::assertColorsAreEqual() instead.
+   *
+   * @see https://www.drupal.org/node/3198325
    */
   public function colorsAreEqual($color_a, $color_b) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use ::assertColorsAreEqual() instead. See https://www.drupal.org/node/3198325', E_USER_DEPRECATED);
     // Fully transparent pixels are equal, regardless of RGB.
     if ($color_a[3] == 127 && $color_b[3] == 127) {
       return TRUE;
@@ -224,16 +249,14 @@ class ToolkitGdTest extends KernelTestBase {
     ];
 
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
-    // @todo Remove the version check once
-    //   https://www.drupal.org/project/drupal/issues/2670966 is resolved.
-    if (function_exists('imagerotate') && (version_compare(phpversion(), '7.0.26') < 0)) {
+    if (function_exists('imagerotate')) {
       $operations += [
         'rotate_5' => [
           'function' => 'rotate',
           // Fuchsia background.
           'arguments' => ['degrees' => 5, 'background' => '#FF00FF'],
-          'width' => 41,
-          'height' => 23,
+          'width' => 43,
+          'height' => 25,
           'corners' => array_fill(0, 4, $this->fuchsia),
         ],
         'rotate_90' => [
@@ -247,8 +270,8 @@ class ToolkitGdTest extends KernelTestBase {
         'rotate_transparent_5' => [
           'function' => 'rotate',
           'arguments' => ['degrees' => 5],
-          'width' => 41,
-          'height' => 23,
+          'width' => 43,
+          'height' => 25,
           'corners' => array_fill(0, 4, $this->rotateTransparent),
         ],
         'rotate_transparent_90' => [
@@ -316,25 +339,14 @@ class ToolkitGdTest extends KernelTestBase {
           $this->assertFalse(is_resource($old_res), new FormattableMarkup("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
         }
 
-        // To keep from flooding the test with assert values, make a general
-        // value for whether each group of values fail.
-        $correct_dimensions_real = TRUE;
-        $correct_dimensions_object = TRUE;
-
-        if (imagesy($toolkit->getResource()) != $values['height'] || imagesx($toolkit->getResource()) != $values['width']) {
-          $correct_dimensions_real = FALSE;
-        }
-
-        // Check that the image object has an accurate record of the dimensions.
-        if ($image->getWidth() != $values['width'] || $image->getHeight() != $values['height']) {
-          $correct_dimensions_object = FALSE;
-        }
-
         $file_path = $directory . '/' . $op . image_type_to_extension($image->getToolkit()->getType());
         $image->save($file_path);
 
-        $this->assertTrue($correct_dimensions_real, new FormattableMarkup('Image %file after %action action has proper dimensions.', ['%file' => $file, '%action' => $op]));
-        $this->assertTrue($correct_dimensions_object, new FormattableMarkup('Image %file object after %action action is reporting the proper height and width values.', ['%file' => $file, '%action' => $op]));
+        // Check that the image object has an accurate record of the dimensions.
+        $this->assertSame($values['height'], imagesy($toolkit->getResource()), "Image $file after $op action should have an height of {$values['height']} px.");
+        $this->assertSame($values['width'], imagesx($toolkit->getResource()), "Image $file after $op action should have a width of {$values['width']} px.");
+        $this->assertSame($values['height'], $image->getHeight(), "Image $file object after $op action should have an height of {$values['height']} px.");
+        $this->assertSame($values['width'], $image->getWidth(), "Image $file object after $op action should have a width of {$values['width']} px.");
 
         // JPEG colors will always be messed up due to compression. So we skip
         // these tests if the original or the result is in jpeg format.
@@ -382,9 +394,7 @@ class ToolkitGdTest extends KernelTestBase {
             // We also skip the color test for transparency for gif <-> png
             // conversion. The convert operation cannot handle that correctly.
             if ($image->getToolkit()->getType() == $image_original_type || $corner != $this->transparent) {
-              $correct_colors = $this->colorsAreEqual($color, $corner);
-              $this->assertTrue($correct_colors, new FormattableMarkup('Image %file object after %action action has the correct color placement at corner %corner.',
-                ['%file' => $file, '%action' => $op, '%corner' => $key]));
+              $this->assertColorsAreEqual($corner, $color, "Image $file object after $op action should have the expected color at corner $key");
             }
           }
         }

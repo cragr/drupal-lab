@@ -3,6 +3,7 @@
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Component\Utility\Color;
+use Drupal\Component\Utility\Rectangle;
 
 /**
  * Defines GD2 rotate operation.
@@ -37,11 +38,6 @@ class Rotate extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function validateArguments(array $arguments) {
-    // PHP 5.5 GD bug: https://bugs.php.net/bug.php?id=65148: To prevent buggy
-    // behavior on negative multiples of 90 degrees we convert any negative
-    // angle to a positive one between 0 and 360 degrees.
-    $arguments['degrees'] -= floor($arguments['degrees'] / 360) * 360;
-
     // Validate or set background color argument.
     if (!empty($arguments['background'])) {
       // Validate the background color: Color::hexToRgb does so for us.
@@ -93,10 +89,21 @@ class Rotate extends GDImageToolkitOperationBase {
       return FALSE;
     }
 
+    // In Drupal we rotate clockwise whereas GD rotates anti-clockwise. We need
+    // to reconcile the value in Drupal with the argument to be passed to
+    // rotate.
+    $degrees = 360 - $arguments['degrees'];
+
     // Stores the original GD resource.
     $original_res = $this->getToolkit()->getResource();
 
-    if ($new_res = imagerotate($this->getToolkit()->getResource(), 360 - $arguments['degrees'], $arguments['background_idx'])) {
+    // Get expected width and height resulting from the rotation.
+    $rotated_rect = (new Rectangle($this->getToolkit()->getWidth(), $this->getToolkit()->getHeight()))->rotate($degrees);
+    $expected_width = $rotated_rect->getBoundingWidth();
+    $expected_height = $rotated_rect->getBoundingHeight();
+
+    // Rotate the image.
+    if ($new_res = imagerotate($this->getToolkit()->getResource(), $degrees, $arguments['background_idx'])) {
       $this->getToolkit()->setResource($new_res);
       imagedestroy($original_res);
 
@@ -108,6 +115,67 @@ class Rotate extends GDImageToolkitOperationBase {
         imagecolortransparent($this->getToolkit()->getResource(), $transparent_idx);
       }
 
+      // Resizes the image if width and height are not as expected.
+      if ($this->getToolkit()->getWidth() != $expected_width || $this->getToolkit()->getHeight() != $expected_height) {
+        // If either dimension of the current image is bigger than expected,
+        // crop the image.
+        if ($this->getToolkit()->getWidth() > $expected_width || $this->getToolkit()->getHeight() > $expected_height) {
+          $crop_width = min($expected_width, $this->getToolkit()->getWidth());
+          $crop_height = min($expected_height, $this->getToolkit()->getHeight());
+          // Prepare the crop.
+          $data = [
+            'x' => $this->getToolkit()->getWidth() / 2 - $crop_width / 2,
+            'y' => $this->getToolkit()->getHeight() / 2 - $crop_height / 2,
+            'width' => $crop_width,
+            'height' => $crop_height,
+          ];
+          if (!$this->getToolkit()->apply('crop', $data)) {
+            return FALSE;
+          }
+        }
+        // If the image at this point is smaller than expected, place it above
+        // a canvas of the expected dimensions.
+        if ($this->getToolkit()->getWidth() < $expected_width || $this->getToolkit()->getHeight() < $expected_height) {
+          // Store the current GD resource.
+          $temp_res = $this->getToolkit()->getResource();
+
+          // Prepare the canvas.
+          $data = [
+            'width' => $expected_width,
+            'height' => $expected_height,
+            'extension' => image_type_to_extension($this->getToolkit()->getType(), FALSE),
+            'transparent_color' => $this->getToolkit()->getTransparentColor(),
+            'is_temp' => TRUE,
+          ];
+          if (!$this->getToolkit()->apply('create_new', $data)) {
+            return FALSE;
+          }
+
+          // Fill the canvas with the required background color.
+          imagefill($this->getToolkit()->getResource(), 0, 0, $arguments['background_idx']);
+
+          // Overlay the current image on the canvas.
+          imagealphablending($temp_res, TRUE);
+          imagesavealpha($temp_res, TRUE);
+          imagealphablending($this->getToolkit()->getResource(), TRUE);
+          imagesavealpha($this->getToolkit()->getResource(), TRUE);
+          // We determine the position of the top-left point in the canvas
+          // where the overlay of the current image should be copied to, so
+          // that the current image results centered on the canvas.
+          $x_pos = (int) ($expected_width / 2 - imagesx($temp_res) / 2);
+          $y_pos = (int) ($expected_height / 2 - imagesy($temp_res) / 2);
+          if (imagecopy($this->getToolkit()->getResource(), $temp_res, $x_pos, $y_pos, 0, 0, imagesx($temp_res), imagesy($temp_res))) {
+            imagedestroy($temp_res);
+          }
+          else {
+            // In case of failure, destroy the temporary resource and restore
+            // the original one.
+            imagedestroy($this->getToolkit()->getResource());
+            $this->getToolkit()->setResource($temp_res);
+            return FALSE;
+          }
+        }
+      }
       return TRUE;
     }
 
