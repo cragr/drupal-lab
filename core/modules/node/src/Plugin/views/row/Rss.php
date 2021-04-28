@@ -20,12 +20,17 @@ use Drupal\views\Plugin\views\row\RssPluginBase;
  */
 class Rss extends RssPluginBase {
 
-  // Basic properties that let the row style follow relationships.
+  /**
+   * Basic properties that let the row style follow relationships.
+   */
   public $base_table = 'node_field_data';
-
   public $base_field = 'nid';
 
-  // Stores the nodes loaded with preRender.
+  /**
+   * Stores the nodes loaded with preRender.
+   *
+   * @var array
+   */
   public $nodes = [];
 
   /**
