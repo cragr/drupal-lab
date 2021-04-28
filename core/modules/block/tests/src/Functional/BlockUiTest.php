@@ -320,7 +320,8 @@ class BlockUiTest extends BrowserTestBase {
 
     // After adding a block, it will indicate which block was just added.
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy');
+    $this->assertSession()->urlQueryStringEquals('?block-placement=' . Html::getClass($block['id']));
 
     // Resaving the block page will remove the block placement indicator.
     $this->submitForm([], 'Save blocks');
@@ -335,7 +336,8 @@ class BlockUiTest extends BrowserTestBase {
     // for the 'block-placement' querystring parameter.
     $this->clickLink('Place block');
     $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=scriptalertxsssubjectscript');
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy');
+    $this->assertSession()->urlQueryStringEquals('?block-placement=scriptalertxsssubjectscript');
 
     // Removing a block will remove the block placement indicator.
     $this->clickLink('Remove');
