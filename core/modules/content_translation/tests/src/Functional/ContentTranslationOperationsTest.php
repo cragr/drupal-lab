@@ -40,16 +40,26 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   protected static $modules = [
     'language',
     'content_translation',
+    'content_translation_test',
     'node',
     'views',
     'block',
   ];
 
   /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->state = $this->container->get('state');
 
     // Enable additional languages.
     $langcodes = ['es', 'ast'];
@@ -161,6 +171,47 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     );
 
     $user = $this->createUser(['create content translations']);
+    $this->drupalLogin($user);
+    $this->assertFalse(content_translation_translate_access($node)->isAllowed());
+    $access_control_handler->resetCache();
+  }
+
+  /**
+   * Tests that overview access can be altered using hook_entity_access().
+   *
+   * @see content_translation_translate_access()
+   * @see content_translation_entity_access()
+   */
+  public function testContentTranslationOverviewAccessWithEntityAccessHook() {
+    $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
+    $user = $this->createUser(['access content']);
+    $this->drupalLogin($user);
+
+    // User cannot access translations out of the box, but with an entity access
+    // hook changing the access to Allowed, they do.
+    $this->state->set('content_translation.entity_access.node', [
+      'create translation' => TRUE,
+      'update translation' => TRUE,
+      'delete translation' => TRUE,
+    ]);
+
+    $node = $this->drupalCreateNode(['status' => FALSE, 'type' => 'article']);
+    $this->assertFalse(content_translation_translate_access($node)->isAllowed());
+    $access_control_handler->resetCache();
+
+    $node->setPublished();
+    $node->save();
+    $this->assertTrue(content_translation_translate_access($node)->isAllowed());
+    $access_control_handler->resetCache();
+
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'access content' => FALSE,
+      ]
+    );
+
+    $user = $this->createUser([]);
     $this->drupalLogin($user);
     $this->assertFalse(content_translation_translate_access($node)->isAllowed());
     $access_control_handler->resetCache();
