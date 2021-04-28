@@ -135,6 +135,7 @@ class QueueTest extends KernelTestBase {
         $items = $property->getValue($queue);
         end($items)->expire = $expire;
         break;
+
       case DatabaseQueue::class:
         \Drupal::database()
           ->update(DatabaseQueue::TABLE_NAME)
