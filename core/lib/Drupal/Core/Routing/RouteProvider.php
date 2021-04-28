@@ -210,6 +210,24 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
+   * Determines if a route exists by name.
+   *
+   * @param string $name
+   *   The name of the route to check.
+   *
+   * @return bool
+   *   Whether a route with that route name exists.
+   */
+  public function routeExists($name) {
+
+    if (empty($name) || !is_string($name)) {
+      return FALSE;
+    }
+
+    return (count($this->getRoutesByNames([$name])) === 1);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preLoadRoutes($names) {
