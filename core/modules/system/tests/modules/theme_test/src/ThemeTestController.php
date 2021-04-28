@@ -33,7 +33,9 @@ class ThemeTestController extends ControllerBase {
    *   A render array containing a theme override.
    */
   public function testTemplate() {
-    return ['#markup' => \Drupal::theme()->render('theme_test_template_test', [])];
+    return [
+      '#markup' => \Drupal::theme()->render('theme_test_template_test', []),
+    ];
   }
 
   /**
@@ -55,49 +57,28 @@ class ThemeTestController extends ControllerBase {
   /**
    * Calls a theme hook suggestion.
    *
-   * @return string
+   * @return array
    *   An HTML string containing the themed output.
    */
   public function testSuggestion() {
-    return ['#markup' => \Drupal::theme()->render(['theme_test__suggestion', 'theme_test'], [])];
+    return [
+      '#markup' => \Drupal::theme()->render([
+        'theme_test__suggestion',
+        'theme_test',
+      ], []),
+    ];
   }
 
   /**
    * Tests themed output generated in a request listener.
    *
-   * @return string
+   * @return array
    *   Content in theme_test_output GLOBAL.
    */
   public function testRequestListener() {
-    return ['#markup' => $GLOBALS['theme_test_output']];
-  }
-
-  /**
-   * Menu callback for testing suggestion alter hooks with template files.
-   */
-  public function suggestionProvided() {
-    return ['#theme' => 'theme_test_suggestion_provided'];
-  }
-
-  /**
-   * Menu callback for testing suggestion alter hooks with template files.
-   */
-  public function suggestionAlter() {
-    return ['#theme' => 'theme_test_suggestions'];
-  }
-
-  /**
-   * Menu callback for testing hook_theme_suggestions_alter().
-   */
-  public function generalSuggestionAlter() {
-    return ['#theme' => 'theme_test_general_suggestions'];
-  }
-
-  /**
-   * Menu callback for testing suggestion alter hooks with specific suggestions.
-   */
-  public function specificSuggestionAlter() {
-    return ['#theme' => 'theme_test_specific_suggestions__variant'];
+    return [
+      '#markup' => $GLOBALS['theme_test_output'],
+    ];
   }
 
   /**

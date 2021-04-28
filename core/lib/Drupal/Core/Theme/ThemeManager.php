@@ -141,48 +141,51 @@ class ThemeManager implements ThemeManagerInterface {
 
     $theme_registry = $this->themeRegistry->getRuntime();
 
-    // If an array of hook candidates were passed, use the first one that has an
-    // implementation.
-    if (is_array($hook)) {
-      foreach ($hook as $candidate) {
-        if ($theme_registry->has($candidate)) {
-          break;
-        }
-      }
-      $hook = $candidate;
-    }
-    // Save the original theme hook, so it can be supplied to theme variable
-    // preprocess callbacks.
-    $original_hook = $hook;
+    // $hook is normally a string, but it can be an array. We only log error
+    // messages below if it was a string.
+    $is_hook_array = is_array($hook);
 
-    // If there's no implementation, check for more generic fallbacks.
-    // If there's still no implementation, log an error and return an empty
-    // string.
-    if (!$theme_registry->has($hook)) {
-      // Iteratively strip everything after the last '__' delimiter, until an
-      // implementation is found.
-      while ($pos = strrpos($hook, '__')) {
-        $hook = substr($hook, 0, $pos);
-        if ($theme_registry->has($hook)) {
-          break;
-        }
-      }
-      if (!$theme_registry->has($hook)) {
-        // Only log a message when not trying theme suggestions ($hook being an
-        // array).
-        if (!isset($candidate)) {
-          \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $hook]);
-        }
-        // There is no theme implementation for the hook passed. Return FALSE so
-        // the function calling
-        // \Drupal\Core\Theme\ThemeManagerInterface::render() can differentiate
-        // between a hook that exists and renders an empty string, and a hook
-        // that is not implemented.
-        return FALSE;
+    // While we search for templates, we create a full list of template
+    // suggestions that is later passed to theme_suggestions alter hooks.
+    $template_suggestions = $is_hook_array ? array_values($hook) : [$hook];
+
+    // The last element element in our template suggestions gets special
+    // treatment. While the other elements must match exactly, the final element
+    // is expanded to create multiple possible matches by iteratively striping
+    // everything after the last '__' delimiter.
+    $last_hook = $suggestion = $is_hook_array ? $hook[array_key_last($hook)] : $hook;
+    while ($pos = strrpos($suggestion, '__')) {
+      $suggestion = substr($suggestion, 0, $pos);
+      $template_suggestions[] = $suggestion;
+    }
+
+    // Use the first hook candidate that has an implementation.
+    foreach ($template_suggestions as $candidate) {
+      if ($theme_registry->has($candidate)) {
+        // Save the original theme hook, so it can be supplied to theme variable
+        // preprocess callbacks.
+        $original_hook = $is_hook_array && in_array($candidate, $hook) ? $candidate : $last_hook;
+        $hook = $candidate;
+        $info = $theme_registry->get($hook);
+        break;
       }
     }
 
-    $info = $theme_registry->get($hook);
+    // If there's no implementation, log an error and return an empty string.
+    if (!isset($info)) {
+      // Only log a message if we #theme was a string. By default, all forms set
+      // #theme to an array containing the form ID and don't implement that as a
+      // theme hook, so we want to prevent errors for that common use case.
+      if (!$is_hook_array) {
+        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $candidate]);
+      }
+      // There is no theme implementation for the hook passed. Return FALSE so
+      // the function calling
+      // \Drupal\Core\Theme\ThemeManagerInterface::render() can differentiate
+      // between a hook that exists and renders an empty string, and a hook
+      // that is not implemented.
+      return FALSE;
+    }
 
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
@@ -226,13 +229,30 @@ class ThemeManager implements ThemeManagerInterface {
       $base_theme_hook = $hook;
     }
 
+    // The $hook's theme registry may specify a "base hook" that differs from
+    // the base string of $hook. If so, we need to be aware of both strings.
+    $base_of_hook = explode('__', $hook)[0];
+
     // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
-    // If the theme implementation was invoked with a direct theme suggestion
-    // like '#theme' => 'node__article', add it to the suggestions array before
-    // invoking suggestion alter hooks.
-    if (isset($info['base hook'])) {
-      $suggestions[] = $hook;
+
+    // Add all the template suggestions with the same base to the suggestions
+    // array before invoking suggestion alter hooks.
+    $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
+    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
+      $suggestion_base = explode('__', $suggestion)[0];
+      if ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook) {
+        if ($suggestion !== $base_theme_hook) {
+          $suggestions[] = $suggestion;
+        }
+        // For suggestions we are adding to the alter hooks, remove them from
+        // $template_suggestions for now. But, ensure that we leave one entry
+        // for the base hook so we can splice in the suggestions later.
+        if ($contains_base_hook && $suggestion !== $base_theme_hook
+          || !$contains_base_hook && $suggestion !== $hook) {
+          unset($template_suggestions[$key]);
+        }
+      }
     }
 
     // Invoke hook_theme_suggestions_alter() and
@@ -244,13 +264,25 @@ class ThemeManager implements ThemeManagerInterface {
     $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
     $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
 
+    // Merge $suggestions back into $template_suggestions before the "base hook"
+    // entry.
+    $template_suggestions = array_values($template_suggestions);
+    array_splice(
+      $template_suggestions,
+      array_search($contains_base_hook ? $base_theme_hook : $hook, $template_suggestions),
+      $contains_base_hook ? 0 : 1,
+      array_reverse($suggestions)
+    );
+
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
     // '#theme' => 'node', but a module can add 'node__article' as a suggestion
     // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
     // an alternate template file for article nodes.
+    $template_suggestion = $hook;
     foreach (array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
+        $template_suggestion = $suggestion;
         $info = $theme_registry->get($suggestion);
         break;
       }
@@ -354,7 +386,11 @@ class ThemeManager implements ThemeManagerInterface {
       if (!isset($default_attributes)) {
         $default_attributes = new Attribute();
       }
-      foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
+      foreach ([
+        'attributes',
+        'title_attributes',
+        'content_attributes',
+      ] as $key) {
         if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
           if ($variables[$key]) {
             $variables[$key] = new Attribute($variables[$key]);
@@ -381,6 +417,10 @@ class ThemeManager implements ThemeManagerInterface {
       if (isset($theme_hook_suggestion)) {
         $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
       }
+      // Add two read-only variables that help the template engine understand
+      // how the template was chosen from among all suggestions.
+      $variables['template_suggestions'] = $template_suggestions;
+      $variables['template_suggestion'] = $template_suggestion;
       $output = $render_function($template_file, $variables);
     }
 
@@ -394,8 +434,9 @@ class ThemeManager implements ThemeManagerInterface {
    *   The current route match.
    */
   protected function initTheme(RouteMatchInterface $route_match = NULL) {
-    // Determine the active theme for the theme negotiator service. This includes
-    // the default theme as well as really specific ones like the ajax base theme.
+    // Determine the active theme for the theme negotiator service. This
+    // includes the default theme as well as really specific ones like the ajax
+    // base theme.
     if (!$route_match) {
       $route_match = \Drupal::routeMatch();
     }
@@ -420,8 +461,8 @@ class ThemeManager implements ThemeManagerInterface {
       $extra_types = $type;
       $type = array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
-      // than !empty() both when $type is passed as a string, or as an array with
-      // one item.
+      // than !empty() both when $type is passed as a string, or as an array
+      // with one item.
       if (empty($extra_types)) {
         unset($extra_types);
       }

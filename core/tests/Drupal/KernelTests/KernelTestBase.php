@@ -907,8 +907,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @return string
    *   The rendered string output (typically HTML).
+   *
+   * @throws \Exception
    */
-  protected function render(array &$elements) {
+  protected function render(array &$elements): string {
     // \Drupal\Core\Render\BareHtmlPageRenderer::renderBarePage calls out to
     // system_page_attachments() directly.
     if (!\Drupal::moduleHandler()->moduleExists('system')) {
