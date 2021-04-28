@@ -125,7 +125,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
       try {
         $item = $this->connection->queryRange('SELECT [data], [created], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE (([expire] = 0) OR (:now > [expire])) AND [name] = :name ORDER BY [created], [item_id] ASC', 0, 1, [
           ':name' => $this->name,
-          ':now' => time(),
+          ':now' => \Drupal::time()->getCurrentTime(),
         ])->fetchObject();
       }
       catch (\Exception $e) {
@@ -247,7 +247,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     try {
       // Clean up the queue for failed batches.
       $this->connection->delete(static::TABLE_NAME)
-        ->condition('created', REQUEST_TIME - 864000, '<')
+        ->condition('created', \Drupal::time()->getRequestTime() - 864000, '<')
         ->condition('name', 'drupal_batch:%', 'LIKE')
         ->execute();
     }
