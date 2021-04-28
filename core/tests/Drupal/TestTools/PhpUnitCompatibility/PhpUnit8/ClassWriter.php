@@ -2,6 +2,8 @@
 
 namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit8;
 
+use Composer\Autoload\ClassLoader;
+
 /**
  * Helper class to rewrite PHPUnit's TestCase class.
  *
@@ -21,7 +23,7 @@ final class ClassWriter {
   }
 
   /**
-   * Mutates the TestCase class from PHPUnit to make it compatible with Drupal.
+   * Mutates PHPUnit classes to make it compatible with Drupal.
    *
    * @param \Composer\Autoload\ClassLoader $autoloader
    *   The autoloader.
@@ -29,6 +31,54 @@ final class ClassWriter {
    * @throws \ReflectionException
    */
   public static function mutateTestBase($autoloader) {
+    static::alterAssert($autoloader);
+    static::alterTestCase($autoloader);
+  }
+
+  /**
+   * Alters the Assert class.
+   *
+   * @param \Composer\Autoload\ClassLoader $autoloader
+   *   The autoloader.
+   *
+   * @throws \ReflectionException
+   */
+  private static function alterAssert(ClassLoader $autoloader): void {
+    // If the class exists already there is nothing we can do. Hopefully this
+    // is happening because this has been called already. The call from
+    // \Drupal\Core\Test\TestDiscovery::registerTestNamespaces() necessitates
+    // this protection.
+    if (class_exists('PHPUnit\Framework\Assert', FALSE)) {
+      return;
+    }
+    // Inspired by Symfony's simple-phpunit remove typehints from Assert.
+    $alteredFile = $autoloader->findFile('PHPUnit\Framework\Assert');
+    $phpunit_dir = dirname($alteredFile, 3);
+    // Mutate TestCase code to make it compatible with Drupal 8 and 9 tests.
+    $alteredCode = file_get_contents($alteredFile);
+    $alteredCode = preg_replace('/abstract class Assert[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillAssertTrait;" . \PHP_EOL, $alteredCode, 1);
+    $simpletest_directory = __DIR__ . '/../../../../../../sites/simpletest';
+    // Only write when necessary.
+    $filename = $simpletest_directory . '/Assert.php';
+    if (!file_exists($filename) || md5_file($filename) !== md5($alteredCode)) {
+      // Create directory when necessary.
+      if (!file_exists($simpletest_directory)) {
+        mkdir($simpletest_directory, 0777, TRUE);
+      }
+      file_put_contents($filename, $alteredCode);
+    }
+    include $filename;
+  }
+
+  /**
+   * Alters the TestCase class.
+   *
+   * @param \Composer\Autoload\ClassLoader $autoloader
+   *   The autoloader.
+   *
+   * @throws \ReflectionException
+   */
+  private static function alterTestCase(ClassLoader $autoloader): void {
     // If the class exists already there is nothing we can do. Hopefully this
     // is happening because this has been called already. The call from
     // \Drupal\Core\Test\TestDiscovery::registerTestNamespaces() necessitates
@@ -42,6 +92,7 @@ final class ClassWriter {
     // Mutate TestCase code to make it compatible with Drupal 8 and 9 tests.
     $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/^    ((?:protected|public)(?: static)? function \w+\(\)): void/m', '    $1', $alteredCode);
+    $alteredCode = preg_replace('/abstract class TestCase[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillTestCaseTrait;" . \PHP_EOL, $alteredCode, 1);
     $alteredCode = str_replace("__DIR__ . '/../Util/", "'$phpunit_dir/src/Util/", $alteredCode);
     $simpletest_directory = __DIR__ . '/../../../../../../sites/simpletest';
     // Only write when necessary.
