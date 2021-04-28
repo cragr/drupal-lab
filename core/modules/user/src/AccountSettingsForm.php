@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -101,33 +102,38 @@ class AccountSettingsForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    // Administrative role option.
-    $form['admin_role'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Administrator role'),
-      '#open' => TRUE,
-    ];
-    // Do not allow users to set the anonymous or authenticated user roles as the
-    // administrator role.
-    $roles = user_role_names(TRUE);
-    unset($roles[RoleInterface::AUTHENTICATED_ID]);
-
+    // Administrative role option. We only show this if it does not match the
+    // default. This is for backwards compatibility reasons, for sites that
+    // were installed before the administrator role was always installed.
     $admin_roles = $this->roleStorage->getQuery()
       ->condition('is_admin', TRUE)
       ->execute();
     $default_value = reset($admin_roles);
 
-    $form['admin_role']['user_admin_role'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Administrator role'),
-      '#empty_value' => '',
-      '#default_value' => $default_value,
-      '#options' => $roles,
-      '#description' => $this->t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
-      // Don't allow to select a single admin role in case multiple roles got
-      // marked as admin role already.
-      '#access' => count($admin_roles) <= 1,
-    ];
+    if ($default_value !== AccountInterface::ADMINISTRATOR_ROLE) {
+      $form['admin_role'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Administrator role'),
+        '#open' => TRUE,
+      ];
+
+      // Do not allow users to set the anonymous or authenticated user roles as
+      // the administrator role.
+      $roles = user_role_names(TRUE);
+      unset($roles[RoleInterface::AUTHENTICATED_ID]);
+
+      $form['admin_role']['user_admin_role'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Administrator role'),
+        '#empty_value' => '',
+        '#default_value' => $default_value,
+        '#options' => $roles,
+        '#description' => $this->t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
+        // Don't allow to select a single admin role in case multiple roles got
+        // marked as admin role already.
+        '#access' => count($admin_roles) <= 1,
+      ];
+    }
 
     // @todo Remove this check once language settings are generalized.
     if ($this->moduleHandler->moduleExists('content_translation')) {

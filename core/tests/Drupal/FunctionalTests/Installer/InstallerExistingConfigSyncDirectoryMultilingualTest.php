@@ -48,7 +48,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
     parent::testConfigSync();
     // Ensure that menu blocks have been created correctly.
     $this->assertSession()->responseNotContains('This block is broken or missing.');
-    $this->assertSession()->linkExists('Add content');
+    $this->assertSession()->responseContains('Congratulations, you installed Drupal!');
   }
 
 }

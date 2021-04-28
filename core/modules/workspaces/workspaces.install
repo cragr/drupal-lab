@@ -66,8 +66,8 @@ function workspaces_install() {
     $result = $query->execute();
   }
 
-  // Default to user ID 1 if we could not find any other administrator users.
-  $owner_id = !empty($result) ? reset($result) : 1;
+  // Default to user ID 0 if we could not find any other administrator users.
+  $owner_id = !empty($result) ? reset($result) : 0;
 
   // Create a 'stage' workspace by default.
   Workspace::create([

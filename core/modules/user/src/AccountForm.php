@@ -212,6 +212,27 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#disabled' => TRUE,
     ];
 
+    // Special handling for the administrator role on user 1.
+    // @see https://www.drupal.org/project/drupal/issues/540008
+    if (intval($account->id()) === 1) {
+      $admin_roles = $this->entityTypeManager
+        ->getStorage('user_role')
+        ->getQuery()
+        ->condition('is_admin', TRUE)
+        ->execute();
+
+      // If the admin role is assigned, prevent it from being removed. Setting
+      // it to selected and disabled unconditionally would constitute a
+      // confusing situation with with the role being selected and disabled when
+      // the user was told by user_requirements() that their user 1 does not
+      // have an admin role.
+      foreach ($admin_roles as $admin_role) {
+        if (in_array($admin_role, $form['account']['roles']['#default_value'])) {
+          $form['account']['roles'][$admin_role]['#disabled'] = TRUE;
+        }
+      }
+    }
+
     $form['account']['notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user of new account'),

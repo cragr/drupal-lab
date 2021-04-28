@@ -96,11 +96,14 @@ class User extends ContentEntityBase implements UserInterface {
     parent::preSave($storage);
 
     // Make sure that the authenticated/anonymous roles are not persisted.
-    foreach ($this->get('roles') as $index => $item) {
-      if (in_array($item->target_id, [RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID])) {
-        $this->get('roles')->offsetUnset($index);
+    $internal = [RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID];
+    $role_refs = $this->get('roles')->getValue();
+    foreach ($role_refs as $index => $role_ref) {
+      if (in_array($role_ref['target_id'], $internal)) {
+        unset($role_refs[$index]);
       }
     }
+    $this->get('roles')->setValue($role_refs);
 
     // Store account cancellation information.
     foreach (['user_cancel_method', 'user_cancel_notify'] as $key) {
@@ -208,12 +211,16 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function hasPermission($permission) {
-    // User #1 has all privileges.
-    if ((int) $this->id() === 1) {
+    if ($this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles())) {
+      return TRUE;
+    }
+    elseif ((int) $this->id() === 1) {
+      @trigger_error('Relying on user 1 having all permissions is deprecated in drupal:9.2.0 and will not work anymore in drupal:10.0.0. Make sure the user with uid 1 has the role assigned that has been configured as the administrator role and set up tests to run with a user that specifically received the appropriate permissions. See https://www.drupal.org/node/2910500', E_USER_DEPRECATED);
+
       return TRUE;
     }
 
-    return $this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles());
+    return FALSE;
   }
 
   /**

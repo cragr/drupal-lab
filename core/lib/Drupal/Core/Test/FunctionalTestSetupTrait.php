@@ -14,6 +14,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
@@ -359,6 +360,7 @@ trait FunctionalTestSetupTrait {
       'pass_raw' => $password,
       'passRaw' => $password,
       'timezone' => date_default_timezone_get(),
+      'roles' => [AccountInterface::AUTHENTICATED_ROLE, AccountInterface::ADMINISTRATOR_ROLE],
     ]);
 
     // The child site derives its session name from the database prefix when

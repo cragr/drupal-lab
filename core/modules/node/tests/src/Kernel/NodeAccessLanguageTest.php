@@ -6,7 +6,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 
 /**
  * Tests node_access and select queries with node_access tag functionality with
@@ -184,9 +183,8 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     // Create a normal authenticated user.
     $web_user = $this->drupalCreateUser(['access content']);
 
-    // Load the user 1 user for later use as an admin user with permission to
-    // see everything.
-    $admin_user = User::load(1);
+    // Create an admin user with permission to see everything.
+    $admin_user = $this->drupalCreateUser([], 'admin_user', TRUE);
 
     // Creating a private node with langcode Hungarian, will be saved as
     // the fallback in node access table.

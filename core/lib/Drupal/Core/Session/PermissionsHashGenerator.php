@@ -5,6 +5,7 @@ namespace Drupal\Core\Session;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -34,6 +35,13 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
   protected $static;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a PermissionsHashGenerator object.
    *
    * @param \Drupal\Core\PrivateKey $private_key
@@ -42,11 +50,18 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    *   The cache backend interface to use for the persistent cache.
    * @param \Drupal\Core\Cache\CacheBackendInterface $static
    *   The cache backend interface to use for the static cache.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager used to retrieve a storage handler from.
    */
-  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache, CacheBackendInterface $static) {
+  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache, CacheBackendInterface $static, EntityTypeManagerInterface $entity_type_manager) {
     $this->privateKey = $private_key;
     $this->cache = $cache;
     $this->static = $static;
+    if ($entity_type_manager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without $entity_type_manager argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/2910500', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::entityTypeManager();
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -55,10 +70,14 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    * Cached by role, invalidated whenever permissions change.
    */
   public function generate(AccountInterface $account) {
-    // User 1 is the super user, and can always access all permissions. Use a
-    // different, unique identifier for the hash.
-    if ($account->id() == 1) {
-      return $this->hash('is-super-user');
+    // Admin roles have all permissions implicitly assigned. Use a different,
+    // unique identifier for the hash.
+    $storage = $this->entityTypeManager->getStorage('user_role');
+    foreach ($storage->loadMultiple($account->getRoles()) as $role) {
+      /** @var \Drupal\user\RoleInterface $role */
+      if ($role->isAdmin()) {
+        return $this->hash('is-admin');
+      }
     }
 
     $sorted_roles = $account->getRoles();

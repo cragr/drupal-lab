@@ -49,11 +49,6 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installConfig(['entity_test']);
 
-    // Create user 1 so that the user created later in the test has a different
-    // user ID.
-    // @todo Remove in https://www.drupal.org/node/540008.
-    User::create(['uid' => 1, 'name' => 'user1'])->save();
-
     EntityViewMode::create([
       'id' => 'entity_test.foobar',
       'targetEntityType' => 'entity_test',

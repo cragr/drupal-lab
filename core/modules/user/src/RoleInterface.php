@@ -23,6 +23,11 @@ interface RoleInterface extends ConfigEntityInterface {
   const AUTHENTICATED_ID = AccountInterface::AUTHENTICATED_ROLE;
 
   /**
+   * Role ID for the admin role; should match the 'role' entity ID.
+   */
+  const ADMINISTRATOR_ID = AccountInterface::ADMINISTRATOR_ROLE;
+
+  /**
    * Returns a list of permissions assigned to the role.
    *
    * @return array

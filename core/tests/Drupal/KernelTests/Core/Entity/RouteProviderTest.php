@@ -6,8 +6,6 @@ use Drupal\entity_test\Entity\EntityTestAdminRoutes;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -31,19 +29,10 @@ class RouteProviderTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->setUpCurrentUser(['uid' => 1]);
-
     $this->installEntitySchema('entity_test_mul');
     $this->installEntitySchema('entity_test_admin_routes');
 
-    /** @var \Drupal\user\RoleInterface $role */
-    $role = Role::create([
-      'id' => RoleInterface::ANONYMOUS_ID,
-    ]);
-    $role
-      ->grantPermission('administer entity_test content')
-      ->grantPermission('view test entity');
-    $role->save();
+    $this->setUpCurrentUser([], ['administer entity_test content', 'view test entity']);
   }
 
   protected function httpKernelHandle($url) {
