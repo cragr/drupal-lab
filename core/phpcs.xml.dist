@@ -224,6 +224,8 @@
 
   <!-- PSR-2 sniffs -->
   <rule ref="PSR2.Classes.PropertyDeclaration">
+    <!-- Silence method name underscore warning which is covered already in
+      Drupal.Methods.MethodDeclaration.Underscore. -->
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
   </rule>
   <rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
@@ -281,7 +283,6 @@
     <severity>0</severity>
   </rule>
   <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
-  <!-- Disable some error messages that we already cover. -->
   <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterOpen">
     <severity>0</severity>
   </rule>
