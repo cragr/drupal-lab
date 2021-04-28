@@ -91,9 +91,9 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
       $expected_formatted_value = $case['expected_formatted_value'];
 
       // Test the returned value.
-      $this->assertJsCondition("JSON.stringify(Drupal.dateFormatter.formatDiff($diff, $options).value) === '$expected_value'");
+      $this->assertJsCondition("JSON.stringify(Drupal.timeDiff.format($diff, $options).value) === '$expected_value'");
       // Test the returned formatted value.
-      $this->assertJsCondition("Drupal.dateFormatter.formatDiff($diff, $options).formatted === '$expected_formatted_value'");
+      $this->assertJsCondition("Drupal.timeDiff.format($diff, $options).formatted === '$expected_formatted_value'");
     }
 
     // Unit testing Drupal.timestampAsTimeDiff.refreshInterval(). Not using
@@ -101,7 +101,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     // each case.
     foreach ($this->getTimeoutTestCases() as $case) {
       $interval = json_encode($case['time_diff']);
-      $this->assertJsCondition("Drupal.timestampAsTimeDiff.refreshInterval($interval, {$case['configured_refresh_interval']}, {$case['granularity']}) === {$case['computed_refresh_interval']}");
+      $this->assertJsCondition("Drupal.timeDiff.refreshInterval($interval, {$case['configured_refresh_interval']}, {$case['granularity']}) === {$case['computed_refresh_interval']}");
     }
 
     // Test the UI.
