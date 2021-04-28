@@ -5,6 +5,9 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Adds middleware IDs to the http_handler_stack_configurator service.
+ */
 class GuzzleMiddlewarePass implements CompilerPassInterface {
 
   /**

@@ -5,6 +5,9 @@ namespace Drupal\FunctionalTests\Rest;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 
+/**
+ * ResourceTestBase for EntityFormMode entity.
+ */
 abstract class EntityFormModeResourceTestBase extends EntityResourceTestBase {
 
   /**

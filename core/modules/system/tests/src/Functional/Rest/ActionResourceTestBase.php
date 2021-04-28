@@ -6,6 +6,9 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
+/**
+ * ResourceTestBase for Action entity.
+ */
 abstract class ActionResourceTestBase extends EntityResourceTestBase {
 
   /**
