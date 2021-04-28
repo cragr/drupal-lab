@@ -160,10 +160,11 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'type' => $type_name,
     ];
     $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
+    $field_label = $this->randomString();
     $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
-      'label' => $this->randomString(),
+      'label' => $field_label,
     ];
     $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, 'Save and continue');
     $this->submitForm([], 'Save field settings');
@@ -184,6 +185,16 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertText('The description may be used as the label of the link to the file.');
+
+    // Set the description field as required.
+    $edit = ['settings[description_field_required]' => TRUE];
+    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/node.{$type_name}.field_{$field_name}");
+    $this->submitForm($edit, 'Save settings');
+    // When resubmitting the form a message should be shown indicating that the
+    // description is now required.
+    $this->drupalGet($node->toUrl('edit-form'));
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains("The {$field_label} field description is required.");
   }
 
   /**
