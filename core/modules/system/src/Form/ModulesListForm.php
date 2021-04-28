@@ -2,8 +2,6 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Config\PreExistingConfigException;
-use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\InfoParserException;
@@ -33,6 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ModulesListForm extends FormBase {
 
   use ModuleDependencyMessageTrait;
+  use ExtensionFormTrait;
 
   /**
    * The current user.
@@ -374,130 +373,27 @@ class ModulesListForm extends FormBase {
   }
 
   /**
-   * Helper function for building a list of modules to install.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return array
-   *   An array of modules to install and their dependencies.
-   */
-  protected function buildModuleList(FormStateInterface $form_state) {
-    // Build a list of modules to install.
-    $modules = [
-      'install' => [],
-      'dependencies' => [],
-      'experimental' => [],
-    ];
-
-    $data = $this->moduleExtensionList->getList();
-    foreach ($data as $name => $module) {
-      // If the module is installed there is nothing to do.
-      if ($this->moduleHandler->moduleExists($name)) {
-        continue;
-      }
-      // Required modules have to be installed.
-      if (!empty($module->required)) {
-        $modules['install'][$name] = $module->info['name'];
-      }
-      // Selected modules should be installed.
-      elseif (($checkbox = $form_state->getValue(['modules', $name], FALSE)) && $checkbox['enable']) {
-        $modules['install'][$name] = $data[$name]->info['name'];
-        // Identify experimental modules.
-        if ($data[$name]->info['package'] == 'Core (Experimental)') {
-          $modules['experimental'][$name] = $data[$name]->info['name'];
-        }
-      }
-    }
-
-    // Add all dependencies to a list.
-    foreach ($modules['install'] as $module => $value) {
-      foreach (array_keys($data[$module]->requires) as $dependency) {
-        if (!isset($modules['install'][$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
-          $modules['dependencies'][$module][$dependency] = $data[$dependency]->info['name'];
-          $modules['install'][$dependency] = $data[$dependency]->info['name'];
-
-          // Identify experimental modules.
-          if ($data[$dependency]->info['package'] == 'Core (Experimental)') {
-            $modules['experimental'][$dependency] = $data[$dependency]->info['name'];
-          }
-        }
-      }
-    }
-
-    // Make sure the install API is available.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
-
-    // Invoke hook_requirements('install'). If failures are detected, make
-    // sure the dependent modules aren't installed either.
-    foreach (array_keys($modules['install']) as $module) {
-      if (!drupal_check_module($module)) {
-        unset($modules['install'][$module]);
-        unset($modules['experimental'][$module]);
-        foreach (array_keys($data[$module]->required_by) as $dependent) {
-          unset($modules['install'][$dependent]);
-          unset($modules['dependencies'][$dependent]);
-        }
-      }
-    }
-
-    return $modules;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Retrieve a list of modules to install and their dependencies.
-    $modules = $this->buildModuleList($form_state);
+    $enabled_modules = array_filter($form_state->getValue('modules'), function ($module) {
+      return !empty($module['enable']);
+    });
+
+    $modules = $this->buildModuleList(array_keys($enabled_modules));
 
     // Redirect to a confirmation form if needed.
     if (!empty($modules['experimental']) || !empty($modules['dependencies'])) {
-
-      $route_name = !empty($modules['experimental']) ? 'system.modules_list_experimental_confirm' : 'system.modules_list_confirm';
       // Write the list of changed module states into a key value store.
       $account = $this->currentUser()->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
-
-      // Redirect to the confirmation form.
-      $form_state->setRedirect($route_name);
-
-      // We can exit here because at least one modules has dependencies
-      // which we have to prompt the user for in a confirmation form.
+      $form_state->setRedirect('system.extension_install_confirm');
       return;
     }
 
     // Install the given modules.
-    if (!empty($modules['install'])) {
-      try {
-        $this->moduleInstaller->install(array_keys($modules['install']));
-        $module_names = array_values($modules['install']);
-        $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
-          '%name' => $module_names[0],
-          '%names' => implode(', ', $module_names),
-        ]));
-      }
-      catch (PreExistingConfigException $e) {
-        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        $this->messenger()->addError(
-          $this->formatPlural(
-            count($config_objects),
-            'Unable to install @extension, %config_names already exists in active configuration.',
-            'Unable to install @extension, %config_names already exist in active configuration.',
-            [
-              '%config_names' => implode(', ', $config_objects),
-              '@extension' => $modules['install'][$e->getExtension()],
-            ])
-        );
-        return;
-      }
-      catch (UnmetDependenciesException $e) {
-        $this->messenger()->addError(
-          $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()])
-        );
-        return;
-      }
-    }
+    $this->installModules($modules);
   }
 
 }
