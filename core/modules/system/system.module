@@ -13,8 +13,10 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Extension\Extension;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -1302,5 +1304,36 @@ function system_theme_registry_alter(array &$theme_registry) {
   if (_system_is_claro_admin_and_not_active()) {
     require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
     claro_system_module_invoked_theme_registry_alter($theme_registry);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
+ *
+ * Provides a BC layer for modules providing old configurations.
+ *
+ * @see https://www.drupal.org/node/2993639
+ *
+ * @todo Remove this BC layer in drupal:10.0.0.
+ */
+function system_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
+  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
+  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+
+  foreach ($entity_view_display->getComponents() as $name => $component) {
+    if (empty($component['type'])) {
+      continue;
+    }
+
+    $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
+    // Check also potential plugins that extends TimestampFormatter.
+    if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+      continue;
+    }
+
+    if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
+      @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:9.2.0 and will be mandatory in Drupal 10.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
+      $entity_view_display->setComponent($name, $component);
+    }
   }
 }

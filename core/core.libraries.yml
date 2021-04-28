@@ -831,3 +831,12 @@ js-cookie:
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
+
+drupal.time-diff:
+  version: VERSION
+  js:
+    misc/time-diff.js:
+      defer: true
+  dependencies:
+    - core/drupal
+    - core/once
