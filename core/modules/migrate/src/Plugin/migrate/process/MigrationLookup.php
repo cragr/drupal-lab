@@ -179,22 +179,23 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
     $destination_ids = NULL;
     $source_id_values = [];
     foreach ($lookup_migration_ids as $lookup_migration_id) {
+      $lookup_value = $value;
       if ($lookup_migration_id == $this->migration->id()) {
         $self = TRUE;
       }
       if (isset($this->configuration['source_ids'][$lookup_migration_id])) {
-        $value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
+        $lookup_value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
       }
-      if (!is_array($value)) {
-        $value = [$value];
+      if (!is_array($lookup_value)) {
+        $lookup_value = [$lookup_value];
       }
-      $this->skipInvalid($value);
-      $source_id_values[$lookup_migration_id] = $value;
+      $this->skipInvalid($lookup_value);
+      $source_id_values[$lookup_migration_id] = $lookup_value;
 
       // Re-throw any PluginException as a MigrateException so the executable
       // can shut down the migration.
       try {
-        $destination_id_array = $this->migrateLookup->lookup($lookup_migration_id, $value);
+        $destination_id_array = $this->migrateLookup->lookup($lookup_migration_id, $lookup_value);
       }
       catch (PluginNotFoundException $e) {
         $destination_id_array = [];
