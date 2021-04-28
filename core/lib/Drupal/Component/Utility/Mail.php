@@ -30,7 +30,7 @@ class Mail {
    *   A RFC compliant version of the string, ready to be used as
    *   "display-name" in mail originator header fields.
    */
-  public static function formatDisplayName($string) {
+  public static function formatDisplayName($string, $field_name) {
     // Make sure we don't process html-encoded characters. They may create
     // unneeded trouble if left encoded, besides they will be correctly
     // processed if decoded.
@@ -39,7 +39,7 @@ class Mail {
     // If string contains non-ASCII characters it must be (short) encoded
     // according to RFC-2047. The output of a "B" (Base64) encoded-word is
     // always safe to be used as display-name.
-    $safe_display_name = Unicode::mimeHeaderEncode($string, TRUE);
+    $safe_display_name = Unicode::mimeHeaderEncode($string, TRUE, $field_name);
 
     // Encoded-words are always safe to be used as display-name because don't
     // contain any RFC 2822 "specials" characters. However

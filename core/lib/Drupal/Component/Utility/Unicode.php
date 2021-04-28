@@ -372,7 +372,7 @@ EOD;
   }
 
   /**
-   * Encodes MIME/HTTP headers that contain incorrectly encoded characters.
+   * Encodes MIME/HTTP headers.
    *
    * For example, Unicode::mimeHeaderEncode('tést.txt') returns
    * "=?UTF-8?B?dMOpc3QudHh0?=".
@@ -383,8 +383,7 @@ EOD;
    * - Only encode strings that contain non-ASCII characters.
    * - We progressively cut-off a chunk with self::truncateBytes(). This ensures
    *   each chunk starts and ends on a character boundary.
-   * - Using \n as the chunk separator may cause problems on some systems and
-   *   may have to be changed to \r\n or \r.
+   * - According to RFC 2047, long lines use CRLF SPACE as the separator.
    *
    * @param string $string
    *   The header to encode.
@@ -394,23 +393,16 @@ EOD;
    * @return string
    *   The mime-encoded header.
    */
-  public static function mimeHeaderEncode($string, $shorten = FALSE) {
-    if (preg_match('/[^\x20-\x7E]/', $string)) {
-      // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
-      $chunk_size = 47;
-      $len = strlen($string);
-      $output = '';
-      while ($len > 0) {
-        $chunk = static::truncateBytes($string, $chunk_size);
-        $output .= ' =?UTF-8?B?' . base64_encode($chunk) . "?=\n";
-        if ($shorten) {
-          break;
-        }
-        $c = strlen($chunk);
-        $string = substr($string, $c);
-        $len -= $c;
-      }
-      return trim($output);
+  public static function mimeHeaderEncode($string, $shorten = FALSE, $field_name = '') {
+    $options = [];
+<<<<<<< Updated upstream
+    $string = iconv_mime_encode($field_name , $string, $options);
+=======
+    $string = iconv_mime_encode($field_name, $string, $options);
+>>>>>>> Stashed changes
+    if ($shorten) {
+      $array = explode("\r\n", $string);
+      $string = $array[0];
     }
     return $string;
   }
