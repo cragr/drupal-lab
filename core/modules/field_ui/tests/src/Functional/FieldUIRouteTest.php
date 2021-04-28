@@ -4,6 +4,7 @@ namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -32,6 +33,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     parent::setUp();
 
     $this->drupalLogin($this->rootUser);
+    $this->drupalPlaceBlock('page_title_block', ['weight' => -10]);
     $this->drupalPlaceBlock('local_tasks_block');
   }
 
@@ -43,7 +45,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertText('No fields are present yet.');
 
     $this->drupalGet('admin/config/people/accounts/fields');
-    $this->assertSession()->titleEquals('Manage fields | Drupal');
+    $this->assertSession()->titleEquals('Manage fields: User | Drupal');
     $this->assertLocalTasks();
 
     // Test manage display tabs and titles.
@@ -51,13 +53,13 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/config/people/accounts/display');
-    $this->assertSession()->titleEquals('Manage display | Drupal');
+    $this->assertSession()->titleEquals('Manage display: User | Drupal');
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[compact]' => TRUE];
     $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/people/accounts/display/compact');
-    $this->assertSession()->titleEquals('Manage display | Drupal');
+    $this->assertSession()->titleEquals('Manage display: User | Drupal');
     $this->assertLocalTasks();
 
     // Test manage form display tabs and titles.
@@ -65,14 +67,14 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/config/people/accounts/form-display');
-    $this->assertSession()->titleEquals('Manage form display | Drupal');
+    $this->assertSession()->titleEquals('Manage form display: User | Drupal');
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[register]' => TRUE];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/people/accounts/form-display/register');
-    $this->assertSession()->titleEquals('Manage form display | Drupal');
+    $this->assertSession()->titleEquals('Manage form display: User | Drupal');
     $this->assertLocalTasks();
     $this->assertCount(1, $this->xpath('//ul/li[1]/a[contains(text(), :text)]', [':text' => 'Default']), 'Default secondary tab is in first position.');
 
@@ -120,6 +122,53 @@ class FieldUIRouteTest extends BrowserTestBase {
     $route = \Drupal::service('router.route_provider')->getRouteByName('entity.entity_test.field_ui_fields');
     $is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route);
     $this->assertTrue($is_admin, 'Admin route correctly marked for "Manage fields" page.');
+  }
+
+  /**
+   * Tests titles of admin routes.
+   */
+  public function testBundleEntityTitles() {
+    /** @var \Drupal\node\NodeTypeInterface $node_type */
+    $node_type = NodeType::load('article');
+    $node_type_label = $node_type->label();
+    /** @var \Drupal\Core\Entity\EntityViewModeInterface $teaser_display_mode */
+    $teaser_display_mode = EntityViewMode::load('node.teaser');
+    $user_entity_type_label = $this->container->get('entity_type.manager')
+      ->getStorage('user')->getEntityType()->getLabel();
+    /** @var \Drupal\Core\Entity\EntityViewModeInterface $compact_display_mode */
+    $compact_display_mode = EntityViewMode::load('user.compact');
+
+    // Entities having bundles (e.g. 'node', 'taxonomy_term').
+    $path = 'admin/structure/types/manage/article';
+    $args = [
+      '@bundle' => $node_type_label,
+    ];
+    $titles = [
+      "$path/fields" => (string) t('Manage fields: @bundle', $args),
+      "$path/fields/add-field" => (string) t('Add field to @bundle', $args),
+      "$path/form-display" => (string) t('Manage form display: @bundle', $args),
+      "$path/form-display/default" => (string) t('Manage form display: @bundle', $args),
+      "$path/display" => (string) t('Manage display: @bundle', $args),
+      "$path/display/default" => (string) t('Manage display: @bundle', $args),
+      "$path/display/teaser" => (string) t('Manage display: @bundle', $args),
+    ];
+    // Entities without bundles (e.g. 'user').
+    $path = 'admin/config/people/accounts';
+    $args = ['@entity' => $user_entity_type_label];
+    $titles += [
+      "$path/fields" => (string) t('Manage fields: @entity', $args),
+      "$path/fields/add-field" => (string) t('Add field to @entity', $args),
+      "$path/form-display" => (string) t('Manage form display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/form-display/default" => (string) t('Manage form display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/display" => (string) t('Manage display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/display/default" => (string) t('Manage display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/display/compact" => (string) t('Manage display: @entity', $args + ['@mode' => $compact_display_mode->label()]),
+    ];
+
+    foreach ($titles as $path => $title) {
+      $this->drupalGet($path);
+      $this->assertSession()->pageTextContains($title);
+    }
   }
 
 }
