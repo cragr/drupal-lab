@@ -3,6 +3,7 @@
 namespace Drupal\image\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
@@ -10,6 +11,59 @@ use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
  * Base class for image file formatters.
  */
 abstract class ImageFormatterBase extends FileFormatterBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return [
+      'image_loading' => [
+        'priority' => 'lazy',
+      ],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $description_link = $this->t('Select the lazy-load priority for load images. <a href=":link">Learn more.</a>', [
+      ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
+    ]);
+    $lazy_load_options = [
+      'lazy' => $this->t('Lazy'),
+      'eager' => $this->t('Eager'),
+    ];
+    $performance_description = $this->t('Image assets are rendered with native browser loading attribute of (<em>loading="lazy"</em>) by default. This improves performance by allowing <a href=":link">modern browsers</a> to lazily load images without JavaScript. It is sometimes desirable to override this default to force browsers to download an image as soon as possible using the "<em>eager</em>" value instead.', [':link' => 'https://caniuse.com/loading-lazy-attr']);
+
+    $image_loading_settings = $this->getSetting('image_loading');
+    $element['image_loading'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Performance'),
+      '#weight' => 10,
+      '#description' => $performance_description,
+    ];
+    $element['image_loading']['priority'] = [
+      '#title' => $this->t('Loading priority'),
+      '#type' => 'select',
+      '#default_value' => $image_loading_settings['priority'],
+      '#options' => $lazy_load_options,
+      '#description' => $description_link,
+    ];
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $image_loading_settings = $this->getSetting('image_loading');
+    $summary[] = $this->t('Loading priority: @priority', [
+      '@priority' => $image_loading_settings['priority'],
+    ]);
+    return $summary;
+  }
 
   /**
    * {@inheritdoc}

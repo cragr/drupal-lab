@@ -142,6 +142,13 @@ field.formatter.settings.image:
     image_style:
       type: string
       label: 'Image style'
+    image_loading:
+      type: mapping
+      label: 'Image loading settings'
+      mapping:
+        priority:
+          type: string
+          label: 'Loading priority'
 
 field.formatter.settings.image_url:
   type: mapping

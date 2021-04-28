@@ -115,6 +115,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     ];
+    $image['#attributes']['loading'] = 'lazy';
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output);
 
@@ -135,6 +136,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     ];
+    $image['#attributes']['loading'] = 'lazy';
     $default_output = '<a href="' . file_create_url($image_uri) . '">' . $renderer->renderRoot($image) . '</a>';
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
@@ -203,6 +205,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#style_name' => 'thumbnail',
       '#alt' => $alt,
     ];
+    $image_style['#attributes']['loading'] = 'lazy';
     $default_output = $renderer->renderRoot($image_style);
     $this->drupalGet('node/' . $nid);
     $image_style = ImageStyle::load('thumbnail');
@@ -214,6 +217,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $this->drupalLogout();
       $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
       $this->assertSession()->statusCodeEquals(403);
+
+      // Log in again.
+      $this->drupalLogin($this->adminUser);
     }
 
     // Test the image URL formatter without an image style.
@@ -228,6 +234,47 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $display_options['settings']['image_style'] = 'thumbnail';
     $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
     $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+
+    // Test the image loading "priority" setting formatter works.
+    $display_options['type'] = 'image';
+    $display_options['settings']['image_link'] = '';
+    $display_options['settings']['image_style'] = '';
+    $display_options['settings']['image_loading']['priority'] = 'eager';
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    $image = [
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+      '#alt' => $alt,
+    ];
+    $image['#attributes']['loading'] = 'eager';
+    $default_output = $renderer->renderRoot($image);
+    $this->drupalGet('node/' . $nid);
+    $this->assertSession()->responseContains($default_output);
+
+    // Test the image loading "priority" setting formatter work together with "image_style" setting.
+    $display_options['settings']['image_style'] = 'thumbnail';
+    $display->setComponent($field_name, $display_options)
+      ->save();
+
+    // Ensure the derivative image is generated so we do not have to deal with
+    // image style callback paths.
+    $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $image_style = [
+      '#theme' => 'image_style',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+      '#style_name' => 'thumbnail',
+      '#alt' => $alt,
+    ];
+    $image_style['#attributes']['loading'] = 'eager';
+    $default_output = $renderer->renderRoot($image_style);
+    $this->drupalGet('node/' . $nid);
+    $this->assertSession()->responseContains($default_output);
   }
 
   /**
@@ -297,6 +344,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     ];
+    $image['#attributes']['loading'] = 'lazy';
     $edit = [
       $field_name . '[0][alt]' => $image['#alt'],
       $field_name . '[0][title]' => $image['#title'],
@@ -395,6 +443,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     ];
+    $image['#attributes']['loading'] = 'lazy';
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
@@ -420,6 +469,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#alt' => $alt,
     ];
+    $image['#attributes']['loading'] = 'lazy';
     $image_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
@@ -473,6 +523,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 40,
       '#height' => 20,
     ];
+    $image['#attributes']['loading'] = 'lazy';
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
