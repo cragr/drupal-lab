@@ -141,14 +141,31 @@ class ModulesListConfirmForm extends ConfirmFormBase {
   protected function buildMessageList() {
     $items = [];
     if (!empty($this->modules['dependencies'])) {
+
+      // Group up modules only if they have the same dependencies.
+      $normalized_list = [];
+      foreach ($this->modules['dependencies'] as $module => $dependencies) {
+        $module_name = $this->modules['install'][$module];
+        $hash = hash('sha256', implode(', ', array_keys($dependencies)));
+        if (!isset($normalized_list[$hash])) {
+          $normalized_list[$hash] = [
+            'modules' => [$module_name],
+            'dependencies' => $dependencies,
+          ];
+        }
+        else {
+          array_push($normalized_list[$hash]['modules'], $module_name);
+        }
+      }
+
       // Display a list of required modules that have to be installed as well
       // but were not manually selected.
-      foreach ($this->modules['dependencies'] as $module => $dependencies) {
-        $items[] = $this->formatPlural(count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', [
-          '@module' => $this->modules['install'][$module],
+      foreach ($normalized_list as $item) {
+        $items[] = $this->formatPlural(count($item['dependencies']), 'You must enable the @required module to install the following modules: @module.', 'You must enable the @required modules to install the following modules: @module.', [
+          '@module' => implode(', ', $item['modules']),
           // It is safe to implode this because module names are not translated
           // markup and so will not be double-escaped.
-          '@required' => implode(', ', $dependencies),
+          '@required' => implode(', ', $item['dependencies']),
         ]);
       }
     }

@@ -410,13 +410,17 @@ class ModulesListForm extends FormBase {
       }
     }
 
+    $not_checked_dependencies = [];
     // Add all dependencies to a list.
     foreach ($modules['install'] as $module => $value) {
       foreach (array_keys($data[$module]->requires) as $dependency) {
-        if (!isset($modules['install'][$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
-          $modules['dependencies'][$module][$dependency] = $data[$dependency]->info['name'];
-          $modules['install'][$dependency] = $data[$dependency]->info['name'];
-
+        if (!$this->moduleHandler->moduleExists($dependency)) {
+          // Dependencies should be installed.
+          if (!isset($modules['install'][$dependency]) || in_array($dependency, $not_checked_dependencies)) {
+            $not_checked_dependencies[] = $dependency;
+            $modules['dependencies'][$module][$dependency] = $data[$dependency]->info['name'];
+            $modules['install'][$dependency] = $data[$dependency]->info['name'];
+          }
           // Identify experimental modules.
           if ($data[$dependency]->info['package'] == 'Core (Experimental)') {
             $modules['experimental'][$dependency] = $data[$dependency]->info['name'];
