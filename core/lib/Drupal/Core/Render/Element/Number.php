@@ -87,7 +87,6 @@ class Number extends FormElement {
       // Check that the input is an allowed multiple of #step (offset by #min if
       // #min is set).
       $offset = isset($element['#min']) ? $element['#min'] : 0.0;
-
       if (!NumberUtility::validStep($value, $element['#step'], $offset)) {
         $form_state->setError($element, t('%name is not a valid number.', ['%name' => $name]));
       }
